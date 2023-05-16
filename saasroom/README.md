@@ -20,6 +20,8 @@
 ## SAASroom Features
 
 - [ ] Sveltekit
+- [ ] Forms handled by https://superforms.vercel.app
+- [ ] Runtime schema validation with zod
 - [ ] Docker deployment
 - [ ] Multi-region, distributed, production-ready SQLite Database with LiteFS
 - [ ] Healthcheck endpoint for uptime.dyne.org
@@ -36,7 +38,6 @@
 - [ ] Code formatting with Prettier
 - [ ] Linting with ESLint
 - [ ] Static Types with TypeScript
-- [ ] Runtime schema validation with zod
 - [ ] Error monitoring with Sentry
 - [ ] Data migrations and seeds
 
