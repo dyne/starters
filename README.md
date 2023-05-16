@@ -8,7 +8,31 @@ This repo takes inspiration from https://github.com/spinspire/recipes but in pla
 
 ## saasroom
 
+`degit dyne/starters/saasroom your-project-name`
 
+Saasroom is a frontend backed with the features described below and works chick to chick with backendroom.
+
+- [ ] Sveltekit framework of choice
+- [ ] Forms handled by https://superforms.vercel.app
+- [ ] Runtime schema validation with zod
+- [ ] Docker deployment
+- [ ] Multi-region, distributed, production-ready SQLite Database with LiteFS
+- [ ] Healthcheck endpoint for uptime.dyne.org
+- [ ] GitHub Actions with testing and deploy on merge for both production and staging environment on baloo
+- [ ] Authentication with Keypairoom
+- [ ] W3C-DIDs with did.dyne.org
+- [ ] Transaction email with Sendgrid and forgot/reset nature of Keypairoom
+- [ ] Backend as a service in one file with [../backendroom](../backendroom)
+- [ ] Role-based user permission
+- [ ] Feature flags for all optional features directly defined in the back-office by admins
+- [ ] Styling with tailwind
+- [ ] Flowbite design system customized for dyne/forkbomb purposes
+- [ ] End-to-end testing with Playwright
+- [ ] Code formatting with Prettier
+- [ ] Linting with ESLint
+- [ ] Static Types with TypeScript
+- [ ] Error monitoring with Sentry
+- [ ] Data migrations and seeds
 
 ## backendroom
 
