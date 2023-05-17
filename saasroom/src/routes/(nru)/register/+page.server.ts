@@ -16,9 +16,10 @@ export const actions: Actions = {
 			await u.authWithPassword(data.email, data.password);
 			await u.requestVerification(data.email);
 		} catch (e) {
+			console.log(e);
 			return fail(400, { error: true, message: e.data.message, data: e.data.data });
 		}
 
-		throw redirect(303, '/dashboard');
+		throw redirect(303, '/my/dashboard');
 	}
 };
