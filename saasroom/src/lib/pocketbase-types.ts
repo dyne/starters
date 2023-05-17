@@ -3,8 +3,8 @@
 */
 
 export enum Collections {
-	Projects = "projects",
-	Signatures = "signatures",
+	FeatureFlags = "featureFlags",
+	Hooks = "hooks",
 	Users = "users",
 }
 
@@ -32,17 +32,29 @@ export type AuthSystemFields<T = never> = {
 
 // Record types for each collection
 
-export type ProjectsRecord = {
-	title?: string
-	description?: HTMLString
-	owner?: RecordIdString
+export type FeatureFlagsRecord = {
+	name: string
+	active?: boolean
 }
 
-export type SignaturesRecord = {
-	file?: string
-	title?: string
-	description?: HTMLString
-	owner?: RecordIdString
+export enum HooksEventOptions {
+	"insert" = "insert",
+	"update" = "update",
+	"delete" = "delete",
+}
+
+export enum HooksActionTypeOptions {
+	"command" = "command",
+	"post" = "post",
+}
+export type HooksRecord = {
+	collection: string
+	event: HooksEventOptions
+	action_type: HooksActionTypeOptions
+	action: string
+	action_params?: string
+	expands?: string
+	disabled?: boolean
 }
 
 export type UsersRecord = {
@@ -51,20 +63,20 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
-export type ProjectsResponse<Texpand = unknown> = ProjectsRecord & BaseSystemFields<Texpand>
-export type SignaturesResponse<Texpand = unknown> = SignaturesRecord & BaseSystemFields<Texpand>
-export type UsersResponse = UsersRecord & AuthSystemFields
+export type FeatureFlagsResponse = Required<FeatureFlagsRecord> & BaseSystemFields
+export type HooksResponse = Required<HooksRecord> & BaseSystemFields
+export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
-	projects: ProjectsRecord
-	signatures: SignaturesRecord
+	featureFlags: FeatureFlagsRecord
+	hooks: HooksRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
-	projects: ProjectsResponse
-	signatures: SignaturesResponse
+	featureFlags: FeatureFlagsResponse
+	hooks: HooksResponse
 	users: UsersResponse
 }
