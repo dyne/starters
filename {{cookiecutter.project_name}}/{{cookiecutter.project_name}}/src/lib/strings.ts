@@ -1,1 +1,1 @@
-export const projectTitle = '{{cookiecutter.project_title.capitalize()}}';
+export const projectTitle = '{{cookiecutter.project_name.capitalize()}}';
