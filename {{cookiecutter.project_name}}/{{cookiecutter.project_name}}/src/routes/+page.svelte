@@ -44,6 +44,7 @@
 		CurrencyDollar,
 		Bolt
 	} from 'svelte-heros-v2';
+	import { projectTitle } from '$lib/strings';
 	let navClass = 'bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800';
 	let navDivClass = 'flex flex-wrap justify-between items-center mx-auto max-w-screen-xl';
 </script>
@@ -84,15 +85,14 @@
 		<ContentWithImage>
 			<svelte:fragment slot="h2">We did reinvent the wheel</svelte:fragment>
 			<p class="mb-4">
-				We are strategists, designers and developers. Innovators and problem
-				solvers. Small enough to be simple and quick, but big enough to
-				deliver the scope you want at the pace you need. Small enough to be
-				simple and quick, but big enough to deliver the scope you want at
-				the pace you need.
+				We are strategists, designers and developers. Innovators and problem solvers. Small enough
+				to be simple and quick, but big enough to deliver the scope you want at the pace you need.
+				Small enough to be simple and quick, but big enough to deliver the scope you want at the
+				pace you need.
 			</p>
 			<p>
-				We are strategists, designers and developers. Innovators and problem
-				solvers. Small enough to be simple and quick.
+				We are strategists, designers and developers. Innovators and problem solvers. Small enough
+				to be simple and quick.
 			</p>
 
 			<svelte:fragment slot="image">
@@ -112,12 +112,10 @@
 
 	<Section name="pricing">
 		<PricingHead>
-			<svelte:fragment slot="h2"
-				>Designed for business teams like yours</svelte:fragment
-			>
+			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at Signroom we focus on markets where technology, innovation,
-				and capital can unlock long-term value and drive economic growth.</svelte:fragment
+				>Here at Signroom we focus on markets where technology, innovation, and capital can unlock
+				long-term value and drive economic growth.</svelte:fragment
 			>
 		</PricingHead>
 		<div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
@@ -125,15 +123,11 @@
 				<PricingBodyHead>
 					<svelte:fragment slot="h3">Starter</svelte:fragment>
 					<svelte:fragment slot="paragraph">
-						Best option for personal use & for your next
-						project.
+						Best option for personal use & for your next project.
 					</svelte:fragment>
 					<svelte:fragment slot="price">
-						<span class="mr-2 text-5xl font-extrabold">$29</span
-						>
-						<span class="text-gray-500 dark:text-gray-400"
-							>/month</span
-						>
+						<span class="mr-2 text-5xl font-extrabold">$29</span>
+						<span class="text-gray-500 dark:text-gray-400">/month</span>
 					</svelte:fragment>
 				</PricingBodyHead>
 				<PricingItemWrapper>
@@ -144,25 +138,13 @@
 						<span>No setup, or hidden fees</span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Team size: <span class="font-semibold"
-								>1 developer</span
-							></span
-						>
+						<span>Team size: <span class="font-semibold">1 developer</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Premium support: <span
-								class="font-semibold">6 months</span
-							></span
-						>
+						<span>Premium support: <span class="font-semibold">6 months</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Free updates: <span class="font-semibold"
-								>6 months</span
-							></span
-						>
+						<span>Free updates: <span class="font-semibold">6 months</span></span>
 					</PricingItem>
 
 					<svelte:fragment slot="btn">
@@ -175,15 +157,11 @@
 				<PricingBodyHead>
 					<svelte:fragment slot="h3">Company</svelte:fragment>
 					<svelte:fragment slot="paragraph">
-						Relevant for multiple users, extended & premium
-						support.
+						Relevant for multiple users, extended & premium support.
 					</svelte:fragment>
 					<svelte:fragment slot="price">
-						<span class="mr-2 text-5xl font-extrabold">$99</span
-						>
-						<span class="text-gray-500 dark:text-gray-400"
-							>/month</span
-						>
+						<span class="mr-2 text-5xl font-extrabold">$99</span>
+						<span class="text-gray-500 dark:text-gray-400">/month</span>
 					</svelte:fragment>
 				</PricingBodyHead>
 				<PricingItemWrapper>
@@ -194,26 +172,13 @@
 						<span>No setup, or hidden fees</span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Team size: <span class="font-semibold"
-								>10 developer</span
-							></span
-						>
+						<span>Team size: <span class="font-semibold">10 developer</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Premium support: <span
-								class="font-semibold"
-								>24 months</span
-							></span
-						>
+						<span>Premium support: <span class="font-semibold">24 months</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Free updates: <span class="font-semibold"
-								>24 months</span
-							></span
-						>
+						<span>Free updates: <span class="font-semibold">24 months</span></span>
 					</PricingItem>
 
 					<svelte:fragment slot="btn">
@@ -226,16 +191,11 @@
 				<PricingBodyHead>
 					<svelte:fragment slot="h3">Enterprise</svelte:fragment>
 					<svelte:fragment slot="paragraph">
-						Best for large scale uses and extended
-						redistribution rights.
+						Best for large scale uses and extended redistribution rights.
 					</svelte:fragment>
 					<svelte:fragment slot="price">
-						<span class="mr-2 text-5xl font-extrabold"
-							>$499</span
-						>
-						<span class="text-gray-500 dark:text-gray-400"
-							>/month</span
-						>
+						<span class="mr-2 text-5xl font-extrabold">$499</span>
+						<span class="text-gray-500 dark:text-gray-400">/month</span>
 					</svelte:fragment>
 				</PricingBodyHead>
 				<PricingItemWrapper>
@@ -246,26 +206,13 @@
 						<span>No setup, or hidden fees</span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Team size: <span class="font-semibold"
-								>100+ developer</span
-							></span
-						>
+						<span>Team size: <span class="font-semibold">100+ developer</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Premium support: <span
-								class="font-semibold"
-								>36 months</span
-							></span
-						>
+						<span>Premium support: <span class="font-semibold">36 months</span></span>
 					</PricingItem>
 					<PricingItem>
-						<span
-							>Free updates: <span class="font-semibold"
-								>36 months</span
-							></span
-						>
+						<span>Free updates: <span class="font-semibold">36 months</span></span>
 					</PricingItem>
 
 					<svelte:fragment slot="btn">
@@ -282,12 +229,10 @@
 			h2Class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
 			pClass="text-gray-500 sm:text-xl dark:text-gray-400"
 		>
-			<svelte:fragment slot="h2"
-				>Designed for business teams like yours</svelte:fragment
-			>
+			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at Signroom we focus on markets where technology, innovation,
-				and capital can unlock long-term value and drive economic growth.</svelte:fragment
+				>Here at Signroom we focus on markets where technology, innovation, and capital can unlock
+				long-term value and drive economic growth.</svelte:fragment
 			>
 		</HeroHeader>
 		<FeatureDefault>
@@ -299,9 +244,8 @@
 				>
 				<svelte:fragment slot="h3">Marketing</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Plan it, create it, launch it. Collaborate seamlessly with
-					all the organization and hit your marketing goals every
-					month with our marketing plan.</svelte:fragment
+					>Plan it, create it, launch it. Collaborate seamlessly with all the organization and hit
+					your marketing goals every month with our marketing plan.</svelte:fragment
 				>
 			</FeatureItem>
 			<FeatureItem>
@@ -312,9 +256,8 @@
 				>
 				<svelte:fragment slot="h3">Legal</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Protect your organization, devices and stay compliant with
-					our structured workflows and custom permissions made for
-					you.</svelte:fragment
+					>Protect your organization, devices and stay compliant with our structured workflows and
+					custom permissions made for you.</svelte:fragment
 				>
 			</FeatureItem>
 			<FeatureItem>
@@ -325,9 +268,8 @@
 				>
 				<svelte:fragment slot="h3">Business Automation</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Auto-assign tasks, send Slack messages, and much more. Now
-					power up with hundreds of new templates to help you get
-					started.</svelte:fragment
+					>Auto-assign tasks, send Slack messages, and much more. Now power up with hundreds of new
+					templates to help you get started.</svelte:fragment
 				>
 			</FeatureItem>
 			<FeatureItem>
@@ -338,8 +280,8 @@
 				>
 				<svelte:fragment slot="h3">Finance</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Audit-proof software built for critical financial
-					operations like month-end close and quarterly budgeting.</svelte:fragment
+					>Audit-proof software built for critical financial operations like month-end close and
+					quarterly budgeting.</svelte:fragment
 				>
 			</FeatureItem>
 			<FeatureItem>
@@ -350,8 +292,8 @@
 				>
 				<svelte:fragment slot="h3">Enterprise Design</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Craft beautiful, delightful experiences for both marketing
-					and product with real cross-company collaboration.</svelte:fragment
+					>Craft beautiful, delightful experiences for both marketing and product with real
+					cross-company collaboration.</svelte:fragment
 				>
 			</FeatureItem>
 			<FeatureItem>
@@ -362,9 +304,8 @@
 				>
 				<svelte:fragment slot="h3">Operations</svelte:fragment>
 				<svelte:fragment slot="paragraph"
-					>Keep your company’s lights on with customizable, iterative,
-					and structured workflows built for all efficient teams and
-					individual.</svelte:fragment
+					>Keep your company’s lights on with customizable, iterative, and structured workflows
+					built for all efficient teams and individual.</svelte:fragment
 				>
 			</FeatureItem>
 		</FeatureDefault>
@@ -374,18 +315,13 @@
 		<Contact>
 			<svelte:fragment slot="h2">Contact Us</svelte:fragment>
 			<svelte:fragment slot="paragraph">
-				Got a technical issue? Want to send feedback about a beta feature?
-				Need details about our Business plan? Let us know.
+				Got a technical issue? Want to send feedback about a beta feature? Need details about our
+				Business plan? Let us know.
 			</svelte:fragment>
 			<form class="space-y-8">
 				<div>
 					<Label for="email" class="block mb-2">Your email</Label>
-					<Input
-						id="email"
-						name="email"
-						placeholder="name@signroom.com"
-						required
-					/>
+					<Input id="email" name="email" placeholder="name@signroom.com" required />
 				</div>
 				<div>
 					<Label for="subject" class="block mb-2">Subject</Label>
@@ -417,89 +353,56 @@
 					<FooterBrand
 						href="https://signroom.com"
 						src="/logo.svg"
-						alt="Signroom Logo"
+						alt={`${projectTitle} Logo`}
 						name=""
 						aClass="flex mb-6"
 					/>
 					<p class="text-gray-600 dark:text-gray-400">
-						Signroom is an ecosystem built on top of Tailwind
-						CSS including a component library, block sections, a
-						Figma design system and other resources.
+						Signroom is an ecosystem built on top of Tailwind CSS including a component library,
+						block sections, a Figma design system and other resources.
 					</p>
 				</div>
 				<div>
-					<h2
-						class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white"
-					>
+					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
 						Resources
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink
-							liClass="mb-4"
-							href="https://signroom.com/"
-							>Signroom</FooterLink
-						>
-						<FooterLink
-							liClass="mb-4"
-							href="https://tailwindcss.com/"
-							>Tailwind CSS</FooterLink
-						>
-						<FooterLink
-							liClass="mb-4"
-							href="https://flowbite-svelte.com/"
+						<FooterLink liClass="mb-4" href="https://signroom.com/">Signroom</FooterLink>
+						<FooterLink liClass="mb-4" href="https://tailwindcss.com/">Tailwind CSS</FooterLink>
+						<FooterLink liClass="mb-4" href="https://flowbite-svelte.com/"
 							>Signroom-Svelte</FooterLink
 						>
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2
-						class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white"
-					>
+					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
 						HELP & SUPPORT
 					</h2>
 					<FooterLinkGroup>
+						<FooterLink liClass="mb-4" href="https://discord.gg/4eeurUVvTy">Discord</FooterLink>
 						<FooterLink
 							liClass="mb-4"
-							href="https://discord.gg/4eeurUVvTy"
-							>Discord</FooterLink
-						>
-						<FooterLink
-							liClass="mb-4"
-							href="https://github.com/shinokada/flowbite-svelte-blocks/issues"
-							>GitHub</FooterLink
+							href="https://github.com/shinokada/flowbite-svelte-blocks/issues">GitHub</FooterLink
 						>
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2
-						class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white"
-					>
+					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
 						Follow us
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink
-							liClass="mb-4"
-							href="https://github.com/shinokada/flowbite-svelte-blocks"
+						<FooterLink liClass="mb-4" href="https://github.com/shinokada/flowbite-svelte-blocks"
 							>Gihub</FooterLink
 						>
-						<FooterLink
-							liClass="mb-4"
-							href="https://discord.gg/4eeurUVvTy"
-							>Discord</FooterLink
-						>
+						<FooterLink liClass="mb-4" href="https://discord.gg/4eeurUVvTy">Discord</FooterLink>
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2
-						class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white"
-					>
-						Legal
-					</h2>
+					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">Legal</h2>
 					<FooterLinkGroup>
 						<FooterLink
 							liClass="mb-4"
-							href="https://github.com/shinokada/flowbite-svelte-blocks/LICENSE"
-							>LICENSE</FooterLink
+							href="https://github.com/shinokada/flowbite-svelte-blocks/LICENSE">LICENSE</FooterLink
 						>
 					</FooterLinkGroup>
 				</div>
@@ -508,21 +411,9 @@
 			<div class="sm:flex sm:items-center sm:justify-between">
 				<FooterCopyright href="/" by="Signroom™" />
 				<div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
-					<FooterIcon
-						href="/"
-						class="text-gray-400 hover:text-gray-900"
-						icon={Facebook}
-					/>
-					<FooterIcon
-						href="/"
-						class="text-gray-400 hover:text-gray-900"
-						icon={Twitter}
-					/>
-					<FooterIcon
-						href="/"
-						class="text-gray-400 hover:text-gray-900"
-						icon={Github}
-					/>
+					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Facebook} />
+					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Twitter} />
+					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Github} />
 				</div>
 			</div>
 		</Footer>
