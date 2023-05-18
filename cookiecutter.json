@@ -1,3 +1,4 @@
 {
-  "project_name": "saasroom"
+  "project_name": "saasroom",
+  "_copy_without_render": ["*.svelte"]
 }
