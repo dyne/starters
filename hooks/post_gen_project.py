@@ -48,7 +48,7 @@ def select_option(options: list[str]) -> str:
 def fetch_webpage_text(url: str) -> str:
     try:
         response = urllib.request.urlopen(url)
-        return response.text
+        return response.read()
     except Exception as e:
         print("Failed to retrieve available versions")
         print(e)
