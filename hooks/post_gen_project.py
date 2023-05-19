@@ -1,12 +1,12 @@
 import os
 import shutil
 import sys
-import urllib
+import urllib.request
 import re
 
 ####
 
-def createENV():
+def create_env():
     # Get the base directory of the generated project
     base_dir = os.path.join(os.getcwd(), "{{cookiecutter.project_name}}")
 
@@ -100,6 +100,6 @@ def download_pocketbase():
 ####
 
 if __name__ == '__main__':
-    createENV()
+    create_env()
     download_pocketbase()
     
