@@ -55,7 +55,7 @@ def fetch_webpage(url):
 def extract_versions_from_text(text: str) -> list[str]:
     pattern = r"^\d+\.\d+\.\d+_[a-zA-Z0-9_]+$"
     matches = re.findall(pattern, text)
-    if matches or len(matches):
+    if matches and len(matches):
         return matches
     else:
         print("No match found.")
@@ -90,6 +90,7 @@ def download_file(url):
 def download_pocketbase():
     releases_text = fetch_webpage("https://github.com/pocketbase/pocketbase/releases/latest")
     available_versions = extract_versions_from_text(releases_text)
+    print(available_versions)
     available_platforms = [extract_platform_from_text(version) for version in available_versions]
     selected_platform = select_option(available_platforms)
     version_number = extract_version_number_from_text(available_versions[0])
