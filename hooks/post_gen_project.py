@@ -1,5 +1,12 @@
 import os
 import shutil
+import sys
+import urllib.request
+from html.parser import HTMLParser
+import platform
+import re
+
+####
 
 def createENV():
     # Get the base directory of the generated project
@@ -15,73 +22,86 @@ def createENV():
     shutil.copyfile(source_file, destination_file)
 
 
-#####
+####
 
+def select_option(options: list[str]) -> str:
 
+    user_input = ''
 
-import sys
-import urllib.request
-from html.parser import HTMLParser
-import platform
+    input_message = "Pick an option:\n"
 
-class VersionParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.versions = []
+    for index, item in enumerate(options):
+        input_message += f'{index+1}) {item}\n'
 
-    def handle_data(self, data):
-        data = data.strip()
-        if data:
-            self.versions.append(data)
+    input_message += 'Your choice: '
 
-def get_current_os():
-    os = platform.system()
-    if os == "Darwin":
-        return "mac"
-    elif os == "Windows":
-        return "win"
-    elif os == "Linux":
-        return "linux"
-    else:
-        print("Unsupported operating system.")
-        sys.exit(1)
+    while user_input not in map(str, range(1, len(options) + 1)):
+        user_input = input(input_message)
 
-def download_installer(version, os):
-    url = f"https://pocketbase.io/downloads/{version}/{os}"
-    try:
-        urllib.request.urlretrieve(url, f"PocketBase_{version}_{os}.exe" if os == "win" else f"PocketBase_{version}_{os}.dmg")
-        print(f"Successfully downloaded PocketBase_{version}_{os}")
-    except Exception as e:
-        print(f"Failed to download installer for version {version} and OS {os}")
-        print(e)
+    selected_option = options[int(user_input) - 1]
+    print('You picked: ' + selected_option)
 
-def get_available_versions():
-    url = "https://pocketbase.io/docs/"
+    return selected_option
+
+####
+
+def fetch_webpage_text(url: str) -> str:
     try:
         response = urllib.request.urlopen(url)
-        content = response.read().decode("utf-8")
-        parser = VersionParser()
-        parser.feed(content)
-        return parser.versions
+        return response.text
     except Exception as e:
         print("Failed to retrieve available versions")
         print(e)
         sys.exit(1)
 
+def extract_versions_from_text(text: str) -> list[str]:
+    pattern = r"^\d+\.\d+\.\d+_[a-zA-Z0-9_]+$"
+    matches = re.findall(pattern, text)
+    if matches or len(matches):
+        return matches
+    else:
+        print("No match found.")
+
+def extract_platform_from_text(text):
+    pattern = r"(?<=^\d+\.\d+\.\d+_)[a-zA-Z0-9_]+$"
+    matches = re.findall(pattern, text)
+    if matches:
+        return matches[0]
+    else:
+        print("No match found.")
+
+def extract_version_number_from_text(text):
+    pattern = r"^\d+\.\d+\.\d+"
+    matches = re.findall(pattern, text)
+    if matches:
+        return matches[0]
+    else:
+        print("No match found.")
+
+def create_download_url(version_number, platform):
+    return f"https://github.com/pocketbase/pocketbase/releases/download/v{version_number}/pocketbase_{version_number}_{platform}.zip"
+
+def download_file(url):
+    try:
+        urllib.request.urlretrieve(url)
+        print("downloaded!")
+    except Exception as e:
+        print(e)
+        sys.exit(1)
+
+def download_pocketbase():
+    releases_text = fetch_webpage_text("https://github.com/pocketbase/pocketbase/releases/latest")
+    available_versions = extract_versions_from_text(releases_text)
+    available_platforms = [extract_platform_from_text(version) for version in available_versions]
+    selected_platform = select_option(available_platforms)
+    version_number = extract_version_number_from_text(available_versions[0])
+    url = create_download_url(version_number, selected_platform)
+    print(url)
+    # download_file(url)
 
 ####
 
 if __name__ == '__main__':
     createENV()
-    current_os = get_current_os()
-    available_versions = get_available_versions()
-    print("Available versions:")
-    for version in available_versions:
-        print(version)
-    selected_version = input("Enter the version you want to download: ")
-    if selected_version not in available_versions:
-        print("Invalid version")
-        sys.exit(1)
-    download_installer(selected_version, current_os)
-    print("installer_downloaded!")
+    download_pocketbase()
     
