@@ -4,7 +4,7 @@
 	import { Register } from 'flowbite-svelte-blocks';
 	import { Button, Checkbox, Label, Input } from 'flowbite-svelte';
 	import type { ActionData } from './$types';
-	import { projectTitle } from '$lib/strings';
+	import { appTitle } from '$lib/strings';
 
 	export let form: ActionData;
 </script>
@@ -13,7 +13,7 @@
 	<div class="w-2/5">
 		<Register href="/">
 			<svelte:fragment slot="top">
-				<img class="h-10 mr-2" src="/logo.svg" alt={`${projectTitle} Logo`} />
+				<img class="h-10 mr-2" src="/logo.svg" alt={`${appTitle} Logo`} />
 			</svelte:fragment>
 			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
 				<form
