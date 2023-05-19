@@ -89,6 +89,7 @@ def download_file(url):
 
 def download_pocketbase():
     releases_text = fetch_webpage("https://github.com/pocketbase/pocketbase/releases/latest")
+    print(releases_text)
     available_versions = extract_versions_from_text(releases_text)
     print(available_versions)
     available_platforms = [extract_platform_from_text(version) for version in available_versions]
