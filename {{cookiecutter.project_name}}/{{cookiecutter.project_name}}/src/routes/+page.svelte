@@ -53,7 +53,7 @@
 	<header>
 		<Navbar let:hidden let:toggle fluid={false} {navClass} {navDivClass}>
 			<NavBrand href="/">
-				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt="Signroom Logo" />
+				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${projectTitle} Logo`} />
 			</NavBrand>
 			<div class="flex items-center lg:order-2">
 				<Button href="/login" color="dark">Log in</Button>
@@ -114,7 +114,7 @@
 		<PricingHead>
 			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at Signroom we focus on markets where technology, innovation, and capital can unlock
+				>Here at {projectTitle} we focus on markets where technology, innovation, and capital can unlock
 				long-term value and drive economic growth.</svelte:fragment
 			>
 		</PricingHead>
@@ -231,7 +231,7 @@
 		>
 			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at Signroom we focus on markets where technology, innovation, and capital can unlock
+				>Here at {projectTitle} we focus on markets where technology, innovation, and capital can unlock
 				long-term value and drive economic growth.</svelte:fragment
 			>
 		</HeroHeader>
@@ -321,7 +321,7 @@
 			<form class="space-y-8">
 				<div>
 					<Label for="email" class="block mb-2">Your email</Label>
-					<Input id="email" name="email" placeholder="name@signroom.com" required />
+					<Input id="email" name="email" placeholder={`name@${projectTitle}.com`} required />
 				</div>
 				<div>
 					<Label for="subject" class="block mb-2">Subject</Label>
@@ -351,14 +351,14 @@
 			<div class="grid gap-12 lg:grid-cols-6 lg:gap-24">
 				<div class="col-span-2">
 					<FooterBrand
-						href="https://signroom.com"
+						href="/"
 						src="/logo.svg"
 						alt={`${projectTitle} Logo`}
 						name=""
 						aClass="flex mb-6"
 					/>
 					<p class="text-gray-600 dark:text-gray-400">
-						Signroom is an ecosystem built on top of Tailwind CSS including a component library,
+						{projectTitle} is an ecosystem built on top of Tailwind CSS including a component library,
 						block sections, a Figma design system and other resources.
 					</p>
 				</div>
@@ -367,10 +367,10 @@
 						Resources
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink liClass="mb-4" href="https://signroom.com/">Signroom</FooterLink>
+						<FooterLink liClass="mb-4" href="/">{projectTitle}</FooterLink>
 						<FooterLink liClass="mb-4" href="https://tailwindcss.com/">Tailwind CSS</FooterLink>
 						<FooterLink liClass="mb-4" href="https://flowbite-svelte.com/"
-							>Signroom-Svelte</FooterLink
+							>{projectTitle}-Svelte</FooterLink
 						>
 					</FooterLinkGroup>
 				</div>
@@ -409,7 +409,7 @@
 			</div>
 			<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 			<div class="sm:flex sm:items-center sm:justify-between">
-				<FooterCopyright href="/" by="Signroom™" />
+				<FooterCopyright href="/" by={projectTitle} />
 				<div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Facebook} />
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Twitter} />
