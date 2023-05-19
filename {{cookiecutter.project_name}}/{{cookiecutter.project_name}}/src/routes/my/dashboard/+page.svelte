@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { projectTitle } from '$lib/strings';
+	import { appTitle } from '$lib/strings';
 </script>
 
-<h1>{projectTitle} dashboard</h1>
+<h1>{appTitle} dashboard</h1>

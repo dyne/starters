@@ -44,7 +44,7 @@
 		CurrencyDollar,
 		Bolt
 	} from 'svelte-heros-v2';
-	import { projectTitle } from '$lib/strings';
+	import { appTitle } from '$lib/strings';
 	let navClass = 'bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800';
 	let navDivClass = 'flex flex-wrap justify-between items-center mx-auto max-w-screen-xl';
 </script>
@@ -53,7 +53,7 @@
 	<header>
 		<Navbar let:hidden let:toggle fluid={false} {navClass} {navDivClass}>
 			<NavBrand href="/">
-				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${projectTitle} Logo`} />
+				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 			</NavBrand>
 			<div class="flex items-center lg:order-2">
 				<Button href="/login" color="dark">Log in</Button>
@@ -114,7 +114,7 @@
 		<PricingHead>
 			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at {projectTitle} we focus on markets where technology, innovation, and capital can unlock
+				>Here at {appTitle} we focus on markets where technology, innovation, and capital can unlock
 				long-term value and drive economic growth.</svelte:fragment
 			>
 		</PricingHead>
@@ -231,7 +231,7 @@
 		>
 			<svelte:fragment slot="h2">Designed for business teams like yours</svelte:fragment>
 			<svelte:fragment slot="paragraph"
-				>Here at {projectTitle} we focus on markets where technology, innovation, and capital can unlock
+				>Here at {appTitle} we focus on markets where technology, innovation, and capital can unlock
 				long-term value and drive economic growth.</svelte:fragment
 			>
 		</HeroHeader>
@@ -321,7 +321,7 @@
 			<form class="space-y-8">
 				<div>
 					<Label for="email" class="block mb-2">Your email</Label>
-					<Input id="email" name="email" placeholder={`name@${projectTitle}.com`} required />
+					<Input id="email" name="email" placeholder={`name@${appTitle}.com`} required />
 				</div>
 				<div>
 					<Label for="subject" class="block mb-2">Subject</Label>
@@ -353,13 +353,13 @@
 					<FooterBrand
 						href="/"
 						src="/logo.svg"
-						alt={`${projectTitle} Logo`}
+						alt={`${appTitle} Logo`}
 						name=""
 						aClass="flex mb-6"
 					/>
 					<p class="text-gray-600 dark:text-gray-400">
-						{projectTitle} is an ecosystem built on top of Tailwind CSS including a component library,
-						block sections, a Figma design system and other resources.
+						{appTitle} is an ecosystem built on top of Tailwind CSS including a component library, block
+						sections, a Figma design system and other resources.
 					</p>
 				</div>
 				<div>
@@ -367,10 +367,10 @@
 						Resources
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink liClass="mb-4" href="/">{projectTitle}</FooterLink>
+						<FooterLink liClass="mb-4" href="/">{appTitle}</FooterLink>
 						<FooterLink liClass="mb-4" href="https://tailwindcss.com/">Tailwind CSS</FooterLink>
 						<FooterLink liClass="mb-4" href="https://flowbite-svelte.com/"
-							>{projectTitle}-Svelte</FooterLink
+							>{appTitle}-Svelte</FooterLink
 						>
 					</FooterLinkGroup>
 				</div>
@@ -409,7 +409,7 @@
 			</div>
 			<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 			<div class="sm:flex sm:items-center sm:justify-between">
-				<FooterCopyright href="/" by={projectTitle} />
+				<FooterCopyright href="/" by={appTitle} />
 				<div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Facebook} />
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Twitter} />
