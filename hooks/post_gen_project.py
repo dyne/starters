@@ -1,9 +1,7 @@
 import os
 import shutil
 import sys
-import urllib.request
-from html.parser import HTMLParser
-import platform
+import urllib
 import re
 
 ####
@@ -45,14 +43,14 @@ def select_option(options: list[str]) -> str:
 
 ####
 
-def fetch_webpage_text(url: str) -> str:
+def fetch_webpage(url):
     try:
-        response = urllib.request.urlopen(url)
-        return response.read()
-    except Exception as e:
-        print("Failed to retrieve available versions")
-        print(e)
-        sys.exit(1)
+        with urllib.request.urlopen(url) as response:
+            html_content = response.read().decode('utf-8')
+        return html_content
+    except urllib.error.URLError as e:
+        print(f"Error occurred while fetching the webpage: {e}")
+        return None
 
 def extract_versions_from_text(text: str) -> list[str]:
     pattern = r"^\d+\.\d+\.\d+_[a-zA-Z0-9_]+$"
@@ -90,7 +88,7 @@ def download_file(url):
         sys.exit(1)
 
 def download_pocketbase():
-    releases_text = fetch_webpage_text("https://github.com/pocketbase/pocketbase/releases/latest")
+    releases_text = fetch_webpage("https://github.com/pocketbase/pocketbase/releases/latest")
     available_versions = extract_versions_from_text(releases_text)
     available_platforms = [extract_platform_from_text(version) for version in available_versions]
     selected_platform = select_option(available_platforms)
