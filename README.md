@@ -23,13 +23,13 @@ This is the starter for saas products. A fullstack app made of:
 - `admin` – backend made with PocketBase
 - `webapp` – frontend made with SvelteKit
 
-### Installation
+**Installation**
 
 ```
 cookiecutter https://github.com/dyne/starters.git --directory="saas"
 ```
 
-### Features
+**Features**
 
 - `webapp`
   - [ ] Sveltekit framework of choice
