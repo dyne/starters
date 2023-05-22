@@ -9,7 +9,7 @@ def create_env():
     shutil.copyfile(source_file, destination_file)
 
 def build_pocketbase():
-    subprocess.run("cd {{cookiecutter.project_name}}/admin")
+    subprocess.run("cd ./{{cookiecutter.project_name}}/admin")
     subprocess.run(["./setup"])
 
 
