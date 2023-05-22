@@ -175,7 +175,7 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 
 ***
 ## 💼 License
-    {{cookiecutter.project_name}} - {{ccokiecutter.project_description}}
+    {{cookiecutter.project_name}} - {{cookiecutter.project_description}}
     Copyleft 🄯 2023 {{cookiecutter.full_name}} <{{cookiecutter.email}}>
 
     This program is free software: you can redistribute it and/or modify
