@@ -1,4 +1,7 @@
 {
   "project_name": "saasroom",
+  "project_description": "A starter for SaaS applications",
+  "author_name": "",
+  "author_email": "",
   "_copy_without_render": ["*.svelte"]
 }
