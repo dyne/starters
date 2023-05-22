@@ -1,8 +1,8 @@
 {
 	"name": "{{cookiecutter.project_name}} - webapp",
 	"author": {
-		"name": "{{cookiecutter.author_name}}",
-		"email": "{{cookiecutter.author_email}}"
+		"name": "{{cookiecutter.fullname}}",
+		"email": "{{cookiecutter.email}}"
 	},
 	"description": "{{cookiecutter.project_description}}",
 	"version": "0.0.1",

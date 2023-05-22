@@ -1,7 +1,7 @@
 {
   "project_name": "saasroom",
-  "project_description": "A starter for SaaS applications",
-  "author_name": "",
-  "author_email": "",
+  "project_description": "Punchline: Dyne's starter for your SaaS applications",
+  "fullname": "Luther Hacker",
+  "email": "luther@dyne.org",
   "_copy_without_render": ["*.svelte"]
 }
