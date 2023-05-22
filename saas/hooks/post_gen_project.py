@@ -9,7 +9,8 @@ def create_env():
     shutil.copyfile(source_file, destination_file)
 
 def build_pocketbase():
-    subprocess.run(["./admin/setup"])
+    subprocess.run("cd {{cookiecutter.project_name}}/admin")
+    subprocess.run(["./setup"])
 
 
 if __name__ == '__main__':
