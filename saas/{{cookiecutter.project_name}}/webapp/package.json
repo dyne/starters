@@ -1,5 +1,10 @@
 {
-	"name": "{{cookiecutter.project_name}}",
+	"name": "{{cookiecutter.project_name}} - webapp",
+	"author": {
+		"name": "{{cookiecutter.author_name}}",
+		"email": "{{cookiecutter.author_email}}"
+	},
+	"description": "{{cookiecutter.project_description}}",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -12,7 +17,7 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"types": "npx -y pocketbase-typegen --db ../backendroom/pb_data/data.db --out src/lib/pocketbase-types.ts"
+		"types": "npx -y pocketbase-typegen --db ../admin/pb_data/data.db --out src/lib/pocketbase-types.ts"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.33.0",
