@@ -1,23 +1,17 @@
 <div align="center">
 
-# SAASroom
+# {{cookiecutter.project_name}}
 
-### Dyne.org's opinionated service starter
+### {{cookiecutter.project_description}}
 
 </div>
-
-<p align="center">
-  <a href="https://dyne.org">
-    <img src="https://files.dyne.org/software_by_dyne.png" width="170">
-  </a>
-</p>
 
 
 ---
 <br><br>
  
 
-## SAASroom Features
+## {{cookiecutter.project_name}} Features
 
 - [ ] Sveltekit
 - [ ] Forms handled by https://superforms.vercel.app
@@ -41,7 +35,7 @@
 - [ ] Error monitoring with Sentry
 - [ ] Data migrations and seeds
 
-# [LIVE DEMO](https://https://interfacer-gui-staging.dyne.org/)
+# [LIVE DEMO](https://yourservice/)
 
 <br>
 
@@ -65,7 +59,7 @@
 
 ***
 ## 💾 Install
-```pip install / yard add SAASroom```
+```pip install / yard add {{cookiecutter.project_name}}```
 
 
 **[🔝 back to top](#toc)**
@@ -73,7 +67,7 @@
 ***
 ## 🎮 Quick start
 
-To start using SAASroom run the following command in the root folder
+To start using {{cookiecutter.project_name}} run the following command in the root folder
 
 ```bash
 docker compose up
@@ -88,9 +82,9 @@ docker compose up
 
 **[🌱 Ecosystem](https://github.com/dyne/ecosystem)** - Plugins, resources, and more.
 
-**[🚩 Issues](../../issues)** - Bugs end errors you encounter using SAASroom.
+**[🚩 Issues](../../issues)** - Bugs end errors you encounter using {{cookiecutter.project_name}}.
 
-**[💬 Discussions](../../discussions)** - Get help, ask questions, request features, and discuss SAASroom.
+**[💬 Discussions](../../discussions)** - Get help, ask questions, request features, and discuss {{cookiecutter.project_name}}.
 
 **[[] Matrix](https://socials.dyne.org/matrix)** - Hanging out with the community.
 
@@ -98,7 +92,7 @@ docker compose up
 
 **[🪁 Telegram](https://socials.dyne.org/telegram)** - Hanging out with the community.
 
-**[📖 Example](https://github.com/SAASroom/example)** - An example repository that uses SAASroom.
+**[📖 Example](https://github.com/{{cookiecutter.project_name}}/example)** - An example repository that uses {{cookiecutter.project_name}}.
 
 **[🔝 back to top](#toc)**
 
@@ -160,9 +154,7 @@ Retrieves the actual value of the token type for the specified owner
 
 Copyleft 🄯 2023 by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
 
-Designed, written and maintained by Puria Nafisi Azizi.
-
-Special thanks to Mr. W. White for his special contributions.
+Designed, written and maintained by {{cookiecutter.full_name}}
 
 **[🔝 back to top](#toc)**
 
@@ -183,8 +175,8 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 
 ***
 ## 💼 License
-    SAASroom - Dyne.org's opinionated service starter
-    Copyleft 🄯 2023 Dyne.org foundation, Amsterdam
+    {{cookiecutter.project_name}} - {{ccokiecutter.project_description}}
+    Copyleft 🄯 2023 {{cookiecutter.full_name}} <{{cookiecutter.email}}>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
