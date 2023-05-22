@@ -8,7 +8,7 @@ import re
 
 def create_env():
     # Get the base directory of the generated project
-    base_dir = os.path.join(os.getcwd(), "{{cookiecutter.project_name}}")
+    base_dir = os.path.join(os.getcwd(), "webapp")
 
     # Specify the source file path
     source_file = os.path.join(base_dir, '.env.example')
