@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userQuestions } from '$lib/strings';
+	import { userQuestions } from '$lib/auth/userQuestions';
 	import { Input, Label } from 'flowbite-svelte';
 </script>
 
