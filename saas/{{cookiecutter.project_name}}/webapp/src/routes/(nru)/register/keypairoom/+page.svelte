@@ -3,9 +3,9 @@
 	import { pb } from '$lib/pocketbase';
 	import type { ActionData } from './$types';
 	import { A, Button, Hr, Input, Label, P } from 'flowbite-svelte';
+	import UserQuestions from '$lib/components/userQuestions.svelte';
 
 	export let form: ActionData;
-	export let data;
 </script>
 
 <form
@@ -37,12 +37,7 @@
 		</P>
 	</div>
 
-	{#each Object.entries(data.questions) as [key, question]}
-		<Label class="space-y-2">
-			<span>{question}</span>
-			<Input type="text" name={key} />
-		</Label>
-	{/each}
+	<UserQuestions />
 
 	<Hr />
 
