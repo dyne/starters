@@ -1,0 +1,3 @@
+[submodule "saas/{{cookiecutter.project_name}}/webapp/zenflows-crypto"]
+	path = saas/{{cookiecutter.project_name}}/webapp/zenflows-crypto
+	url = https://github.com/interfacerproject/zenflows-crypto
