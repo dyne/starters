@@ -6,10 +6,9 @@
 
 </div>
 
-
 ---
+
 <br><br>
- 
 
 ## {{cookiecutter.project_name}} Features
 
@@ -57,25 +56,31 @@
 
 </div>
 
-***
-## 💾 Install
-```pip install / yard add {{cookiecutter.project_name}}```
+---
 
+## 💾 Install
+
+```
+pip install / yard add {{cookiecutter.project_name}}
+```
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🎮 Quick start
 
 To start using {{cookiecutter.project_name}} run the following command in the root folder
 
 ```bash
-docker compose up
+git submodule update --init
+pnpm install
 ```
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🚑 Community & support
 
 **[📝 Documentation](#toc)** - Getting started and more.
@@ -96,15 +101,16 @@ docker compose up
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🐋 Docker
 
 Please refer to [DOCKER PACKAGES](../../packages)
 
-
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🐝 API
 
 Available endpoints
@@ -115,42 +121,43 @@ Execute a transaction with some amount
 
 **Parameters**
 
-|          Name | Required |  Type   | Description       | 
-| -------------:|:--------:|:-------:| ------------------|
-|       `token` | required | string  | Type of token. Accepted values `idea` or `strength`  |
-|       `amount`| required | number  | Transaction's token amount |
-|       `owner` | required | ULID    | The ULID of the Agent's owner |
- 
+|     Name | Required |  Type  | Description                                         |
+| -------: | :------: | :----: | --------------------------------------------------- |
+|  `token` | required | string | Type of token. Accepted values `idea` or `strength` |
+| `amount` | required | number | Transaction's token amount                          |
+|  `owner` | required |  ULID  | The ULID of the Agent's owner                       |
+
 ### GET /token/${request.token}/${request.owner}
 
 Retrieves the actual value of the token type for the specified owner
 
-
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🔧 Configuration
 
 **[🔝 back to top](#toc)**
 
-***
+---
 
 ## 📋 Testing
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 🐛 Troubleshooting & debugging
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 😍 Acknowledgements
 
 <a href="https://dyne.org">
   <img src="https://files.dyne.org/software_by_dyne.png" width="222">
 </a>
-
 
 Copyleft 🄯 2023 by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
 
@@ -158,7 +165,8 @@ Designed, written and maintained by {{cookiecutter.full_name}}
 
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 👤 Contributing
 
 Please first take a look at the [Dyne.org - Contributor License Agreement](CONTRIBUTING.md) then
@@ -170,11 +178,12 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 5.  Create a new Pull Request `gh pr create -f`
 6.  🙏 Thank you
 
-
 **[🔝 back to top](#toc)**
 
-***
+---
+
 ## 💼 License
+
     {{cookiecutter.project_name}} - {{cookiecutter.project_description}}
     Copyleft 🄯 2023 {{cookiecutter.full_name}} <{{cookiecutter.email}}>
 
