@@ -90,5 +90,6 @@
 				{seed}
 			</span>
 		</Alert>
+		<Button href="/my/dashboard">Go to Dashboard</Button>
 	{/if}
 </div>
