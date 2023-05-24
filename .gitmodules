@@ -1,0 +1,3 @@
+[submodule "cliroom"]
+	path = cliroom
+	url = https://github.com/dyne/cliroom
