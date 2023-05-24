@@ -1,6 +1,7 @@
 import type { UserAnswers } from './userQuestions';
 import { zencode_exec } from 'zenroom';
 import keypairoomClient from '../../../zenflows-crypto/src/keypairoomClient-8-9-10-11-12.zen?raw';
+import keypairoomClientRecreateKeys from '../../../zenflows-crypto/src/keypairoomClientRecreateKeys.zen?raw';
 import { pb } from '$lib/pocketbase';
 
 export interface Keypair {
@@ -19,12 +20,17 @@ export interface Keypair {
 	ethereum_address: string;
 }
 
+async function zencodeExec<T>(contract: string, data: Record<string, unknown>): Promise<T> {
+	const { result } = await zencode_exec(contract, { data: JSON.stringify(data) });
+	return JSON.parse(result);
+}
+
 export async function generateKeypair(
 	email: string,
 	HMAC: string,
 	answers: UserAnswers
 ): Promise<Keypair> {
-	const zenData = {
+	return await zencodeExec<Keypair>(keypairoomClient, {
 		userChallenges: {
 			whereParentsMet: answers.question1,
 			nameFirstPet: answers.question2,
@@ -34,9 +40,14 @@ export async function generateKeypair(
 		},
 		username: email,
 		'seedServerSideShard.HMAC': HMAC
-	};
-	const { result } = await zencode_exec(keypairoomClient, { data: JSON.stringify(zenData) });
-	return JSON.parse(result);
+	});
+}
+
+export async function regenerateKeypair(seed: string, HMAC: string): Promise<Keypair> {
+	return await zencodeExec<Keypair>(keypairoomClientRecreateKeys, {
+		seed,
+		'seedServerSideShard.HMAC': HMAC
+	});
 }
 
 export async function getHMAC(email: string) {
