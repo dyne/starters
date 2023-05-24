@@ -3,6 +3,7 @@ module pb
 go 1.20
 
 require (
+	github.com/dyne/Zenroom/bindings/golang/zenroom v0.0.0-20230523163851-80a67a9eb26a
 	github.com/labstack/echo/v5 v5.0.0-20220201181537-ed2888cfa198
 	github.com/pocketbase/dbx v1.10.0
 	github.com/pocketbase/pocketbase v0.15.1

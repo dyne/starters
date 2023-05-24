@@ -1,14 +1,19 @@
 package main
 
 import (
+	"net/http"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+	"encoding/json"
 
+	"pb/config"
+	"pb/zencode"
 	"pb/hooks"
 	_ "pb/migrations"
 
+	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -17,6 +22,10 @@ import (
 )
 
 func main() {
+	conf, err := config.NewEnv()
+	if err != nil {
+		panic(err)
+	}
 	app := pocketbase.New()
 	var publicDirFlag string
 
@@ -32,6 +41,29 @@ func main() {
 		// serve static files
 		spa_mode := true // missing routes serve index.html
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS(publicDirFlag), spa_mode))
+
+		e.Router.AddRoute(echo.Route{
+			Method: http.MethodPost,
+			Path:   "/keypairoom-server",
+			Handler: func(c echo.Context) error {
+				var body map[string]map[string]interface{}
+
+				err := json.NewDecoder(c.Request().Body).Decode(&body)
+				if err != nil {
+					return err
+
+				}
+				hmac, err := zencode.KeypairoomServer(*conf, body["userData"])
+				if err != nil {
+					return err
+				}
+
+				return c.JSON(http.StatusOK, map[string]string{"hmac": hmac})
+			},
+			Middlewares: []echo.MiddlewareFunc{
+				//apis.ActivityLogger(app),
+			},
+		})
 		return nil
 	})
 	hooks.Register(app)
