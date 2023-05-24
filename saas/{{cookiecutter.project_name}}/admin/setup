@@ -11,11 +11,6 @@ if [ ! -x "pb" ]; then
   go build
 fi
 
-if [ ! -x "$(which tygo)" ]; then
-  echo "go install tygo"
-  go install github.com/gzuidhof/tygo@latest
-fi
-
 if [ ! -x "$(which modd)" ]; then
   echo "go install modd"
   go install github.com/cortesi/modd/cmd/modd@latest

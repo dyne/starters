@@ -15,6 +15,15 @@ Please make sure to have these installed:
 
 # The starters
 
+## cliroom
+
+🛠️ CLI builder that runs Zencode smart contracts
+
+```bash
+cruft create --directory cliroom https://github.com/dyne/starters
+```
+
+
 ## saas
 
 This is the starter for saas products. A fullstack app made of:
@@ -25,7 +34,7 @@ This is the starter for saas products. A fullstack app made of:
 **Installation**
 
 ```
-cruft create https://github.com/dyne/starters.git --directory sass
+cruft create --directory saas https://github.com/dyne/starters
 ```
 
 **Update your project with the starter upgrades**
