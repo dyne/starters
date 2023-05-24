@@ -25,7 +25,7 @@ This is the starter for saas products. A fullstack app made of:
 **Installation**
 
 ```
-cruft create https://github.com/dyne/starters.git --directory sass
+cruft create --directory saas https://github.com/dyne/starters
 ```
 
 **Update your project with the starter upgrades**
