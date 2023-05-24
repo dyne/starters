@@ -6,18 +6,30 @@
 	import UserQuestions from '$lib/components/userQuestions.svelte';
 
 	export let form: ActionData;
+
+	const submit = async (e: Event) => {
+		console.log(e);
+		// const formData = await request.formData();
+		// 	const email = formData.get('email') as string;
+		// 	const HMAC = crypto.createHmac('sha256', email).digest('base64'); // <- here we should get HMAC from a server request?
+		// 	const keypair = await generateKeypair(email, HMAC, {
+		// 		question1: formData.get(qk.question1) as string,
+		// 		question2: formData.get(qk.question2) as string,
+		// 		question3: formData.get(qk.question3) as string,
+		// 		question4: formData.get(qk.question4) as string,
+		// 		question5: formData.get(qk.question5) as string
+		// 	});
+		// 	const { seed } = keypair;
+		// 	log('keypair', keypair);
+		// 	return { seed };
+	};
 </script>
 
 {#if !form?.seed}
 	<form
 		method="POST"
 		class="flex flex-col space-y-6 bg-white mx-auto max-w-md p-6 rounded-md shadow-md dark:bg-gray-800 dark:text-white"
-		use:enhance={() => {
-			return async ({ result }) => {
-				pb.authStore.loadFromCookie(document.cookie);
-				await applyAction(result);
-			};
-		}}
+		on:submit={submit}
 	>
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Generate your keys</h3>
 
