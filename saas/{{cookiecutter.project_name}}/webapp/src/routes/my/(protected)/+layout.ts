@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { getKeypairFromLocalStorage } from '$lib/auth/generateKeypair';
+import { getKeypairFromLocalStorage } from '$lib/auth/keypair';
 import { redirect } from '@sveltejs/kit';
 
 export async function load() {

@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
-import { getKeypairFromLocalStorage } from '$lib/auth/generateKeypair';
+import { getKeypairFromLocalStorage } from '$lib/auth/keypair';
 
 export async function load() {
 	if (browser) {

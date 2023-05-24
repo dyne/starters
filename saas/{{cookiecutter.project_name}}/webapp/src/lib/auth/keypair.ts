@@ -4,6 +4,8 @@ import keypairoomClient from '../../../zenflows-crypto/src/keypairoomClient-8-9-
 import keypairoomClientRecreateKeys from '../../../zenflows-crypto/src/keypairoomClientRecreateKeys.zen?raw';
 import { pb } from '$lib/pocketbase';
 
+//
+
 export interface Keypair {
 	seed: string;
 	keyring: {
@@ -19,6 +21,8 @@ export interface Keypair {
 	reflow_public_key: string;
 	ethereum_address: string;
 }
+
+//
 
 async function zencodeExec<T>(contract: string, data: Record<string, unknown>): Promise<T> {
 	const { result } = await zencode_exec(contract, { data: JSON.stringify(data) });
@@ -50,17 +54,22 @@ export async function regenerateKeypair(seed: string, HMAC: string): Promise<Key
 	});
 }
 
-export async function getHMAC(email: string) {
-	const hmac = await pb.send('/keypairoom-server', {
+//
+
+export async function getHMAC(email: string): Promise<string> {
+	// const response = await pb.send('/keypairoom-server', {
+	const response = await fetch('https://test.signroom.io/keypairoom-server', {
 		body: JSON.stringify({ userData: { email } }),
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		}
 	});
-	console.log('hmac', hmac);
-	return hmac;
+	// return response.hmac
+	return (await response.json()).hmac;
 }
+
+//
 
 export const KEYPAIR_STORAGE_KEY = 'keypair';
 
