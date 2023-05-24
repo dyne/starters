@@ -3,19 +3,22 @@ import { generateKeypair } from '$lib/auth/generateKeypair';
 import { userQuestionsKeys as qk } from '$lib/auth/userQuestions';
 import crypto from 'node:crypto';
 import { Collections } from '$lib/pocketbase-types';
+import { log } from '$lib/utils/devLog';
 
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
 		const HMAC = crypto.createHmac('sha256', email).digest('base64'); // <- here we should get HMAC from a server request?
-		const { seed } = await generateKeypair(email, HMAC, {
+		const keypair = await generateKeypair(email, HMAC, {
 			question1: formData.get(qk.question1) as string,
 			question2: formData.get(qk.question2) as string,
 			question3: formData.get(qk.question3) as string,
 			question4: formData.get(qk.question4) as string,
 			question5: formData.get(qk.question5) as string
 		});
+		const { seed } = keypair;
+		log('keypair', keypair);
 
 		const u = locals.pb.collection(Collections.Users);
 		const data = {
