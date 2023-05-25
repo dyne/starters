@@ -9,63 +9,50 @@
 	export let form: ActionData;
 </script>
 
-<div class="grid h-screen place-items-center">
-	<div class="w-2/5">
-		<Register href="/">
-			<svelte:fragment slot="top">
-				<img class="h-10 mr-2" src="/logo.svg" alt={`${appTitle} Logo`} />
-			</svelte:fragment>
-			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-				<form
-					method="POST"
-					class="flex flex-col space-y-6"
-					use:enhance={() => {
-						return async ({ result }) => {
-							pb.authStore.loadFromCookie(document.cookie);
-							await applyAction(result);
-						};
-					}}
-				>
-					<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Create and account</h3>
-					<Label class="space-y-2">
-						<span>Your email</span>
-						<Input type="email" name="email" placeholder="name@company.com" required />
-					</Label>
-					<Label class="space-y-2">
-						<span>Your password</span>
-						<Input type="password" name="password" placeholder="•••••" required />
-					</Label>
+<form
+	method="POST"
+	class="flex flex-col space-y-6"
+	use:enhance={() => {
+		return async ({ result }) => {
+			pb.authStore.loadFromCookie(document.cookie);
+			await applyAction(result);
+		};
+	}}
+>
+	<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Create and account</h3>
+	<Label class="space-y-2">
+		<span>Your email</span>
+		<Input type="email" name="email" placeholder="name@company.com" required />
+	</Label>
+	<Label class="space-y-2">
+		<span>Your password</span>
+		<Input type="password" name="password" placeholder="•••••" required />
+	</Label>
 
-					<Label class="space-y-2">
-						<span>Confirm password</span>
-						<Input type="password" name="passwordConfirm" placeholder="•••••" required />
-					</Label>
-					<div class="flex items-start">
-						<Checkbox
-							>I accept the <a
-								class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-								href="/"
-							>
-								Terms and Conditions</a
-							></Checkbox
-						>
-					</div>
-
-					<Button type="submit" class="w-full1">Create an account</Button>
-
-					<p class="text-sm font-light text-gray-500 da rk:text-gray-400">
-						Already have an account?
-						<a
-							href="/login"
-							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-							>Login here</a
-						>
-					</p>
-					{#if form?.error}
-						<pre class="bg-red-100">{JSON.stringify(form, null, 2)}</pre>
-					{/if}
-				</form>
-			</div>
-		</Register>
+	<Label class="space-y-2">
+		<span>Confirm password</span>
+		<Input type="password" name="passwordConfirm" placeholder="•••••" required />
+	</Label>
+	<div class="flex items-start">
+		<Checkbox
+			>I accept the <a
+				class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+				href="/"
+			>
+				Terms and Conditions</a
+			></Checkbox
+		>
 	</div>
-</div>
+
+	<Button type="submit" class="w-full1">Create an account</Button>
+
+	<p class="text-sm font-light text-gray-500 da rk:text-gray-400">
+		Already have an account?
+		<a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+			>Login here</a
+		>
+	</p>
+	{#if form?.error}
+		<pre class="bg-red-100">{JSON.stringify(form, null, 2)}</pre>
+	{/if}
+</form>

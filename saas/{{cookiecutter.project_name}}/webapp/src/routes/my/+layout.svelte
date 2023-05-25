@@ -19,8 +19,8 @@
 	$: activeUrl = $page.url.pathname;
 </script>
 
-<Section name="tableheader" sectionClass="bg-gray-50 dark:bg-gray-900 flex h-full py-4">
-	<Sidebar>
+<div class="flex">
+	<Sidebar class="shrink-0">
 		<SidebarWrapper class="bg-white">
 			<SidebarGroup>
 				<SidebarItem label="Overview">
@@ -350,4 +350,7 @@
 			</SidebarGroup>
 		</SidebarWrapper>
 	</Sidebar>
-</Section>
+	<div class="bg-slate-100 grow">
+		<slot />
+	</div>
+</div>
