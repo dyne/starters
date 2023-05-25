@@ -71,16 +71,16 @@ export async function getHMAC(email: string): Promise<string> {
 
 //
 
-export const KEYPAIR_STORAGE_KEY = 'keypair';
+export const KEYRING_STORAGE_KEY = 'keypair';
 
-export function saveKeypairToLocalStorage(keypair: Keypair) {
-	localStorage.setItem(KEYPAIR_STORAGE_KEY, JSON.stringify(keypair));
+export function saveKeyringToLocalStorage(keyring: Keyring) {
+	localStorage.setItem(KEYRING_STORAGE_KEY, JSON.stringify(keyring));
 }
 
-export function getKeypairFromLocalStorage(): Keypair | null {
-	const keypair = localStorage.getItem(KEYPAIR_STORAGE_KEY);
-	if (keypair) {
-		return JSON.parse(keypair);
+export function getKeyringFromLocalStorage(): Keyring | null {
+	const keyring = localStorage.getItem(KEYRING_STORAGE_KEY);
+	if (keyring) {
+		return JSON.parse(keyring);
 	}
 	return null;
 }

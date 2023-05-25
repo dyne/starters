@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { getHMAC, regenerateKeypair, saveKeypairToLocalStorage } from '$lib/auth/keypair';
+	import { getHMAC, regenerateKeypair, saveKeyringToLocalStorage } from '$lib/auth/keypair';
 	import { log } from 'debug';
 	import { A, Button, Heading, P, Textarea } from 'flowbite-svelte';
 
@@ -13,7 +13,7 @@
 			const seed = formData.get('seed') as string;
 			const hmac = await getHMAC(data.user?.email);
 			const keypair = await regenerateKeypair(seed, hmac);
-			saveKeypairToLocalStorage(keypair);
+			saveKeyringToLocalStorage(keypair.keyring);
 			success = true;
 		} catch (e) {
 			log(e, JSON.stringify(e));

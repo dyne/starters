@@ -3,7 +3,7 @@
 	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import UserQuestions from '$lib/components/userQuestions.svelte';
 	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
-	import { generateKeypair, getHMAC, saveKeypairToLocalStorage } from '$lib/auth/keypair';
+	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
 	import { log } from '$lib/utils/devLog';
 
 	export let data;
@@ -23,7 +23,7 @@
 			};
 			const HMAC = await getHMAC(userEmail);
 			const keypair = await generateKeypair(userEmail, HMAC, userAnswers);
-			saveKeypairToLocalStorage(keypair);
+			saveKeyringToLocalStorage(keypair.keyring);
 			seed = keypair.seed;
 		} catch (e) {
 			log(e, JSON.stringify(e));
