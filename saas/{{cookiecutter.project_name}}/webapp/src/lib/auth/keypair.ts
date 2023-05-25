@@ -71,7 +71,7 @@ export async function getHMAC(email: string): Promise<string> {
 
 //
 
-export const KEYRING_STORAGE_KEY = 'keypair';
+export const KEYRING_STORAGE_KEY = 'keyring';
 
 export function saveKeyringToLocalStorage(keyring: Keyring) {
 	localStorage.setItem(KEYRING_STORAGE_KEY, JSON.stringify(keyring));
