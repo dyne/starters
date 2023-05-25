@@ -20,6 +20,6 @@ export const actions: Actions = {
 			return fail(400, { error: true, message: e.data.message, data: e.data.data });
 		}
 
-		throw redirect(303, '/my/dashboard');
+		throw redirect(303, '/my/keypairoom');
 	}
 };
