@@ -57,16 +57,14 @@ export async function regenerateKeypair(seed: string, HMAC: string): Promise<Key
 //
 
 export async function getHMAC(email: string): Promise<string> {
-	// const response = await pb.send('/keypairoom-server', {
-	const response = await fetch('https://test.signroom.io/keypairoom-server', {
+	const response = await pb.send('/api/keypairoom-server', {
 		body: JSON.stringify({ userData: { email } }),
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		}
 	});
-	// return response.hmac
-	return (await response.json()).hmac;
+	return response.hmac;
 }
 
 //

@@ -26,12 +26,13 @@ services:
       - "8090:8090"
     environment:
       - "RESTROOM_URL=http://zvmlet:3000"
+      - "SALT=bWltbW8K"
     env_file:
       - pb.env
     volumes:
       - type: bind
         source: ./pb_data
-        target: /app/pb_dtaa
+        target: /app/pb_data
   zvmlet:
     container_name: zvmlet
     image: ghcr.io/interfacerproject/zenflows-crypto:latest
