@@ -1,5 +1,11 @@
 const FEATURE_FLAG_COLLECTION_NAME = "features";
 
+/**
+    type Feature = {
+        name: string;
+        envVariables: Record<string, unknown>;
+    }
+*/
 const features = [
     {
         name: "keypairoom",
