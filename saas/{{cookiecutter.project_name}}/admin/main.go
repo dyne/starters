@@ -1,17 +1,17 @@
 package main
 
 import (
-	"net/http"
+	"encoding/json"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-	"encoding/json"
 
 	"pb/config"
-	"pb/zencode"
 	"pb/hooks"
 	_ "pb/migrations"
+	"pb/zencode"
 
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
@@ -44,7 +44,7 @@ func main() {
 
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodPost,
-			Path:   "/keypairoom-server",
+			Path:   "/api/keypairoom-server",
 			Handler: func(c echo.Context) error {
 				var body map[string]map[string]interface{}
 

@@ -116,7 +116,7 @@ Then print the 'bitcoin public key' as 'base58'
 const pb = new PocketBase('http://127.0.0.1:8090');
 const email = "mimmo@sito.io"
 
-const hmac = await pb.send("/keypairoom-server", {
+const hmac = await pb.send("/api/keypairoom-server", {
     body: JSON.stringify({ "userData": {"email": email}}), method: "POST", headers: {
       "Content-Type": "application/json",}});
 console.log(hmac)

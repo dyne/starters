@@ -18,11 +18,14 @@ package config
 
 import (
 	"errors"
+	"fmt"
+	"net/url"
 	"os"
 )
 
 type Config struct {
-	Salt string
+	Salt        string
+	RestroomURL *url.URL
 }
 
 // NewEnv() fetches configuration options from the environment.  If
@@ -36,6 +39,41 @@ func NewEnv() (*Config, error) {
 		return nil, errors.New(`"SALT" must be provided`)
 	}
 	c.Salt = s
+
+	u, err := fetchURL("RESTROOM_URL")
+	if err != nil {
+		return nil, err
+	}
+	c.RestroomURL = u
 	return c, nil
 }
 
+func fetchURL(env string) (*url.URL, error) {
+	s, ok := os.LookupEnv(env)
+	if !ok {
+		return nil, fmt.Errorf("%q must be provided", env)
+	}
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return nil, fmt.Errorf("%q is malformed: %w", env, err)
+	}
+
+	// not a uri, possibly a url
+	if u.Scheme == "" || u.Host == "" {
+		return nil, fmt.Errorf("%q is malformed: not a url", env)
+	}
+
+	if u.Scheme != "http" && u.Scheme != "https" {
+		return nil, fmt.Errorf("%q is malformed: invalid scheme; must be http(s)", env)
+	}
+
+	// normalize it: take only what we need
+	u = &url.URL{
+		Scheme: u.Scheme,
+		Host:   u.Host,
+		Path:   "/",
+	}
+
+	return u, nil
+}
