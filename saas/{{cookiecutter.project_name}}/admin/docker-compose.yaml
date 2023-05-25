@@ -31,6 +31,12 @@ services:
       - pb.env
     volumes:
       - type: bind
+        source: ./pb_public
+        target: /app/pb_public
+      - type: bind
+        source: ./pb_migrations
+        target: /app/pb_migrations
+      - type: bind
         source: ./pb_data
         target: /app/pb_data
   zvmlet:

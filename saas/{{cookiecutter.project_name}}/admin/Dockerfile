@@ -44,4 +44,4 @@ COPY --from=builder /app/pb .
 EXPOSE 8090
 
 ENTRYPOINT ["./pb"]
-CMD ["serve", "--http=0.0.0.0:8090"]
+CMD ["serve", "--http=0.0.0.0:8090", "--publicDir=/app/pb_public"]
