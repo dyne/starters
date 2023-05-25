@@ -6,15 +6,17 @@ import { pb } from '$lib/pocketbase';
 
 //
 
+export interface Keyring {
+	eddsa: string;
+	ethereum: string;
+	reflow: string;
+	bitcoin: string;
+	ecdh: string;
+}
+
 export interface Keypair {
 	seed: string;
-	keyring: {
-		eddsa: string;
-		ethereum: string;
-		reflow: string;
-		bitcoin: string;
-		ecdh: string;
-	};
+	keyring: Keyring;
 	ecdh_public_key: string;
 	bitcoin_public_key: string;
 	eddsa_public_key: string;
