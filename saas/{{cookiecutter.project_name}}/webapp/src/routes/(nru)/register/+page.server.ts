@@ -2,14 +2,15 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { formatUnknownException } from '$lib/errorHandling';
 import { log } from '$lib/utils/devLog';
+import type { formKeys } from './+page.svelte';
+import type { ValueOf } from '$lib/utils/types';
 
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
-		const data = Object.fromEntries(await request.formData()) as {
-			email: string;
-			password: string;
-			passwordConfirm: string;
-		};
+		const data = Object.fromEntries(await request.formData()) as Record<
+			ValueOf<typeof formKeys>,
+			string
+		>;
 
 		const u = locals.pb.collection('users');
 
