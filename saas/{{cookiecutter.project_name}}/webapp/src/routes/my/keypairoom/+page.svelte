@@ -5,6 +5,10 @@
 	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
 	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
 	import { log } from '$lib/utils/devLog';
+	import {
+		getPublicKeysFromKeypair,
+		updateUserPublicKeys
+	} from '$lib/auth/updateUserPublicKeys.js';
 
 	export let data;
 
@@ -21,10 +25,15 @@
 				question4: formData.get(qk.question4) as string,
 				question5: formData.get(qk.question5) as string
 			};
+
 			const HMAC = await getHMAC(userEmail);
 			const keypair = await generateKeypair(userEmail, HMAC, userAnswers);
+
 			saveKeyringToLocalStorage(keypair.keyring);
 			seed = keypair.seed;
+
+			const publicKeys = getPublicKeysFromKeypair(keypair);
+			await updateUserPublicKeys(data.user?.id!, publicKeys);
 		} catch (e) {
 			log(e, JSON.stringify(e));
 			cancel();
