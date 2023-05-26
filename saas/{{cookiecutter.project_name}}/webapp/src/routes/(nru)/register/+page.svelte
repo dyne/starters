@@ -2,7 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { pb } from '$lib/pocketbase';
 	import { Register } from 'flowbite-svelte-blocks';
-	import { Button, Checkbox, Label, Input } from 'flowbite-svelte';
+	import { Button, Checkbox, Label, Input, Alert } from 'flowbite-svelte';
 	import type { ActionData } from './$types';
 	import { appTitle } from '$lib/strings';
 
@@ -53,6 +53,8 @@
 		>
 	</p>
 	{#if form?.error}
-		<pre class="bg-red-100">{JSON.stringify(form, null, 2)}</pre>
+		<Alert dismissable={false} accent={false} color="red">
+			{form.error}
+		</Alert>
 	{/if}
 </form>
