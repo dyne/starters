@@ -1,4 +1,4 @@
-type ValueOf<T> = T[keyof T];
+import type { ValueOf } from '$lib/utils/types';
 
 export const userQuestionsKeys = {
 	question1: 'question1',
