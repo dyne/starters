@@ -1,11 +1,13 @@
 #!/bin/env bash
 
-set -exo pipefail
+set -eo pipefail
 
-cd ../{{cookiecutter.project_name}}/admin/pb_data
+# cd ../{{cookiecutter.project_name}}/admin/pb_data
+# VALUE=$(sqlite3 data.db 'select value from _params where key like "settings";' | sed -En 's/Acme/{{cookiecutter.project_name}}/p')
+# sqlite3 data.db "update _params set value = '${VALUE}' where key like 'settings'"
 
-VALUE=$(sqlite3 data.db 'select value from _params where key like "settings";' | sed -En 's/Acme/{{cookiecutter.project_name}}/p')
+echo 🎉 Everything is done please run in your console
 
-echo $VALUE
+echo
 
-sqlite3 data.db "update _params set value = '${VALUE}' where key like 'settings'"
+echo docker compose up
