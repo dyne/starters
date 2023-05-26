@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"pb/config"
 	"pb/zencode"
-	"time"
 	"strconv"
+	"time"
 )
 
 const clientTimeout = 10 * time.Second
@@ -33,16 +33,17 @@ var transport = &http.Transport{
 
 type DidAgent struct {
 	BitcoinPublicKey string
-	EcdhPublicKey string
-	EddsaPublicKey string
-	EthereumAddress string
-	ReflowPublicKey string
+	EcdhPublicKey    string
+	EddsaPublicKey   string
+	EthereumAddress  string
+	ReflowPublicKey  string
 }
 
 type DidResult struct {
-	Created bool `json:"created"`
-	Did map[string]interface{} `json:"did"`
+	Created bool                   `json:"created"`
+	Did     map[string]interface{} `json:"did"`
 }
+
 // from https://pkg.go.dev/net/http#pkg-overview
 // Clients and Transports are safe for concurrent use by multiple goroutines
 // and for efficiency should only be created once and re-used.
@@ -99,42 +100,41 @@ func GetDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 	var body map[string]interface{}
 	err = json.Unmarshal(bytesBody, &body)
 
-	result := DidResult {
+	result := DidResult{
 		Created: false,
-		Did: body,
+		Did:     body,
 	}
 
 	return &result, nil
 }
 
 func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
-	didRequest := map[string]interface{} {
-		"proof": map[string]interface{} {
-			"type": "EcdsaSecp256k1Signature2019",
+	didRequest := map[string]interface{}{
+		"proof": map[string]interface{}{
+			"type":         "EcdsaSecp256k1Signature2019",
 			"proofPurpose": "assertionMethod",
 		},
-		"@context": []interface{} {
+		"@context": []interface{}{
 			"https://www.w3.org/ns/did/v1",
 			"https://w3id.org/security/suites/ed25519-2018/v1",
 			"https://w3id.org/security/suites/secp256k1-2019/v1",
 			"https://w3id.org/security/suites/secp256k1-2020/v1",
 			"https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json",
-			map[string]interface{} {
+			map[string]interface{}{
 				"description": "https://schema.org/description",
-				"identifier": "https://schema.org/identifier",
+				"identifier":  "https://schema.org/identifier",
 			},
 		},
-		"did_spec": conf.DidSpec,
-		"signer_did_spec": conf.DidSignerSpec,
-		"identity": conf.DidIdentity,
+		"did_spec":           conf.DidSpec,
+		"signer_did_spec":    conf.DidSignerSpec,
+		"identity":           conf.DidIdentity,
 		"bitcoin_public_key": agent.BitcoinPublicKey,
-		"ecdh_public_key": agent.EcdhPublicKey,
-		"eddsa_public_key": agent.EddsaPublicKey,
-		"ethereum_address": agent.EthereumAddress,
-		"reflow_public_key": agent.ReflowPublicKey,
-		"timestamp": strconv.FormatInt(time.Now().UnixMilli(), 10),
-		"ifacer_id": map[string]interface{} {"identifier": "43"},
-
+		"ecdh_public_key":    agent.EcdhPublicKey,
+		"eddsa_public_key":   agent.EddsaPublicKey,
+		"ethereum_address":   agent.EthereumAddress,
+		"reflow_public_key":  agent.ReflowPublicKey,
+		"timestamp":          strconv.FormatInt(time.Now().UnixMilli(), 10),
+		"ifacer_id":          map[string]interface{}{"identifier": "43"},
 	}
 	for k, v := range *conf.DidKeyring {
 		didRequest[k] = v
@@ -158,9 +158,9 @@ func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 		return nil, err
 	}
 
-	result := DidResult {
+	result := DidResult{
 		Created: true,
-		Did: body,
+		Did:     body,
 	}
 	return &result, nil
 }

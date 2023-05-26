@@ -17,22 +17,22 @@
 package config
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
 	"os"
-	"encoding/base64"
-	"encoding/json"
 )
 
 type Config struct {
-	Salt        string
-	RestroomURL *url.URL
-	DidKeyring  *map[string]interface{}
-	DidURL      *url.URL
-	DidSpec     string
-	DidSignerSpec     string
-	DidIdentity     string
+	Salt          string
+	RestroomURL   *url.URL
+	DidKeyring    *map[string]interface{}
+	DidURL        *url.URL
+	DidSpec       string
+	DidSignerSpec string
+	DidIdentity   string
 }
 
 // NewEnv() fetches configuration options from the environment.  If
@@ -123,13 +123,12 @@ func fetchDict(env string) (*map[string]interface{}, error) {
 	}
 
 	rawDecodedDict, err := base64.StdEncoding.DecodeString(s)
-    if err != nil {
+	if err != nil {
 		return nil, fmt.Errorf("%q is malformed: %w", err)
-    }
+	}
 
 	var body map[string]interface{}
 	json.Unmarshal(rawDecodedDict, &body)
-
 
 	return &body, nil
 }

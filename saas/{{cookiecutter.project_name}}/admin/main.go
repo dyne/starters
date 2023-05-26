@@ -18,9 +18,9 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-    "github.com/pocketbase/pocketbase/models"
 )
 
 func main() {
@@ -74,12 +74,12 @@ func main() {
 				if authRecord == nil {
 					return apis.NewForbiddenError("Only auth records can access this endpoint", nil)
 				}
-				did, err := did.ClaimDid(conf, &did.DidAgent {
+				did, err := did.ClaimDid(conf, &did.DidAgent{
 					BitcoinPublicKey: authRecord.Get("bitcoin_public_key").(string),
-					EcdhPublicKey: authRecord.Get("ecdh_public_key").(string),
-					EddsaPublicKey: authRecord.Get("eddsa_public_key").(string),
-					EthereumAddress: authRecord.Get("ethereum_address").(string),
-					ReflowPublicKey: authRecord.Get("reflow_public_key").(string),
+					EcdhPublicKey:    authRecord.Get("ecdh_public_key").(string),
+					EddsaPublicKey:   authRecord.Get("eddsa_public_key").(string),
+					EthereumAddress:  authRecord.Get("ethereum_address").(string),
+					ReflowPublicKey:  authRecord.Get("reflow_public_key").(string),
 				})
 				if err != nil {
 					return err
