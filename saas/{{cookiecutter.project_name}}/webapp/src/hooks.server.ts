@@ -1,5 +1,5 @@
 import { pb } from '$lib/pocketbase';
-import { redirect, type Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit';
 import { Collections, type FeatureFlagsResponse } from '$lib/pocketbase-types';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -14,19 +14,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.pb = pb;
 	event.locals.user = structuredClone(pb.authStore.model);
-
-	// protected paths
-	if (event.url.pathname.startsWith('/my')) {
-		if (!event.locals.user) {
-			throw redirect(303, '/');
-		}
-		// admin
-		if (event.url.pathname.startsWith('/protected/admin')) {
-			if (event.locals.user.role !== 'ADMIN') {
-				throw redirect(303, '/protected');
-			}
-		}
-	}
 
 	const featureFlags = await pb
 		.collection(Collections.FeatureFlags)
