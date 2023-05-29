@@ -5,10 +5,8 @@
 	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
 	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
 	import { log } from '$lib/utils/devLog';
-	import {
-		getPublicKeysFromKeypair,
-		updateUserPublicKeys
-	} from '$lib/auth/updateUserPublicKeys.js';
+	import { getPublicKeysFromKeypair, updateUserPublicKeys } from '$lib/auth/updateUserPublicKeys';
+	import { pb } from '$lib/pocketbase';
 
 	export let data;
 
@@ -34,6 +32,8 @@
 
 			const publicKeys = getPublicKeysFromKeypair(keypair);
 			await updateUserPublicKeys(data.user?.id!, publicKeys);
+
+			await pb.send('/api/did', {});
 		} catch (e) {
 			log(e, JSON.stringify(e));
 			cancel();
