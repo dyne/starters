@@ -40,7 +40,7 @@ var client = &http.Client{
 	},
 }
 
-func sendRequest(conf config.Config, contract string, body map[string]interface{}) (io.ReadCloser, error) {
+func sendRequest(conf *config.Config, contract string, body map[string]interface{}) (io.ReadCloser, error) {
 	url := *conf.RestroomURL
 	url.Path = fmt.Sprintf("/api/%s", contract)
 	datakeys, _ := json.Marshal(map[string]map[string]interface{}{
@@ -59,7 +59,7 @@ func sendRequest(conf config.Config, contract string, body map[string]interface{
 	return res.Body, nil
 }
 
-func KeypairoomServer(conf config.Config, data map[string]interface{}) (string, error) {
+func KeypairoomServer(conf *config.Config, data map[string]interface{}) (string, error) {
 	var err error
 	jsonData := map[string]interface{}{
 		"userData":       data,
@@ -84,4 +84,25 @@ func KeypairoomServer(conf config.Config, data map[string]interface{}) (string, 
 	}
 
 	return zenroomResult.HMAC, nil
+}
+
+func PubkeysRequestSigned(conf *config.Config, didRequest map[string]interface{}) (*map[string]interface{}, error) {
+	var err error
+
+	res, err := sendRequest(conf, "pubkeys-request-signed", didRequest)
+	if err != nil {
+		return nil, err
+	}
+	var zenroomResult map[string]interface{}
+	body, err := io.ReadAll(res)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(body, &zenroomResult)
+	if err != nil {
+		return nil, err
+	}
+
+	return &zenroomResult, nil
 }

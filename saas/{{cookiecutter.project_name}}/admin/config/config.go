@@ -17,6 +17,8 @@
 package config
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
@@ -24,8 +26,13 @@ import (
 )
 
 type Config struct {
-	Salt        string
-	RestroomURL *url.URL
+	Salt          string
+	RestroomURL   *url.URL
+	DidKeyring    *map[string]interface{}
+	DidURL        *url.URL
+	DidSpec       string
+	DidSignerSpec string
+	DidIdentity   string
 }
 
 // NewEnv() fetches configuration options from the environment.  If
@@ -45,6 +52,36 @@ func NewEnv() (*Config, error) {
 		return nil, err
 	}
 	c.RestroomURL = u
+
+	u, err = fetchURL("DID_URL")
+	if err != nil {
+		return nil, err
+	}
+	c.DidURL = u
+
+	d, err := fetchDict("DID_KEYRING")
+	if err != nil {
+		return nil, err
+	}
+	c.DidKeyring = d
+
+	s, ok = os.LookupEnv("DID_SPEC")
+	if !ok {
+		return nil, errors.New(`"DID_SPEC" must be provided`)
+	}
+	c.DidSpec = s
+
+	s, ok = os.LookupEnv("DID_SIGNER_SPEC")
+	if !ok {
+		return nil, errors.New(`"DID_SIGNER_SPEC" must be provided`)
+	}
+	c.DidSignerSpec = s
+
+	s, ok = os.LookupEnv("DID_IDENTITY")
+	if !ok {
+		return nil, errors.New(`"DID_IDENTITY" must be provided`)
+	}
+	c.DidIdentity = s
 	return c, nil
 }
 
@@ -76,4 +113,22 @@ func fetchURL(env string) (*url.URL, error) {
 	}
 
 	return u, nil
+}
+
+// Parse a JSON dictionary encoded as base64
+func fetchDict(env string) (*map[string]interface{}, error) {
+	s, ok := os.LookupEnv(env)
+	if !ok {
+		return nil, fmt.Errorf("%q must be provided", env)
+	}
+
+	rawDecodedDict, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return nil, fmt.Errorf("%q is malformed: %w", err)
+	}
+
+	var body map[string]interface{}
+	json.Unmarshal(rawDecodedDict, &body)
+
+	return &body, nil
 }

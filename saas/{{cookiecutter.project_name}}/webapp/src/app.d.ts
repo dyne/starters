@@ -6,7 +6,7 @@ declare namespace App {
 	interface Locals {
 		pb: import('pocketbase').default;
 		user: import('pocketbase').default['authStore']['model'];
-		featureFlags: import('./lib/pocketbase-types.ts').FeatureFlagsResponse[];
+		features: import('./lib/pocketbase-types.ts').FeaturesResponse[];
 	}
 	// interface PageData {}
 	// interface Platform {}
