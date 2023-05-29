@@ -1,10 +1,17 @@
+<script context="module" lang="ts">
+	export const formKeys = {
+		email: 'email',
+		password: 'password',
+		passwordConfirm: 'passwordConfirm',
+		acceptTerms: 'acceptTerms'
+	} as const;
+</script>
+
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { pb } from '$lib/pocketbase';
-	import { Register } from 'flowbite-svelte-blocks';
-	import { Button, Checkbox, Label, Input } from 'flowbite-svelte';
+	import { Button, Checkbox, Label, Input, Alert, A } from 'flowbite-svelte';
 	import type { ActionData } from './$types';
-	import { appTitle } from '$lib/strings';
 
 	export let form: ActionData;
 </script>
@@ -22,37 +29,32 @@
 	<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Create and account</h3>
 	<Label class="space-y-2">
 		<span>Your email</span>
-		<Input type="email" name="email" placeholder="name@company.com" required />
+		<Input type="email" name={formKeys.email} placeholder="name@company.com" required />
 	</Label>
 	<Label class="space-y-2">
 		<span>Your password</span>
-		<Input type="password" name="password" placeholder="•••••" required />
+		<Input type="password" name={formKeys.password} placeholder="•••••" required />
 	</Label>
 
 	<Label class="space-y-2">
 		<span>Confirm password</span>
-		<Input type="password" name="passwordConfirm" placeholder="•••••" required />
+		<Input type="password" name={formKeys.passwordConfirm} placeholder="•••••" required />
 	</Label>
 	<div class="flex items-start">
-		<Checkbox
-			>I accept the <a
-				class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-				href="/"
-			>
-				Terms and Conditions</a
-			></Checkbox
-		>
+		<Checkbox name={formKeys.acceptTerms} value="true" required>
+			I accept the <A href="/" class="ml-1">Terms and Conditions</A>
+		</Checkbox>
 	</div>
 
 	<Button type="submit" class="w-full1">Create an account</Button>
 
-	<p class="text-sm font-light text-gray-500 da rk:text-gray-400">
+	<p class="text-sm text-gray-500 dark:text-gray-400">
 		Already have an account?
-		<a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-			>Login here</a
-		>
+		<A href="/login">Login here</A>
 	</p>
 	{#if form?.error}
-		<pre class="bg-red-100">{JSON.stringify(form, null, 2)}</pre>
+		<Alert dismissable={false} accent={false} color="red">
+			{form.error}
+		</Alert>
 	{/if}
 </form>

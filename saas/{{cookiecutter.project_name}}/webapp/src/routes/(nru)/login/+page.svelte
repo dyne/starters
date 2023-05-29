@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { pb } from '$lib/pocketbase';
+	import { Alert } from 'flowbite-svelte';
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
@@ -22,6 +23,8 @@
 	<input type="password" name="password" placeholder="Password" />
 	<button>Log in</button>
 	{#if form?.error}
-		<pre class="bg-red-100">{JSON.stringify(form, null, 2)}</pre>
+		<Alert dismissable={false} accent={false} color="red">
+			{form.error}
+		</Alert>
 	{/if}
 </form>
