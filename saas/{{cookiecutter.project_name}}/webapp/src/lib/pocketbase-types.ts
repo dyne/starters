@@ -61,6 +61,11 @@ export type HooksRecord = {
 export type UsersRecord = {
 	name?: string
 	avatar?: string
+	bitcoin_public_key?: string
+	ecdh_public_key?: string
+	eddsa_public_key?: string
+	ethereum_address?: string
+	reflow_public_key?: string
 }
 
 // Response types include system fields and match responses from the PocketBase API

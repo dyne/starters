@@ -1,5 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { formatUnknownException } from '$lib/errorHandling';
+import { log } from '$lib/utils/devLog';
 
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
@@ -9,16 +11,11 @@ export const actions: Actions = {
 		};
 
 		try {
-			await locals.pb
-				.collection('users')
-				.authWithPassword(data.email, data.password);
+			await locals.pb.collection('users').authWithPassword(data.email, data.password);
 		} catch (e) {
-			console.error(e);
-			return fail(400, {
-				error: true,
-				message: e.data.message,
-				data: e.data.data
-			});
+			log(e);
+			const err = formatUnknownException(e, 400, 'Login not successful');
+			return fail(err.status, { email: data.email, error: err.message });
 		}
 
 		throw redirect(303, '/my/dashboard');
