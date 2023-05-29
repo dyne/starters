@@ -6,15 +6,17 @@ import { pb } from '$lib/pocketbase';
 
 //
 
+export interface Keyring {
+	eddsa: string;
+	ethereum: string;
+	reflow: string;
+	bitcoin: string;
+	ecdh: string;
+}
+
 export interface Keypair {
 	seed: string;
-	keyring: {
-		eddsa: string;
-		ethereum: string;
-		reflow: string;
-		bitcoin: string;
-		ecdh: string;
-	};
+	keyring: Keyring;
 	ecdh_public_key: string;
 	bitcoin_public_key: string;
 	eddsa_public_key: string;
@@ -69,16 +71,16 @@ export async function getHMAC(email: string): Promise<string> {
 
 //
 
-export const KEYPAIR_STORAGE_KEY = 'keypair';
+export const KEYRING_STORAGE_KEY = 'keyring';
 
-export function saveKeypairToLocalStorage(keypair: Keypair) {
-	localStorage.setItem(KEYPAIR_STORAGE_KEY, JSON.stringify(keypair));
+export function saveKeyringToLocalStorage(keyring: Keyring) {
+	localStorage.setItem(KEYRING_STORAGE_KEY, JSON.stringify(keyring));
 }
 
-export function getKeypairFromLocalStorage(): Keypair | null {
-	const keypair = localStorage.getItem(KEYPAIR_STORAGE_KEY);
-	if (keypair) {
-		return JSON.parse(keypair);
+export function getKeyringFromLocalStorage(): Keyring | null {
+	const keyring = localStorage.getItem(KEYRING_STORAGE_KEY);
+	if (keyring) {
+		return JSON.parse(keyring);
 	}
 	return null;
 }

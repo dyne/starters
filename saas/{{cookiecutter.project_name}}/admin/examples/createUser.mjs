@@ -113,7 +113,7 @@ Then print the 'ethereum address'
 Then print the 'reflow public key' as 'base58'
 Then print the 'bitcoin public key' as 'base58'
 `
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://test.signroom.io');
 const email = "mimmo@sito.io"
 
 const hmac = await pb.send("/api/keypairoom-server", {

@@ -3,8 +3,10 @@
 	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import UserQuestions from '$lib/components/userQuestions.svelte';
 	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
-	import { generateKeypair, getHMAC, saveKeypairToLocalStorage } from '$lib/auth/keypair';
+	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
 	import { log } from '$lib/utils/devLog';
+	import { getPublicKeysFromKeypair, updateUserPublicKeys } from '$lib/auth/updateUserPublicKeys';
+	import { pb } from '$lib/pocketbase';
 
 	export let data;
 
@@ -21,10 +23,17 @@
 				question4: formData.get(qk.question4) as string,
 				question5: formData.get(qk.question5) as string
 			};
+
 			const HMAC = await getHMAC(userEmail);
 			const keypair = await generateKeypair(userEmail, HMAC, userAnswers);
-			saveKeypairToLocalStorage(keypair);
+
+			saveKeyringToLocalStorage(keypair.keyring);
 			seed = keypair.seed;
+
+			const publicKeys = getPublicKeysFromKeypair(keypair);
+			await updateUserPublicKeys(data.user?.id!, publicKeys);
+
+			await pb.send('/api/did', {});
 		} catch (e) {
 			log(e, JSON.stringify(e));
 			cancel();

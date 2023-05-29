@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"pb/config"
+	"pb/did"
 	"pb/hooks"
 	_ "pb/migrations"
 	"pb/zencode"
@@ -17,6 +18,7 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 )
@@ -53,7 +55,7 @@ func main() {
 					return err
 
 				}
-				hmac, err := zencode.KeypairoomServer(*conf, body["userData"])
+				hmac, err := zencode.KeypairoomServer(conf, body["userData"])
 				if err != nil {
 					return err
 				}
@@ -61,7 +63,33 @@ func main() {
 				return c.JSON(http.StatusOK, map[string]string{"hmac": hmac})
 			},
 			Middlewares: []echo.MiddlewareFunc{
-				//apis.ActivityLogger(app),
+				apis.ActivityLogger(app),
+			},
+		})
+		e.Router.AddRoute(echo.Route{
+			Method: http.MethodGet,
+			Path:   "/api/did",
+			Handler: func(c echo.Context) error {
+				authRecord, _ := c.Get(apis.ContextAuthRecordKey).(*models.Record)
+				if authRecord == nil {
+					return apis.NewForbiddenError("Only auth records can access this endpoint", nil)
+				}
+				did, err := did.ClaimDid(conf, &did.DidAgent{
+					BitcoinPublicKey: authRecord.Get("bitcoin_public_key").(string),
+					EcdhPublicKey:    authRecord.Get("ecdh_public_key").(string),
+					EddsaPublicKey:   authRecord.Get("eddsa_public_key").(string),
+					EthereumAddress:  authRecord.Get("ethereum_address").(string),
+					ReflowPublicKey:  authRecord.Get("reflow_public_key").(string),
+				})
+				if err != nil {
+					return err
+
+				}
+
+				return c.JSON(http.StatusOK, did)
+			},
+			Middlewares: []echo.MiddlewareFunc{
+				apis.ActivityLogger(app),
 			},
 		})
 		return nil
