@@ -5,6 +5,7 @@
 	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
 	import { generateKeypair, getHMAC, saveKeypairToLocalStorage } from '$lib/auth/keypair';
 	import { log } from '$lib/utils/devLog';
+	import CopyButton from '$lib/components/copyButton.svelte';
 
 	export let data;
 
@@ -88,6 +89,9 @@
 		<Alert dismissable={false} accent={false}>
 			<span class="font-mono">
 				{seed}
+				<div class="flex flex-col items-end pt-4">
+					<CopyButton textToCopy={seed}>Copy seed</CopyButton>
+				</div>
 			</span>
 		</Alert>
 		<Button href="/my/dashboard">Go to Dashboard</Button>
