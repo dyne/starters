@@ -1,0 +1,7 @@
+description: read a file content from pipe stdin or if a filename given the content of the file
+
+options:
+  - name: -f, --file <file>
+    description: file to read if you pass - the stdin is read instead
+    file: true
+

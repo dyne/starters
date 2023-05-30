@@ -1,0 +1,7 @@
+Rule check version 3.0.0
+Rule unknown ignore
+Given I have a 'string' named 'name'
+Given I have a 'number' named 'timeout'
+Given I have a 'string array' named 'args'
+Then print the data
+

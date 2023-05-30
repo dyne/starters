@@ -1,0 +1,4 @@
+Rule check version 3.0.0
+Rule unknown ignore
+Given I have a 'string' named 'file'
+then print the data
