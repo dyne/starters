@@ -19,79 +19,105 @@ package config
 import (
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/tools/types"
 	"net/url"
 	"os"
 )
 
 type Config struct {
-	Salt          string
-	RestroomURL   *url.URL
-	DidKeyring    *map[string]interface{}
-	DidURL        *url.URL
-	DidSpec       string
-	DidSignerSpec string
-	DidIdentity   string
+	RestroomURL *url.URL
+}
+
+var Conf Config
+
+type KeypairoomConfig struct {
+	Salt string
+}
+
+type DidConfig struct {
+	Keyring    *map[string]interface{}
+	DidURL     *url.URL
+	Spec       string
+	SignerSpec string
+	Identity   string
+}
+
+func FetchKeypairoomConfig(app core.App) (KeypairoomConfig, error) {
+	c := KeypairoomConfig{}
+	conf, err := newConfig(app, "keypairoom")
+	if err != nil {
+		return c, err
+	}
+
+	if conf["SALT"] == "" {
+		return c, fmt.Errorf("SALT must be provided")
+	}
+	c.Salt = conf["SALT"]
+
+	return c, nil
+}
+
+func FetchDidConfig(app core.App) (DidConfig, error) {
+	c := DidConfig{}
+	conf, err := newConfig(app, "DID")
+	if err != nil {
+		return c, err
+	}
+
+	if conf["DID_SPEC"] == "" {
+		return c, fmt.Errorf("DID_SPEC must be provided")
+	}
+	c.Spec = conf["DID_SPEC"]
+
+	if conf["DID_SIGNER_SPEC"] == "" {
+		return c, fmt.Errorf("DID_SIGNER_SPEC must be provided")
+	}
+	c.SignerSpec = conf["DID_SIGNER_SPEC"]
+
+	if conf["DID_IDENTITY"] == "" {
+		return c, fmt.Errorf("DID_IDENTITY must be provided")
+	}
+	c.Identity = conf["DID_IDENTITY"]
+
+	u, err := fetchURL(conf["DID_URL"])
+	if err != nil {
+		return c, err
+	}
+	c.DidURL = u
+
+	d, err := fetchDict(conf["DID_KEYRING"])
+	if err != nil {
+		return c, err
+	}
+	c.Keyring = d
+
+	return c, nil
 }
 
 // NewEnv() fetches configuration options from the environment.  If
 // a required option is not available or is malformed, it will error
 // out.
-func NewEnv() (*Config, error) {
-	c := &Config{}
+func NewEnv() (Config, error) {
+	c := Config{}
 
-	s, ok := os.LookupEnv("SALT")
+	s, ok := os.LookupEnv("RESTROOM_URL")
 	if !ok {
-		return nil, errors.New(`"SALT" must be provided`)
+		return c, fmt.Errorf("RESTROOM_URL must be provided")
 	}
-	c.Salt = s
 
-	u, err := fetchURL("RESTROOM_URL")
+	u, err := fetchURL(s)
 	if err != nil {
-		return nil, err
+		return c, err
 	}
 	c.RestroomURL = u
 
-	u, err = fetchURL("DID_URL")
-	if err != nil {
-		return nil, err
-	}
-	c.DidURL = u
-
-	d, err := fetchDict("DID_KEYRING")
-	if err != nil {
-		return nil, err
-	}
-	c.DidKeyring = d
-
-	s, ok = os.LookupEnv("DID_SPEC")
-	if !ok {
-		return nil, errors.New(`"DID_SPEC" must be provided`)
-	}
-	c.DidSpec = s
-
-	s, ok = os.LookupEnv("DID_SIGNER_SPEC")
-	if !ok {
-		return nil, errors.New(`"DID_SIGNER_SPEC" must be provided`)
-	}
-	c.DidSignerSpec = s
-
-	s, ok = os.LookupEnv("DID_IDENTITY")
-	if !ok {
-		return nil, errors.New(`"DID_IDENTITY" must be provided`)
-	}
-	c.DidIdentity = s
 	return c, nil
 }
 
 func fetchURL(env string) (*url.URL, error) {
-	s, ok := os.LookupEnv(env)
-	if !ok {
-		return nil, fmt.Errorf("%q must be provided", env)
-	}
-
-	u, err := url.Parse(s)
+	u, err := url.Parse(env)
 	if err != nil {
 		return nil, fmt.Errorf("%q is malformed: %w", env, err)
 	}
@@ -117,12 +143,7 @@ func fetchURL(env string) (*url.URL, error) {
 
 // Parse a JSON dictionary encoded as base64
 func fetchDict(env string) (*map[string]interface{}, error) {
-	s, ok := os.LookupEnv(env)
-	if !ok {
-		return nil, fmt.Errorf("%q must be provided", env)
-	}
-
-	rawDecodedDict, err := base64.StdEncoding.DecodeString(s)
+	rawDecodedDict, err := base64.StdEncoding.DecodeString(env)
 	if err != nil {
 		return nil, fmt.Errorf("%q is malformed: %w", err)
 	}
@@ -131,4 +152,19 @@ func fetchDict(env string) (*map[string]interface{}, error) {
 	json.Unmarshal(rawDecodedDict, &body)
 
 	return &body, nil
+}
+
+func newConfig(app core.App, feature string) (map[string]string, error) {
+	var envConfig map[string]string
+	record, err := app.Dao().
+		FindFirstRecordByData("features", "name", feature)
+	envString, err := record.Get("envVariables").(types.JsonRaw).MarshalJSON()
+	if err != nil {
+		return envConfig, err
+	}
+	err = json.Unmarshal(envString, &envConfig)
+	if err != nil {
+		return envConfig, err
+	}
+	return envConfig, nil
 }
