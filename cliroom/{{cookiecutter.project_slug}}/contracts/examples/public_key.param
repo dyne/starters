@@ -1,0 +1,3 @@
+options:
+  - name: -k, --keyring
+    description: the ecdh keyring to use

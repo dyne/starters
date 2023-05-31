@@ -1,0 +1,6 @@
+Rule unknown ignore
+Scenario 'ecdh': Read things
+Given I have the 'keyring'
+When I create the ecdh public key
+Then print the 'ecdh public key' 
+Then print the 'keyring'

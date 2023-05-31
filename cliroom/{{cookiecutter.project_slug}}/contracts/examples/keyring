@@ -1,0 +1,21 @@
+description: |
+  This is a long description for a chain that executes two smart contracts
+  and pass the output of the first as the `keys` input of the next one
+steps:
+  - id: keyring
+    zencode: |-
+      Scenario ecdh: create the keypair at user creation 
+      Given nothing
+      When I create the ecdh key
+      Then print keyring
+  - id: public
+    keysFromStep: keyring
+    zencode: |-
+      rule caller restroom-mw
+      Scenario 'ecdh': Read things
+      Given Argument [keyring]: The keyring for your format
+      Given I have the 'keyring'
+      When I create the ecdh public key
+      Then print the 'ecdh public key' 
+      Then print the 'keyring'
+

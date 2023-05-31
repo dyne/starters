@@ -1,0 +1,50 @@
+{
+	"name": "{{ cookiecutter.project_name }}",
+	"version": "1.0.0",
+	"description": "{{ cookiecutter.project_description }}",
+	"author": {
+		"name": "{{cookiecutter.full_name}}",
+		"email": "{{cookiecutter.email}}"
+	},
+	"bin": "src/index.js",
+	"type": "module",
+	"scripts": {
+		"build": "pkg .",
+		"clean": "rimraf dist build",
+		"b": "pnpm clean && pnpm build"
+	},
+	"pkg": {
+		"assets": [
+			"./package.json",
+			"./contracts/**/*",
+			"./node_modules/.pnpm/figlet@*/node_modules/figlet/fonts/ANSI Shadow.flf"
+		],
+		"targets": [
+			"latest-alpine-x64",
+			"latest-alpine-arm64",
+			"latest-linux-x64",
+			"latest-linux-arm64",
+			"latest-linuxstatic-x64",
+			"latest-linuxstatic-arm64",
+			"latest-macos-x64",
+			"latest-macos-arm64",
+			"latest-win-x64",
+			"latest-win-arm64"
+		],
+		"outputPath": "dist"
+	},
+	"keywords": [],
+	"license": "MIT",
+	"dependencies": {
+		"@dyne/zencode-chain": "^1.2.0",
+		"commander": "^10.0.1",
+		"figlet": "^1.6.0",
+		"zenroom": "^2.21.1"
+	},
+	"devDependencies": {
+		"gradient-string": "^2.0.2",
+		"pkg": "^5.8.1",
+		"rimraf": "^5.0.0",
+		"yaml": "^2.2.2"
+	}
+}

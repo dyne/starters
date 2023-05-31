@@ -3,5 +3,7 @@
   "project_description": "Punchline: Dyne's starter for your SaaS applications",
   "full_name": "Luther Hacker",
   "email": "luther@dyne.org",
+  "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "repo": "https://github.com/dyne/{{ cookiecutter.project_slug }}",
   "_copy_without_render": ["*.svelte"]
 }
