@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -25,12 +24,6 @@ import (
 )
 
 func main() {
-	var err error
-	config.Conf, err = config.NewEnv()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "configs couldn't be loaded: %s\n", err.Error())
-		os.Exit(1)
-	}
 	app := pocketbase.New()
 	var publicDirFlag string
 
