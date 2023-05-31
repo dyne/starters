@@ -10,7 +10,6 @@ const features = [
     {
         name: "keypairoom",
         envVariables: {
-            RESTROOM_URL: "http://zvmlet:3000",
             SALT: "bWltbW8K",
         },
     },
