@@ -55,12 +55,12 @@ var client = &http.Client{
 	},
 }
 
-func restroomRequest(conf *config.Config, contract string, body *map[string]interface{}) (io.ReadCloser, error) {
+func restroomRequest(conf *config.DidConfig, contract string, body map[string]interface{}) (io.ReadCloser, error) {
 	url := *conf.DidURL
 	url.Path = fmt.Sprintf("/api/v1/sandbox/%s", contract)
 	datakeys, _ := json.Marshal(map[string]map[string]interface{}{
 		"keys": {},
-		"data": *body,
+		"data": body,
 	})
 	req, err := http.NewRequest("POST", url.String(), bytes.NewReader(datakeys))
 	if err != nil {
@@ -74,11 +74,11 @@ func restroomRequest(conf *config.Config, contract string, body *map[string]inte
 	return res.Body, nil
 }
 
-func didId(conf *config.Config, agent *DidAgent) string {
-	return fmt.Sprintf("did:dyne:%s:%s", conf.DidSpec, agent.EddsaPublicKey)
+func didId(conf *config.DidConfig, agent *DidAgent) string {
+	return fmt.Sprintf("did:dyne:%s:%s", conf.Spec, agent.EddsaPublicKey)
 }
 
-func GetDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
+func GetDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	url := *conf.DidURL
 	url.Path = fmt.Sprintf("/dids/%s", didId(conf, agent))
 	req, err := http.NewRequest("GET", url.String(), nil)
@@ -108,7 +108,7 @@ func GetDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 	return &result, nil
 }
 
-func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
+func RequestNewDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	didRequest := map[string]interface{}{
 		"proof": map[string]interface{}{
 			"type":         "EcdsaSecp256k1Signature2019",
@@ -125,9 +125,9 @@ func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 				"identifier":  "https://schema.org/identifier",
 			},
 		},
-		"did_spec":           conf.DidSpec,
-		"signer_did_spec":    conf.DidSignerSpec,
-		"identity":           conf.DidIdentity,
+		"did_spec":           conf.Spec,
+		"signer_did_spec":    conf.SignerSpec,
+		"identity":           conf.Identity,
 		"bitcoin_public_key": agent.BitcoinPublicKey,
 		"ecdh_public_key":    agent.EcdhPublicKey,
 		"eddsa_public_key":   agent.EddsaPublicKey,
@@ -136,11 +136,11 @@ func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 		"timestamp":          strconv.FormatInt(time.Now().UnixMilli(), 10),
 		"ifacer_id":          map[string]interface{}{"identifier": "43"},
 	}
-	for k, v := range *conf.DidKeyring {
+	for k, v := range conf.Keyring {
 		didRequest[k] = v
 	}
 
-	did, err := zencode.PubkeysRequestSigned(conf, didRequest)
+	did, err := zencode.PubkeysRequestSigned(didRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func RequestNewDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
 	return &result, nil
 }
 
-func ClaimDid(conf *config.Config, agent *DidAgent) (*DidResult, error) {
+func ClaimDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	did, err := GetDid(conf, agent)
 	if err == nil {
 		return did, nil
