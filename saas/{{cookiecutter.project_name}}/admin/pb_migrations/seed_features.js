@@ -1,4 +1,4 @@
-const FEATURE_FLAG_COLLECTION_NAME = "features";
+const FEATURES_COLLECTION_NAME = "features";
 
 /**
     type Feature = {
@@ -30,7 +30,7 @@ migrate(
     (db) => {
         const dao = new Dao(db);
         const collection = dao.findCollectionByNameOrId(
-            FEATURE_FLAG_COLLECTION_NAME
+            FEATURES_COLLECTION_NAME
         );
 
         for (const feature of features) {
@@ -50,7 +50,7 @@ migrate(
         for (const feature of features) {
             try {
                 const record = dao.findFirstRecordByData(
-                    FEATURE_FLAG_COLLECTION_NAME,
+                    FEATURES_COLLECTION_NAME,
                     "name",
                     feature.name
                 );
