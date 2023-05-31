@@ -59,7 +59,7 @@ func sendRequest(contract string, body map[string]interface{}) (io.ReadCloser, e
 	return res.Body, nil
 }
 
-func KeypairoomServer(conf config.KeypairoomConfig, data map[string]interface{}) (string, error) {
+func KeypairoomServer(conf *config.KeypairoomConfig, data map[string]interface{}) (string, error) {
 	var err error
 	jsonData := map[string]interface{}{
 		"userData":       data,
@@ -86,23 +86,23 @@ func KeypairoomServer(conf config.KeypairoomConfig, data map[string]interface{})
 	return zenroomResult.HMAC, nil
 }
 
-func PubkeysRequestSigned(didRequest map[string]interface{}) (*map[string]interface{}, error) {
+func PubkeysRequestSigned(didRequest map[string]interface{}) (map[string]interface{}, error) {
 	var err error
+	var zenroomResult map[string]interface{}
 
 	res, err := sendRequest("pubkeys-request-signed", didRequest)
 	if err != nil {
-		return nil, err
+		return zenroomResult, err
 	}
-	var zenroomResult map[string]interface{}
 	body, err := io.ReadAll(res)
 	if err != nil {
-		return nil, err
+		return zenroomResult, err
 	}
 
 	err = json.Unmarshal(body, &zenroomResult)
 	if err != nil {
-		return nil, err
+		return zenroomResult, err
 	}
 
-	return &zenroomResult, nil
+	return zenroomResult, nil
 }

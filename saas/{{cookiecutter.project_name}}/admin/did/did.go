@@ -55,12 +55,12 @@ var client = &http.Client{
 	},
 }
 
-func restroomRequest(conf config.DidConfig, contract string, body *map[string]interface{}) (io.ReadCloser, error) {
+func restroomRequest(conf *config.DidConfig, contract string, body map[string]interface{}) (io.ReadCloser, error) {
 	url := *conf.DidURL
 	url.Path = fmt.Sprintf("/api/v1/sandbox/%s", contract)
 	datakeys, _ := json.Marshal(map[string]map[string]interface{}{
 		"keys": {},
-		"data": *body,
+		"data": body,
 	})
 	req, err := http.NewRequest("POST", url.String(), bytes.NewReader(datakeys))
 	if err != nil {
@@ -74,11 +74,11 @@ func restroomRequest(conf config.DidConfig, contract string, body *map[string]in
 	return res.Body, nil
 }
 
-func didId(conf config.DidConfig, agent *DidAgent) string {
+func didId(conf *config.DidConfig, agent *DidAgent) string {
 	return fmt.Sprintf("did:dyne:%s:%s", conf.Spec, agent.EddsaPublicKey)
 }
 
-func GetDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
+func GetDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	url := *conf.DidURL
 	url.Path = fmt.Sprintf("/dids/%s", didId(conf, agent))
 	req, err := http.NewRequest("GET", url.String(), nil)
@@ -108,7 +108,7 @@ func GetDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	return &result, nil
 }
 
-func RequestNewDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
+func RequestNewDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	didRequest := map[string]interface{}{
 		"proof": map[string]interface{}{
 			"type":         "EcdsaSecp256k1Signature2019",
@@ -136,7 +136,7 @@ func RequestNewDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
 		"timestamp":          strconv.FormatInt(time.Now().UnixMilli(), 10),
 		"ifacer_id":          map[string]interface{}{"identifier": "43"},
 	}
-	for k, v := range *conf.Keyring {
+	for k, v := range conf.Keyring {
 		didRequest[k] = v
 	}
 
@@ -165,7 +165,7 @@ func RequestNewDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	return &result, nil
 }
 
-func ClaimDid(conf config.DidConfig, agent *DidAgent) (*DidResult, error) {
+func ClaimDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) {
 	did, err := GetDid(conf, agent)
 	if err == nil {
 		return did, nil

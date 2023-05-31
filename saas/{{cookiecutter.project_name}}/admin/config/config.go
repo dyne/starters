@@ -30,22 +30,22 @@ type Config struct {
 	RestroomURL *url.URL
 }
 
-var Conf Config
+var Conf *Config
 
 type KeypairoomConfig struct {
 	Salt string
 }
 
 type DidConfig struct {
-	Keyring    *map[string]interface{}
+	Keyring    map[string]interface{}
 	DidURL     *url.URL
 	Spec       string
 	SignerSpec string
 	Identity   string
 }
 
-func FetchKeypairoomConfig(app core.App) (KeypairoomConfig, error) {
-	c := KeypairoomConfig{}
+func FetchKeypairoomConfig(app core.App) (*KeypairoomConfig, error) {
+	c := &KeypairoomConfig{}
 	conf, err := newConfig(app, "keypairoom")
 	if err != nil {
 		return c, err
@@ -59,8 +59,8 @@ func FetchKeypairoomConfig(app core.App) (KeypairoomConfig, error) {
 	return c, nil
 }
 
-func FetchDidConfig(app core.App) (DidConfig, error) {
-	c := DidConfig{}
+func FetchDidConfig(app core.App) (*DidConfig, error) {
+	c := &DidConfig{}
 	conf, err := newConfig(app, "DID")
 	if err != nil {
 		return c, err
@@ -99,8 +99,8 @@ func FetchDidConfig(app core.App) (DidConfig, error) {
 // NewEnv() fetches configuration options from the environment.  If
 // a required option is not available or is malformed, it will error
 // out.
-func NewEnv() (Config, error) {
-	c := Config{}
+func NewEnv() (*Config, error) {
+	c := &Config{}
 
 	s, ok := os.LookupEnv("RESTROOM_URL")
 	if !ok {
@@ -142,7 +142,7 @@ func fetchURL(env string) (*url.URL, error) {
 }
 
 // Parse a JSON dictionary encoded as base64
-func fetchDict(env string) (*map[string]interface{}, error) {
+func fetchDict(env string) (map[string]interface{}, error) {
 	rawDecodedDict, err := base64.StdEncoding.DecodeString(env)
 	if err != nil {
 		return nil, fmt.Errorf("%q is malformed: %w", err)
@@ -151,7 +151,7 @@ func fetchDict(env string) (*map[string]interface{}, error) {
 	var body map[string]interface{}
 	json.Unmarshal(rawDecodedDict, &body)
 
-	return &body, nil
+	return body, nil
 }
 
 func newConfig(app core.App, feature string) (map[string]string, error) {
