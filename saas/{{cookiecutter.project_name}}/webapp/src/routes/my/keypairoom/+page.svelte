@@ -1,56 +1,53 @@
 <script lang="ts">
-	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
-	import UserQuestions from '$lib/components/userQuestions.svelte';
-	import { userQuestionsKeys as qk, type UserAnswers } from '$lib/auth/userQuestions';
+	import { userQuestions, type UserAnswers } from '$lib/auth/userQuestions';
 	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
-	import { log } from '$lib/utils/devLog';
-	import CopyButton from '$lib/components/copyButton.svelte';
 	import { getPublicKeysFromKeypair, updateUserPublicKeys } from '$lib/auth/updateUserPublicKeys';
 	import { pb } from '$lib/pocketbase';
+
+	// Components
+	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
+	import CopyButton from '$lib/components/copyButton.svelte';
+	import Form, { createForm } from '$lib/components/forms/form.svelte';
+	import Input from '$lib/components/forms/input.svelte';
+
+	//
 
 	export let data;
 
 	let seed = '';
-	let error = '';
 
-	const onSubmit: SubmitFunction = async ({ data: formData, cancel }) => {
-		try {
-			const userEmail = data.user?.email as string;
-			const userAnswers: UserAnswers = {
-				question1: formData.get(qk.question1) as string,
-				question2: formData.get(qk.question2) as string,
-				question3: formData.get(qk.question3) as string,
-				question4: formData.get(qk.question4) as string,
-				question5: formData.get(qk.question5) as string
-			};
-
-			const HMAC = await getHMAC(userEmail);
-			const keypair = await generateKeypair(userEmail, HMAC, userAnswers);
-
-			saveKeyringToLocalStorage(keypair.keyring);
-			seed = keypair.seed;
-
-			const publicKeys = getPublicKeysFromKeypair(keypair);
-			await updateUserPublicKeys(data.user?.id!, publicKeys);
-
-			await pb.send('/api/did', {});
-		} catch (e) {
-			log(e, JSON.stringify(e));
-			cancel();
-		}
-
-		return async ({ result }) => {
-			await applyAction(result);
+	const superform = createForm(data.form, data.schema, async ({ form }) => {
+		const { data: formData } = form;
+		const userEmail = data.user?.email as string;
+		const userAnswers: UserAnswers = {
+			question1: formData.question1!,
+			question2: formData.question2!,
+			question3: formData.question3!,
+			question4: formData.question4!,
+			question5: formData.question5!
 		};
-	};
+
+		const HMAC = await getHMAC(userEmail);
+		const keypair = await generateKeypair(userEmail, HMAC, userAnswers);
+
+		saveKeyringToLocalStorage(keypair.keyring);
+		seed = keypair.seed;
+
+		const publicKeys = getPublicKeysFromKeypair(keypair);
+		await updateUserPublicKeys(data.user?.id!, publicKeys);
+
+		await pb.send('/api/did', {});
+	});
+
+	const { capture, restore } = superform;
+	export const snapshot = { capture, restore };
 </script>
 
 <div
 	class=" bg-white mx-auto max-w-md p-6 rounded-md shadow-md dark:bg-gray-800 dark:text-white space-y-6"
 >
 	{#if !seed}
-		<form class="space-y-6" method="post" use:enhance={onSubmit}>
+		<Form {superform} className="space-y-6">
 			<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Generate your keys</h3>
 
 			<Alert dismissable={false} accent={false}>
@@ -80,15 +77,12 @@
 				</ul>
 			</Alert>
 
-			<UserQuestions />
+			{#each userQuestions as question}
+				<Input field={question.id} label={question.text} />
+			{/each}
+
 			<Hr />
-
-			<Button type="submit">Create keys</Button>
-
-			{#if error}
-				<pre class="bg-red-100">{JSON.stringify(error, null, 2)}</pre>
-			{/if}
-		</form>
+		</Form>
 	{:else}
 		<Heading tag="h4">Keypair creation successful!</Heading>
 		<P size="sm" color="text-gray-400 dark:text-gray-600">
