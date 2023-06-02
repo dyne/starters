@@ -10,12 +10,12 @@ export const userQuestionsKeys = {
 
 export type UserQuestionsKey = ValueOf<typeof userQuestionsKeys>;
 
-export const userQuestions: Record<UserQuestionsKey, string> = {
-	question1: 'Where did your parents meet?',
-	question2: 'What is the name of your first pet?',
-	question3: 'What is your home town?',
-	question4: 'What is the name of your first teacher?',
-	question5: 'What is the surname of your mother before wedding?'
-} as const;
+export const userQuestions: Array<{ id: UserQuestionsKey; text: string }> = [
+	{ id: userQuestionsKeys.question1, text: 'Where did your parents meet?' },
+	{ id: userQuestionsKeys.question2, text: 'What is the name of your first pet?' },
+	{ id: userQuestionsKeys.question3, text: 'What is your home town?' },
+	{ id: userQuestionsKeys.question4, text: 'What is the name of your first teacher?' },
+	{ id: userQuestionsKeys.question5, text: 'What is the surname of your mother before wedding?' }
+];
 
 export type UserAnswers = Record<UserQuestionsKey, string>;
