@@ -36,7 +36,7 @@ migrate(
             const record = new Record(collection, {
                 name: feature.name,
                 envVariables: feature.envVariables,
-                active: true,
+                active: false,
             });
 
             dao.saveRecord(record);

@@ -23,14 +23,7 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/tools/types"
 	"net/url"
-	"os"
 )
-
-type Config struct {
-	RestroomURL *url.URL
-}
-
-var Conf *Config
 
 type KeypairoomConfig struct {
 	Salt string
@@ -92,26 +85,6 @@ func FetchDidConfig(app core.App) (*DidConfig, error) {
 		return c, err
 	}
 	c.Keyring = d
-
-	return c, nil
-}
-
-// NewEnv() fetches configuration options from the environment.  If
-// a required option is not available or is malformed, it will error
-// out.
-func NewEnv() (*Config, error) {
-	c := &Config{}
-
-	s, ok := os.LookupEnv("RESTROOM_URL")
-	if !ok {
-		return c, fmt.Errorf("RESTROOM_URL must be provided")
-	}
-
-	u, err := fetchURL(s)
-	if err != nil {
-		return c, err
-	}
-	c.RestroomURL = u
 
 	return c, nil
 }
