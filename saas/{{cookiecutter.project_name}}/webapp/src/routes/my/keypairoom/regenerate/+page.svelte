@@ -1,43 +1,42 @@
 <script lang="ts">
-	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import { getHMAC, regenerateKeypair, saveKeyringToLocalStorage } from '$lib/auth/keypair';
-	import { log } from 'debug';
-	import { A, Button, Heading, P, Textarea } from 'flowbite-svelte';
+	import { A, Heading, P } from 'flowbite-svelte';
+
+	import Form, { createForm } from '$lib/components/forms/form.svelte';
+	import Textarea from '$lib/components/forms/textarea.svelte';
+
+	//
 
 	export let data;
 
 	let success = false;
 
-	const onSubmit: SubmitFunction = async ({ data: formData, cancel }) => {
-		try {
-			const seed = formData.get('seed') as string;
-			const hmac = await getHMAC(data.user?.email);
-			const keypair = await regenerateKeypair(seed, hmac);
-			saveKeyringToLocalStorage(keypair.keyring);
-			success = true;
-		} catch (e) {
-			log(e, JSON.stringify(e));
-			cancel();
-		}
+	const superform = createForm(data.form, data.schema, async ({ form }) => {
+		const seed = form.data.seed;
+		const hmac = await getHMAC(data.user?.email);
+		const keypair = await regenerateKeypair(seed, hmac);
+		saveKeyringToLocalStorage(keypair.keyring);
+		success = true;
+	});
+	const keys = data.schema.keyof().Enum;
 
-		return async ({ result }) => {
-			await applyAction(result);
-		};
-	};
+	const { capture, restore } = superform;
+	export const snapshot = { capture, restore };
 
 	const textAreaPlaceholder =
 		'skin buyer sunset person run push elevator under debris soft surge man';
 </script>
 
 {#if !success}
-	<form method="post" use:enhance={onSubmit} class="space-y-4 p-6 flex flex-col">
+	<Form {superform} defaultSubmitButtonText="Regenerate keys">
 		<Heading tag="h4">Regenerate keys</Heading>
-		<P>You've been redirected here because your private keys are missing.</P>
-		<P>Please type here your seed:</P>
-		<Textarea name="seed" placeholder={textAreaPlaceholder} />
-		<Button type="submit">Regenerate keys</Button>
-		<A href="/my/keypairoom">Forgot the seed? Regenerate it</A>
-	</form>
+		<div>
+			<P>You've been redirected here because your private keys are missing.</P>
+			<P>Please type here your seed:</P>
+		</div>
+		<Textarea field={keys.seed} placeholder={textAreaPlaceholder} />
+	</Form>
+	<A href="/my/keypairoom">Forgot the seed? Regenerate it</A>
 {:else}
 	<div class="space-y-4 p-6 flex flex-col">
 		<Heading tag="h4">Keys regenerated!</Heading>
