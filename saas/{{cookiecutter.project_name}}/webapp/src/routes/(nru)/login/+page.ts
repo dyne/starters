@@ -3,10 +3,7 @@ import { z } from 'zod';
 
 const schema = z.object({
 	email: z.string().email(),
-	password: z.string(),
-	miao: z.object({
-		woof: z.string()
-	})
+	password: z.string()
 });
 
 export const load = async () => {
