@@ -3,6 +3,8 @@
 */
 
 export enum Collections {
+	CrudexampleCourses = "CrudExample_Courses",
+	CrudexampleEvents = "CrudExample_Events",
 	Features = "features",
 	Hooks = "hooks",
 	Users = "users",
@@ -31,6 +33,19 @@ export type AuthSystemFields<T = never> = {
 } & BaseSystemFields<T>
 
 // Record types for each collection
+
+export type CrudexampleCoursesRecord = {
+	name?: string
+	organization?: string
+	teacher?: string
+	date?: string
+}
+
+export type CrudexampleEventsRecord = {
+	title?: string
+	artist?: string
+	location?: string
+}
 
 export type FeaturesRecord<TenvVariables = unknown> = {
 	name: string
@@ -69,6 +84,8 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
+export type CrudexampleCoursesResponse = Required<CrudexampleCoursesRecord> & BaseSystemFields
+export type CrudexampleEventsResponse = Required<CrudexampleEventsRecord> & BaseSystemFields
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
 export type UsersResponse = Required<UsersRecord> & AuthSystemFields
@@ -76,12 +93,16 @@ export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
+	CrudExample_Courses: CrudexampleCoursesRecord
+	CrudExample_Events: CrudexampleEventsRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
+	CrudExample_Courses: CrudexampleCoursesResponse
+	CrudExample_Events: CrudexampleEventsResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
 	users: UsersResponse
