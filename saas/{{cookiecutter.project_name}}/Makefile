@@ -15,7 +15,7 @@ bg:
 
 fg:
 	@echo "🚀 Launching the Frontend" 
-	cd webapp && pnpm dev
+	cd webapp && pnpm i && pnpm dev
 
 clean: ## 🧹 Clean the containers
 	@echo "🧹 Cleaning the data"
