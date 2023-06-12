@@ -3,8 +3,7 @@
 */
 
 export enum Collections {
-	CrudexampleAllfields = "CrudExample_AllFields",
-	CrudexampleEvents = "CrudExample_Events",
+	CrudExample = "CrudExample",
 	Features = "features",
 	Hooks = "hooks",
 	Users = "users",
@@ -34,26 +33,28 @@ export type AuthSystemFields<T = never> = {
 
 // Record types for each collection
 
-export enum CrudexampleAllfieldsSelectOptions {
+export enum CrudExampleSelectOptions {
 	"opt1" = "opt1",
 	"opt2" = "opt2",
 	"opt3" = "opt3",
 	"opt4" = "opt4",
 	"opt5" = "opt5",
 }
-export type CrudexampleAllfieldsRecord = {
+
+export enum CrudExampleMultiselectOptions {
+	"A" = "A",
+	"B" = "B",
+	"C" = "C",
+	"D" = "D",
+}
+export type CrudExampleRecord = {
 	text: string
 	text_with_regex?: string
 	file_only_pdf_json?: string[]
 	boolean?: boolean
-	select: CrudexampleAllfieldsSelectOptions
+	select: CrudExampleSelectOptions
 	textarea?: HTMLString
-}
-
-export type CrudexampleEventsRecord = {
-	title?: string
-	artist?: string
-	location?: string
+	multiselect?: CrudExampleMultiselectOptions[]
 }
 
 export type FeaturesRecord<TenvVariables = unknown> = {
@@ -93,8 +94,7 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
-export type CrudexampleAllfieldsResponse = Required<CrudexampleAllfieldsRecord> & BaseSystemFields
-export type CrudexampleEventsResponse = Required<CrudexampleEventsRecord> & BaseSystemFields
+export type CrudExampleResponse = Required<CrudExampleRecord> & BaseSystemFields
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
 export type UsersResponse = Required<UsersRecord> & AuthSystemFields
@@ -102,16 +102,14 @@ export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
-	CrudExample_AllFields: CrudexampleAllfieldsRecord
-	CrudExample_Events: CrudexampleEventsRecord
+	CrudExample: CrudExampleRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
-	CrudExample_AllFields: CrudexampleAllfieldsResponse
-	CrudExample_Events: CrudexampleEventsResponse
+	CrudExample: CrudExampleResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
 	users: UsersResponse
