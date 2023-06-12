@@ -3,7 +3,7 @@
 */
 
 export enum Collections {
-	CrudexampleCourses = "CrudExample_Courses",
+	CrudexampleAllfields = "CrudExample_AllFields",
 	CrudexampleEvents = "CrudExample_Events",
 	Features = "features",
 	Hooks = "hooks",
@@ -34,11 +34,20 @@ export type AuthSystemFields<T = never> = {
 
 // Record types for each collection
 
-export type CrudexampleCoursesRecord = {
-	name?: string
-	organization?: string
-	teacher?: string
-	date?: string
+export enum CrudexampleAllfieldsSelectOptions {
+	"opt1" = "opt1",
+	"opt2" = "opt2",
+	"opt3" = "opt3",
+	"opt4" = "opt4",
+	"opt5" = "opt5",
+}
+export type CrudexampleAllfieldsRecord = {
+	text: string
+	text_with_regex?: string
+	file_only_pdf_json?: string[]
+	boolean?: boolean
+	select: CrudexampleAllfieldsSelectOptions[]
+	textarea?: HTMLString
 }
 
 export type CrudexampleEventsRecord = {
@@ -84,7 +93,7 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
-export type CrudexampleCoursesResponse = Required<CrudexampleCoursesRecord> & BaseSystemFields
+export type CrudexampleAllfieldsResponse = Required<CrudexampleAllfieldsRecord> & BaseSystemFields
 export type CrudexampleEventsResponse = Required<CrudexampleEventsRecord> & BaseSystemFields
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
@@ -93,7 +102,7 @@ export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
-	CrudExample_Courses: CrudexampleCoursesRecord
+	CrudExample_AllFields: CrudexampleAllfieldsRecord
 	CrudExample_Events: CrudexampleEventsRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
@@ -101,7 +110,7 @@ export type CollectionRecords = {
 }
 
 export type CollectionResponses = {
-	CrudExample_Courses: CrudexampleCoursesResponse
+	CrudExample_AllFields: CrudexampleAllfieldsResponse
 	CrudExample_Events: CrudexampleEventsResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
