@@ -46,7 +46,7 @@ export type CrudexampleAllfieldsRecord = {
 	text_with_regex?: string
 	file_only_pdf_json?: string[]
 	boolean?: boolean
-	select: CrudexampleAllfieldsSelectOptions[]
+	select: CrudexampleAllfieldsSelectOptions
 	textarea?: HTMLString
 }
 

@@ -30,6 +30,7 @@ const FieldTypeRefiners: FieldTypeRefiners = {
 	[FieldType.TEXT]: {
 		min: (s, o) => s.min(o.min as number),
 		max: (s, o) => s.max(o.max as number)
+		// Ciscoheat suggestion: add a "|" pipe to the regex to allow for empty string
 		// pattern: (s, o) => s.regex(new RegExp(o.pattern as string))
 		// pattern: (s, o) =>
 		// 	s.refine((v) => {
