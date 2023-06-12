@@ -14,8 +14,6 @@
 
 	let files: FileList | undefined;
 	$: if (files) $value = [...files];
-
-	$: log($errors);
 </script>
 
 <div class="space-y-2">

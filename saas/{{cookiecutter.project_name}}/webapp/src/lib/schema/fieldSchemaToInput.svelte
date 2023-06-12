@@ -13,10 +13,14 @@
 	const field = fieldSchema.name;
 	const label = fieldSchema.name;
 
+	/* Select */
+
 	let options: string[] = [];
 	if (fieldSchema.type == FieldType.SELECT) {
 		options = fieldSchema.options.values as string[];
 	}
+
+	/* File */
 
 	let fileConstraints = {};
 	if (fieldSchema.type == FieldType.FILE) {
