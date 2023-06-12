@@ -8,12 +8,20 @@
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import Checkbox from '$lib/components/forms/checkbox.svelte';
+	import { z } from 'zod';
 
 	//
 
-	export let data;
+	const schema = z
+		.object({
+			email: z.string().email(),
+			password: z.string().min(8),
+			passwordConfirm: z.string().min(8),
+			acceptTerms: z.boolean()
+		})
+		.refine((data) => data.password === data.passwordConfirm, 'PASSWORDS_DO_NOT_MATCH');
 
-	const superform = createForm(data.form, data.schema, async ({ form }) => {
+	const superform = createForm(schema, async ({ form }) => {
 		const { data } = form;
 		const u = pb.collection(Collections.Users);
 		await u.create(data);
@@ -21,7 +29,7 @@
 		await u.requestVerification(data.email);
 		await goto('/my/keypairoom');
 	});
-	const keys = data.schema.innerType().keyof().Enum;
+	const keys = schema.innerType().keyof().Enum;
 
 	const { capture, restore } = superform;
 	export const snapshot = { capture, restore };
