@@ -7,12 +7,14 @@
 	"description": "{{cookiecutter.project_description}}",
 	"version": "0.0.1",
 	"private": true,
-  "pnpm": { "allowedPrePostScripts": true },
+	"pnpm": {
+		"allowedPrePostScripts": true
+	},
 	"scripts": {
 		"schema": "node scripts/generate_schema.mjs",
-    "predev": "pnpm run schema",
+		"predev": "pnpm run schema",
 		"dev": "vite dev",
-    "prebuild": "pnpm run schema",
+		"prebuild": "pnpm run schema",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
