@@ -3,6 +3,7 @@
 
 	import { Helper, Label } from 'flowbite-svelte';
 	import { getFormContext } from './form.svelte';
+	import { log } from 'debug';
 
 	export let field: string;
 	export let label = '';
@@ -13,10 +14,13 @@
 
 	let files: FileList | undefined;
 	$: if (files) $value = [...files];
+
+	$: log($errors);
 </script>
 
 <div class="space-y-2">
-	<Label color={$errors ? 'red' : 'gray'} for={field} class="mb-2">{label}</Label>
+	<Label color={'gray'} for={field} class="mb-2">{label}</Label>
+	<!-- <Label color={$errors ? 'red' : 'gray'} for={field} class="mb-2">{label}</Label> -->
 	<input
 		name={field}
 		data-invalid={$errors}
@@ -25,7 +29,7 @@
 		{...$formConstraints}
 		{...constraints}
 	/>
-	{#if $errors}
-		<Helper class="mt-2" color="red">ds</Helper>
-	{/if}
+	<!-- {#if $errors}
+		<Helper class="mt-2" color="red">{JSON.stringify($errors)}</Helper>
+	{/if} -->
 </div>
