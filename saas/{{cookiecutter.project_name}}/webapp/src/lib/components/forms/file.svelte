@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 
-	import { Helper, Label } from 'flowbite-svelte';
+	import { Fileupload, Helper, Label, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { getFormContext } from './form.svelte';
 	import { log } from 'debug';
 
@@ -21,7 +21,16 @@
 <div class="space-y-2">
 	<Label color={'gray'} for={field} class="mb-2">{label}</Label>
 	<!-- <Label color={$errors ? 'red' : 'gray'} for={field} class="mb-2">{label}</Label> -->
-	<input name={field} data-invalid={$errors} type="file" bind:files {...constraints} />
+	<Fileupload name={field} bind:files {...constraints} data-invalid={$errors} />
+	{#if files}
+		<Listgroup items={[...files]} let:item class="mt-2">
+			{#if item}
+				{item.name}
+			{:else}
+				<ListgroupItem>No files</ListgroupItem>
+			{/if}
+		</Listgroup>
+	{/if}
 	<!-- {#if $errors}
 		<Helper class="mt-2" color="red">{JSON.stringify($errors)}</Helper>
 	{/if} -->
