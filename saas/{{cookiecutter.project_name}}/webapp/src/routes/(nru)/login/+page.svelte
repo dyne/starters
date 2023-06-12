@@ -5,16 +5,20 @@
 	import { Heading } from 'flowbite-svelte';
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
+	import { z } from 'zod';
 
-	export let data;
+	const schema = z.object({
+		email: z.string().email(),
+		password: z.string()
+	});
 
-	const superform = createForm(data.form, data.schema, async ({ form }) => {
+	const superform = createForm(schema, async ({ form }) => {
 		const { data } = form;
 		const u = pb.collection(Collections.Users);
 		await u.authWithPassword(data.email, data.password);
 		await goto('/my');
 	});
-	const keys = data.schema.keyof().Enum;
+	const keys = schema.keyof().Enum;
 
 	const { capture, restore } = superform;
 	export const snapshot = { capture, restore };

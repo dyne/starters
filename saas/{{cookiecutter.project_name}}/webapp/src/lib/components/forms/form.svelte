@@ -7,7 +7,8 @@
 		superForm,
 		setMessage,
 		type FormOptions,
-		type SuperForm
+		type SuperForm,
+		superValidateSync
 	} from 'sveltekit-superforms/client';
 
 	//
@@ -29,10 +30,13 @@
 	>;
 
 	export function createForm<T extends AnyZodObject>(
-		form: Validation<T>,
 		schema: any,
-		submitFunction: SubmitFunction<T> = async () => {}
+		submitFunction: SubmitFunction<T> = async () => {},
+		initialData: any = undefined
 	) {
+		let form: Validation<T>;
+		if (initialData) form = superValidateSync(initialData, schema, { errors: false });
+		else form = superValidateSync(schema);
 		return superForm<T>(form, {
 			SPA: true,
 			applyAction: false,

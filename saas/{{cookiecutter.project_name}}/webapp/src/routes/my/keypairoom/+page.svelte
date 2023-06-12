@@ -9,6 +9,7 @@
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
+	import { z } from 'zod';
 
 	//
 
@@ -16,7 +17,21 @@
 
 	let seed = '';
 
-	const superform = createForm(data.form, data.schema, async ({ form }) => {
+	const schema = (
+		z.object({
+			question1: z.string(),
+			question2: z.string(),
+			question3: z.string(),
+			question4: z.string(),
+			question5: z.string()
+		}) satisfies z.ZodType<UserAnswers>
+	)
+		.partial()
+		.refine((v) => {
+			return Object.values(v).filter((v) => Boolean(v)).length >= 3;
+		}, 'AT_LEAST_THREE_QUESTIONS');
+
+	const superform = createForm(schema, async ({ form }) => {
 		const { data: formData } = form;
 		const userEmail = data.user?.email as string;
 		const userAnswers: UserAnswers = {
