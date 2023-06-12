@@ -29,8 +29,12 @@ type FieldTypeRefiners = {
 const FieldTypeRefiners: FieldTypeRefiners = {
 	[FieldType.TEXT]: {
 		min: (s, o) => s.min(o.min as number),
-		max: (s, o) => s.max(o.max as number),
-		pattern: (s, o) => s.regex(new RegExp(o.pattern as string))
+		max: (s, o) => s.max(o.max as number)
+		// pattern: (s, o) => s.regex(new RegExp(o.pattern as string))
+		// pattern: (s, o) =>
+		// 	s.refine((v) => {
+		// 		return v.match(o.pattern as string);
+		// 	})
 	},
 	[FieldType.FILE]: {
 		maxSize: (s, o) =>
