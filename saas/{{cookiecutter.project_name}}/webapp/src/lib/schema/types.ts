@@ -1,16 +1,32 @@
-export interface Collection {
+import type { ValueOf } from '$lib/utils/types';
+
+//
+
+export const FieldType = {
+	TEXT: 'text',
+	EDITOR: 'editor',
+	BOOL: 'bool',
+	FILE: 'file',
+	SELECT: 'select'
+} as const;
+
+export type FieldType = ValueOf<typeof FieldType>;
+
+// Types generated parsing ./pb_schema.json with https://transform.tools/json-to-typescript
+
+export interface CollectionSchema {
 	id: string;
 	name: string;
 	type: string;
 	system: boolean;
 	schema: FieldSchema[];
 	indexes: string[];
-	listRule?: string;
-	viewRule?: string;
-	createRule?: string;
-	updateRule?: string;
-	deleteRule?: string;
-	options: CollectionOptions;
+	listRule: string | null;
+	viewRule: string | null;
+	createRule: string | null;
+	updateRule: string | null;
+	deleteRule: string | null;
+	options: Record<string, unknown>;
 }
 
 export interface FieldSchema {
@@ -19,28 +35,5 @@ export interface FieldSchema {
 	type: string;
 	system: boolean;
 	required: boolean;
-	options: SchemaOptions;
-}
-
-export interface SchemaOptions {
-	min?: any;
-	max?: any;
-	pattern?: string;
-	maxSelect?: number;
-	values?: string[];
-	maxSize?: number;
-	mimeTypes?: string[];
-	thumbs?: any;
-	protected?: boolean;
-}
-
-export interface CollectionOptions {
-	allowEmailAuth?: boolean;
-	allowOAuth2Auth?: boolean;
-	allowUsernameAuth?: boolean;
-	exceptEmailDomains: any;
-	manageRule: any;
-	minPasswordLength?: number;
-	onlyEmailDomains: any;
-	requireEmail?: boolean;
+	options: Record<string, unknown>;
 }
