@@ -5,6 +5,9 @@
 	import type { Collections } from '$lib/pocketbase-types';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 	import type { FieldSchema } from './types';
+	import { pb } from '$lib/pocketbase';
+	import { log } from 'debug';
+	import type { AnyZodObject } from 'zod';
 
 	export let collection: Collections;
 	export let initialData: any = undefined;
@@ -19,8 +22,13 @@
 
 	const superform = createForm(
 		zodSchema,
-		async (input) => {
-			console.log(input.form);
+		async ({ form }) => {
+			const formData = createFormData(form.data);
+			if (initialData && initialData.id) {
+				await pb.collection(collection).update(initialData.id, formData);
+			} else {
+				await pb.collection(collection).create(formData);
+			}
 		},
 		initialData
 	);
@@ -44,6 +52,22 @@
 
 	function filterFieldsSchema(schema: FieldSchema) {
 		return !excludedFields.includes(schema.name);
+	}
+
+	function createFormData(data: Record<string, unknown>) {
+		const formData = new FormData();
+		for (const [key, value] of Object.entries(data)) {
+			if (value instanceof File) {
+				formData.append(key, value);
+			} else if (Array.isArray(value)) {
+				for (const item of value) {
+					formData.append(key, item);
+				}
+			} else {
+				formData.append(key, value as string);
+			}
+		}
+		return formData;
 	}
 </script>
 

@@ -5,9 +5,4 @@
 	export let data;
 </script>
 
-<CrudForm
-	collection={Collections.CrudexampleAllfields}
-	initialData={data.item}
-	fieldsOrder={['select', 'boolean']}
-	excludedFields={['select']}
-/>
+<CrudForm collection={Collections.CrudexampleAllfields} initialData={data.item} />
