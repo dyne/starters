@@ -20,7 +20,14 @@
 <div class="space-y-2">
 	<Label color={$errors ? 'red' : 'gray'} for={field} class="mb-2">
 		<span>{label}</span>
-		<Select items={selectOptions} bind:value={$value} />
+		<Select
+			name={field}
+			items={selectOptions}
+			bind:value={$value}
+			color={$errors ? 'red' : 'base'}
+			data-invalid={$errors}
+			{...$constraints}
+		/>
 	</Label>
 	{#if $errors}
 		<Helper class="mt-2" color="red">{$errors}</Helper>
