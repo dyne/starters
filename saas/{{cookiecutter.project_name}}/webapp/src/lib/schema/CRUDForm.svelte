@@ -4,7 +4,7 @@
 	import { fieldsSchemaToZod } from './collectionSchemaToZod';
 	import type { Collections } from '$lib/pocketbase-types';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import type { FieldSchema } from './types';
+	import { FieldType, type FieldSchema } from './types';
 	import { pb } from '$lib/pocketbase';
 	import { log } from 'debug';
 	import type { AnyZodObject } from 'zod';
@@ -17,7 +17,10 @@
 	export let excludedFields: string[] = [];
 
 	const collectionSchema = getCollectionSchema(collection)!;
-	const fieldsSchema = collectionSchema.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
+	const fieldsSchema = collectionSchema.schema
+		.sort(sortFieldsSchema)
+		.filter(filterFieldsSchema)
+		.filter(excludeMultiselect);
 	const zodSchema = fieldsSchemaToZod(fieldsSchema);
 
 	const superform = createForm(
@@ -52,6 +55,14 @@
 
 	function filterFieldsSchema(schema: FieldSchema) {
 		return !excludedFields.includes(schema.name);
+	}
+
+	function excludeMultiselect(schema: FieldSchema) {
+		if (schema.type == FieldType.SELECT && (schema.options.maxSelect as number) > 1) {
+			log('multiple select not supported yet');
+			return false;
+		}
+		return true;
 	}
 
 	function createFormData(data: Record<string, unknown>) {
