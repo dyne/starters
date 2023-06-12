@@ -34,9 +34,7 @@
 		submitFunction: SubmitFunction<T> = async () => {},
 		initialData: any = undefined
 	) {
-		let form: SuperValidated<T>;
-		if (initialData) form = superValidateSync(initialData, schema, { errors: false });
-		else form = superValidateSync(schema);
+		const form = superValidateSync(initialData, schema, { errors: false });
 		return superForm<T>(form, {
 			SPA: true,
 			applyAction: false,
