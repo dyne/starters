@@ -10,7 +10,7 @@
 	export let constraints = {};
 
 	const { superform } = getFormContext();
-	const { value, errors, constraints: formConstraints } = formFieldProxy(superform, field);
+	const { value, errors } = formFieldProxy(superform, field);
 
 	let files: FileList | undefined;
 	$: if (files) $value = [...files];
@@ -21,14 +21,7 @@
 <div class="space-y-2">
 	<Label color={'gray'} for={field} class="mb-2">{label}</Label>
 	<!-- <Label color={$errors ? 'red' : 'gray'} for={field} class="mb-2">{label}</Label> -->
-	<input
-		name={field}
-		data-invalid={$errors}
-		type="file"
-		bind:files
-		{...$formConstraints}
-		{...constraints}
-	/>
+	<input name={field} data-invalid={$errors} type="file" bind:files {...constraints} />
 	<!-- {#if $errors}
 		<Helper class="mt-2" color="red">{JSON.stringify($errors)}</Helper>
 	{/if} -->

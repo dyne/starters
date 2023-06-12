@@ -22,7 +22,8 @@
 	if (fieldSchema.type == FieldType.FILE) {
 		fileConstraints = {
 			accept: (fieldSchema.options.mimeTypes as string[]).join(', '),
-			multiple: fieldSchema.options.maxSelect != 1
+			multiple: fieldSchema.options.maxSelect != 1,
+			required: fieldSchema.required
 		};
 	}
 </script>
