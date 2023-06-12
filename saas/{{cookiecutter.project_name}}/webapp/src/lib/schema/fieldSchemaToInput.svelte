@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Checkbox from '$lib/components/forms/checkbox.svelte';
 	import File from '$lib/components/forms/file.svelte';
+	import Hidden from '$lib/components/forms/hidden.svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import Select from '$lib/components/forms/select.svelte';
 	import Textarea from '$lib/components/forms/textarea.svelte';
 	import { type FieldSchema, FieldType } from './types';
 
 	export let fieldSchema: FieldSchema;
+	export let hidden = false;
 
 	const field = fieldSchema.name;
 	const label = fieldSchema.name;
@@ -25,7 +27,9 @@
 	}
 </script>
 
-{#if fieldSchema.type == FieldType.TEXT}
+{#if hidden}
+	<Hidden {field} />
+{:else if fieldSchema.type == FieldType.TEXT}
 	<Input {field} {label} />
 {:else if fieldSchema.type == FieldType.BOOL}
 	<Checkbox {field}>{label}</Checkbox>
