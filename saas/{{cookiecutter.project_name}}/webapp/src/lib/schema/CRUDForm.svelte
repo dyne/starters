@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import { getCollectionSchema } from './getCollectionSchema';
-	import { collectionSchemaToZod } from './collectionSchemaToZod';
+	import { fieldsSchemaToZod } from './collectionSchemaToZod';
 	import type { Collections } from '$lib/pocketbase-types';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 
@@ -12,18 +12,37 @@
 	export let hiddenFields: string[] = [];
 
 	const collectionSchema = getCollectionSchema(collection)!;
-	const schema = collectionSchemaToZod(collectionSchema);
+	const fieldsSchema = collectionSchema.schema.sort(sortFieldSchemas);
+	const zodSchema = fieldsSchemaToZod(fieldsSchema);
+
 	const superform = createForm(
-		schema,
+		zodSchema,
 		async (input) => {
 			console.log(input.form);
 		},
 		initialData
 	);
+
+	//
+
+	function sortFieldSchemas(a: any, b: any) {
+		const aIndex = fieldsOrder.indexOf(a.name);
+		const bIndex = fieldsOrder.indexOf(b.name);
+		if (aIndex === -1 && bIndex === -1) {
+			return 0;
+		}
+		if (aIndex === -1) {
+			return 1;
+		}
+		if (bIndex === -1) {
+			return -1;
+		}
+		return aIndex - bIndex;
+	}
 </script>
 
 <Form {superform}>
-	{#each collectionSchema.schema as fieldSchema}
+	{#each fieldsSchema as fieldSchema}
 		{@const hidden = hiddenFields.includes(fieldSchema.name)}
 		<FieldSchemaToInput {fieldSchema} {hidden} />
 	{/each}

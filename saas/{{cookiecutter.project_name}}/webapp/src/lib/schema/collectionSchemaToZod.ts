@@ -72,9 +72,9 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 	return zodSchema;
 }
 
-export function collectionSchemaToZod(collection: CollectionSchema): z.AnyZodObject {
+export function fieldsSchemaToZod(fields: FieldSchema[]): z.AnyZodObject {
 	const zodSchema: Record<string, ZodTypeAny> = {};
-	for (const field of collection.schema) {
+	for (const field of fields) {
 		try {
 			zodSchema[field.name] = fieldSchemaToZod(field);
 		} catch (e) {

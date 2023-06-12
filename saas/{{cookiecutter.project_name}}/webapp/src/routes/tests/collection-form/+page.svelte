@@ -8,5 +8,5 @@
 <CrudForm
 	collection={Collections.CrudexampleAllfields}
 	initialData={data.item}
-	hiddenFields={['text_with_regex', 'text']}
+	fieldsOrder={['select', 'boolean']}
 />
