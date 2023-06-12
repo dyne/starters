@@ -9,4 +9,5 @@
 	collection={Collections.CrudexampleAllfields}
 	initialData={data.item}
 	fieldsOrder={['select', 'boolean']}
+	excludedFields={['select']}
 />
