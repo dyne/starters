@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ZodEffects, ZodTypeAny } from 'zod';
 import { log } from '$lib/utils/devLog';
 import type { ValueOf } from '$lib/utils/types';
-import { type FieldSchema, type CollectionSchema, FieldType } from './types';
+import { type FieldSchema, FieldType } from './types';
 
 //
 
@@ -29,13 +29,9 @@ type FieldTypeRefiners = {
 const FieldTypeRefiners: FieldTypeRefiners = {
 	[FieldType.TEXT]: {
 		min: (s, o) => s.min(o.min as number),
-		max: (s, o) => s.max(o.max as number)
-		// Ciscoheat suggestion: add a "|" pipe to the regex to allow for empty string
-		// pattern: (s, o) => s.regex(new RegExp(o.pattern as string))
-		// pattern: (s, o) =>
-		// 	s.refine((v) => {
-		// 		return v.match(o.pattern as string);
-		// 	})
+		max: (s, o) => s.max(o.max as number),
+		// Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
+		pattern: (s, o) => s.regex(new RegExp(`|${o.pattern}` as string))
 	},
 	[FieldType.FILE]: {
 		maxSize: (s, o) =>
