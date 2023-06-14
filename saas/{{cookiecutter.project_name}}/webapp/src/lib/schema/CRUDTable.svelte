@@ -15,9 +15,10 @@
 		TableHead,
 		TableHeadCell
 	} from 'flowbite-svelte';
-	import { getCollectionSchema } from './getCollectionSchema';
 	import TrashCan from '$lib/components/icons/trashCan.svelte';
 	import Edit from '$lib/components/icons/edit.svelte';
+	import CrudForm from './CRUDForm.svelte';
+	import { onMount } from 'svelte';
 
 	//
 
@@ -29,30 +30,43 @@
 	const recordService = pb.collection(collection);
 
 	let dataPromise: Promise<Record[]>;
-	loadData();
+
+	onMount(() => {
+		loadData();
+	});
 
 	async function loadData() {
 		dataPromise = recordService.getFullList();
 	}
 
-	/* Record delete */
+	/* Record actions */
 
-	let deletingRecord: Record | null = null;
+	type Action = 'delete' | 'edit';
 
-	async function setDeletingRecord(record: Record) {
-		deletingRecord = record;
+	let currentRecord: Record | null = null;
+	let recordAction: Action | null = null;
+
+	async function setRecordForAction(record: Record, action: Action) {
+		currentRecord = record;
+		recordAction = action;
 	}
 
-	function discardDelete() {
-		deletingRecord = null;
+	function discard() {
+		currentRecord = null;
+		recordAction = null;
 	}
 
 	async function deleteRecord() {
-		if (deletingRecord) {
-			await recordService.delete(deletingRecord.id);
+		if (currentRecord && recordAction === 'delete') {
+			await recordService.delete(currentRecord.id);
 			loadData();
-			deletingRecord = null;
+			discard();
 		}
+	}
+
+	async function handleSuccess() {
+		loadData();
+		discard();
 	}
 </script>
 
@@ -67,43 +81,59 @@
 			{/if}
 		</TableHead>
 		<TableBody>
-			{#await dataPromise}
-				<TableBodyRow>
-					<Spinner />
-				</TableBodyRow>
-			{:then data}
-				{#each data as item (item.id)}
+			{#if dataPromise}
+				{#await dataPromise}
 					<TableBodyRow>
-						{#each displayFields as field}
-							<TableBodyCell>{item[field]}</TableBodyCell>
-						{/each}
-						{#if showEdit || showDelete}
-							<TableBodyCell class="space-x-1">
-								<Button
-									class="!p-3"
-									color="alternative"
-									on:click={() => {
-										setDeletingRecord(item);
-									}}
-								>
-									<TrashCan className="h-5" />
-								</Button>
-								<Button class="!p-3" color="alternative"><Edit className="h-5" /></Button>
-							</TableBodyCell>
-						{/if}
+						<Spinner />
 					</TableBodyRow>
-				{/each}
-			{/await}
+				{:then data}
+					{#each data as item (item.id)}
+						<TableBodyRow>
+							{#each displayFields as field}
+								<TableBodyCell>{item[field]}</TableBodyCell>
+							{/each}
+							{#if showEdit || showDelete}
+								<TableBodyCell class="space-x-1">
+									<Button
+										class="!p-3"
+										color="alternative"
+										on:click={() => {
+											setRecordForAction(item, 'edit');
+										}}
+									>
+										<Edit className="h-5" />
+									</Button>
+									<Button
+										class="!p-3"
+										color="alternative"
+										on:click={() => {
+											setRecordForAction(item, 'delete');
+										}}
+									>
+										<TrashCan className="h-5" />
+									</Button>
+								</TableBodyCell>
+							{/if}
+						</TableBodyRow>
+					{/each}
+				{/await}
+			{/if}
 		</TableBody>
 	</Table>
 </div>
 
-<Modal open={Boolean(deletingRecord)} title="Delete record" size="xs" autoclose>
+<Modal open={Boolean(currentRecord) && recordAction === 'delete'} title="Delete record" size="xs">
 	<div class="text-center space-y-6">
 		<P>Are you sure you want to delete this record?</P>
 		<div class="flex gap-2 justify-center">
 			<Button color="red" on:click={deleteRecord}>Delete</Button>
-			<Button color="alternative" on:click={discardDelete}>Cancel</Button>
+			<Button color="alternative" on:click={discard}>Cancel</Button>
 		</div>
+	</div>
+</Modal>
+
+<Modal open={Boolean(currentRecord) && recordAction === 'edit'} title="Edit record" size="lg">
+	<div class="w-[500px]">
+		<CrudForm {collection} initialData={currentRecord} on:success={handleSuccess} />
 	</div>
 </Modal>
