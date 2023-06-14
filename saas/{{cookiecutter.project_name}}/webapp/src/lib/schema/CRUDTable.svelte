@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Record } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import {
 		Spinner,
@@ -11,43 +10,35 @@
 		TableHead,
 		TableHeadCell
 	} from 'flowbite-svelte';
-	import { onMount } from 'svelte';
+	import { getCollectionSchema } from './getCollectionSchema';
+
+	//
 
 	export let collection: Collections;
+	export let displayFields: string[] = ['id'];
 
-	let loading = true;
-	let data: Record[];
-
-	onMount(async () => {
-		data = await pb.collection(collection).getFullList();
-		loading = false;
-	});
+	let dataPromise = (async () => {
+		return await pb.collection(collection).getFullList();
+	})();
 </script>
 
-{#if loading}
+{#await dataPromise}
 	<Spinner />
-{:else if data}
-	<script>
-		import {
-			Table,
-			TableBody,
-			TableBodyCell,
-			TableBodyRow,
-			TableHead,
-			TableHeadCell
-		} from 'flowbite-svelte';
-	</script>
-
+{:then data}
 	<Table>
 		<TableHead>
-			<TableHeadCell>Item</TableHeadCell>
+			{#each displayFields as field}
+				<TableHeadCell>{field}</TableHeadCell>
+			{/each}
 		</TableHead>
 		<TableBody>
 			{#each data as item (item.id)}
 				<TableBodyRow>
-					<TableBodyCell><pre>{JSON.stringify(item, null, 2)}</pre></TableBodyCell>
+					{#each displayFields as field}
+						<TableBodyCell>{item[field]}</TableBodyCell>
+					{/each}
 				</TableBodyRow>
 			{/each}
 		</TableBody>
 	</Table>
-{/if}
+{/await}
