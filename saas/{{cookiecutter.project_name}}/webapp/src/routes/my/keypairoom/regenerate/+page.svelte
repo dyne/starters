@@ -4,6 +4,7 @@
 
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Textarea from '$lib/components/forms/textarea.svelte';
+	import { z } from 'zod';
 
 	//
 
@@ -11,14 +12,18 @@
 
 	let success = false;
 
-	const superform = createForm(data.form, data.schema, async ({ form }) => {
+	const schema = z.object({
+		seed: z.string()
+	});
+
+	const superform = createForm(schema, async ({ form }) => {
 		const seed = form.data.seed;
 		const hmac = await getHMAC(data.user?.email);
 		const keypair = await regenerateKeypair(seed, hmac);
 		saveKeyringToLocalStorage(keypair.keyring);
 		success = true;
 	});
-	const keys = data.schema.keyof().Enum;
+	const keys = schema.keyof().Enum;
 
 	const { capture, restore } = superform;
 	export const snapshot = { capture, restore };
