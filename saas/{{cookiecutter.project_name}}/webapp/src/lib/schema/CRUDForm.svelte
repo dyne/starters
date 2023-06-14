@@ -7,7 +7,9 @@
 	import { FieldType, type FieldSchema } from './types';
 	import { pb } from '$lib/pocketbase';
 	import { log } from 'debug';
-	import type { AnyZodObject } from 'zod';
+	import { createEventDispatcher } from 'svelte';
+
+	//
 
 	export let collection: Collections;
 	export let initialData: any = undefined;
@@ -15,6 +17,10 @@
 	export let fieldsOrder: string[] = [];
 	export let hiddenFields: string[] = [];
 	export let excludedFields: string[] = [];
+
+	//
+
+	const dispatch = createEventDispatcher<{ success: {} }>();
 
 	const collectionSchema = getCollectionSchema(collection)!;
 	const fieldsSchema = collectionSchema.schema
@@ -32,6 +38,7 @@
 			} else {
 				await pb.collection(collection).create(formData);
 			}
+			dispatch('success', {});
 		},
 		initialData
 	);
@@ -80,9 +87,13 @@
 		}
 		return formData;
 	}
+
+	//
+
+	const defaultSubmitButtonText = Boolean(initialData) ? 'Edit record' : 'Create record';
 </script>
 
-<Form {superform}>
+<Form {superform} {defaultSubmitButtonText} on:success>
 	{#each fieldsSchema as fieldSchema}
 		{@const hidden = hiddenFields.includes(fieldSchema.name)}
 		<FieldSchemaToInput {fieldSchema} {hidden} />
