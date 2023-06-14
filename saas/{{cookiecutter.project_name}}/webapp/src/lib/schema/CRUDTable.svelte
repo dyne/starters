@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Record } from 'pocketbase';
+	import type { Record as PBRecord } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import {
 		Button,
@@ -29,7 +29,7 @@
 
 	const recordService = pb.collection(collection);
 
-	let dataPromise: Promise<Record[]>;
+	let dataPromise: Promise<PBRecord[]>;
 
 	onMount(() => {
 		loadData();
@@ -41,36 +41,49 @@
 
 	/* Record actions */
 
-	type Action = 'delete' | 'edit';
+	type Action = 'delete' | 'edit' | 'create';
 
-	let currentRecord: Record | null = null;
-	let recordAction: Action | null = null;
+	let currentRecord: PBRecord | null = null;
+	let currentAction: Action | null = null;
 
-	async function setRecordForAction(record: Record, action: Action) {
+	async function setAction(action: Action, record: PBRecord | null = null) {
+		currentAction = action;
 		currentRecord = record;
-		recordAction = action;
 	}
 
-	function discard() {
+	function resetState() {
 		currentRecord = null;
-		recordAction = null;
+		currentAction = null;
 	}
 
 	async function deleteRecord() {
-		if (currentRecord && recordAction === 'delete') {
+		if (currentRecord && currentAction === 'delete') {
 			await recordService.delete(currentRecord.id);
 			loadData();
-			discard();
+			resetState();
 		}
 	}
 
 	async function handleSuccess() {
 		loadData();
-		discard();
+		resetState();
 	}
 </script>
 
 <div>
+	<div class="flex justify-between items-center mb-4">
+		<Heading tag="h4">{collection}</Heading>
+		<div class="shrink-0">
+			<Button
+				color="alternative"
+				on:click={() => {
+					setAction('create');
+				}}
+			>
+				+ Add entry
+			</Button>
+		</div>
+	</div>
 	<Table>
 		<TableHead>
 			{#each displayFields as field}
@@ -98,7 +111,7 @@
 										class="!p-3"
 										color="alternative"
 										on:click={() => {
-											setRecordForAction(item, 'edit');
+											setAction('edit', item);
 										}}
 									>
 										<Edit className="h-5" />
@@ -107,7 +120,7 @@
 										class="!p-3"
 										color="alternative"
 										on:click={() => {
-											setRecordForAction(item, 'delete');
+											setAction('delete', item);
 										}}
 									>
 										<TrashCan className="h-5" />
@@ -122,18 +135,35 @@
 	</Table>
 </div>
 
-<Modal open={Boolean(currentRecord) && recordAction === 'delete'} title="Delete record" size="xs">
-	<div class="text-center space-y-6">
-		<P>Are you sure you want to delete this record?</P>
-		<div class="flex gap-2 justify-center">
-			<Button color="red" on:click={deleteRecord}>Delete</Button>
-			<Button color="alternative" on:click={discard}>Cancel</Button>
-		</div>
-	</div>
-</Modal>
+<div class="flex flex-col">
+	<p>{JSON.stringify(currentAction)}</p>
+	<p>{JSON.stringify(currentRecord)}</p>
+</div>
 
-<Modal open={Boolean(currentRecord) && recordAction === 'edit'} title="Edit record" size="lg">
+{#if Boolean(currentRecord)}
+	<Modal open={currentAction === 'delete'} title="Delete record" size="xs" on:hide={resetState}>
+		<div class="text-center space-y-6">
+			<P>Are you sure you want to delete this record?</P>
+			<div class="flex gap-2 justify-center">
+				<Button color="red" on:click={deleteRecord}>Delete</Button>
+				<Button color="alternative" on:click={resetState}>Cancel</Button>
+			</div>
+		</div>
+	</Modal>
+
+	<Modal open={currentAction === 'edit'} title="Edit record" size="lg" on:hide={resetState}>
+		<div class="w-[500px]">
+			<slot name="editForm" {currentRecord}>
+				<CrudForm {collection} initialData={currentRecord} on:success={handleSuccess} />
+			</slot>
+		</div>
+	</Modal>
+{/if}
+
+<Modal open={currentAction === 'create'} title="Create record" size="lg" on:hide={resetState}>
 	<div class="w-[500px]">
-		<CrudForm {collection} initialData={currentRecord} on:success={handleSuccess} />
+		<slot name="createForm">
+			<CrudForm {collection} on:success={handleSuccess} />
+		</slot>
 	</div>
 </Modal>

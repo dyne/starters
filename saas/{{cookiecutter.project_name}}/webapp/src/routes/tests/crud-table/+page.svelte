@@ -3,4 +3,6 @@
 	import CrudTable from '$lib/schema/CRUDTable.svelte';
 </script>
 
-<CrudTable collection={Collections.CrudExample} displayFields={['id', 'text']} />
+<div class="p-4">
+	<CrudTable collection={Collections.CrudExample} displayFields={['id', 'text']} />
+</div>
