@@ -75,6 +75,7 @@
 	function createFormData(data: Record<string, unknown>) {
 		const formData = new FormData();
 		for (const [key, value] of Object.entries(data)) {
+			if (!Boolean(value)) continue; // Needed otherwise pb complains about "bad formatting", especially for null files
 			if (value instanceof File) {
 				formData.append(key, value);
 			} else if (Array.isArray(value)) {
