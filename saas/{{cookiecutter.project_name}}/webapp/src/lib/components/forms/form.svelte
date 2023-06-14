@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import { formatUnknownException } from '$lib/errorHandling';
 	import type { AnyZodObject } from 'zod';
-	import type { SuperValidated, UnwrapEffects } from 'sveltekit-superforms/index';
+	import type { UnwrapEffects } from 'sveltekit-superforms/index';
 	import {
 		superForm,
 		setMessage,
