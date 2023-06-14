@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import { formatUnknownException } from '$lib/errorHandling';
 	import type { AnyZodObject } from 'zod';
-	import type { UnwrapEffects, Validation } from 'sveltekit-superforms/index';
+	import type { SuperValidated, UnwrapEffects } from 'sveltekit-superforms/index';
 	import {
 		superForm,
 		setMessage,
@@ -34,9 +34,7 @@
 		submitFunction: SubmitFunction<T> = async () => {},
 		initialData: any = undefined
 	) {
-		let form: Validation<T>;
-		if (initialData) form = superValidateSync(initialData, schema, { errors: false });
-		else form = superValidateSync(schema);
+		const form = superValidateSync(initialData, schema, { errors: false });
 		return superForm<T>(form, {
 			SPA: true,
 			applyAction: false,

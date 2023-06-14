@@ -3,6 +3,7 @@
 */
 
 export enum Collections {
+	CrudExample = "CrudExample",
 	Features = "features",
 	Hooks = "hooks",
 	Users = "users",
@@ -31,6 +32,30 @@ export type AuthSystemFields<T = never> = {
 } & BaseSystemFields<T>
 
 // Record types for each collection
+
+export enum CrudExampleSelectOptions {
+	"opt1" = "opt1",
+	"opt2" = "opt2",
+	"opt3" = "opt3",
+	"opt4" = "opt4",
+	"opt5" = "opt5",
+}
+
+export enum CrudExampleMultiselectOptions {
+	"A" = "A",
+	"B" = "B",
+	"C" = "C",
+	"D" = "D",
+}
+export type CrudExampleRecord = {
+	text: string
+	text_with_regex?: string
+	file_only_pdf_json?: string[]
+	boolean?: boolean
+	select: CrudExampleSelectOptions
+	textarea?: HTMLString
+	multiselect?: CrudExampleMultiselectOptions[]
+}
 
 export type FeaturesRecord<TenvVariables = unknown> = {
 	name: string
@@ -69,6 +94,7 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
+export type CrudExampleResponse = Required<CrudExampleRecord> & BaseSystemFields
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
 export type UsersResponse = Required<UsersRecord> & AuthSystemFields
@@ -76,12 +102,14 @@ export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
+	CrudExample: CrudExampleRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
+	CrudExample: CrudExampleResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
 	users: UsersResponse
