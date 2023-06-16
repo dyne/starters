@@ -1,6 +1,17 @@
+<script lang="ts" context="module">
+	import type { Record as PBRecord } from 'pocketbase';
+	import type { SvelteComponent } from 'svelte';
+
+	export type TableAction = {
+		name: string;
+		icon?: typeof SvelteComponent;
+		function: <T>(record: T & PBRecord) => void;
+	};
+</script>
+
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Record as PBRecord, RecordFullListQueryParams } from 'pocketbase';
+	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import {
 		Button,
@@ -18,7 +29,6 @@
 	import TrashCan from '$lib/components/icons/trashCan.svelte';
 	import Edit from '$lib/components/icons/edit.svelte';
 	import CrudForm from './CRUDForm.svelte';
-	import { onMount } from 'svelte';
 	import CrudTableHead from './CRUDTableHead.svelte';
 
 	//
@@ -27,6 +37,7 @@
 	export let displayFields: string[] = ['id'];
 	export let showDelete = true;
 	export let showEdit = true;
+	export let actions: Array<TableAction> = [];
 
 	const recordService = pb.collection(collection);
 
@@ -111,25 +122,42 @@
 								<TableBodyCell>{item[field]}</TableBodyCell>
 							{/each}
 							{#if showEdit || showDelete}
-								<TableBodyCell class="space-x-1">
-									<Button
-										class="!p-3"
-										color="alternative"
-										on:click={() => {
-											setAction('edit', item);
-										}}
-									>
-										<Edit className="h-5" />
-									</Button>
-									<Button
-										class="!p-3"
-										color="alternative"
-										on:click={() => {
-											setAction('delete', item);
-										}}
-									>
-										<TrashCan className="h-5" />
-									</Button>
+								<TableBodyCell>
+									<div class="flex items-center space-x-2">
+										<Button
+											class="!px-3"
+											color="alternative"
+											on:click={() => {
+												setAction('edit', item);
+											}}
+										>
+											<Edit className="h-5" />
+										</Button>
+										<Button
+											class="!px-3"
+											color="alternative"
+											on:click={() => {
+												setAction('delete', item);
+											}}
+										>
+											<TrashCan className="h-5" />
+										</Button>
+										{#each actions as action}
+											<Button
+												class="!px-3"
+												color="alternative"
+												on:click={() => {
+													action.function(item);
+												}}
+											>
+												{#if action.icon}
+													<svelte:component this={action.icon} />
+												{:else}
+													{action.name}
+												{/if}
+											</Button>
+										{/each}
+									</div>
 								</TableBodyCell>
 							{/if}
 						</TableBodyRow>

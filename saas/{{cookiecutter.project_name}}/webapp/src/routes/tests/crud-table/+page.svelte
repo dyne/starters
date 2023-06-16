@@ -6,6 +6,14 @@
 <div class="p-4">
 	<CrudTable
 		collection={Collections.CrudExample}
-		displayFields={['id', 'text', 'created', 'updated']}
+		displayFields={['id', 'text']}
+		actions={[
+			{
+				name: 'ciao',
+				function: (r) => {
+					console.log(r);
+				}
+			}
+		]}
 	/>
 </div>
