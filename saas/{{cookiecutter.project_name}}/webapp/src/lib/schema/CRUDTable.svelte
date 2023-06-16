@@ -27,10 +27,9 @@
 		TableHeadCell,
 		Checkbox
 	} from 'flowbite-svelte';
-	import TrashCan from '$lib/components/icons/trashCan.svelte';
-	import Edit from '$lib/components/icons/edit.svelte';
 	import CrudForm from './CRUDForm.svelte';
 	import CrudTableHead from './CRUDTableHead.svelte';
+	import { Trash, Pencil, Plus, XMark } from 'svelte-heros-v2';
 
 	//
 
@@ -128,14 +127,17 @@
 			{#if Boolean(selection.length)}
 				<P><span class="font-bold">{selection.length}</span> selected</P>
 				<div class="flex space-x-2 items-center">
-					<Button color="alternative" on:click={discardSelection}>x Discard</Button>
+					<Button color="alternative" on:click={discardSelection}>
+						<XMark size="20" />
+						<span class="ml-1">Discard</span>
+					</Button>
 					<Button
 						color="alternative"
 						on:click={() => {
 							setAction('delete');
 						}}
 					>
-						<TrashCan className="h-5" />
+						<Trash size="20" />
 						<span class="ml-1"> Delete </span>
 					</Button>
 				</div>
@@ -146,7 +148,8 @@
 						setAction('create');
 					}}
 				>
-					+ Add entry
+					<Plus size="20" />
+					<span class="ml-1"> Add entry </span>
 				</Button>
 			{/if}
 		</div>
@@ -181,7 +184,7 @@
 											setAction('edit', item);
 										}}
 									>
-										<Edit className="h-5" />
+										<Pencil size="20" />
 									</Button>
 									<Button
 										class="!px-3"
@@ -190,7 +193,7 @@
 											setAction('delete', item);
 										}}
 									>
-										<TrashCan className="h-5" />
+										<Trash size="20" />
 									</Button>
 									{#each actions as action}
 										<Button
@@ -222,8 +225,13 @@
 		<div class="text-center space-y-6">
 			<P>Are you sure you want to delete this record?</P>
 			<div class="flex gap-2 justify-center">
-				<Button color="red" on:click={deleteRecord}>Delete</Button>
-				<Button color="alternative" on:click={resetState}>Cancel</Button>
+				<Button color="red" on:click={deleteRecord}>
+					<Trash size="20" /><span class="ml-1">Delete</span>
+				</Button>
+				<Button color="alternative" on:click={resetState}>
+					<XMark size="20" />
+					<span class="ml-1"> Cancel </span>
+				</Button>
 			</div>
 		</div>
 	</Modal>

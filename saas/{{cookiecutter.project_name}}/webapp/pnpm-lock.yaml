@@ -22,9 +22,6 @@ dependencies:
   svelte-heros:
     specifier: ^3.3.1
     version: 3.3.1(svelte@3.59.1)
-  svelte-heros-v2:
-    specifier: ^0.4.2
-    version: 0.4.2(svelte@3.59.1)
   zenroom:
     specifier: ^3.0.1
     version: 3.0.1
@@ -84,6 +81,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.3.2
     version: 3.3.2(postcss-load-config@4.0.1)(postcss@8.4.23)(svelte@3.59.1)
+  svelte-heros-v2:
+    specifier: ^0.4.2
+    version: 0.4.2(svelte@3.59.1)
   svelte-preprocess:
     specifier: ^5.0.3
     version: 5.0.3(postcss-load-config@4.0.1)(postcss@8.4.23)(svelte@3.59.1)(typescript@5.0.4)
@@ -2362,7 +2362,7 @@ packages:
       svelte: ^3.54.0
     dependencies:
       svelte: 3.59.1
-    dev: false
+    dev: true
 
   /svelte-heros@3.3.1(svelte@3.59.1):
     resolution: {integrity: sha512-+ujQD/FbzV3t65RLYZ8qqKX7GwpgOPT13C80JQdbgM0lVHSId5gDzSbBXPpWfx6P3neel8ypqmt7BbwRNVECMw==}
