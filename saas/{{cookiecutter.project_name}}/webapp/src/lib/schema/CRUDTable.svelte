@@ -135,11 +135,6 @@
 	</Table>
 </div>
 
-<div class="flex flex-col">
-	<p>{JSON.stringify(currentAction)}</p>
-	<p>{JSON.stringify(currentRecord)}</p>
-</div>
-
 {#if Boolean(currentRecord)}
 	<Modal open={currentAction === 'delete'} title="Delete record" size="xs" on:hide={resetState}>
 		<div class="text-center space-y-6">
