@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Record as PBRecord } from 'pocketbase';
+	import type { Record as PBRecord, RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import {
 		Button,
@@ -19,6 +19,7 @@
 	import Edit from '$lib/components/icons/edit.svelte';
 	import CrudForm from './CRUDForm.svelte';
 	import { onMount } from 'svelte';
+	import CrudTableHead from './CRUDTableHead.svelte';
 
 	//
 
@@ -30,13 +31,17 @@
 	const recordService = pb.collection(collection);
 
 	let dataPromise: Promise<PBRecord[]>;
-
-	onMount(() => {
-		loadData();
-	});
+	let queryParams: RecordFullListQueryParams = {
+		sort: '-created'
+	};
 
 	async function loadData() {
-		dataPromise = recordService.getFullList();
+		dataPromise = recordService.getFullList(queryParams);
+	}
+
+	$: {
+		queryParams;
+		loadData();
 	}
 
 	/* Record actions */
@@ -87,7 +92,7 @@
 	<Table>
 		<TableHead>
 			{#each displayFields as field}
-				<TableHeadCell>{field}</TableHeadCell>
+				<CrudTableHead bind:queryParams {field} />
 			{/each}
 			{#if showEdit || showDelete}
 				<TableHeadCell>Actions</TableHeadCell>

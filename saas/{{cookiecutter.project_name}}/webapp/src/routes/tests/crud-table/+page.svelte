@@ -4,5 +4,8 @@
 </script>
 
 <div class="p-4">
-	<CrudTable collection={Collections.CrudExample} displayFields={['id', 'text']} />
+	<CrudTable
+		collection={Collections.CrudExample}
+		displayFields={['id', 'text', 'created', 'updated']}
+	/>
 </div>
