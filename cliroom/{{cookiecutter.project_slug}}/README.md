@@ -18,7 +18,7 @@
 
 ## cliroom features
 
-{screenshot}
+[![asciicast](https://asciinema.org/a/JwrP1goc45scxOxjYm8FmKNI4.svg)](https://asciinema.org/a/JwrP1goc45scxOxjYm8FmKNI4)
 
 <br>
 
@@ -48,12 +48,13 @@ Cliroom is a template of a project that allows you to create beatufil command li
 
 To start using cliroom
 
-1. `npx degit dyne/cliroom myproject`
+1. `cruft create --directory cliroom https://github.com/dyne/starters`
+1. answer questions (suppose to name your project myproject)
 1. `cd myproject`
 1. edit `package.json` and change the name and description
 1. populate the `contracts` folder with your zencode smart contracts
 1. define the parameters of your contracts with `*.param` files
-1. `npm build`
+1. `npm i && npm build`
 1. 🎉 enjoy your new CLI
 
 **[🔝 back to top](#toc)**
