@@ -24,7 +24,8 @@
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Checkbox
 	} from 'flowbite-svelte';
 	import TrashCan from '$lib/components/icons/trashCan.svelte';
 	import Edit from '$lib/components/icons/edit.svelte';
@@ -41,13 +42,13 @@
 
 	const recordService = pb.collection(collection);
 
-	let dataPromise: Promise<PBRecord[]>;
+	let data: PBRecord[];
 	let queryParams: RecordFullListQueryParams = {
 		sort: '-created'
 	};
 
 	async function loadData() {
-		dataPromise = recordService.getFullList(queryParams);
+		data = await recordService.getFullList(queryParams);
 	}
 
 	$: {
@@ -84,24 +85,75 @@
 		loadData();
 		resetState();
 	}
+
+	/* Multiple selection */
+
+	let selection: string[] = [];
+	let allSelected = false;
+
+	$: if (data) {
+		allSelected = data.length === selection.length;
+	}
+
+	function toggleAll() {
+		if (allSelected) {
+			selection = [];
+		} else {
+			if (data) {
+				selection = data.map((item) => item.id);
+			}
+		}
+	}
+
+	function discardSelection() {
+		selection = [];
+	}
+
+	async function deleteSelection() {
+		if (selection.length && currentAction === 'delete') {
+			for (const id of selection) {
+				await recordService.delete(id);
+			}
+			loadData();
+			discardSelection();
+			resetState();
+		}
+	}
 </script>
 
 <div>
 	<div class="flex justify-between items-center mb-4">
 		<Heading tag="h4">{collection}</Heading>
-		<div class="shrink-0">
-			<Button
-				color="alternative"
-				on:click={() => {
-					setAction('create');
-				}}
-			>
-				+ Add entry
-			</Button>
+		<div class="shrink-0 flex space-x-4 items-center">
+			{#if Boolean(selection.length)}
+				<P><span class="font-bold">{selection.length}</span> selected</P>
+				<div class="flex space-x-2 items-center">
+					<Button color="alternative" on:click={discardSelection}>x Discard</Button>
+					<Button
+						color="alternative"
+						on:click={() => {
+							setAction('delete');
+						}}
+					>
+						<TrashCan className="h-5" />
+						<span class="ml-1"> Delete </span>
+					</Button>
+				</div>
+			{:else}
+				<Button
+					color="alternative"
+					on:click={() => {
+						setAction('create');
+					}}
+				>
+					+ Add entry
+				</Button>
+			{/if}
 		</div>
 	</div>
 	<Table>
 		<TableHead>
+			<TableHeadCell><Checkbox checked={allSelected} on:click={toggleAll} /></TableHeadCell>
 			{#each displayFields as field}
 				<CrudTableHead bind:queryParams {field} />
 			{/each}
@@ -110,59 +162,56 @@
 			{/if}
 		</TableHead>
 		<TableBody>
-			{#if dataPromise}
-				{#await dataPromise}
+			{#if data}
+				{#each data as item (item.id)}
 					<TableBodyRow>
-						<Spinner />
+						<TableBodyCell>
+							<Checkbox bind:group={selection} value={item.id} name="select" />
+						</TableBodyCell>
+						{#each displayFields as field}
+							<TableBodyCell>{item[field]}</TableBodyCell>
+						{/each}
+						{#if showEdit || showDelete}
+							<TableBodyCell>
+								<div class="flex items-center space-x-2">
+									<Button
+										class="!px-3"
+										color="alternative"
+										on:click={() => {
+											setAction('edit', item);
+										}}
+									>
+										<Edit className="h-5" />
+									</Button>
+									<Button
+										class="!px-3"
+										color="alternative"
+										on:click={() => {
+											setAction('delete', item);
+										}}
+									>
+										<TrashCan className="h-5" />
+									</Button>
+									{#each actions as action}
+										<Button
+											class="!px-3"
+											color="alternative"
+											on:click={() => {
+												action.function(item);
+											}}
+										>
+											{#if action.icon}
+												<svelte:component this={action.icon} />
+											{:else}
+												{action.name}
+											{/if}
+										</Button>
+									{/each}
+								</div>
+							</TableBodyCell>
+						{/if}
 					</TableBodyRow>
-				{:then data}
-					{#each data as item (item.id)}
-						<TableBodyRow>
-							{#each displayFields as field}
-								<TableBodyCell>{item[field]}</TableBodyCell>
-							{/each}
-							{#if showEdit || showDelete}
-								<TableBodyCell>
-									<div class="flex items-center space-x-2">
-										<Button
-											class="!px-3"
-											color="alternative"
-											on:click={() => {
-												setAction('edit', item);
-											}}
-										>
-											<Edit className="h-5" />
-										</Button>
-										<Button
-											class="!px-3"
-											color="alternative"
-											on:click={() => {
-												setAction('delete', item);
-											}}
-										>
-											<TrashCan className="h-5" />
-										</Button>
-										{#each actions as action}
-											<Button
-												class="!px-3"
-												color="alternative"
-												on:click={() => {
-													action.function(item);
-												}}
-											>
-												{#if action.icon}
-													<svelte:component this={action.icon} />
-												{:else}
-													{action.name}
-												{/if}
-											</Button>
-										{/each}
-									</div>
-								</TableBodyCell>
-							{/if}
-						</TableBodyRow>
-					{/each}
-				{/await}
+				{/each}
 			{/if}
 		</TableBody>
 	</Table>
@@ -195,3 +244,17 @@
 		</slot>
 	</div>
 </Modal>
+
+{#if Boolean(selection.length)}
+	<Modal open={currentAction === 'delete'} title="Delete record" size="xs" on:hide={resetState}>
+		<div class="text-center space-y-6">
+			<P>
+				Are you sure you want to delete <span class="font-bold">{selection.length}</span> records?
+			</P>
+			<div class="flex gap-2 justify-center">
+				<Button color="red" on:click={deleteSelection}>Delete</Button>
+				<Button color="alternative" on:click={resetState}>Cancel</Button>
+			</div>
+		</div>
+	</Modal>
+{/if}
