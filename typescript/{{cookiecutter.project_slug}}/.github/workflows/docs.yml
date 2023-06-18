@@ -1,0 +1,33 @@
+name: 📖 Deploy docs
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+
+jobs:
+  deploy_pages:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+    - run: |
+        pnpm install
+        pnpm docs
+        touch docs/.nojekyll
+
+    - name: Deploy docs 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs # The folder the action should deploy.
