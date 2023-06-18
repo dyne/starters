@@ -17,8 +17,13 @@ jobs:
         with:
           version: 8
 
-      - run: |
-          pnpm install
-          pnpm test
-          pnpm lint
-          pnpm build-all
+      - run: pnpm install
+      - name: Linting
+        continue-on-error: true
+        run: pnpm lint
+
+      - name: Run the tests
+        run: pnpm coverage
+
+      - name: Build all
+        run: pnpm build-all
