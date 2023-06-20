@@ -75,15 +75,20 @@
 	function createFormData(data: Record<string, unknown>) {
 		const formData = new FormData();
 		for (const [key, value] of Object.entries(data)) {
-			if (!Boolean(value)) continue; // Needed otherwise pb complains about "bad formatting", especially for null files
-			if (value instanceof File) {
-				formData.append(key, value);
+			if (value === null || value === undefined) {
+				// Needed otherwise pb complains about "bad formatting", especially for null files
+				continue;
 			} else if (Array.isArray(value)) {
-				for (const item of value) {
-					formData.append(key, item);
+				// Special case for empty arrays, cause they can't be represented in formData
+				if (value.length === 0) {
+					formData.append(`${key}-`, initialData[key]);
+				} else {
+					for (const item of value) {
+						formData.append(key, item);
+					}
 				}
 			} else {
-				formData.append(key, value as string);
+				formData.append(key, value as string | File);
 			}
 		}
 		return formData;
