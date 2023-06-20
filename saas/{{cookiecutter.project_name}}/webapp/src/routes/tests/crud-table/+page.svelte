@@ -6,7 +6,7 @@
 <div class="p-4">
 	<CrudTable
 		collection={Collections.CrudExample}
-		displayFields={['id', 'text', 'created']}
+		displayFields={['id', 'text', 'relation_single', 'relation']}
 		actions={[
 			{
 				name: 'ciao',

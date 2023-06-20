@@ -5,4 +5,6 @@
 	export let data;
 </script>
 
-<CrudForm collection={Collections.CrudexampleAllfields} initialData={data.item} />
+<div class="max-w-xl mx-auto p-4">
+	<CrudForm collection={Collections.CrudExample} initialData={data.item} />
+</div>
