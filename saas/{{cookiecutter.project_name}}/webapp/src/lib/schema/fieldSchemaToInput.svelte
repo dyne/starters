@@ -3,7 +3,7 @@
 	import File from '$lib/components/forms/file.svelte';
 	import Hidden from '$lib/components/forms/hidden.svelte';
 	import Input from '$lib/components/forms/input.svelte';
-	import Relations from '$lib/components/forms/relations.svelte';
+	import Relations, { type RelationDisplayFields } from '$lib/components/forms/relations.svelte';
 	import Select from '$lib/components/forms/select.svelte';
 	import Textarea from '$lib/components/forms/textarea.svelte';
 	import { isFieldArray } from './collectionSchemaToZod';
@@ -11,6 +11,7 @@
 
 	export let fieldSchema: FieldSchema;
 	export let hidden = false;
+	export let relationDisplayFields: RelationDisplayFields = [];
 
 	const field = fieldSchema.name;
 	const label = fieldSchema.name;
@@ -57,7 +58,7 @@
 		{label}
 		multiple={isArray}
 		collection={collectionId}
-		searchFields={['name']}
-		max={2}
+		displayFields={relationDisplayFields}
+		{max}
 	/>
 {/if}

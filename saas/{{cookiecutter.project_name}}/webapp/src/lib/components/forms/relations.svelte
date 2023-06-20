@@ -1,3 +1,7 @@
+<script lang="ts" context="module">
+	export type RelationDisplayFields = string[];
+</script>
+
 <script lang="ts">
 	import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
@@ -9,7 +13,7 @@
 	export let label = '';
 	export let collection: string | Collections;
 	export let multiple: boolean;
-	export let searchFields: string[];
+	export let displayFields: RelationDisplayFields;
 	export let max: number | undefined = undefined;
 
 	const { superform } = getFormContext();
@@ -28,7 +32,7 @@
 		bind:relation={$value}
 		{collection}
 		{multiple}
-		{searchFields}
+		{displayFields}
 		{max}
 	/>
 	{#if error}

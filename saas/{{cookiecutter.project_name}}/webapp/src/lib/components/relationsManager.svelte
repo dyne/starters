@@ -7,13 +7,14 @@
 	import Svelecte from 'svelecte';
 	import ArrayManager from './arrayManager.svelte';
 	import { onMount } from 'svelte';
+	import { getCollectionSchema } from '$lib/schema/getCollectionSchema';
 
 	//
 
 	export let relation: string[] | string;
 	export let collection: string | Collections;
 	export let multiple: boolean;
-	export let searchFields: string[];
+	export let displayFields: string[];
 	export let name = '';
 	export let max: number | undefined = undefined;
 
@@ -43,8 +44,16 @@
 	const valueField = 'data';
 	const labelField = 'label';
 
+	function getCollectionFieldNames(): string[] {
+		const collectionSchema = getCollectionSchema(collection);
+		if (!collectionSchema) return [];
+		return collectionSchema.schema.map((f) => f.name);
+	}
+
 	function buildFilterString(text: string) {
-		return searchFields.map((f) => `${f}~'${text}'`).join(' || ');
+		return getCollectionFieldNames()
+			.map((f) => `${f}~'${text}'`)
+			.join(' || ');
 	}
 
 	async function fetchOptions(text: string) {
@@ -54,7 +63,7 @@
 		return data.map((d) => {
 			return {
 				[valueField]: d,
-				[labelField]: searchFields.map((f) => d[f]).join(' | ')
+				[labelField]: displayFields.map((f) => d[f]).join(' | ')
 			};
 		});
 	}
@@ -72,7 +81,10 @@
 	//
 
 	function buildRecordString(id: string) {
-		return searchFields.map((f) => tempRecords[id][f]).join(' | ');
+		return displayFields
+			.map((f) => tempRecords[id][f])
+			.filter((f) => Boolean(f))
+			.join(' | ');
 	}
 
 	$: disabled = Boolean(max) && tempIDs.length >= (max as number);

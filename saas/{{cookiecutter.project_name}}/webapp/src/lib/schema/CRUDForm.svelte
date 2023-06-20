@@ -1,3 +1,8 @@
+<script lang="ts" context="module">
+	import type { RelationDisplayFields } from '$lib/components/forms/relations.svelte';
+	export type RelationsDisplayFields = Record<string, RelationDisplayFields>;
+</script>
+
 <script lang="ts">
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import { getCollectionSchema } from './getCollectionSchema';
@@ -17,6 +22,7 @@
 	export let fieldsOrder: string[] = [];
 	export let hiddenFields: string[] = [];
 	export let excludedFields: string[] = [];
+	export let relationsDisplayFields: RelationsDisplayFields = {};
 
 	//
 
@@ -102,6 +108,7 @@
 <Form {superform} {defaultSubmitButtonText} on:success>
 	{#each fieldsSchema as fieldSchema}
 		{@const hidden = hiddenFields.includes(fieldSchema.name)}
-		<FieldSchemaToInput {fieldSchema} {hidden} />
+		{@const relationDisplayFields = relationsDisplayFields[fieldSchema.name] || []}
+		<FieldSchemaToInput {fieldSchema} {hidden} {relationDisplayFields} />
 	{/each}
 </Form>

@@ -18,7 +18,6 @@
 		Heading,
 		Modal,
 		P,
-		Spinner,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -27,7 +26,7 @@
 		TableHeadCell,
 		Checkbox
 	} from 'flowbite-svelte';
-	import CrudForm from './CRUDForm.svelte';
+	import CrudForm, { type RelationsDisplayFields } from './CRUDForm.svelte';
 	import CrudTableHead from './CRUDTableHead.svelte';
 	import { Trash, Pencil, Plus, XMark } from 'svelte-heros-v2';
 
@@ -38,6 +37,7 @@
 	export let showDelete = true;
 	export let showEdit = true;
 	export let actions: Array<TableAction> = [];
+	export let relationsDisplayFields: RelationsDisplayFields = {};
 
 	const recordService = pb.collection(collection);
 
@@ -240,7 +240,12 @@
 	<Modal open={currentAction === 'edit'} title="Edit record" size="lg" on:hide={resetState}>
 		<div class="w-[500px]">
 			<slot name="editForm" {currentRecord}>
-				<CrudForm {collection} initialData={currentRecord} on:success={handleSuccess} />
+				<CrudForm
+					{collection}
+					initialData={currentRecord}
+					{relationsDisplayFields}
+					on:success={handleSuccess}
+				/>
 			</slot>
 		</div>
 	</Modal>
@@ -249,7 +254,7 @@
 <Modal open={currentAction === 'create'} title="Create record" size="lg" on:hide={resetState}>
 	<div class="w-[500px]">
 		<slot name="createForm">
-			<CrudForm {collection} on:success={handleSuccess} />
+			<CrudForm {collection} on:success={handleSuccess} {relationsDisplayFields} />
 		</slot>
 	</div>
 </Modal>

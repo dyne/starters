@@ -15,5 +15,9 @@
 				}
 			}
 		]}
+		relationsDisplayFields={{
+			relation_single: ['name', 'culo'],
+			relation: ['name', 'culo']
+		}}
 	/>
 </div>
