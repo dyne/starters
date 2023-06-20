@@ -22,9 +22,6 @@ dependencies:
   svelte-heros:
     specifier: ^3.3.1
     version: 3.3.1(svelte@3.59.1)
-  svelte-heros-v2:
-    specifier: ^0.4.2
-    version: 0.4.2(svelte@3.59.1)
   zenroom:
     specifier: ^3.0.1
     version: 3.0.1
@@ -78,12 +75,18 @@ devDependencies:
   prettier-plugin-svelte:
     specifier: ^2.10.0
     version: 2.10.0(prettier@2.8.8)(svelte@3.59.1)
+  svelecte:
+    specifier: ^3.16.1
+    version: 3.16.1
   svelte:
     specifier: ^3.59.1
     version: 3.59.1
   svelte-check:
     specifier: ^3.3.2
     version: 3.3.2(postcss-load-config@4.0.1)(postcss@8.4.23)(svelte@3.59.1)
+  svelte-heros-v2:
+    specifier: ^0.4.2
+    version: 0.4.2(svelte@3.59.1)
   svelte-preprocess:
     specifier: ^5.0.3
     version: 5.0.3(postcss-load-config@4.0.1)(postcss@8.4.23)(svelte@3.59.1)(typescript@5.0.4)
@@ -2329,6 +2332,12 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
+  /svelecte@3.16.1:
+    resolution: {integrity: sha512-ShPwGmyD9Vshm8uehRbscx7RXOMhMB9H4S2ITNxLttN4BrrszGK+jcrs4d7a6nULw3qutiRI7fl0bnYxusJD7A==}
+    dependencies:
+      svelte-tiny-virtual-list: 2.0.5
+    dev: true
+
   /svelte-check@3.3.2(postcss-load-config@4.0.1)(postcss@8.4.23)(svelte@3.59.1):
     resolution: {integrity: sha512-67j3rI0LDc2DvL0ON/2pvCasVVD3nHDrTkZNr4eITNfo2oFXdw7SIyMOiFj4swu+pjmFQAigytBK1IWyik8dBw==}
     hasBin: true
@@ -2362,7 +2371,7 @@ packages:
       svelte: ^3.54.0
     dependencies:
       svelte: 3.59.1
-    dev: false
+    dev: true
 
   /svelte-heros@3.3.1(svelte@3.59.1):
     resolution: {integrity: sha512-+ujQD/FbzV3t65RLYZ8qqKX7GwpgOPT13C80JQdbgM0lVHSId5gDzSbBXPpWfx6P3neel8ypqmt7BbwRNVECMw==}
@@ -2428,6 +2437,10 @@ packages:
       strip-indent: 3.0.0
       svelte: 3.59.1
       typescript: 5.0.4
+    dev: true
+
+  /svelte-tiny-virtual-list@2.0.5:
+    resolution: {integrity: sha512-xg9ckb8UeeIme4/5qlwCrl2QNmUZ8SCQYZn3Ji83cUsoASqRNy3KWjpmNmzYvPDqCHSZjruBBsoB7t5hwuzw5g==}
     dev: true
 
   /svelte@3.59.1:

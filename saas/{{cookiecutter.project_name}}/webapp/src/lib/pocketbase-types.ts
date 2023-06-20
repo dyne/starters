@@ -49,12 +49,15 @@ export enum CrudExampleMultiselectOptions {
 }
 export type CrudExampleRecord = {
 	text: string
-	text_with_regex?: string
 	file_only_pdf_json?: string[]
 	boolean?: boolean
 	select: CrudExampleSelectOptions
 	textarea?: HTMLString
+	text_with_regex?: string
 	multiselect?: CrudExampleMultiselectOptions[]
+	image?: string
+	relation?: RecordIdString[]
+	relation_single: RecordIdString
 }
 
 export type FeaturesRecord<TenvVariables = unknown> = {
@@ -94,7 +97,7 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
-export type CrudExampleResponse = Required<CrudExampleRecord> & BaseSystemFields
+export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
 export type UsersResponse = Required<UsersRecord> & AuthSystemFields
