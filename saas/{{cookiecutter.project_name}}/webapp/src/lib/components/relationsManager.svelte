@@ -21,7 +21,7 @@
 
 	let tempIDs: string[] = [];
 	if (Array.isArray(relation)) tempIDs = relation;
-	else tempIDs = [relation];
+	else if (relation) tempIDs = [relation];
 
 	$: relation = multiple ? tempIDs : tempIDs[0];
 
