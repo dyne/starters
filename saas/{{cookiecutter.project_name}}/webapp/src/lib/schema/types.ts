@@ -7,7 +7,8 @@ export const FieldType = {
 	EDITOR: 'editor',
 	BOOL: 'bool',
 	FILE: 'file',
-	SELECT: 'select'
+	SELECT: 'select',
+	RELATION: 'relation'
 } as const;
 
 export type FieldType = ValueOf<typeof FieldType>;

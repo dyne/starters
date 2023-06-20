@@ -10,13 +10,16 @@ const FieldTypeToZod = {
 	[FieldType.TEXT]: z.string(),
 	[FieldType.EDITOR]: z.string(),
 	[FieldType.BOOL]: z.boolean(),
-	[FieldType.FILE]: z.array(z.custom<File>((f) => f instanceof File)),
-	[FieldType.SELECT]: z.string()
+	[FieldType.FILE]: z.custom<File>((f) => f instanceof File),
+	[FieldType.SELECT]: z.string(),
+	[FieldType.RELATION]: z.string()
 };
+
+type FieldOptions = Record<string, unknown>;
 
 type FieldTypeRefiner<T extends ValueOf<typeof FieldTypeToZod>> = (
 	schema: T,
-	options: Record<string, unknown>
+	options: FieldOptions
 ) => ZodEffects<T> | T;
 
 type FieldTypeRefiners = {
@@ -30,26 +33,42 @@ const FieldTypeRefiners: FieldTypeRefiners = {
 	[FieldType.TEXT]: {
 		min: (s, o) => s.min(o.min as number),
 		max: (s, o) => s.max(o.max as number),
-		// Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
-		pattern: (s, o) => s.regex(new RegExp(`|${o.pattern}` as string))
+		pattern: (s, o) => s.regex(new RegExp(`|${o.pattern}` as string)) // Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
 	},
 	[FieldType.FILE]: {
-		maxSize: (s, o) =>
-			s.refine((files) => files.every((file) => file.size < (o.maxSize as number))),
-		mimeTypes: (s, o) =>
-			s.refine((files) => files.every((file) => (o.mimeTypes as string[]).includes(file.type))),
-		maxSelect: (s, o) => s.refine((files) => files.length <= (o.maxSelect as number))
+		maxSize: (s, o) => s.refine((file) => file.size < (o.maxSize as number)),
+		mimeTypes: (s, o) => s.refine((file) => (o.mimeTypes as string[]).includes(file.type))
+	},
+	[FieldType.SELECT]: {
+		values: (s, o) => s.refine((value) => (o.values as string[]).includes(value))
 	},
 	[FieldType.BOOL]: {},
 	[FieldType.EDITOR]: {},
-	[FieldType.SELECT]: {
-		values: (s, o) => s.refine((value) => (o.values as string[]).includes(value)),
-		maxSelect: (s, o) => {
-			// s.refine((values) => values.length <= (o.maxSelect as number))
-			if ((o.maxSelect as number) > 1) log('multiple select not supported yet');
-			return s;
-		}
-	}
+	[FieldType.RELATION]: {}
+};
+
+//
+
+type IsFieldArrayRefiner = (options: FieldOptions) => boolean;
+
+const FieldTypeToArray: Record<string, IsFieldArrayRefiner> = {
+	[FieldType.FILE]: (o) => (o.maxSelect as number) > 1,
+	[FieldType.SELECT]: (o) => (o.maxSelect as number) > 1,
+	[FieldType.RELATION]: (o) => o.maxSelect != 1
+};
+
+export function isFieldArray(field: FieldSchema): boolean {
+	const refiner = FieldTypeToArray[field.type as FieldType];
+	if (!refiner) return false;
+	return refiner(field.options);
+}
+
+type ZodArrayAny = z.ZodArray<z.ZodTypeAny>;
+type ArrayRefiner = (schema: ZodArrayAny, options: FieldOptions) => ZodArrayAny;
+
+const arrayRefiners: Record<string, ArrayRefiner> = {
+	maxSelect: (s, o) => s.max(o.maxSelect as number),
+	minSelect: (s, o) => s.max(o.maxSelect as number)
 };
 
 //
@@ -61,6 +80,14 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 	const refiners = FieldTypeRefiners[type];
 	for (const [key, refiner] of Object.entries(refiners)) {
 		if (fieldschema.options[key]) zodSchema = refiner(zodSchema, fieldschema.options);
+	}
+	//
+	if (isFieldArray(fieldschema)) {
+		zodSchema = z.array(zodSchema);
+		for (const [key, refiner] of Object.entries(arrayRefiners)) {
+			if (fieldschema.options[key])
+				zodSchema = refiner(zodSchema as ZodArrayAny, fieldschema.options);
+		}
 	}
 	//
 	if (!fieldschema.required) zodSchema = zodSchema.optional().nullable().nullish();
