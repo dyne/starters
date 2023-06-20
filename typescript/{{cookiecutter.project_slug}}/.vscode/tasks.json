@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "pnpm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "pnpm: build",
+			"detail": "tsc -p tsconfig.json"
+		},
+		{
+			"type": "pnpm",
+			"script": "test",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "pnpm: test",
+			"detail": "jest"
+		}
+	]
+}
