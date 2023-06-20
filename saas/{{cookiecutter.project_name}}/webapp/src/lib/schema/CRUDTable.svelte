@@ -43,6 +43,7 @@
 
 	let data: PBRecord[];
 	let queryParams: RecordFullListQueryParams = {
+		$autoCancel: false,
 		sort: '-created'
 	};
 
