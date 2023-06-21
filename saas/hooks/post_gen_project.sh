@@ -10,7 +10,6 @@ git init
 git branch -m main
 
 ZENCODE_CRYPTO=admin/zencode/zenflows-crypto
-rmdir $ZENCODE_CRYPTO
 [ ! -d $ZENCODE_CRYPTO ] && git submodule add https://github.com/interfacerproject/zenflows-crypto $ZENCODE_CRYPTO
 
 echo 🎉 Everything is done please run
