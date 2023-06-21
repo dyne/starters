@@ -12,10 +12,9 @@ if [ ! -d .git ]; then
 fi
 
 ZENCODE_CRYPTO=admin/zencode/zenflows-crypto
-rmdir --ignore-fail-on-non-empty $ZENCODE_CRYPTO
-if [ ! -d $ZENCODE_CRYPTO ]; then
+if [[ -z $(ls -A $ZENCODE_CRYPTO) ]]; then
+	rmdir $ZENCODE_CRYPTO
 	git submodule add https://github.com/interfacerproject/zenflows-crypto $ZENCODE_CRYPTO
-	git submodule update --init
 fi
 
 echo 🎉 Everything is done please run
