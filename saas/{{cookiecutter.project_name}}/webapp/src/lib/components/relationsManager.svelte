@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Collections } from '$lib/pocketbase-types';
+	import { Collections } from '$lib/pocketbase-types';
 	import type { Record as PBRecord } from 'pocketbase';
 
 	// @ts-ignore
@@ -41,31 +41,49 @@
 
 	//
 
-	const valueField = 'data';
-	const labelField = 'label';
-
 	function getCollectionFieldNames(): string[] {
+		const fieldNames: string[] = ['id'];
+		//
+		if (collection == '_pb_users_auth_' || collection == Collections.Users) {
+			fieldNames.push('username');
+			fieldNames.push('email');
+		}
+		//
 		const collectionSchema = getCollectionSchema(collection);
-		if (!collectionSchema) return [];
-		return collectionSchema.schema.map((f) => f.name);
+		if (collectionSchema) {
+			collectionSchema.schema.forEach((fs) => {
+				fieldNames.push(fs.name);
+			});
+		}
+		//
+		return fieldNames;
 	}
 
 	function buildFilterString(text: string) {
 		return getCollectionFieldNames()
-			.map((f) => `${f}~'${text}'`)
+			.map((f) => `${f}~"${text}"`)
 			.join(' || ');
 	}
+
+	//
+
+	const valueField = 'data';
+	const labelField = 'label';
 
 	async function fetchOptions(text: string) {
 		const data = await pb.collection(collection).getFullList({
 			filter: buildFilterString(text)
 		});
-		return data.map((d) => {
+		const options = data.map((d) => {
 			return {
 				[valueField]: d,
-				[labelField]: displayFields.map((f) => d[f]).join(' | ')
+				[labelField]: getCollectionFieldNames()
+					.map((f) => d[f])
+					.filter((f) => Boolean(f))
+					.join(' | ')
 			};
 		});
+		return options;
 	}
 
 	let selectValue: null;
