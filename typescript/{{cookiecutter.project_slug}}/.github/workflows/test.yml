@@ -1,0 +1,29 @@
+name: 🧪 Lint and test
+
+on: [push, pull_request]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+
+      - run: pnpm install
+      - name: Linting
+        continue-on-error: true
+        run: pnpm lint
+
+      - name: Run the tests
+        run: pnpm coverage
+
+      - name: Build all
+        run: pnpm build-all
