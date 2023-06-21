@@ -1,11 +1,11 @@
 <script lang="ts">
 	import FeatureFlag from '$lib/components/featureFlag.svelte';
-	export let data;
+	import { features } from '$lib/features';
 </script>
 
 <div class="p-4 space-y-8">
 	<h1>Features data</h1>
-	{#each data.features as feature}
+	{#each $features as feature}
 		<div class="space-y-2">
 			<p>Feature: {feature.name} | Active: {feature.active}</p>
 			<div class="flex gap-4 items-stretch">

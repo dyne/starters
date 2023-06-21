@@ -1,12 +1,14 @@
 <script lang="ts" context="module">
 	import type { Record as PBRecord } from 'pocketbase';
-	import type { SvelteComponent } from 'svelte';
+	import type { SvelteComponent, SvelteComponentTyped } from 'svelte';
 
 	export type TableAction = {
 		name: string;
 		icon?: typeof SvelteComponent;
 		function: <T>(record: T & PBRecord) => void;
 	};
+
+	export type TableCellComponent = typeof SvelteComponentTyped<{ value?: any }>;
 </script>
 
 <script lang="ts">
@@ -33,11 +35,14 @@
 	} from './CRUDForm.svelte';
 	import CrudTableHead from './CRUDTableHead.svelte';
 	import { Trash, Pencil, Plus, XMark } from 'svelte-heros-v2';
+	import CrudTableRow from './CRUDTableRow.svelte';
+	import { record } from 'zod';
 
 	//
 
 	export let collection: Collections;
-	export let displayFields: string[] = ['id'];
+	export let fields: string[] = ['id'];
+	export let fieldsDisplay: Record<string, TableCellComponent> = {};
 	export let showDelete = true;
 	export let showEdit = true;
 	export let actions: Array<TableAction> = [];
@@ -167,7 +172,7 @@
 	<Table>
 		<TableHead>
 			<TableHeadCell><Checkbox checked={allSelected} on:click={toggleAll} /></TableHeadCell>
-			{#each displayFields as field}
+			{#each fields as field}
 				<CrudTableHead bind:queryParams {field} />
 			{/each}
 			{#if showEdit || showDelete}
@@ -177,18 +182,25 @@
 		<TableBody>
 			{#if data}
 				{#each data as item (item.id)}
-					<TableBodyRow>
+					<CrudTableRow record={item} {collection}>
 						<TableBodyCell>
 							<Checkbox bind:group={selection} value={item.id} name="select" />
 						</TableBodyCell>
-						{#each displayFields as field}
-							<TableBodyCell>{item[field]}</TableBodyCell>
+						{#each fields as field}
+							<TableBodyCell>
+								{@const component = fieldsDisplay[field]}
+								{#if component}
+									<svelte:component this={component} value={item[field]} />
+								{:else}
+									{item[field]}
+								{/if}
+							</TableBodyCell>
 						{/each}
 						{#if showEdit || showDelete}
 							<TableBodyCell>
 								<div class="flex items-center space-x-2">
 									<Button
-										class="!px-3"
+										class="!p-2"
 										color="alternative"
 										on:click={() => {
 											setAction(formMode.EDIT, item);
@@ -197,7 +209,7 @@
 										<Pencil size="20" />
 									</Button>
 									<Button
-										class="!px-3"
+										class="!p-2"
 										color="alternative"
 										on:click={() => {
 											setAction('delete', item);
@@ -207,7 +219,7 @@
 									</Button>
 									{#each actions as action}
 										<Button
-											class="!px-3"
+											class="!p-2 !px-3"
 											color="alternative"
 											on:click={() => {
 												action.function(item);
@@ -223,7 +235,7 @@
 								</div>
 							</TableBodyCell>
 						{/if}
-					</TableBodyRow>
+					</CrudTableRow>
 				{/each}
 			{/if}
 		</TableBody>

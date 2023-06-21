@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { features } from '$lib/pocketbase';
-	import { log } from '$lib/utils/devLog';
+	import { isFeatureActive, features } from '$lib/features';
 
 	export let flag: string;
-
-	let feature = $features.find((f) => f.name == flag);
-	if (!feature) log('flagNotFound:', flag);
 </script>
 
-{#if feature && feature.active}
+{#if isFeatureActive($features, flag)}
 	<slot />
 {/if}

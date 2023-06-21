@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { redirect } from '@sveltejs/kit';
 	import { currentUser } from '$lib/pocketbase';
 	import {
 		Footer,
@@ -8,7 +7,6 @@
 		FooterIcon,
 		FooterLink,
 		FooterLinkGroup,
-		Heading,
 		Input,
 		Label,
 		NavBrand,
@@ -45,6 +43,8 @@
 		Bolt
 	} from 'svelte-heros-v2';
 	import { appTitle } from '$lib/strings';
+	import { features, featuresNames, isFeatureActive } from '$lib/features';
+
 	let navClass = 'bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800';
 	let navDivClass = 'flex flex-wrap justify-between items-center mx-auto max-w-screen-xl';
 </script>
@@ -56,8 +56,10 @@
 				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 			</NavBrand>
 			<div class="flex items-center lg:order-2">
-				<Button href="/login" color="dark">Log in</Button>
-				<Button href="/register" class="ml-2" color="red">Sign up</Button>
+				{#if isFeatureActive($features, featuresNames.AUTH)}
+					<Button href="/login" color="dark">Log in</Button>
+					<Button href="/register" class="ml-2" color="red">Sign up</Button>
+				{/if}
 				<NavHamburger
 					on:click={toggle}
 					btnClass="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
