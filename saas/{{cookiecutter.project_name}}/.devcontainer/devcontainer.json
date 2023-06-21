@@ -1,0 +1,27 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "Cardinal90.multi-cursor-case-preserve",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "golang.go",
+        "lokalise.i18n-ally",
+        "ms-playwright.playwright",
+        "svelte.svelte-vscode",
+        "yoavbls.pretty-ts-errors"
+      ],
+      "settings": {
+        "[svelte]": {
+          "editor.defaultFormatter": "svelte.svelte-vscode"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "svelte.enable-ts-plugin": true,
+        "go.toolsManagement.autoUpdate": true
+      }
+    }
+  }
+}
