@@ -13,8 +13,8 @@ fi
 
 ZENCODE_CRYPTO=admin/zencode/zenflows-crypto
 if [[ -z $(ls -A $ZENCODE_CRYPTO) ]]; then
-	rmdir $ZENCODE_CRYPTO
-	git submodule add https://github.com/interfacerproject/zenflows-crypto $ZENCODE_CRYPTO
+	rmdir $ZENCODE_CRYPTO || true
+	git submodule add https://github.com/interfacerproject/zenflows-crypto $ZENCODE_CRYPTO || true
 fi
 
 echo 🎉 Everything is done please run
