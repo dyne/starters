@@ -58,6 +58,7 @@ export type CrudExampleRecord = {
 	image?: string
 	relation?: RecordIdString[]
 	relation_single: RecordIdString
+	owner?: RecordIdString
 }
 
 export type FeaturesRecord<TenvVariables = unknown> = {
