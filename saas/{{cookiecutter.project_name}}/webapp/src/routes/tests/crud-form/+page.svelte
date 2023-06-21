@@ -6,5 +6,13 @@
 </script>
 
 <div class="max-w-xl mx-auto p-4">
-	<CrudForm collection={Collections.CrudExample} initialData={data.item} />
+	<CrudForm
+		collection={Collections.CrudExample}
+		initialData={data.item}
+		relationsDisplayFields={{
+			relation: ['name'],
+			relation_single: ['name'],
+			owner: ['name', 'username', 'email']
+		}}
+	/>
 </div>
