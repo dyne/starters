@@ -1,6 +1,14 @@
 <script lang="ts" context="module">
 	import type { RelationDisplayFields } from '$lib/components/forms/relations.svelte';
+	import type { ValueOf } from '$lib/utils/types';
+
 	export type RelationsDisplayFields = Record<string, RelationDisplayFields>;
+
+	export const formMode = {
+		EDIT: 'edit',
+		CREATE: 'create'
+	} as const;
+	export type FormMode = ValueOf<typeof formMode>;
 </script>
 
 <script lang="ts">
@@ -17,16 +25,22 @@
 	//
 
 	export let collection: Collections;
-	export let initialData: any = undefined;
+	export let mode: FormMode;
+	export let initialData: any;
+	if (mode == formMode.CREATE) initialData = {};
 
 	export let fieldsOrder: string[] = [];
-	export let hiddenFields: string[] = [];
 	export let excludedFields: string[] = [];
 	export let relationsDisplayFields: RelationsDisplayFields = {};
 
+	export let hiddenFields: string[] = [];
+	export let hiddenFieldsValues: Record<string, unknown> = {};
+
 	//
 
-	const dispatch = createEventDispatcher<{ success: {} }>();
+	for (const [key, value] of Object.entries(hiddenFieldsValues)) {
+		if (hiddenFields.includes(key)) initialData[key] = value;
+	}
 
 	const collectionSchema = getCollectionSchema(collection)!;
 	const fieldsSchema = collectionSchema.schema
@@ -35,11 +49,13 @@
 		.filter(excludeMultiselect);
 	const zodSchema = fieldsSchemaToZod(fieldsSchema);
 
+	const dispatch = createEventDispatcher<{ success: {} }>();
+
 	const superform = createForm(
 		zodSchema,
 		async ({ form }) => {
 			const formData = createFormData(form.data);
-			if (initialData && initialData.id) {
+			if (mode == formMode.EDIT && initialData && initialData.id) {
 				await pb.collection(collection).update(initialData.id, formData);
 			} else {
 				await pb.collection(collection).create(formData);
@@ -87,7 +103,7 @@
 			} else if (Array.isArray(value)) {
 				// Special case for empty arrays, cause they can't be represented in formData
 				if (value.length === 0) {
-					formData.append(`${key}-`, initialData[key]);
+					formData.append(key, '');
 				} else {
 					for (const item of value) {
 						formData.append(key, item);
@@ -102,7 +118,7 @@
 
 	//
 
-	const defaultSubmitButtonText = Boolean(initialData) ? 'Edit record' : 'Create record';
+	const defaultSubmitButtonText = mode == formMode.EDIT ? 'Edit record' : 'Create record';
 </script>
 
 <Form {superform} {defaultSubmitButtonText} on:success>

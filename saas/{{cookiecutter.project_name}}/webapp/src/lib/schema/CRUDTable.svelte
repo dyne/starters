@@ -28,7 +28,11 @@
 		TableHeadCell,
 		Checkbox
 	} from 'flowbite-svelte';
-	import CrudForm, { type RelationsDisplayFields } from './CRUDForm.svelte';
+	import CrudForm, {
+		formMode,
+		type FormMode,
+		type RelationsDisplayFields
+	} from './CRUDForm.svelte';
 	import CrudTableHead from './CRUDTableHead.svelte';
 	import { Trash, Pencil, Plus, XMark } from 'svelte-heros-v2';
 	import CrudTableRow from './CRUDTableRow.svelte';
@@ -43,6 +47,11 @@
 	export let showEdit = true;
 	export let actions: Array<TableAction> = [];
 	export let relationsDisplayFields: RelationsDisplayFields = {};
+
+	export let formHiddenFields: string[] = [];
+	export let formHiddenFieldsValues: Record<string, unknown> = {};
+
+	//
 
 	const recordService = pb.collection(collection);
 
@@ -63,7 +72,7 @@
 
 	/* Record actions */
 
-	type Action = 'delete' | 'edit' | 'create';
+	type Action = 'delete' | FormMode;
 
 	let currentRecord: PBRecord | null = null;
 	let currentAction: Action | null = null;
@@ -151,7 +160,7 @@
 				<Button
 					color="alternative"
 					on:click={() => {
-						setAction('create');
+						setAction(formMode.CREATE);
 					}}
 				>
 					<Plus size="20" />
@@ -194,7 +203,7 @@
 										class="!p-2"
 										color="alternative"
 										on:click={() => {
-											setAction('edit', item);
+											setAction(formMode.EDIT, item);
 										}}
 									>
 										<Pencil size="20" />
@@ -248,28 +257,30 @@
 			</div>
 		</div>
 	</Modal>
+{/if}
 
-	<Modal open={currentAction === 'edit'} title="Edit record" size="lg" on:hide={resetState}>
+{#if currentAction == formMode.EDIT || currentAction == formMode.CREATE}
+	<Modal
+		open={currentAction == formMode.EDIT || currentAction == formMode.CREATE}
+		title="Edit record"
+		size="lg"
+		on:hide={resetState}
+	>
 		<div class="w-[500px]">
-			<slot name="editForm" {currentRecord}>
+			<slot name="CRUDForm" {currentRecord}>
 				<CrudForm
+					mode={currentAction}
 					{collection}
-					initialData={currentRecord}
-					{relationsDisplayFields}
 					on:success={handleSuccess}
+					{relationsDisplayFields}
+					hiddenFields={formHiddenFields}
+					hiddenFieldsValues={formHiddenFieldsValues}
+					initialData={currentRecord}
 				/>
 			</slot>
 		</div>
 	</Modal>
 {/if}
-
-<Modal open={currentAction === 'create'} title="Create record" size="lg" on:hide={resetState}>
-	<div class="w-[500px]">
-		<slot name="createForm">
-			<CrudForm {collection} on:success={handleSuccess} {relationsDisplayFields} />
-		</slot>
-	</div>
-</Modal>
 
 {#if Boolean(selection.length)}
 	<Modal open={currentAction === 'delete'} title="Delete record" size="xs" on:hide={resetState}>
