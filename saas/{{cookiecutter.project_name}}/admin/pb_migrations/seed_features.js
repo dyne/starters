@@ -23,6 +23,10 @@ const features = [
             DID_KEYRING: "json, currently passed base64 encoded",
         },
     },
+    {
+        name: "auth",
+        envVariables: {},
+    },
 ];
 
 migrate(
