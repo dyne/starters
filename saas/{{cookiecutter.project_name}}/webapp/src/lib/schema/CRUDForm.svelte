@@ -20,13 +20,19 @@
 	export let initialData: any = undefined;
 
 	export let fieldsOrder: string[] = [];
-	export let hiddenFields: string[] = [];
 	export let excludedFields: string[] = [];
 	export let relationsDisplayFields: RelationsDisplayFields = {};
+
+	export let hiddenFields: string[] = [];
+	export let hiddenFieldsValues: Record<string, unknown> = {};
 
 	//
 
 	const dispatch = createEventDispatcher<{ success: {} }>();
+
+	for (const [key, value] of Object.entries(hiddenFieldsValues)) {
+		if (hiddenFields.includes(key)) initialData[key] = value;
+	}
 
 	const collectionSchema = getCollectionSchema(collection)!;
 	const fieldsSchema = collectionSchema.schema
@@ -38,6 +44,7 @@
 	const superform = createForm(
 		zodSchema,
 		async ({ form }) => {
+			console.log('form data', form.data);
 			const formData = createFormData(form.data);
 			if (initialData && initialData.id) {
 				await pb.collection(collection).update(initialData.id, formData);

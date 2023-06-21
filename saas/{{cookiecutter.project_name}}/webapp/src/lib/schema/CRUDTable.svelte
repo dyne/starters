@@ -39,6 +39,11 @@
 	export let actions: Array<TableAction> = [];
 	export let relationsDisplayFields: RelationsDisplayFields = {};
 
+	export let formHiddenFields: string[] = [];
+	export let formHiddenFieldsValues: Record<string, unknown> = {};
+
+	//
+
 	const recordService = pb.collection(collection);
 
 	let data: PBRecord[];
@@ -242,9 +247,11 @@
 			<slot name="editForm" {currentRecord}>
 				<CrudForm
 					{collection}
-					initialData={currentRecord}
-					{relationsDisplayFields}
 					on:success={handleSuccess}
+					{relationsDisplayFields}
+					hiddenFields={formHiddenFields}
+					hiddenFieldsValues={formHiddenFieldsValues}
+					initialData={currentRecord}
 				/>
 			</slot>
 		</div>
@@ -254,7 +261,13 @@
 <Modal open={currentAction === 'create'} title="Create record" size="lg" on:hide={resetState}>
 	<div class="w-[500px]">
 		<slot name="createForm">
-			<CrudForm {collection} on:success={handleSuccess} {relationsDisplayFields} />
+			<CrudForm
+				{collection}
+				on:success={handleSuccess}
+				{relationsDisplayFields}
+				hiddenFields={formHiddenFields}
+				hiddenFieldsValues={formHiddenFieldsValues}
+			/>
 		</slot>
 	</div>
 </Modal>

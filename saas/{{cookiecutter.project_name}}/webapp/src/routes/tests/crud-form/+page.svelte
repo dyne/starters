@@ -14,5 +14,7 @@
 			relation_single: ['name'],
 			owner: ['name', 'username', 'email']
 		}}
+		hiddenFields={['owner']}
+		hiddenFieldsValues={{ owner: data.user?.id }}
 	/>
 </div>

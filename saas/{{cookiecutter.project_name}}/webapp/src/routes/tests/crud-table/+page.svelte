@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Collections } from '$lib/pocketbase-types';
 	import CrudTable from '$lib/schema/CRUDTable.svelte';
+
+	export let data;
 </script>
 
 <div class="p-4">
@@ -19,5 +21,7 @@
 			relation_single: ['name', 'culo'],
 			relation: ['name', 'culo']
 		}}
+		formHiddenFields={['owner']}
+		formHiddenFieldsValues={{ owner: data.user?.id }}
 	/>
 </div>
