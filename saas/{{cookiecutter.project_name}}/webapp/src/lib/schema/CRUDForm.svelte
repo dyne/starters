@@ -24,7 +24,7 @@
 
 	//
 
-	export let collection: Collections;
+	export let collection: Collections | string;
 	export let mode: FormMode;
 	export let initialData: any;
 	if (mode == formMode.CREATE) initialData = {};
