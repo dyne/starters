@@ -49,6 +49,20 @@
 			}
 		});
 	}
+
+	//
+
+	export function formHasErrors(errors: object) {
+		const checks: boolean[] = [];
+		if (Object.keys(errors).length === 0) return false;
+		else {
+			for (const [key, value] of Object.entries(errors)) {
+				if (typeof value === 'object') checks.push(formHasErrors(value));
+				else if (Boolean(value)) checks.push(true);
+			}
+		}
+		return checks.some((check) => check);
+	}
 </script>
 
 <script lang="ts" generics="T extends AnyZodObject">
@@ -81,7 +95,8 @@
 
 	{#if useDefaultSubmitButton}
 		<div class="flex justify-end">
-			<Button type="submit" disabled={!$errors}>{defaultSubmitButtonText}</Button>
+			<Button type="submit">{defaultSubmitButtonText}</Button>
+			<!-- <Button type="submit" disabled={formHasErrors($errors)}>{defaultSubmitButtonText}</Button> -->
 		</div>
 	{/if}
 
