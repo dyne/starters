@@ -6,7 +6,8 @@
 
 	export let record: Record;
 
-	const { recordService, loadRecords } = getRecordsManagerContext();
+	const { dataManager } = getRecordsManagerContext();
+	const { loadRecords, recordService } = dataManager;
 
 	async function deleteRecord() {
 		await recordService.delete(record.id);
@@ -26,7 +27,7 @@
 	<Trash size="20" />
 </Button>
 
-<Modal bind:open title="Delete record" size="xs">
+<Modal class="m-0" bind:open title="Delete record" size="xs">
 	<div class="text-center space-y-6">
 		<P>Are you sure you want to delete this record?</P>
 		<div class="flex gap-2 justify-center">

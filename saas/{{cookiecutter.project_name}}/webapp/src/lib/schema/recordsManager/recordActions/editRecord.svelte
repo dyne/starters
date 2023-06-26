@@ -1,14 +1,16 @@
-<script lang="ts" generics="T extends Record">
+<script lang="ts">
 	import type { Record } from 'pocketbase';
 	import { Button, Modal } from 'flowbite-svelte';
 	import { Pencil } from 'svelte-heros-v2';
 	import CrudForm, { formMode } from '$lib/schema/CRUDForm.svelte';
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
 
-	export let record: T;
+	type RecordGeneric = $$Generic;
 
-	const { loadRecords, formHiddenFields, formHiddenFieldsValues, formRelationsDisplayFields } =
-		getRecordsManagerContext();
+	export let record: RecordGeneric & Record;
+
+	const { dataManager, formSettings } = getRecordsManagerContext();
+	const { loadRecords } = dataManager;
 
 	let open = false;
 </script>
@@ -23,17 +25,15 @@
 	<Pencil size="20" />
 </Button>
 
-<Modal bind:open title="Edit record" size="lg">
+<Modal class="m-0" bind:open title="Edit record" size="lg">
 	<div class="w-[500px]">
 		<CrudForm
 			mode={formMode.EDIT}
 			collection={record.collectionId}
 			initialData={record}
-			relationsDisplayFields={formRelationsDisplayFields}
-			hiddenFields={formHiddenFields}
-			hiddenFieldsValues={formHiddenFieldsValues}
-			on:success={() => {
-				loadRecords();
+			{formSettings}
+			on:success={async () => {
+				await loadRecords();
 				open = false;
 			}}
 		/>

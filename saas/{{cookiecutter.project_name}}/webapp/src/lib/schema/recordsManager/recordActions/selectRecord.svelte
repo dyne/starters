@@ -4,7 +4,8 @@
 	import type { Record } from 'pocketbase';
 
 	export let record: Record;
-	const { selectedRecords } = getRecordsManagerContext();
+	const { selectionManager } = getRecordsManagerContext();
+	const { selectedRecords } = selectionManager;
 </script>
 
 <Checkbox bind:group={$selectedRecords} value={record.id} name="select" />
