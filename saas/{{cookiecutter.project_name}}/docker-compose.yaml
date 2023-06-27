@@ -18,7 +18,7 @@
 
 version: "3.8"
 services:
-  srv:
+  be:
     image: starters-pb:latest
     build:
       context: admin/
@@ -45,6 +45,7 @@ services:
     ports:
       - 5173:5173
     environment:
-      - PUBLIC_POCKETBASE_URL=http://srv:8090/
+      - PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090/
       - PB_ADMIN_USER=${PB_ADMIN_USER:-}
       - PB_ADMIN_PASS=${PB_ADMIN_PASS:-}
+    network_mode: "host"
