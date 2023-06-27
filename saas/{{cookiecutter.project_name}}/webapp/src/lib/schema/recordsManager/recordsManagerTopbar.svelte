@@ -42,7 +42,7 @@
 				</Button>
 			</div>
 		{:else}
-			<CreateRecord initialData={{ text: 'ciao' }} let:openModal />
+			<CreateRecord />
 		{/if}
 	</div>
 </div>
