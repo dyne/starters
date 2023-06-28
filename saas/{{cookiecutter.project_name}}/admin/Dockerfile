@@ -31,6 +31,10 @@ FROM alpine:$ALP_VER
 
 ARG USER=app
 
+RUN wget https://github.com/dyne/zenroom/releases/latest/download/zenroom -O zenroom \
+        && chmod a+x zenroom \
+        && cp zenroom /usr/local/bin/
+
 RUN addgroup --system "$USER" && adduser --system --ingroup "$USER" "$USER" && \
       install -d -m 0755 -o "$USER" -g "$USER" /log
 

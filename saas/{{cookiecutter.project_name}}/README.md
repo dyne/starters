@@ -31,3 +31,10 @@ cd admin
 cd webapp
 pnpm dev
 ```
+
+## Usage with docker compose
+
+```
+docker compose build
+docker compose up
+```
