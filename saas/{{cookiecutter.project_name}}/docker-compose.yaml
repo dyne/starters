@@ -38,6 +38,8 @@ services:
     stdin_open: true
     tty: true
   fe:
+    depends_on: 
+      - be
     image: starters-fe
     build:
       context: webapp/
