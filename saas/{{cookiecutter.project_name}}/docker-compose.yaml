@@ -44,12 +44,10 @@ services:
     build:
       context: ./
       dockerfile: ./webapp/Dockerfile
-    ports:
-      - 5173:5173
     environment:
       - PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090/
-      - PB_ADMIN_USER=${PB_ADMIN_USER:-}
-      - PB_ADMIN_PASS=${PB_ADMIN_PASS:-}
+      - PB_ADMIN_USER=admin@example.org
+      - PB_ADMIN_PASS=adminadmin
     volumes:
       - type: bind
         source: ./admin/pb_data

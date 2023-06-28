@@ -6,13 +6,11 @@ RUN wget "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic
 
 WORKDIR /build
 
-COPY . .
+COPY ./webapp/ .
 RUN git init
 RUN git submodule add https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 
 
 EXPOSE $NODE_PORT
 RUN pnpm i
-RUN pnpm types && pnpm schema
-RUN pnpm build
-CMD pnpm preview --host
+CMD pnpm serve
