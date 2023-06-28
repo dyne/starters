@@ -19,12 +19,17 @@ ARG ALP_VER=3.18.0
 FROM golang:$GOVER-alpine AS builder
 ENV GONOPROXY=
 
+RUN apk add --no-cache git
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
-
 COPY . .
+RUN git init
+RUN rmdir zencode/zenflows-crypto
+RUN git submodule add https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
+
 RUN ENABLE_CGO=0 go build -o pb .
 
 FROM alpine:$ALP_VER
