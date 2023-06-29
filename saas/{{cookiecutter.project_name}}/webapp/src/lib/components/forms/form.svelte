@@ -79,10 +79,12 @@
 	}
 </script>
 
-<script lang="ts" generics="T extends AnyZodObject">
+<script lang="ts">
 	import { setContext } from 'svelte';
 	import { Button, Spinner, Alert, Modal } from 'flowbite-svelte';
 	import Error from './error.svelte';
+
+	type T = $$Generic<AnyZodObject>;
 
 	//
 
