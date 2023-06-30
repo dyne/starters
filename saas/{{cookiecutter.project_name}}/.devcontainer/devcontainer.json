@@ -1,0 +1,19 @@
+{
+  "forwardPorts": [5173, 8090],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "Cardinal90.multi-cursor-case-preserve",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "golang.go",
+        "lokalise.i18n-ally",
+        "ms-playwright.playwright",
+        "svelte.svelte-vscode",
+        "yoavbls.pretty-ts-errors"
+      ]
+    }
+  }
+}
