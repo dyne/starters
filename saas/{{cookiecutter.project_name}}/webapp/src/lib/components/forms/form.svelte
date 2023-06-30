@@ -43,6 +43,7 @@
 			applyAction: false,
 			scrollToError: 'smooth',
 			validators: schema,
+			dataType: 'json',
 			onUpdate: async (input) => {
 				try {
 					await submitFunction(input);
