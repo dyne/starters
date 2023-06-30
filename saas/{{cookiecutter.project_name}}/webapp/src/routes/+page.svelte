@@ -57,7 +57,7 @@
 			</NavBrand>
 			<div class="flex items-center lg:order-2">
 				{#if isFeatureActive($features, featuresNames.AUTH)}
-					<Button href="/login" color="dark">Log in</Button>
+					<Button id="btn-login" href="/login" color="dark">Log in</Button>
 					<Button href="/register" class="ml-2" color="red">Sign up</Button>
 				{/if}
 				<NavHamburger
