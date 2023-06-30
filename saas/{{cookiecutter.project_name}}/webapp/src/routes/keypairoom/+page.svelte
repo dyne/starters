@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { userQuestions, type UserAnswers } from '$lib/auth/userQuestions';
-	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/auth/keypair';
-	import { getPublicKeysFromKeypair, updateUserPublicKeys } from '$lib/auth/updateUserPublicKeys';
+	import { userQuestions, type UserAnswers } from '$lib/keypairoom/userQuestions.js';
+	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
+	import {
+		getPublicKeysFromKeypair,
+		updateUserPublicKeys
+	} from '$lib/keypairoom/updateUserPublicKeys';
 	import { currentUser, pb } from '$lib/pocketbase';
 
 	// Components
