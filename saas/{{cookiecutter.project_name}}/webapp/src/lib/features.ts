@@ -7,9 +7,11 @@ import { pb } from './pocketbase';
 export const features = writable<Array<FeaturesResponse>>([]);
 
 export async function loadFeatures() {
-	return await pb
+	const feats = await pb
 		.collection(Collections.Features)
 		.getFullList<FeaturesResponse>({ $autoCancel: false });
+	features.set(feats);
+	return feats;
 }
 // "$autoCancel: false" is needed to avoid canceling the request
 // in case multiple layouts need to load the features
