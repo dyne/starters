@@ -6,13 +6,14 @@
 		updateUserPublicKeys
 	} from '$lib/keypairoom/updateUserPublicKeys';
 	import { currentUser, pb } from '$lib/pocketbase';
+	import { z } from 'zod';
+	import { features, featuresNames, isFeatureActive } from '$lib/features';
 
 	// Components
 	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
-	import { z } from 'zod';
 
 	//
 
@@ -52,7 +53,7 @@
 		const publicKeys = getPublicKeysFromKeypair(keypair);
 		await updateUserPublicKeys($currentUser?.id!, publicKeys);
 
-		await pb.send('/api/did', {});
+		if (isFeatureActive($features, featuresNames.DID)) await pb.send('/api/did', {});
 	});
 
 	const { capture, restore } = superform;
