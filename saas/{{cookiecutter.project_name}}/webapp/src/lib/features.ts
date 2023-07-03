@@ -25,6 +25,10 @@ export function isFeatureActive(features: FeaturesResponse[], name: string) {
 	return Boolean(feature) && Boolean(feature?.active);
 }
 
+export function areFeaturesActive(features: FeaturesResponse[], names: string[]) {
+	return names.every((name) => isFeatureActive(features, name));
+}
+
 export const featuresNames = {
 	AUTH: 'auth',
 	DID: 'DID',
