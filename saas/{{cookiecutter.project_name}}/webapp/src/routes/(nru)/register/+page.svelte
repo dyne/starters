@@ -43,7 +43,7 @@
 <Form {superform} defaultSubmitButtonText="Create an account">
 	<Heading tag="h3">Create an account</Heading>
 
-	<Input type="email" label="Your email" field={keys.email} placeholder="name@company.com" />
+	<Input type="email" label="Your email" field={keys.email} placeholder="name@foundation.org" />
 	<Input type="password" label="Your password" field={keys.password} placeholder="•••••" />
 	<Input
 		type="password"

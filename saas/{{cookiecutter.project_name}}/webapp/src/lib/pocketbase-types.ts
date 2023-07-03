@@ -55,8 +55,8 @@ export type CrudExampleRecord = {
 	textarea?: HTMLString
 	text_with_regex?: string
 	multiselect?: CrudExampleMultiselectOptions[]
-	image?: string
 	relation?: RecordIdString[]
+	image?: string
 	relation_single: RecordIdString
 	owner?: RecordIdString
 }
@@ -99,9 +99,9 @@ export type UsersRecord = {
 
 // Response types include system fields and match responses from the PocketBase API
 export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
-export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
-export type HooksResponse = Required<HooksRecord> & BaseSystemFields
-export type UsersResponse = Required<UsersRecord> & AuthSystemFields
+export type FeaturesResponse<TenvVariables = unknown, Texpand = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields<Texpand>
+export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSystemFields<Texpand>
+export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 

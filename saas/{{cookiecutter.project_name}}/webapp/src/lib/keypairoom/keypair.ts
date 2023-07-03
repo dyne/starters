@@ -79,7 +79,7 @@ export function saveKeyringToLocalStorage(keyring: Keyring) {
 }
 
 export function getKeyringFromLocalStorage(): Keyring | null {
-	if (!browser) throw new Error('verifyUser() must be called from the browser');
+	if (!browser) throw new Error('getKeyringFromLocalStorage() must be called from the browser');
 	const keyring = localStorage.getItem(KEYRING_STORAGE_KEY);
 	if (keyring) {
 		return JSON.parse(keyring);
