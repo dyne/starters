@@ -31,7 +31,7 @@
 		type="email"
 		label="Your email"
 		field={keys.email}
-		placeholder="name@company.com"
+		placeholder="name@foundation.org"
 	/>
 	<Input
 		id="password"
