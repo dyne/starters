@@ -18,6 +18,7 @@
 	{/if}
 	<Textarea
 		bind:value={$value}
+		class="!min-h-[200px]"
 		color={$errors ? 'red' : 'base'}
 		name={field}
 		data-invalid={$errors}
