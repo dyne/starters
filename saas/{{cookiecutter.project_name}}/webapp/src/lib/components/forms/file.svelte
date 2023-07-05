@@ -3,7 +3,8 @@
 
 	import { Fileupload, Helper, Label, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { getFormContext } from './form.svelte';
-	import FieldError from './fieldParts/fieldError.svelte';
+	import FieldError, { fieldHasErrors } from './fieldParts/fieldError.svelte';
+	import FieldLabel from './fieldParts/fieldLabel.svelte';
 
 	//
 
@@ -57,10 +58,12 @@
 			await validate(field, { value: data, taint: true });
 		}
 	}
+
+	$: hasErrors = fieldHasErrors($errors);
 </script>
 
 <div class="space-y-3">
-	<Label color={$errors ? 'red' : 'gray'} for={field}>{label}</Label>
+	<FieldLabel {field} text={label} />
 	<Fileupload
 		id={field}
 		name={field}
@@ -68,7 +71,7 @@
 		{multiple}
 		{required}
 		accept={accept.join(', ')}
-		data-invalid={$errors}
+		data-invalid={hasErrors}
 	/>
 
 	{#if !multiple && $value && $value instanceof File}
