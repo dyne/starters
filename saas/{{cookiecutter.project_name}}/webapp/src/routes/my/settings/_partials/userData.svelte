@@ -1,115 +1,48 @@
 <script lang="ts">
-	import { Card, Modal, Avatar, Button, Dropzone, Fileupload, Toggle } from 'flowbite-svelte';
+	import { Avatar, Heading, P, Button,Hr } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
-	import { CloudArrowUp, Pencil, ArrowLeft } from 'svelte-heros-v2';
-	import EditableLabel from '$lib/components/editableLabel.svelte';
-	let open: boolean = false;
-	let files: FileList | undefined;
+	import UserDataForm from './userDataForm.svelte';
+	import { Pencil, XMark } from 'svelte-heros-v2';
 
-	async function handleImageChange() {
-		const formData = new FormData();
-		formData.append('avatar', files![0]);
-		pb.collection('users').update($currentUser!.id, formData);
-		open = false;
-	}
+	const avatarUrl = pb.files.getUrl($currentUser, $currentUser?.avatar);
 
-	async function handleNameChange(value: string) {
-		const formData = new FormData();
-		formData.append('name', value);
-		await pb.collection('users').update($currentUser!.id, formData);
-	}
-
-	async function handleEmailChange(value: string) {
-		const formData = new FormData();
-		formData.append('email', value);
-		await pb.collection('users').update($currentUser!.id, {
-			email: value
-		});
-	}
-
-	async function handleEmailVisible() {
-		await pb.collection('users').update($currentUser!.id, {emailVisibility: !$currentUser!.emailVisibility });
-	}
-
-	const handleOnClick = () => (open = true);
-
-	const dropHandle = (event: DragEvent) => {
-		event.preventDefault();
-		if (files!.length > 0) {
-			const fileName = files![0].name;
-			alert('You dropped ' + fileName);
-		}
+	let edit = false;
+	const toggleEdit = () => {
+		edit = !edit;
 	};
-
-	const handleResetPassword = async () => {
-		await pb.admins.requestPasswordReset($currentUser!.email);
-	};
-	//
 </script>
 
-<div class="flex flex-col gap-2">
-	<Avatar
-		size="xl"
-		src={`${PUBLIC_POCKETBASE_URL}api/files/_pb_users_auth_/${$currentUser?.id}/${$currentUser?.avatar}`}
-	/>
-	<div class="flex flex-col gap-2">
-		<div class="flex space-x-3">
-			<Button on:click={handleOnClick} color="primary" size="sm">
-				<CloudArrowUp />
-				<span class="ml-2">Change Image</span></Button
-			>
-
-			<Modal {open} title="Upload Image" class="!min-w-md">
-				<Card class="flex flex-col gap-4 !min-w-md">
-					{#if !files?.[0]}
-						<Fileupload bind:files />
-						<Dropzone
-							id="dropzone"
-							on:drop={dropHandle}
-							class="!relative"
-							inputClass="!absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-						>
-							<CloudArrowUp />
-							<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-								<span class="font-semibold">Click to upload</span> or drag and drop
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">
-								SVG, PNG, JPG or GIF (MAX. 800x400px)
-							</p>
-						</Dropzone>
-					{:else}
-						<Avatar size="xl" src={URL.createObjectURL(files[0])} />
-						<Button on:click={handleImageChange} color="primary">Upload</Button>
-					{/if}
-				</Card>
-			</Modal>
-		</div>
-	</div>
-	<EditableLabel
-		value={$currentUser?.name || 'Anonymous'}
-		handleChange={handleNameChange}
-		valueClass="text-xl font-bold text-gray-900"
-	/>
-
-	<div>
-		<EditableLabel
-			value={$currentUser?.email}
-			handleChange={handleEmailChange}
-			valueClass="text-md text-gray-400  font-semibold"
-		/>
-		<div class="flex flex-row justify-between w-full">
-			<p class="text-md text-gray-400 font-semibold">Email visible:</p>
-			<Toggle
-				checked={$currentUser?.emailVisibility}
-				color="red"
-				class="text-md font-semibold"
-				on:change={handleEmailVisible}
-			/>
+<div class="space-y-6">
+	<div class="flex flex-row gap-6 items-center">
+		<Avatar size="lg" src={avatarUrl} />
+		<div class="flex flex-col">
+			<Heading tag="h4">{$currentUser?.name}</Heading>
+			<P>
+				{$currentUser?.email}
+				<span class="text-gray-400 text-sm ml-1">
+					({$currentUser.emailVisibility ? 'public' : 'not public'})
+				</span>
+			</P>
 		</div>
 	</div>
 
-	<Button on:click={handleResetPassword} size="sm" color="alternative" class="w-fit">
-		Reset password
-	</Button>
+	<div class='flex items-center gap-4 justify-end'>
+		{#if edit}
+		<Hr />
+		{/if}
+			<Button color="alternative" on:click={toggleEdit}>
+				{#if !edit}
+					<Pencil size="20" />
+					<span class="ml-2">Edit profile</span>
+				{:else}
+					<XMark size="20" />
+					<span class="ml-2">Cancel</span>
+				{/if}
+			</Button>
+	</div>
+
+	{#if edit}
+		<UserDataForm on:success={toggleEdit}/>
+	{/if}
 </div>
