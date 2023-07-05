@@ -1,43 +1,65 @@
+<script lang="ts" context="module">
+	/**
+	 * Superforms validation errors come in different shapes:
+	 * • string[] (the most common)
+	 * • {"1": string[], "2": string[], ...} (when using arrays)
+	 * • {"key": string[], ...} (when using nested fields)
+	 *
+	 * Here we try to detect the shape of the error data.
+	 */
+
+	export function isNonNullable(value: unknown): value is NonNullable<unknown> {
+		return value !== undefined && value !== null;
+	}
+
+	export function isBaseError(errorData: unknown): errorData is string[] {
+		return Array.isArray(errorData) && errorData.length > 0;
+	}
+
+	export function isNestedError(errorData: unknown): errorData is Record<string, string[]> {
+		return (
+			isNonNullable(errorData) &&
+			!isBaseError(errorData) &&
+			typeof errorData === 'object' &&
+			Object.values(errorData).some((value) => isBaseError(value))
+		);
+	}
+
+	export function fieldHasErrors(errorData: unknown): boolean {
+		return isBaseError(errorData) || isNestedError(errorData);
+	}
+</script>
+
 <script lang="ts">
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 	import { getFormContext } from '../form.svelte';
 	import { Helper } from 'flowbite-svelte';
-	import { log } from '$lib/utils/devLog';
 
 	export let field: string;
 
 	const { superform } = getFormContext();
 	const { errors } = formFieldProxy(superform, field);
-
-	let errorsRecord: { key: string; errors: string[] }[] = [];
-
-	// Sometimes validation errors are like {0: string[], 1: string[]}
-	$: {
-		if ($errors === undefined || $errors === null) errorsRecord = [];
-		else if (Array.isArray($errors) && $errors.length > 0)
-			errorsRecord = [{ key: field, errors: $errors }];
-		else if (typeof $errors === 'object') {
-			errorsRecord = [];
-			Object.entries($errors).forEach(([key, errors]) => {
-				if (Array.isArray(errors)) errorsRecord.push({ key, errors });
-			});
-		} else {
-			log('unknown error shape', $errors);
-		}
-	}
 </script>
 
-{#if errorsRecord.length}
+{#if isBaseError($errors)}
 	<div class="space-y-1">
-		{#each errorsRecord as record}
-			<div>
-				{#if errorsRecord.length != 1}
-					<Helper color="red"><span class="font-bold">{record.key}</span></Helper>
-				{/if}
-				{#each record.errors as error}
-					<Helper color="red">{error}</Helper>
-				{/each}
-			</div>
+		{#each $errors as error}
+			<Helper color="red">{error}</Helper>
+		{/each}
+	</div>
+{/if}
+
+{#if isNestedError($errors)}
+	<div class="space-y-2">
+		{#each Object.entries($errors) as [key, errors]}
+			{#if isBaseError(errors)}
+				<div class="space-y-1">
+					<Helper color="red"><span class="font-bold">{key}</span></Helper>
+					{#each errors as error}
+						<Helper color="red">{error}</Helper>
+					{/each}
+				</div>
+			{/if}
 		{/each}
 	</div>
 {/if}
