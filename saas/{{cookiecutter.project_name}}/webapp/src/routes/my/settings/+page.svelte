@@ -1,13 +1,17 @@
-<script>
-	import UserCard from '$lib/components/userCard.svelte';
-	import UserKeys from '$lib/components/userKeys.svelte';
+<script lang="ts">
+	import UserCard from './_partials/userData.svelte';
+	import UserKeys from './_partials/userKeys.svelte';
+	import { Card } from 'flowbite-svelte';
+	import { features, featuresNames, isFeatureActive } from '$lib/features';
 </script>
 
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-0 max-w- w-full">
-	<div class="flex flex-col col-span-5">
+<div class="max-w-xl mx-auto space-y-8 p-8">
+	<Card class="!max-w-none">
 		<UserCard />
-	</div>
-	<div class="flex flex-col col-span-7">
-		<UserKeys />
-	</div>
+	</Card>
+	{#if isFeatureActive($features,featuresNames.KEYPAIROOM)}
+		<Card class="!max-w-none">
+			<UserKeys />
+		</Card>
+	{/if}
 </div>
