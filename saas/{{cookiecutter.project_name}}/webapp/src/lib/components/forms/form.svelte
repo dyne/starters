@@ -94,7 +94,7 @@
 	export let useDefaultSubmitButton = true;
 	export let defaultSubmitButtonText = 'Submit';
 
-	export let className = 'space-y-6';
+	export let className = 'space-y-8';
 
 	//
 
