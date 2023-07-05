@@ -158,7 +158,7 @@
 	const defaultSubmitButtonText = mode == formMode.EDIT ? 'Edit record' : 'Create record';
 </script>
 
-<Form {superform} {defaultSubmitButtonText} on:success>
+<Form {superform} {defaultSubmitButtonText} on:success showRequiredIndicator>
 	{#each fieldsSchema as fieldSchema}
 		{@const hidden = hiddenFields.includes(fieldSchema.name)}
 		{@const relationDisplayFields = relationsDisplayFields[fieldSchema.name] || []}
