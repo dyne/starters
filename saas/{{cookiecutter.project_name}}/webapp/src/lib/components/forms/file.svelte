@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 
-	import { Fileupload, Helper, Label, Listgroup, ListgroupItem } from 'flowbite-svelte';
+	import { Fileupload, Helper, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { getFormContext } from './form.svelte';
 	import FieldError, { fieldHasErrors } from './fieldParts/fieldError.svelte';
 	import FieldLabel from './fieldParts/fieldLabel.svelte';
+	import ListgroupItemButton from '../listgroupItemButton.svelte';
 
 	//
 
@@ -18,17 +19,49 @@
 	const { validate } = superform;
 	const { value, errors } = formFieldProxy(superform, field);
 
-	let fileList: FileList | undefined;
-	let rejectedFiles: { file: File; errors: string[] }[] = [];
+	//
 
-	$: if (fileList) {
-		handleChange(fileList);
+	$: hasErrors = fieldHasErrors($errors);
+
+	const oldFiles: File[] = [].concat($value);
+
+	//
+
+	async function handleFileSelect(e: Event) {
+		const fileList = (e.target as HTMLInputElement)?.files;
+		if (!fileList) return;
+
+		let data = !multiple ? fileList[0] : [...($value as File[]), ...fileList];
+		await handleChange(data);
 	}
 
-	async function handleChange(fileList: FileList) {
+	//
+
+	function isFileArray(value: unknown): value is File[] {
+		return Array.isArray(value) && value.every((item) => item instanceof File);
+	}
+
+	function isFile(value: unknown): value is File {
+		return Boolean(value) && value instanceof File;
+	}
+
+	function removeFile() {
+		if (!isFile($value)) return;
+		handleChange($value);
+	}
+
+	function removeFileFromArray(file: File) {
+		if (!isFileArray($value)) return;
+		handleChange($value.filter((item) => item !== file));
+	}
+
+	//
+
+	let rejectedFiles: { file: File; errors: string[] }[] = [];
+
+	async function handleChange(data: File | File[]) {
 		rejectedFiles = [];
 
-		let data = multiple ? [...fileList] : fileList[0];
 		const errors = await validate(field, { value: data, update: false });
 
 		if (!errors) {
@@ -58,41 +91,42 @@
 			await validate(field, { value: data, taint: true });
 		}
 	}
-
-	$: hasErrors = fieldHasErrors($errors);
 </script>
 
 <div class="space-y-3">
 	<FieldLabel {field} text={label} />
+
 	<Fileupload
 		id={field}
 		name={field}
-		bind:files={fileList}
 		{multiple}
 		{required}
 		accept={accept.join(', ')}
 		data-invalid={hasErrors}
+		on:change={handleFileSelect}
 	/>
 
-	{#if !multiple && $value && $value instanceof File}
-		<Listgroup>
-			<ListgroupItem>
-				{$value.name}
-			</ListgroupItem>
-		</Listgroup>
-	{/if}
-
-	{#if multiple && $value.length > 0}
-		<div class="space-y-1">
-			{#if rejectedFiles.length > 0}
-				<Helper>ACCEPTED FILES</Helper>
-			{/if}
+	{#if isFile($value) || (isFileArray($value) && $value.length > 0)}
+		<div>
+			<Helper>FILES</Helper>
 			<Listgroup>
-				{#each $value as file}
-					<ListgroupItem>
-						{file.name}
-					</ListgroupItem>
-				{/each}
+				{#if !multiple && isFile($value)}
+					<ListgroupItemButton on:click={removeFile}>
+						{$value.name}
+					</ListgroupItemButton>
+				{/if}
+
+				{#if multiple && isFileArray($value)}
+					{#each $value as file}
+						<ListgroupItemButton
+							on:click={() => {
+								removeFileFromArray(file);
+							}}
+						>
+							{file.name}
+						</ListgroupItemButton>
+					{/each}
+				{/if}
 			</Listgroup>
 		</div>
 	{/if}
