@@ -61,7 +61,7 @@ const FieldTypeRefiners: FieldTypeRefiners = {
 
 //
 
-export function isFieldArray(fieldSchema: FieldSchema): boolean {
+export function isArrayField(fieldSchema: FieldSchema): boolean {
 	const maxSelect = fieldSchema.options.maxSelect;
 	return Boolean(maxSelect) && !isNaN(Number(maxSelect)) && Number(maxSelect) > 1;
 }
@@ -88,7 +88,7 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 
 	if (!fieldschema.required) zodSchema = zodSchema.nullish();
 
-	if (!isFieldArray(fieldschema)) return zodSchema;
+	if (!isArrayField(fieldschema)) return zodSchema;
 	else {
 		let arraySchema = z.array(zodSchema);
 		for (const [key, refiner] of Object.entries(arrayRefiners)) {
