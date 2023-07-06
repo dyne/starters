@@ -52,7 +52,7 @@
 							/></svg
 						>
 					</svelte:fragment>
-					<SidebarDropdownItem label="Settings" href="/" />
+					<SidebarDropdownItem label="Profile" href="/my/profile" />
 					<SidebarDropdownItem label="Kanban" href="/" />
 					<SidebarDropdownItem label="Calendar" href="/" />
 				</SidebarDropdownWrapper>
