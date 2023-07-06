@@ -1,3 +1,13 @@
+<script lang="ts" context="module">
+	export function isFileArray(value: unknown): value is File[] {
+		return Array.isArray(value) && value.every((item) => item instanceof File);
+	}
+
+	export function isFile(value: unknown): value is File {
+		return Boolean(value) && value instanceof File;
+	}
+</script>
+
 <script lang="ts">
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 
@@ -13,17 +23,32 @@
 	export let label = '';
 	export let multiple = false;
 	export let accept: string[] = [];
-	export let required = false;
 
 	const { superform } = getFormContext();
 	const { validate } = superform;
 	const { value, errors } = formFieldProxy(superform, field);
 
-	//
-
 	$: hasErrors = fieldHasErrors($errors);
 
-	const oldFiles: File[] = [].concat($value);
+	// const oldFiles: File[] = [].concat($value);
+
+	//
+
+	function removeFile() {
+		if (!isFile($value)) return;
+		$value = undefined;
+		validate(field);
+	}
+
+	function removeFileFromArray(file: File) {
+		if (!isFileArray($value)) return;
+		$value = $value.filter((item) => item !== file);
+		validate(field);
+	}
+
+	//
+
+	let rejectedFiles: { file: File; errors: string[] }[] = [];
 
 	//
 
@@ -32,38 +57,9 @@
 		if (!fileList) return;
 
 		let data = !multiple ? fileList[0] : [...($value as File[]), ...fileList];
-		await handleChange(data);
-	}
-
-	//
-
-	function isFileArray(value: unknown): value is File[] {
-		return Array.isArray(value) && value.every((item) => item instanceof File);
-	}
-
-	function isFile(value: unknown): value is File {
-		return Boolean(value) && value instanceof File;
-	}
-
-	function removeFile() {
-		if (!isFile($value)) return;
-		handleChange($value);
-	}
-
-	function removeFileFromArray(file: File) {
-		if (!isFileArray($value)) return;
-		handleChange($value.filter((item) => item !== file));
-	}
-
-	//
-
-	let rejectedFiles: { file: File; errors: string[] }[] = [];
-
-	async function handleChange(data: File | File[]) {
 		rejectedFiles = [];
 
 		const errors = await validate(field, { value: data, update: false });
-
 		if (!errors) {
 			await validate(field, { value: data, taint: true });
 			return;
@@ -76,7 +72,6 @@
 		if (multiple && Array.isArray(data)) {
 			const errorsRecord = errors as unknown as Record<string, string[]>;
 			const rejectedFilesIndexes = Object.keys(errorsRecord).map((key) => Number(key));
-
 			for (const index of rejectedFilesIndexes) {
 				rejectedFiles = [
 					...rejectedFiles,
@@ -86,7 +81,6 @@
 					}
 				];
 			}
-
 			data = data.filter((_, index) => !rejectedFilesIndexes.includes(index));
 			await validate(field, { value: data, taint: true });
 		}
@@ -100,7 +94,6 @@
 		id={field}
 		name={field}
 		{multiple}
-		{required}
 		accept={accept.join(', ')}
 		data-invalid={hasErrors}
 		on:change={handleFileSelect}
