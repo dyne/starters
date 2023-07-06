@@ -10,7 +10,7 @@
 	const dispatch = createEventDispatcher<{ success: {} }>();
 
 	const schema = z.object({
-		name: z.string().min(3),
+		name: z.string().min(3).optional(),
 		email: z.string().email(),
 		emailVisibility: z.boolean().optional(),
 		avatar: z
