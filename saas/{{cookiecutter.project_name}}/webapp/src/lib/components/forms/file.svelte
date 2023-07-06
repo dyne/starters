@@ -11,7 +11,7 @@
 <script lang="ts">
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 
-	import { Fileupload, Helper, Listgroup, ListgroupItem } from 'flowbite-svelte';
+	import { Badge, Fileupload, Helper, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { getFormContext } from './form.svelte';
 	import FieldError, { fieldHasErrors } from './fieldParts/fieldError.svelte';
 	import FieldLabel from './fieldParts/fieldLabel.svelte';
@@ -29,8 +29,7 @@
 	const { value, errors } = formFieldProxy(superform, field);
 
 	$: hasErrors = fieldHasErrors($errors);
-
-	// const oldFiles: File[] = [].concat($value);
+	const oldFiles = ([] as File[]).concat($value);
 
 	//
 
@@ -104,19 +103,31 @@
 			<Helper>FILES</Helper>
 			<Listgroup>
 				{#if !multiple && isFile($value)}
+					{@const isNew = !oldFiles.includes($value)}
 					<ListgroupItemButton on:click={removeFile}>
-						{$value.name}
+						<div>
+							{$value.name}
+							{#if isNew}
+								<Badge color="green">new</Badge>
+							{/if}
+						</div>
 					</ListgroupItemButton>
 				{/if}
 
 				{#if multiple && isFileArray($value)}
 					{#each $value as file}
+						{@const isNew = !oldFiles.includes(file)}
 						<ListgroupItemButton
 							on:click={() => {
 								removeFileFromArray(file);
 							}}
 						>
-							{file.name}
+							<div>
+								{file.name}
+								{#if isNew}
+									<Badge color="green">new</Badge>
+								{/if}
+							</div>
 						</ListgroupItemButton>
 					{/each}
 				{/if}
