@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { Avatar, Heading, P, Button,Hr } from 'flowbite-svelte';
+	import { Heading, P, Button,Hr } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 	import UserDataForm from './userDataForm.svelte';
 	import { Pencil, XMark } from 'svelte-heros-v2';
+	import UserAvatar from '$lib/components/userAvatar.svelte';
 
+	//@ts-ignore
 	const avatarUrl = pb.files.getUrl($currentUser, $currentUser?.avatar);
 
 	let edit = false;
@@ -15,13 +16,13 @@
 
 <div class="space-y-6">
 	<div class="flex flex-row gap-6 items-center">
-		<Avatar size="lg" src={avatarUrl} />
+		<UserAvatar size="lg"/>
 		<div class="flex flex-col">
 			<Heading tag="h4">{$currentUser?.name}</Heading>
 			<P>
 				{$currentUser?.email}
 				<span class="text-gray-400 text-sm ml-1">
-					({$currentUser.emailVisibility ? 'public' : 'not public'})
+					({$currentUser?.emailVisibility ? 'public' : 'not public'})
 				</span>
 			</P>
 		</div>
