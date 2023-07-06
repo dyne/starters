@@ -77,12 +77,30 @@
 		if (hiddenFields.includes(key)) initialData[key] = value;
 	}
 
-	// File field schema expects a file
-	// InitialData coming from PocketBase is a string
-	// TEMPORARY FIX: set initialData to empty array
+	/* File handling */
+
+	/**
+	 * File field zod schema expects a file
+	 * but InitialData coming from PocketBase is a string
+	 *
+	 * We solve it this way:
+	 * - Store the original filenames
+	 * - Convert the strings to "placeholder" files
+	 * - When submitting the form, convert the files back to strings
+	 */
+
+	const initalFilenames: Record<string, string[]> = {};
+
 	for (const field of collectionSchema.schema) {
 		if (field.type == FieldType.FILE && field.name in initialData) {
-			initialData[field.name] = [];
+			const data = initialData[field.name];
+			if (typeof data == 'string' && Boolean(data)) {
+				initalFilenames[field.name] = [data];
+				initialData[field.name] = new File([], data);
+			} else if (Array.isArray(data)) {
+				initalFilenames[field.name] = data;
+				initialData[field.name] = (data as string[]).map((item) => new File([], item));
+			}
 		}
 	}
 
