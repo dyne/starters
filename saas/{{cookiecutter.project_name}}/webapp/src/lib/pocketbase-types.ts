@@ -3,7 +3,9 @@
 */
 
 export enum Collections {
-	CrudExample = "CrudExample",
+	Authorizations = "authorizations",
+	AuthorizationsExamples = "authorizationsExamples",
+	CrudExample = "crudExample",
 	Features = "features",
 	Hooks = "hooks",
 	Users = "users",
@@ -32,6 +34,17 @@ export type AuthSystemFields<T = never> = {
 } & BaseSystemFields<T>
 
 // Record types for each collection
+
+export type AuthorizationsRecord = {
+	owner: RecordIdString
+	users: RecordIdString[]
+	collection_id: string
+	record_id: string
+}
+
+export type AuthorizationsExamplesRecord = {
+	name: string
+}
 
 export enum CrudExampleSelectOptions {
 	"opt1" = "opt1",
@@ -98,6 +111,8 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
+export type AuthorizationsResponse<Texpand = unknown> = Required<AuthorizationsRecord> & BaseSystemFields<Texpand>
+export type AuthorizationsExamplesResponse = Required<AuthorizationsExamplesRecord> & BaseSystemFields
 export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
@@ -106,14 +121,18 @@ export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 // Types containing all Records and Responses, useful for creating typing helper functions
 
 export type CollectionRecords = {
-	CrudExample: CrudExampleRecord
+	authorizations: AuthorizationsRecord
+	authorizationsExamples: AuthorizationsExamplesRecord
+	crudExample: CrudExampleRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
 	users: UsersRecord
 }
 
 export type CollectionResponses = {
-	CrudExample: CrudExampleResponse
+	authorizations: AuthorizationsResponse
+	authorizationsExamples: AuthorizationsExamplesResponse
+	crudExample: CrudExampleResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
 	users: UsersResponse
