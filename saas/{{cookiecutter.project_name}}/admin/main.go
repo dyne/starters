@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"fmt"
-	"net/mail"
 	"pb/config"
 	"pb/did"
 	"pb/hooks"
@@ -23,7 +21,6 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-	"github.com/pocketbase/pocketbase/tools/mailer"
 )
 
 func main() {
@@ -102,24 +99,6 @@ func main() {
 			},
 		})
 		return nil
-	})
-	app.OnRecordAfterCreateRequest("notify_user").Add(func(e *core.RecordCreateEvent) error {
-		userTo, err := app.Dao().FindRecordById("users", e.Record.Get("owner").(string))
-		if err != nil {
-			return err
-		}
-		message := &mailer.Message{
-			From: mail.Address{
-				Address: app.Settings().Meta.SenderAddress,
-				Name:    app.Settings().Meta.SenderName,
-			},
-			To:      []mail.Address{{Address: userTo.Email()}},
-			Subject: "New Message",
-			HTML:    e.Record.Get("message").(string),
-			// bcc, cc, attachments and custom headers are also supported...
-		}
-
-		return app.NewMailClient().Send(message)
 	})
 
 	hooks.Register(app)
