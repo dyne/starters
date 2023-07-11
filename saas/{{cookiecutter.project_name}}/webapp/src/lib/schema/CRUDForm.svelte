@@ -66,6 +66,7 @@
 	export let initialData: any = {};
 
 	export let formSettings: Partial<FormSettings> = {};
+	export let submitButtonText = '';
 
 	//
 
@@ -74,9 +75,11 @@
 		...formSettings
 	};
 
-	const dispatch = createEventDispatcher<{ success: {
-		record: PBRecord;
-	} }>();
+	const dispatch = createEventDispatcher<{
+		success: {
+			record: PBRecord;
+		};
+	}>();
 
 	/* Schema generation */
 
@@ -107,7 +110,7 @@
 				} else {
 					record = await pb.collection(collection).create(formData);
 				}
-				dispatch('success', {record});
+				dispatch('success', { record });
 			},
 			mockedData
 		);
@@ -144,7 +147,11 @@
 
 	//
 
-	const defaultSubmitButtonText = mode == formMode.EDIT ? 'Edit record' : 'Create record';
+	const defaultSubmitButtonText = Boolean(submitButtonText)
+		? submitButtonText
+		: mode == formMode.EDIT
+		? 'Edit record'
+		: 'Create record';
 </script>
 
 <Form {superform} {defaultSubmitButtonText} on:success showRequiredIndicator>
