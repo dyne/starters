@@ -3,7 +3,7 @@ migrate((db) => {
     {
       "id": "3fhw2mfr9zrgodj",
       "created": "2022-10-03 21:50:44.238Z",
-      "updated": "2023-07-11 12:40:55.514Z",
+      "updated": "2023-07-11 13:14:54.782Z",
       "name": "hooks",
       "type": "base",
       "system": false,
@@ -164,8 +164,8 @@ migrate((db) => {
     {
       "id": "p9dhra382rts3bg",
       "created": "2023-06-07 10:44:19.476Z",
-      "updated": "2023-07-11 12:40:55.824Z",
-      "name": "CrudExample",
+      "updated": "2023-07-11 13:16:04.708Z",
+      "name": "crudExample",
       "type": "base",
       "system": false,
       "schema": [
@@ -340,8 +340,8 @@ migrate((db) => {
     },
     {
       "id": "_pb_users_auth_",
-      "created": "2023-07-11 12:40:55.511Z",
-      "updated": "2023-07-11 12:40:55.518Z",
+      "created": "2023-07-11 13:14:54.780Z",
+      "updated": "2023-07-11 13:14:54.783Z",
       "name": "users",
       "type": "auth",
       "system": false,
@@ -447,8 +447,7 @@ migrate((db) => {
         }
       ],
       "indexes": [
-        "CREATE INDEX `__pb_users_auth__created_idx` ON `users` (`created`)",
-        "CREATE UNIQUE INDEX `idx_C7SFIV3` ON `users` (\n  `bitcoin_public_key`,\n  `ecdh_public_key`,\n  `reflow_public_key`,\n  `ethereum_address`,\n  `eddsa_public_key`\n)"
+        "CREATE INDEX `__pb_users_auth__created_idx` ON `users` (`created`)"
       ],
       "listRule": "id = @request.auth.id",
       "viewRule": "id = @request.auth.id",
