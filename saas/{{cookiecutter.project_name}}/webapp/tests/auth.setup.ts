@@ -1,9 +1,10 @@
 import { expect, test as setup } from '@playwright/test';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
+import { login } from '@utils/login';
 
 export const authFile = 'playwright/.auth/user.json';
 
-dotenv.config();
+config();
 
 setup('authenticate', async ({ page }) => {
 	if (!process.env.TEST_USER_A_MAIL || !process.env.TEST_USER_A_PASS)
@@ -15,18 +16,6 @@ setup('authenticate', async ({ page }) => {
 	await loginButton.click();
 	await expect(page).toHaveURL(/login/);
 
-	const emailField = page.locator('#email');
-	const passwordField = page.locator('#password');
-	await expect(emailField).toBeVisible();
-	await expect(passwordField).toBeVisible();
-
-	await emailField.fill(process.env.TEST_USER_A_MAIL);
-	await passwordField.fill(process.env.TEST_USER_A_PASS);
-
-	const submitButton = page.locator('#submit');
-	await expect(submitButton).toBeVisible();
-	await submitButton.click();
-
-	await expect(page).toHaveURL(/my/);
+	await login(page, process.env.TEST_USER_A_MAIL, process.env.TEST_USER_A_PASS);
 	await page.context().storageState({ path: authFile });
 });
