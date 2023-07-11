@@ -6,7 +6,7 @@ export const authFile = 'playwright/.auth/user.json';
 dotenv.config();
 
 setup('authenticate', async ({ page }) => {
-	if (!process.env.TEST_USER_EMAIL || !process.env.TEST_USER_PASSWORD)
+	if (!process.env.TEST_USER_A_MAIL || !process.env.TEST_USER_A_PASS)
 		throw new Error('No test user email or password set in ENV');
 	await page.goto('/');
 
@@ -20,8 +20,8 @@ setup('authenticate', async ({ page }) => {
 	await expect(emailField).toBeVisible();
 	await expect(passwordField).toBeVisible();
 
-	await emailField.fill(process.env.TEST_USER_EMAIL);
-	await passwordField.fill(process.env.TEST_USER_PASSWORD);
+	await emailField.fill(process.env.TEST_USER_A_MAIL);
+	await passwordField.fill(process.env.TEST_USER_A_PASS);
 
 	const submitButton = page.locator('#submit');
 	await expect(submitButton).toBeVisible();
