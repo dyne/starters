@@ -44,6 +44,7 @@ export type AuthorizationsRecord = {
 
 export type AuthorizationsExamplesRecord = {
 	name: string
+	owner?: RecordIdString
 }
 
 export enum CrudExampleSelectOptions {
@@ -112,7 +113,7 @@ export type UsersRecord = {
 
 // Response types include system fields and match responses from the PocketBase API
 export type AuthorizationsResponse<Texpand = unknown> = Required<AuthorizationsRecord> & BaseSystemFields<Texpand>
-export type AuthorizationsExamplesResponse = Required<AuthorizationsExamplesRecord> & BaseSystemFields
+export type AuthorizationsExamplesResponse<Texpand = unknown> = Required<AuthorizationsExamplesRecord> & BaseSystemFields<Texpand>
 export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
 export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
 export type HooksResponse = Required<HooksRecord> & BaseSystemFields
