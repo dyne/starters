@@ -63,6 +63,8 @@
 			});
 		}
 
+		fieldNames.push('id');
+
 		return fieldNames;
 	}
 
