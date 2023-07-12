@@ -126,17 +126,16 @@ func executeEventAction(event, table, action_type, action, action_params string,
 }
 
 func doSendMail(app *pocketbase.PocketBase, action, action_params string, record *models.Record) error {
-	emailTo := record.GetString("owner")
-	if emailTo == "" {
-		log.Printf("empty email receiver: no field owner")
-		return errors.New(fmt.Sprintf("Error during action sendmail"))
+	userTo, err := app.Dao().FindRecordById("users", record.GetString("owner"))
+	if err != nil {
+		return err
 	}
 	message := &mailer.Message{
 		From: mail.Address{
 			Address: app.Settings().Meta.SenderAddress,
 			Name:    app.Settings().Meta.SenderName,
 		},
-		To:      []mail.Address{ {Address: emailTo} },
+		To:      []mail.Address{ {Address: userTo.Email()} },
 		Subject: action_params,
 		HTML:    action,
 	}
