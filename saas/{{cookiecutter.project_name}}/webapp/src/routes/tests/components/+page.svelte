@@ -3,7 +3,7 @@
 	import RecordSelect from '$lib/components/recordSelect.svelte';
 	import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { Collections } from '$lib/pocketbase-types';
-	import { Heading } from 'flowbite-svelte';
+	import { Heading, Hr } from 'flowbite-svelte';
 
 	export let relation: string;
 	export let relations: string[] = [];
@@ -16,22 +16,24 @@
 	</div>
 
 	<div class="p-8 space-y-2">
-		<Heading tag="h4">Relation - Multiple - Select</Heading>
-		<RelationsManager
-			bind:relation={relations}
-			collection={Collections.Features}
-			displayFields={['name']}
-			multiple
-		/>
-	</div>
-
-	<div class="p-8 space-y-2">
 		<Heading tag="h4">Relation - Single - Search</Heading>
 		<RelationsManager
 			bind:relation
 			mode="select"
 			collection={Collections.Features}
 			displayFields={['name']}
+		/>
+	</div>
+
+	<Hr />
+
+	<div class="p-8 space-y-2">
+		<Heading tag="h4">Relation - Multiple - Select</Heading>
+		<RelationsManager
+			bind:relation={relations}
+			collection={Collections.Features}
+			displayFields={['name']}
+			multiple
 		/>
 	</div>
 
@@ -45,6 +47,8 @@
 			multiple
 		/>
 	</div>
+
+	<Hr />
 
 	<div class="p-8 space-y-8">
 		<Heading tag="h4">Record management</Heading>
