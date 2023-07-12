@@ -53,7 +53,7 @@
 	function handleSelect(e: CustomEvent<{ record: PBRecord }>) {
 		const data = e.detail.record;
 		if (multiple) relation = [...relation, data.id];
-		else relation = [data.id];
+		else relation = data.id;
 	}
 </script>
 
