@@ -136,7 +136,7 @@ func doSendMail(app *pocketbase.PocketBase, action, action_params string, record
 			Address: app.Settings().Meta.SenderAddress,
 			Name:    app.Settings().Meta.SenderName,
 		},
-		To:      []mail.Address{{Address: emailTo}},
+		To:      []mail.Address{ {Address: emailTo} },
 		Subject: action_params,
 		HTML:    action,
 	}
