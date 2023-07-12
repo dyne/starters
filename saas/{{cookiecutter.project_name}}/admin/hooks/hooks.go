@@ -139,21 +139,48 @@ func doSendMail(app *pocketbase.PocketBase, action, action_params string, record
 			return err
 		}
 	}
-	userTo, err := app.Dao().FindRecordById("users", record.GetString(params.OwnerField))
-	if err != nil {
-		return err
+	var emails []string
+	owner := record.Get(params.OwnerField)
+	if o, ok := owner.(string); ok {
+		userTo, err := app.Dao().FindRecordById("users", o)
+		if err != nil {
+			return err
+		}
+		emails = []string{userTo.Email()}
+	} else if os, ok := owner.([]string); ok {
+		records, err := app.Dao().FindRecordsByIds("users", os)
+		if err != nil {
+			return err
+		}
+		for _, x := range records {
+			emails = append(emails, x.Email())
+		}
+	} else {
+		return errors.New(fmt.Sprintf("Unknown record"))
 	}
-	message := &mailer.Message{
-		From: mail.Address{
-			Address: app.Settings().Meta.SenderAddress,
-			Name:    app.Settings().Meta.SenderName,
-		},
-		To:      []mail.Address{ {Address: userTo.Email()} },
-		Subject: params.Subject,
-		HTML:    action,
+	// TODO: send mail in multiple go routines
+	var err error = nil
+	for _, email := range emails {
+		message := &mailer.Message{
+			From: mail.Address{
+				Address: app.Settings().Meta.SenderAddress,
+				Name:    app.Settings().Meta.SenderName,
+			},
+			To:      []mail.Address{ {Address: email} },
+			Subject: params.Subject,
+			HTML:    action,
+		}
+		e := app.NewMailClient().Send(message)
+		if e != nil {
+			if err == nil {
+				err = e
+			} else {
+				err = fmt.Errorf("%w; %w", err, e)
+			}
+		}
 	}
 
-	return app.NewMailClient().Send(message)
+	return err
 }
 
 func doCommand(action, action_params string, record *models.Record) error {
