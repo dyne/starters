@@ -7,10 +7,10 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/mail"
 	"os"
 	"os/exec"
 	"strings"
-	"net/mail"
 
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/dbx"
@@ -102,7 +102,7 @@ func executeEventActions(app *pocketbase.PocketBase, event string, table string,
 		})
 		switch action_type {
 		case "sendmail":
-			if err := doSendMail(app, action, action_type, record); err != nil {
+			if err := doSendMail(app, action, action_params, record); err != nil {
 				log.Println("ERROR", err)
 			}
 		default:
@@ -126,7 +126,20 @@ func executeEventAction(event, table, action_type, action, action_params string,
 }
 
 func doSendMail(app *pocketbase.PocketBase, action, action_params string, record *models.Record) error {
-	userTo, err := app.Dao().FindRecordById("users", record.GetString("owner"))
+	params := struct {
+		Subject    string `json:"subject"`
+		OwnerField string `json:"ownerField"`
+	}{
+		Subject:    "New message",
+		OwnerField: "owner",
+	}
+	if action_params != "" {
+		err := json.Unmarshal([]byte(action_params), &params)
+		if err != nil {
+			return err
+		}
+	}
+	userTo, err := app.Dao().FindRecordById("users", record.GetString(params.OwnerField))
 	if err != nil {
 		return err
 	}
@@ -136,7 +149,7 @@ func doSendMail(app *pocketbase.PocketBase, action, action_params string, record
 			Name:    app.Settings().Meta.SenderName,
 		},
 		To:      []mail.Address{ {Address: userTo.Email()} },
-		Subject: action_params,
+		Subject: params.Subject,
 		HTML:    action,
 	}
 
