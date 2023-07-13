@@ -85,14 +85,14 @@
 	onMount(() => {
 		const collections = [...subscribe, collection];
 		for (const c of collections) {
-			pb.realtime.subscribe(c, () => {
+			pb.collection(c).subscribe('*', () => {
 				loadRecords();
 			});
 		}
 
 		return () => {
 			for (const c of collections) {
-				pb.realtime.unsubscribe(c);
+				pb.collection(c).unsubscribe();
 			}
 		};
 	});
