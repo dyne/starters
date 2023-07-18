@@ -12,4 +12,6 @@
 	$: hasErrors = formHasErrors($allErrors);
 </script>
 
-<Button {id} {color} type="submit" disabled={hasErrors}><slot /></Button>
+<Button {id} {color} type="submit" disabled={hasErrors}>
+	<slot />
+</Button>
