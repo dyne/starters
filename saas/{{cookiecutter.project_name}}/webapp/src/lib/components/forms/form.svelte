@@ -105,8 +105,7 @@
 
 <script lang="ts">
 	import { setContext } from 'svelte';
-	import { Button, Spinner, Alert, Modal } from 'flowbite-svelte';
-	import Error from './error.svelte';
+	import { Spinner, Modal } from 'flowbite-svelte';
 
 	type T = $$Generic<AnyZodObject>;
 
@@ -115,35 +114,22 @@
 	export let superform: SuperForm<UnwrapEffects<T>, any>;
 
 	export let showRequiredIndicator = false;
-	export let useDefaultSubmitButton = true;
-	export let defaultSubmitButtonText = 'Submit';
-
 	export let className = 'space-y-8';
 
 	//
 
-	const { enhance, delayed, allErrors } = superform;
+	const { enhance, delayed } = superform;
 	setContext<FormContext<T>>(FORM_KEY, { superform, showRequiredIndicator });
-
-	$: hasErrors = formHasErrors($allErrors);
 </script>
 
 <form class={className} method="post" use:enhance>
 	<slot />
-
-	<Error />
-
-	{#if useDefaultSubmitButton}
-		<div class="flex justify-end">
-			<Button id="submit" type="submit" disabled={hasErrors}>{defaultSubmitButtonText}</Button>
-		</div>
-	{/if}
-
-	{#if $delayed}
-		<div class="m-0 p-0">
-			<Modal open={$delayed} permanent>
-				<Spinner />
-			</Modal>
-		</div>
-	{/if}
 </form>
+
+{#if $delayed}
+	<div class="m-0 p-0">
+		<Modal open={$delayed} permanent>
+			<Spinner />
+		</Modal>
+	</div>
+{/if}
