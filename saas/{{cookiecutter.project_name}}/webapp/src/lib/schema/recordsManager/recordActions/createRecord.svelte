@@ -5,16 +5,18 @@
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import type { Record } from 'pocketbase';
-
+	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 
 	export let initialData: Record = {} as Record;
 
 	const { collection, dataManager, formSettings } = getRecordsManagerContext();
 	const { loadRecords } = dataManager;
 
-	const dispatch = createEventDispatcher<{ success: {
-		record: Record;
-	} }>();
+	const dispatch = createEventDispatcher<{
+		success: {
+			record: Record;
+		};
+	}>();
 
 	let open = false;
 
@@ -30,7 +32,7 @@
 	</Button>
 </slot>
 
-<div class="m-0">
+<ModalWrapper>
 	<Modal bind:open title="Create record" size="lg">
 		<div class="w-[500px]">
 			<CrudForm
@@ -46,4 +48,4 @@
 			/>
 		</div>
 	</Modal>
-</div>
+</ModalWrapper>

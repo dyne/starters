@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+
 	import type { Record } from 'pocketbase';
 	import { Button, Modal } from 'flowbite-svelte';
 	import { Pencil } from 'svelte-heros-v2';
@@ -30,7 +32,7 @@
 	<Pencil size="20" />
 </Button>
 
-<div class="m-0">
+<ModalWrapper>
 	<Modal bind:open title="Edit record" size="lg">
 		<div class="w-[500px]">
 			<CrudForm
@@ -45,4 +47,4 @@
 			/>
 		</div>
 	</Modal>
-</div>
+</ModalWrapper>

@@ -106,6 +106,7 @@
 <script lang="ts">
 	import { setContext } from 'svelte';
 	import { Spinner, Modal } from 'flowbite-svelte';
+	import ModalWrapper from '../modalWrapper.svelte';
 
 	type T = $$Generic<AnyZodObject>;
 
@@ -127,9 +128,9 @@
 </form>
 
 {#if $delayed}
-	<div class="m-0 p-0">
+	<ModalWrapper>
 		<Modal open={$delayed} permanent>
 			<Spinner />
 		</Modal>
-	</div>
+	</ModalWrapper>
 {/if}
