@@ -2,7 +2,9 @@
 	import Checkbox from '$lib/components/forms/checkbox.svelte';
 	import FileInput from '$lib/components/forms/file.svelte';
 	import Form, { createForm, createFormData } from '$lib/components/forms/form.svelte';
+	import FormError from '$lib/components/forms/formError.svelte';
 	import Input from '$lib/components/forms/input.svelte';
+	import SubmitButton from '$lib/components/forms/submitButton.svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { createEventDispatcher } from 'svelte';
 	import { z } from 'zod';
@@ -26,21 +28,32 @@
 		emailVisibility: $currentUser!.emailVisibility
 	};
 
-	const superform = createForm(schema, async ({form})=>{
-        const formData = createFormData(form.data);
-        $currentUser = await pb.collection('users').update($currentUser!.id, formData);
-		dispatch('success');
-    }, initialData);
-
+	const superform = createForm(
+		schema,
+		async ({ form }) => {
+			const formData = createFormData(form.data);
+			$currentUser = await pb.collection('users').update($currentUser!.id, formData);
+			dispatch('success');
+		},
+		initialData
+	);
 </script>
 
-<Form {superform} defaultSubmitButtonText="Update profile">
+<Form {superform}>
 	<Input field="name" label="Username" />
+
 	<div class="space-y-2">
 		<Input field="email" type="email" />
 		<Checkbox field="emailVisibility">
 			<span>Show email to other users</span>
 		</Checkbox>
 	</div>
+
 	<FileInput field="avatar" />
+
+	<FormError />
+
+	<div class="flex justify-end">
+		<SubmitButton>Update profile</SubmitButton>
+	</div>
 </Form>
