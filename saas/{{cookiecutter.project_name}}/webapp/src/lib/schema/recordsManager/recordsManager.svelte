@@ -47,10 +47,7 @@
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import { writable } from 'svelte/store';
-	import { Heading, P, Pagination } from 'flowbite-svelte';
-	import CreateRecord from './recordActions/createRecord.svelte';
-	import { Clock } from 'svelte-heros-v2';
-
+	import { Pagination } from 'flowbite-svelte';
 
 	//
 
@@ -59,10 +56,6 @@
 	export let editFormSettings: Partial<FormSettings> = {};
 	export let initialQueryParams: RecordFullListQueryParams = {};
 	export let subscribe: string[] = [];
-	export let emptyState: { title: string; description: string } = {
-		title: 'No records',
-		description: 'There are no records to show.'
-	};
 
 	/* Slot typing */
 
@@ -168,59 +161,41 @@
 	});
 </script>
 
-{#if records.length === 0}
-	<!-- empty_state -->
-	<slot name="empty_state">
-		<div class="w-full py-20 text-center border-2 rounded-lg">
-			<div class="flex flex-col items-center justify-center space-y-6">
-				<div class="shrink-0 rounded-full flex items-center justify-center text-gray-400">
-					<Clock size="60" />
-				</div>
-				<div class="flex flex-col items-center justify-center">
-					<Heading tag="h3">{emptyState.title}</Heading>
-					<P class="w-fit text-gray-400 font-semibold">{emptyState.description}</P>
-				</div>
-				<CreateRecord />
+<slot {records} {loadRecords} />
+<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
+	{#if totalPages > 0}
+		<div class="flex flex-col items-center justify-center gap-2 my-5">
+			<div class="text-sm text-gray-700 dark:text-gray-400">
+				Showing <span class="font-semibold text-gray-900 dark:text-white"
+					>{perPage * Number(currentPage) - perPage + 1}</span
+				>
+				to
+				<span class="font-semibold text-gray-900 dark:text-white"
+					>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
+				>
+				of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
+			</div>
+
+			<div class="flex w-full justify-center">
+				<Pagination
+					{pages}
+					activeClass="bg-blue-500 text-white"
+					on:previous={(e) => {
+						e.preventDefault();
+						if (Number(currentPage) - 1 < 1) return;
+						goto(`?page=${Number(currentPage) - 1}`);
+					}}
+					on:next={(e) => {
+						e.preventDefault();
+						if (Number(currentPage) + 1 > totalPages) return;
+						goto(`?page=${Number(currentPage) + 1}`);
+					}}
+					on:click={(e) => {
+						e.preventDefault();
+						goto(e.target?.href);
+					}}
+				/>
 			</div>
 		</div>
-	</slot>
-{:else}
-	<slot {records} {loadRecords} />
-	<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
-		{#if totalPages > 0}
-			<div class="flex flex-col items-center justify-center gap-2 my-5">
-				<div class="text-sm text-gray-700 dark:text-gray-400">
-					Showing <span class="font-semibold text-gray-900 dark:text-white"
-						>{perPage * Number(currentPage) - perPage + 1}</span
-					>
-					to
-					<span class="font-semibold text-gray-900 dark:text-white"
-						>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
-					>
-					of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
-				</div>
-
-				<div class="flex w-full justify-center">
-					<Pagination
-						{pages}
-						activeClass="bg-blue-500 text-white"
-						on:previous={(e) => {
-							e.preventDefault();
-							if (Number(currentPage) - 1 < 1) return;
-							goto(`?page=${Number(currentPage) - 1}`);
-						}}
-						on:next={(e) => {
-							e.preventDefault();
-							if (Number(currentPage) + 1 > totalPages) return;
-							goto(`?page=${Number(currentPage) + 1}`);
-						}}
-						on:click={(e) => {
-							e.preventDefault();
-							goto(e.target?.href);
-						}}
-					/>
-				</div>
-			</div>
-		{/if}
-	</slot>
-{/if}
+	{/if}
+</slot>
