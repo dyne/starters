@@ -3,6 +3,7 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { FormSettings } from '../CRUDForm.svelte';
+	import { Pagination } from 'flowbite-svelte';
 
 	//
 
@@ -38,7 +39,10 @@
 </script>
 
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
 
 	import { pb } from '$lib/pocketbase';
 	import type { RecordFullListQueryParams } from 'pocketbase';
@@ -61,26 +65,47 @@
 
 	/* Data load */
 
+	$: pages = Array.from({ length: totalPages }, (_, i) => ({
+		name: `${i + 1}`,
+		href: `?page=${i + 1}`
+	}));
+	let currentPage = '';
+	$: currentPage = $page.url.searchParams.get('page') || '1';
 	const queryParams = writable<RecordFullListQueryParams>({
-		sort: '-created',
-		...initialQueryParams
+		sort: '-created'
 	});
+
+	$: $queryParams = {
+		$autoCancel: false,
+		...$queryParams,
+		...initialQueryParams
+	};
 
 	const recordService = pb.collection(collection);
 
-	let records: (RecordGeneric & PBRecord)[] = [];
+	let records: PBRecord[] = [];
+	let totalPages: number;
 
 	async function loadRecords() {
-		records = await recordService.getFullList({ $autoCancel: false, ...$queryParams });
+		const res = await recordService.getList(Number(currentPage), 2, { ...$queryParams });
+		records = res.items;
+		totalPages = res.totalPages;
+
+		console.log('records', res);
 	}
 
 	$: if (browser) {
-		$queryParams;
+		$queryParams = {
+			...$queryParams,
+			page: Number($page.url.searchParams.get('page') || 0)
+		};
 		loadRecords();
 	}
 
 	onMount(() => {
 		const collections = [...subscribe, collection];
+		console.log($page.url.searchParams.get('page'));
+		console.log($page.url.searchParams.toString());
 		for (const c of collections) {
 			pb.collection(c).subscribe('*', () => {
 				loadRecords();
@@ -136,3 +161,24 @@
 </script>
 
 <slot {records} {loadRecords} />
+<slot name="pagination">
+	{#if records.length > 0}
+		<div class="flex w-full justify-center my-5">
+			<Pagination
+				{pages}
+				on:previous={(e) => {
+					e.preventDefault();
+					goto(`?page=${Number(currentPage) - 1}`);
+				}}
+				on:next={(e) => {
+					e.preventDefault();
+					goto(`?page=${Number(currentPage) + 1}`);
+				}}
+				on:click={(e) => {
+					e.preventDefault();
+					goto(e.target?.href);
+				}}
+			/>
+		</div>
+	{/if}
+</slot>
