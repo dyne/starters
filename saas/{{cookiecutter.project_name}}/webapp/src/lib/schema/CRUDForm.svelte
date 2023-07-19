@@ -45,10 +45,10 @@
 <script lang="ts">
 	import Form, { createForm, createFormData } from '$lib/components/forms/form.svelte';
 	import { getCollectionSchema } from './getCollectionSchema';
-	import { fieldsSchemaToZod, isArrayField } from './collectionSchemaToZod';
+	import { fieldsSchemaToZod } from './collectionSchemaToZod';
 	import type { Collections } from '$lib/pocketbase-types';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import { FieldType, type FieldSchema } from './types';
+	import type { FieldSchema } from './types';
 	import { pb } from '$lib/pocketbase';
 	import { log } from 'debug';
 	import { createEventDispatcher } from 'svelte';
@@ -95,10 +95,7 @@
 	/* Schema generation */
 
 	const collectionSchema = getCollectionSchema(collection)!;
-	const fieldsSchema = collectionSchema.schema
-		.sort(sortFieldsSchema)
-		.filter(filterFieldsSchema)
-		.filter(excludeMultiselect);
+	const fieldsSchema = collectionSchema.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
 	const zodSchema = fieldsSchemaToZod(fieldsSchema);
 
 	/* Superform creation */
@@ -146,14 +143,6 @@
 
 	function filterFieldsSchema(schema: FieldSchema) {
 		return !excludedFields.includes(schema.name);
-	}
-
-	function excludeMultiselect(schema: FieldSchema) {
-		if (schema.type == FieldType.SELECT && (schema.options.maxSelect as number) > 1) {
-			log('multiple select not supported yet');
-			return false;
-		}
-		return true;
 	}
 
 	//

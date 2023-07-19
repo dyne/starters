@@ -8,10 +8,12 @@ help: ## 🛟 Show this help message
 doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
 
-setup: 
+setup: ## ⛏️ Setup the project
 	git init
-	cd admin && git submodule add https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
-	cd webapp && git submodule add https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
+	rm -rf admin/zencode/zenflows-crypto
+	rm -rf webapp/zenflows-crypto
+	cd admin && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
+	cd webapp && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 
 bg:
 	@echo "🚀 Launching the Backend" 
@@ -29,10 +31,16 @@ fg:
 	fi
 	cd webapp && pnpm i && pnpm serve
 
-clean: ## 🧹 Clean the containers
-	@echo "🧹 Cleaning the data"
+purge: ## ⛔ Purge the data
+	@echo "⛔ Purge the data"
 	rm -fr admin/pb_data/*
+
+clean: ## 🧹 Clean the project builds
+	@echo "🧹 Cleaning project build"
 	rm -f admin/pb
+	rm -fr webapp/node_modules
+	rm -f webapp/src/lib/pocketbase-types.ts
+	rm -f webapp/src/lib/schema/pb_schema.json
 
 up: bg fg ## 💄 Run all the components quickly
-dev: bg fgdev ## 👩‍💻Run all the components in dev mode
+dev: bg fgdev ## 🧑‍💻Run all the components in dev mode
