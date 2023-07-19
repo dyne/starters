@@ -4,6 +4,7 @@
 	import { Trash, XMark } from 'svelte-heros-v2';
 	import CreateRecord from './recordActions/createRecord.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import FilterRecords from './recordActions/filterRecords.svelte';
 
 	//
 
@@ -60,6 +61,7 @@
 		{/if}
 	</div>
 </div>
+<FilterRecords />
 
 <ModalWrapper>
 	<Modal bind:open={showDeleteModal} title="Delete records" size="xs">
