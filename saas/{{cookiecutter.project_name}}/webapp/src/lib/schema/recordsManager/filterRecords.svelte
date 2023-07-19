@@ -1,39 +1,48 @@
 <script lang="ts">
 	import { Button, Search, Select } from 'flowbite-svelte';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from './recordsManager.svelte';
 	import { MagnifyingGlass } from 'svelte-heros-v2';
 
+	export let searchableFields: string[] = [];
+
 	const { dataManager } = getRecordsManagerContext();
+	const { queryParams } = dataManager;
 	let selected: string = 'all fields';
 	let fields: { value: string; name: string }[] = ['all fields']
-		.concat(['title', 'text']) // searcheable fields
+		.concat(searchableFields)
 		.map((field) => ({
 			value: field,
 			name: field
 		}));
-	const { queryParams } = dataManager;
 	let queryString = '';
 	const handleSearch = () => {
 		if (queryString.length) {
 			if (selected === 'all fields') {
-				$queryParams.filter = `title ~ '${queryString}' || text ~ '${queryString}'`;
+				$queryParams.filter = searchableFields
+					.reduce((acc: string[], field) => {
+						acc.push(`${field} ~ '${queryString}'`);
+						return acc;
+					}, [])
+					.join(' || ');
 			} else {
 				$queryParams.filter = `${selected} ~ '${queryString}'`;
 			}
 		} else {
 			delete $queryParams.filter;
 		}
-		console.log($queryParams);
 	};
 </script>
 
 <form class="flex gap-2">
-	<Select items={fields} bind:value={selected} size="md" />
+	<Select items={fields} bind:value={selected} size="md" class="!w-fit" />
 	<Search
 		size="md"
-		on:change={(e) => {
-			e.preventDefault();
-			queryString = e.target?.value;
+		bind:value={queryString}
+		on:keydown={(e) => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				handleSearch();
+			}
 		}}
 	/>
 	<Button class="!p-2.5" on:click={handleSearch}>

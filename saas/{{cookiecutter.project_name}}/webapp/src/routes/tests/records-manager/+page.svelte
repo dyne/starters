@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { currentUser } from '$lib/pocketbase';
 	import { Collections, type CrudExampleRecord } from '$lib/pocketbase-types';
+	import FilterRecords from '$lib/schema/recordsManager/filterRecords.svelte';
 	import RecordsManager, {
 		createSlotTypeCaster
 	} from '$lib/schema/recordsManager/recordsManager.svelte';
@@ -33,6 +34,8 @@
 
 			<div class="space-y-4">
 				<Heading tag="h4">Table</Heading>
+				<!-- add this component where you like, within recordsManager and indicate which fields to search for -->
+				<FilterRecords searchableFields={['text', 'textarea']} />
 				<RecordsTable {records} fields={['id', 'text', 'textarea']} />
 			</div>
 
