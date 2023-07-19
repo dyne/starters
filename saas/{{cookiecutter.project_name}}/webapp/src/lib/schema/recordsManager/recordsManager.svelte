@@ -44,6 +44,9 @@
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import { writable } from 'svelte/store';
+	import { Heading, P } from 'flowbite-svelte';
+	import CreateRecord from './recordActions/createRecord.svelte';
+	import { Clock } from 'svelte-heros-v2';
 
 	//
 
@@ -52,6 +55,10 @@
 	export let editFormSettings: Partial<FormSettings> = {};
 	export let initialQueryParams: RecordFullListQueryParams = {};
 	export let subscribe: string[] = [];
+	export let emptyState: { title: string; description: string } = {
+		title: 'No records',
+		description: 'There are no records to show.'
+	};
 
 	/* Slot typing */
 
@@ -135,4 +142,22 @@
 	});
 </script>
 
-<slot {records} {loadRecords} />
+{#if records.length === 0}
+	<!-- empty_state -->
+	<slot name="empty_state">
+		<div class="w-full py-20 text-center border-2 rounded-lg">
+			<div class="flex flex-col items-center justify-center space-y-6">
+				<div class="shrink-0 rounded-full flex items-center justify-center text-gray-400">
+					<Clock size="60" />
+				</div>
+				<div class="flex flex-col items-center justify-center">
+					<Heading tag="h3">{emptyState.title}</Heading>
+					<P class="w-fit text-gray-400 font-semibold">{emptyState.description}</P>
+				</div>
+				<CreateRecord />
+			</div>
+		</div>
+	</slot>
+{:else}
+	<slot {records} {loadRecords} />
+{/if}
