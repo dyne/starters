@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -16,7 +16,7 @@ dependencies:
     version: 1.6.5
   flowbite-svelte:
     specifier: ^0.35.1
-    version: 0.35.1(@algolia/client-search@4.17.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1)
+    version: 0.35.1(@algolia/client-search@4.19.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1)
   flowbite-svelte-blocks:
     specifier: ^0.3.6
     version: 0.3.6(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite-svelte@0.35.1)(flowbite@1.6.5)(svelte-heros@3.3.1)(svelte@3.59.1)
@@ -127,14 +127,14 @@ packages:
       '@algolia/autocomplete-shared': 1.8.2
     dev: false
 
-  /@algolia/autocomplete-preset-algolia@1.8.2(@algolia/client-search@4.17.0)(algoliasearch@4.17.0):
+  /@algolia/autocomplete-preset-algolia@1.8.2(@algolia/client-search@4.19.0)(algoliasearch@4.17.0):
     resolution: {integrity: sha512-J0oTx4me6ZM9kIKPuL3lyU3aB8DEvpVvR6xWmHVROx5rOYJGQcZsdG4ozxwcOyiiu3qxMkIbzntnV1S1VWD8yA==}
     peerDependencies:
       '@algolia/client-search': '>= 4.9.1 < 6'
       algoliasearch: '>= 4.9.1 < 6'
     dependencies:
       '@algolia/autocomplete-shared': 1.8.2
-      '@algolia/client-search': 4.17.0
+      '@algolia/client-search': 4.19.0
       algoliasearch: 4.17.0
     dev: false
 
@@ -150,6 +150,10 @@ packages:
 
   /@algolia/cache-common@4.17.0:
     resolution: {integrity: sha512-g8mXzkrcUBIPZaulAuqE7xyHhLAYAcF2xSch7d9dABheybaU3U91LjBX6eJTEB7XVhEsgK4Smi27vWtAJRhIKQ==}
+    dev: false
+
+  /@algolia/cache-common@4.19.0:
+    resolution: {integrity: sha512-4zFZCC0vYTvfoFSyAXEXDtQFamMibtMPjARirfvRlfgK+5YXW9qJIV+V7O/4qb1mH6RjngvHOo3GDE1xDoIzKA==}
     dev: false
 
   /@algolia/cache-in-memory@4.17.0:
@@ -182,6 +186,13 @@ packages:
       '@algolia/transporter': 4.17.0
     dev: false
 
+  /@algolia/client-common@4.19.0:
+    resolution: {integrity: sha512-tiEyCKkkG5Ig04ATYlt1v41UJb/lS4RmJVXEAsaTkoyB5iUCOChE5WEVPPuJbO/5tSTCbIF4P+g5BjQDb7aGBA==}
+    dependencies:
+      '@algolia/requester-common': 4.19.0
+      '@algolia/transporter': 4.19.0
+    dev: false
+
   /@algolia/client-personalization@4.17.0:
     resolution: {integrity: sha512-RMzN4dZLIta1YuwT7QC9o+OeGz2cU6eTOlGNE/6RcUBLOU3l9tkCOdln5dPE2jp8GZXPl2yk54b2nSs1+pAjqw==}
     dependencies:
@@ -198,8 +209,20 @@ packages:
       '@algolia/transporter': 4.17.0
     dev: false
 
+  /@algolia/client-search@4.19.0:
+    resolution: {integrity: sha512-kkqvljLIBYFv+GMefIq0wv2cRP30NG5/INyL1OKr8Qk4Nk0FciFF3wdxIgv6fm156x1q4V0fLw5zwMMWMPOsLQ==}
+    dependencies:
+      '@algolia/client-common': 4.19.0
+      '@algolia/requester-common': 4.19.0
+      '@algolia/transporter': 4.19.0
+    dev: false
+
   /@algolia/logger-common@4.17.0:
     resolution: {integrity: sha512-DGuoZqpTmIKJFDeyAJ7M8E/LOenIjWiOsg1XJ1OqAU/eofp49JfqXxbfgctlVZVmDABIyOz8LqEoJ6ZP4DTyvw==}
+    dev: false
+
+  /@algolia/logger-common@4.19.0:
+    resolution: {integrity: sha512-2YdIHiQwlUCdhFFK1rE53VCEc8scTUcQLWJgpzi1amvP/ffUog4h5VXdGhyhHzYeAexMsaELX2/sEJa4lgOzng==}
     dev: false
 
   /@algolia/logger-console@4.17.0:
@@ -218,6 +241,10 @@ packages:
     resolution: {integrity: sha512-XJjmWFEUlHu0ijvcHBoixuXfEoiRUdyzQM6YwTuB8usJNIgShua8ouFlRWF8iCeag0vZZiUm4S2WCVBPkdxFgg==}
     dev: false
 
+  /@algolia/requester-common@4.19.0:
+    resolution: {integrity: sha512-oBsoYDNx09L163N9aQM/FrGfLoU/sLvvzcHw1fdJg5eysTAXCvdMNXk29ocy0rhq2deQ8ccdU/Z9Qu0RfLGUmA==}
+    dev: false
+
   /@algolia/requester-node-http@4.17.0:
     resolution: {integrity: sha512-bpb/wDA1aC6WxxM8v7TsFspB7yBN3nqCGs2H1OADolQR/hiAIjAxusbuMxVbRFOdaUvAIqioIIkWvZdpYNIn8w==}
     dependencies:
@@ -232,6 +259,14 @@ packages:
       '@algolia/requester-common': 4.17.0
     dev: false
 
+  /@algolia/transporter@4.19.0:
+    resolution: {integrity: sha512-xgpU6eTzHJ8rqEvhVW9DdyIC+rsRYovIGpCz8k9JjwpLHNltu8wTQik0hasb1z16mFaIQDzgJTxo/C4ciMMr6w==}
+    dependencies:
+      '@algolia/cache-common': 4.19.0
+      '@algolia/logger-common': 4.19.0
+      '@algolia/requester-common': 4.19.0
+    dev: false
+
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
@@ -241,10 +276,10 @@ packages:
     resolution: {integrity: sha512-vDwCDoVXDgopw/hvr0zEADew2wWaGP8Qq0Bxhgii1Ewz2t4fQeyJwIRN/mWADeLFYPVkpz8TpEbxya/i6Tm0WA==}
     dev: false
 
-  /@docsearch/js@3.3.4(@algolia/client-search@4.17.0):
+  /@docsearch/js@3.3.4(@algolia/client-search@4.19.0):
     resolution: {integrity: sha512-Xd2saBziXJ1UuVpcDz94zAFEFAM6ap993agh0za2e3LDZLhaW993b1f9gyUL4e1CZLsR076tztG2un2gVncvpA==}
     dependencies:
-      '@docsearch/react': 3.3.4(@algolia/client-search@4.17.0)
+      '@docsearch/react': 3.3.4(@algolia/client-search@4.19.0)
       preact: 10.13.2
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -253,7 +288,7 @@ packages:
       - react-dom
     dev: false
 
-  /@docsearch/react@3.3.4(@algolia/client-search@4.17.0):
+  /@docsearch/react@3.3.4(@algolia/client-search@4.19.0):
     resolution: {integrity: sha512-aeOf1WC5zMzBEi2SI6WWznOmIo9rnpN4p7a3zHXxowVciqlI4HsZGtOR9nFOufLeolv7HibwLlaM0oyUqJxasw==}
     peerDependencies:
       '@types/react': '>= 16.8.0 < 19.0.0'
@@ -268,7 +303,7 @@ packages:
         optional: true
     dependencies:
       '@algolia/autocomplete-core': 1.8.2
-      '@algolia/autocomplete-preset-algolia': 1.8.2(@algolia/client-search@4.17.0)(algoliasearch@4.17.0)
+      '@algolia/autocomplete-preset-algolia': 1.8.2(@algolia/client-search@4.19.0)(algoliasearch@4.17.0)
       '@docsearch/css': 3.3.4
       algoliasearch: 4.17.0
     transitivePeerDependencies:
@@ -1475,12 +1510,12 @@ packages:
       '@popperjs/core': 2.11.7
       classnames: 2.3.2
       flowbite: 1.6.5
-      flowbite-svelte: 0.35.1(@algolia/client-search@4.17.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1)
+      flowbite-svelte: 0.35.1(@algolia/client-search@4.19.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1)
       svelte: 3.59.1
       svelte-heros: 3.3.1(svelte@3.59.1)
     dev: false
 
-  /flowbite-svelte@0.35.1(@algolia/client-search@4.17.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1):
+  /flowbite-svelte@0.35.1(@algolia/client-search@4.19.0)(@popperjs/core@2.11.7)(classnames@2.3.2)(flowbite@1.6.5)(svelte@3.59.1):
     resolution: {integrity: sha512-163TSS0xa3Wa0+neLojkIxyvTG096MWq/1q9BiV1PzbT4UMIcrq14OkZqGxg3JtQExfUa1iIvUC0JculKKIOYQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     peerDependencies:
@@ -1489,7 +1524,7 @@ packages:
       flowbite: ^1.6.3
       svelte: ^3.55.1
     dependencies:
-      '@docsearch/js': 3.3.4(@algolia/client-search@4.17.0)
+      '@docsearch/js': 3.3.4(@algolia/client-search@4.19.0)
       '@popperjs/core': 2.11.7
       classnames: 2.3.2
       flowbite: 1.6.5
