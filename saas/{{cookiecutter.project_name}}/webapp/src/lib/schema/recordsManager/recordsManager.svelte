@@ -75,7 +75,8 @@
 	export let perPage = 5;
 
 	const queryParams = writable<RecordFullListQueryParams>({
-		sort: '-created'
+		sort: '-created',
+		...initialQueryParams
 	});
 
 	$: $queryParams = {
@@ -97,10 +98,11 @@
 	}
 
 	$: if (browser) {
-		$queryParams = {
-			...$queryParams,
-			page: Number(currentPage)
-		};
+		$queryParams;
+		initialQueryParams;
+		currentPage;
+		totalPages;
+		totalItems;
 		loadRecords();
 	}
 
@@ -166,13 +168,11 @@
 		<div class="flex flex-col items-center justify-center gap-2 my-5">
 			<div class="text-sm text-gray-700 dark:text-gray-400">
 				Showing <span class="font-semibold text-gray-900 dark:text-white"
-					>{(perPage * Number(currentPage)-perPage +1)}</span
+					>{perPage * Number(currentPage) - perPage + 1}</span
 				>
 				to
 				<span class="font-semibold text-gray-900 dark:text-white"
-					>{Number(currentPage) == totalPages
-						? totalItems
-						: perPage * Number(currentPage)}</span
+					>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
 				>
 				of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
 			</div>
