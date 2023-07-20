@@ -164,7 +164,7 @@
 
 <slot {records} {loadRecords} />
 <slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
-	{#if totalPages > 0}
+	{#if totalPages > 1}
 		<div class="flex flex-col items-center justify-center gap-2 my-5">
 			<div class="text-sm text-gray-700 dark:text-gray-400">
 				Showing <span class="font-semibold text-gray-900 dark:text-white"
