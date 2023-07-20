@@ -91,17 +91,7 @@
 	let records: PBRecord[] = [];
 	let totalPages: number = 0;
 
-	async function wait(ms: number) {
-		var start = new Date().getTime();
-		var end = start;
-		while (end < start + ms) {
-			end = new Date().getTime();
-			console.log('waiting');
-		}
-	}
-
 	async function loadRecords() {
-		await wait(500);
 		const res = await recordService.getList(Number(currentPage), perPage, { ...$queryParams });
 		records = res.items;
 		totalPages = res.totalPages;
