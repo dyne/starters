@@ -34,9 +34,9 @@
 </script>
 
 <form class="flex gap-2">
-	<Select items={fields} bind:value={selected} size="md" class="!w-fit" />
+	<Select items={fields} bind:value={selected} class="!w-fit" />
 	<Search
-		size="md"
+		size="lg"
 		bind:value={queryString}
 		on:keydown={(e) => {
 			if (e.key === 'Enter') {
