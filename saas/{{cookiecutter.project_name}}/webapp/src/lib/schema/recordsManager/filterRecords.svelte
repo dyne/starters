@@ -16,21 +16,22 @@
 		}));
 	let queryString = '';
 	const handleSearch = () => {
-		if (queryString.length) {
-			if (selected === 'all fields') {
-				$queryParams.filter = searchableFields
-					.reduce((acc: string[], field) => {
-						acc.push(`${field} ~ '${queryString}'`);
-						return acc;
-					}, [])
-					.join(' || ');
-			} else {
-				$queryParams.filter = `${selected} ~ '${queryString}'`;
-			}
+		if (selected === 'all fields') {
+			$queryParams.filter = searchableFields
+				.reduce((acc: string[], field) => {
+					acc.push(`${field} ~ '${queryString}'`);
+					return acc;
+				}, [])
+				.join(' || ');
 		} else {
-			delete $queryParams.filter;
+			$queryParams.filter = `${selected} ~ '${queryString}'`;
 		}
 	};
+	$: {
+		if (queryString === '') {
+			handleSearch();
+		}
+	}
 </script>
 
 <form class="flex gap-2">
