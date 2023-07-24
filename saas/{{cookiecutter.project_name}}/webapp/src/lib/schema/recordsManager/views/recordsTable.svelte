@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ShareRecord from '../recordActions/shareRecord.svelte';
+
 	import FieldComponent, { type FieldsComponents } from './fieldComponent.svelte';
 	import type { Record as PBRecord } from 'pocketbase';
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
@@ -25,6 +27,7 @@
 	export let records: (PBRecord & RecordGeneric)[] = [];
 	export let fields: string[] = ['id'];
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
+	export let showShare: boolean = false;
 
 	export let showDelete = true;
 	export let showEdit = true;
@@ -73,6 +76,9 @@
 							{/if}
 							{#if showDelete}
 								<DeleteRecord {record} />
+							{/if}
+							{#if showShare}
+								<ShareRecord {record} />
 							{/if}
 							<slot {record} />
 						</div>
