@@ -2,22 +2,26 @@
 	import { Button, Search, Select } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from './recordsManager.svelte';
 	import { MagnifyingGlass } from 'svelte-heros-v2';
+	import { getCollectionSchema } from '../getCollectionSchema';
 
-	export let searchableFields: string[] = [];
+	export let searchableFields: string[] | undefined = undefined;
+	export let placeholder: string = 'Search...';
+	export let allFieldsCaption: string = 'All fields';
 
-	const { dataManager } = getRecordsManagerContext();
+	const { dataManager, collection } = getRecordsManagerContext();
 	const { queryParams } = dataManager;
-	let selected: string = 'all fields';
-	let fields: { value: string; name: string }[] = ['all fields']
-		.concat(searchableFields)
+	const allFields = getCollectionSchema(collection)?.schema?.map((field) => field.name) ?? [];
+	let selected: string = allFieldsCaption;
+	let fields: { value: string; name: string }[] = [allFieldsCaption]
+		.concat(searchableFields || allFields)
 		.map((field) => ({
 			value: field,
 			name: field
 		}));
 	let queryString = '';
 	const handleSearch = () => {
-		if (selected === 'all fields') {
-			$queryParams.filter = searchableFields
+		if (selected === allFieldsCaption) {
+			$queryParams.filter = (searchableFields || allFields)
 				.reduce((acc: string[], field) => {
 					acc.push(`${field} ~ '${queryString}'`);
 					return acc;
@@ -27,11 +31,6 @@
 			$queryParams.filter = `${selected} ~ '${queryString}'`;
 		}
 	};
-	$: {
-		if (queryString === '') {
-			handleSearch();
-		}
-	}
 </script>
 
 <form class="flex gap-2">
@@ -39,14 +38,9 @@
 	<Search
 		size="lg"
 		bind:value={queryString}
-		on:keydown={(e) => {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				handleSearch();
-			}
+		on:input={() => {
+			handleSearch();
 		}}
+		{placeholder}
 	/>
-	<Button class="!p-2.5" on:click={handleSearch}>
-		<MagnifyingGlass size="20" />
-	</Button>
 </form>
