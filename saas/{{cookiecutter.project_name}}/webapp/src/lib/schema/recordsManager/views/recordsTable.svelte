@@ -34,7 +34,7 @@
 	export let showDelete = true;
 	export let showEdit = true;
 	export let showCheckboxes = true;
-	export let emptyState: { title?: string; description?: string; icon?: typeof SvelteComponent };
+	export let emptyState: { title?: string; description?: string; icon?: typeof SvelteComponent } = {};
 	const {
 		title = 'No records',
 		description = 'There are no records to show.',
