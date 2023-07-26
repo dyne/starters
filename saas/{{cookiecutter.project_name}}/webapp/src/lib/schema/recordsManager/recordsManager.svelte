@@ -3,7 +3,6 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { FormSettings } from '../CRUDForm.svelte';
-	import { Pagination } from 'flowbite-svelte';
 
 	//
 
@@ -48,8 +47,9 @@
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import { writable } from 'svelte/store';
-	import { PaginationItem, Spinner } from 'flowbite-svelte';
+	import { PaginationItem, Pagination } from 'flowbite-svelte';
 	import GridSpinner from '$lib/components/gridSpinner.svelte';
+
 
 	//
 
@@ -172,7 +172,7 @@
 {:then}
 	<slot {records} {loadRecords} />
 	<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
-		{#if totalPages > 0}
+		{#if totalPages > 1}
 			<div class="flex flex-col items-center justify-center gap-2 my-5">
 				<div class="text-sm text-gray-700 dark:text-gray-400">
 					Showing <span class="font-semibold text-gray-900 dark:text-white"
