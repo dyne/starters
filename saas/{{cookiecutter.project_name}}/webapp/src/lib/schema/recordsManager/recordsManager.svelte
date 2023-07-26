@@ -3,7 +3,6 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { FormSettings } from '../CRUDForm.svelte';
-	import { Pagination } from 'flowbite-svelte';
 
 	//
 
@@ -48,7 +47,7 @@
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import { writable } from 'svelte/store';
-	import { PaginationItem } from 'flowbite-svelte';
+	import { Pagination } from 'flowbite-svelte';
 
 	//
 
