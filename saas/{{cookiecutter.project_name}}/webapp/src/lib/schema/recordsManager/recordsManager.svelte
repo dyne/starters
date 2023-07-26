@@ -3,7 +3,6 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { FormSettings } from '../CRUDForm.svelte';
-	import { Pagination } from 'flowbite-svelte';
 
 	//
 
@@ -48,7 +47,9 @@
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
 	import { writable } from 'svelte/store';
-	import { PaginationItem } from 'flowbite-svelte';
+	import { PaginationItem, Pagination } from 'flowbite-svelte';
+	import GridSpinner from '$lib/components/gridSpinner.svelte';
+
 
 	//
 
@@ -96,6 +97,8 @@
 		totalPages = res.totalPages;
 		totalItems = res.totalItems;
 	}
+
+	let promise = loadRecords();
 
 	$: if (browser) {
 		$queryParams;
@@ -162,41 +165,51 @@
 	});
 </script>
 
-<slot {records} {loadRecords} />
-<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
-	{#if totalPages > 0}
-		<div class="flex flex-col items-center justify-center gap-2 my-5">
-			<div class="text-sm text-gray-700 dark:text-gray-400">
-				Showing <span class="font-semibold text-gray-900 dark:text-white"
-					>{perPage * Number(currentPage) - perPage + 1}</span
-				>
-				to
-				<span class="font-semibold text-gray-900 dark:text-white"
-					>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
-				>
-				of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
-			</div>
+{#await promise}
+	<div class="flex items-center justify-center min-h-screen justify-items-center">
+		<GridSpinner />
+	</div>
+{:then}
+	<slot {records} {loadRecords} />
+	<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
+		{#if totalPages > 1}
+			<div class="flex flex-col items-center justify-center gap-2 my-5">
+				<div class="text-sm text-gray-700 dark:text-gray-400">
+					Showing <span class="font-semibold text-gray-900 dark:text-white"
+						>{perPage * Number(currentPage) - perPage + 1}</span
+					>
+					to
+					<span class="font-semibold text-gray-900 dark:text-white"
+						>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
+					>
+					of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
+				</div>
 
-			<div class="flex w-full justify-center">
-				<Pagination
-					{pages}
-					activeClass="bg-blue-500 text-white"
-					on:previous={(e) => {
-						e.preventDefault();
-						if (Number(currentPage) - 1 < 1) return;
-						goto(`?page=${Number(currentPage) - 1}`);
-					}}
-					on:next={(e) => {
-						e.preventDefault();
-						if (Number(currentPage) + 1 > totalPages) return;
-						goto(`?page=${Number(currentPage) + 1}`);
-					}}
-					on:click={(e) => {
-						e.preventDefault();
-						goto(e.target?.href);
-					}}
-				/>
+				<div class="flex w-full justify-center">
+					<Pagination
+						{pages}
+						activeClass="bg-blue-500 text-white"
+						on:previous={(e) => {
+							e.preventDefault();
+							if (Number(currentPage) - 1 < 1) return;
+							goto(`?page=${Number(currentPage) - 1}`);
+						}}
+						on:next={(e) => {
+							e.preventDefault();
+							if (Number(currentPage) + 1 > totalPages) return;
+							goto(`?page=${Number(currentPage) + 1}`);
+						}}
+						on:click={(e) => {
+							e.preventDefault();
+							goto(e.target?.href);
+						}}
+					/>
+				</div>
 			</div>
-		</div>
-	{/if}
-</slot>
+		{/if}
+	</slot>
+{:catch}
+	<div class="flex items-center justify-center min-h-screen justify-items-center">
+		Some error occured
+	</div>
+{/await}
