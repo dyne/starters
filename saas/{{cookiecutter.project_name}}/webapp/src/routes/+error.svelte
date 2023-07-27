@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { A, Heading, P } from 'flowbite-svelte';
 	type ErrorData = {
@@ -16,6 +17,13 @@
 					image: '/404-computer.svg',
 					title: 'Not Found',
 					description: 'Whoops! That page doesn’t exist.'
+				};
+			case 503:
+				return {
+					status: 503,
+					image: '/maintenance.svg',
+					title: 'Service Unavailable',
+					description: 'We’re temporarily offline for maintenance. Please try again later.'
 				};
 			default:
 				return {
@@ -37,14 +45,15 @@
 	<div class="flex flex-col items-center justify-center w-full gap-4">
 		<Heading tag="h3" class="text-primary-600">{data.status} {data.title}</Heading>
 		<Heading tag="h2">{data.description}</Heading>
-		<div class="w-full pt-8">
-			<P class="text-gray-400">Here are some Helpful link:</P>
-			<ul class="flex gap-2">
-				<li><A href="/">Home</A></li>
-				<li><A href="/login">Login</A></li>
-				<li><A href="/register">Register</A></li>
-				<li><A href="/my">My</A></li>
-			</ul>
-		</div>
+		{#if status !== 503}
+			<div class="w-full pt-8 space-y-1">
+				<P class="text-gray-400">Here are some Helpful link:</P>
+				<ul class="flex gap-6">
+					<li><A href="/">Home</A></li>
+					<li><A href="/login">Login</A></li>
+					<li><A href="/register">Register</A></li>
+				</ul>
+			</div>
+		{/if}
 	</div>
 </div>
