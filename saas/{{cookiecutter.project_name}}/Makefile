@@ -42,5 +42,5 @@ clean: ## 🧹 Clean the project builds
 	rm -f webapp/src/lib/pocketbase-types.ts
 	rm -f webapp/src/lib/schema/pb_schema.json
 
-up: bg fg ## 💄 Run all the components quickly
+up: setup bg fg ## 💄 Run all the components quickly
 dev: bg fgdev ## 🧑‍💻Run all the components in dev mode
