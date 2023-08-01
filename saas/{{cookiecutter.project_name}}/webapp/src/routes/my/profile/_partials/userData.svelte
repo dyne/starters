@@ -1,22 +1,24 @@
 <script lang="ts">
-	import { Heading, P, Button,Hr } from 'flowbite-svelte';
+	import { Heading, P, Button, Hr } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import UserDataForm from './userDataForm.svelte';
-	import { Pencil, XMark } from 'svelte-heros-v2';
+	import { LockClosed, Pencil, XMark } from 'svelte-heros-v2';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
-
-	//@ts-ignore
-	const avatarUrl = pb.files.getUrl($currentUser, $currentUser?.avatar);
 
 	let edit = false;
 	const toggleEdit = () => {
 		edit = !edit;
 	};
+
+	const askPassworReset = async () => {
+		await pb.collection('users').requestPasswordReset($currentUser!.email);
+		alert('Password reset email sent.');
+	};
 </script>
 
 <div class="space-y-6">
 	<div class="flex flex-row gap-6 items-center">
-		<UserAvatar size="lg"/>
+		<UserAvatar size="lg" />
 		<div class="flex flex-col">
 			<Heading tag="h4">{$currentUser?.name}</Heading>
 			<P>
@@ -28,22 +30,27 @@
 		</div>
 	</div>
 
-	<div class='flex items-center gap-4 justify-end'>
+	<div class="flex items-center gap-4 justify-end">
 		{#if edit}
-		<Hr />
-		{/if}
-			<Button color="alternative" on:click={toggleEdit}>
-				{#if !edit}
-					<Pencil size="20" />
-					<span class="ml-2">Edit profile</span>
-				{:else}
-					<XMark size="20" />
-					<span class="ml-2">Cancel</span>
-				{/if}
+			<Hr />
+		{:else}
+			<Button color="alternative" on:click={askPassworReset}>
+				<LockClosed size="20" />
+				<span class="ml-2">Change password</span>
 			</Button>
+		{/if}
+		<Button color="alternative" on:click={toggleEdit}>
+			{#if !edit}
+				<Pencil size="20" />
+				<span class="ml-2">Edit profile</span>
+			{:else}
+				<XMark size="20" />
+				<span class="ml-2">Cancel</span>
+			{/if}
+		</Button>
 	</div>
 
 	{#if edit}
-		<UserDataForm on:success={toggleEdit}/>
+		<UserDataForm on:success={toggleEdit} />
 	{/if}
 </div>

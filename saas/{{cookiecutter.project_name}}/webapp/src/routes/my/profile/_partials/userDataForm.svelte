@@ -5,7 +5,10 @@
 	import FormError from '$lib/components/forms/formError.svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import SubmitButton from '$lib/components/forms/submitButton.svelte';
+	import { features, featuresNames, isFeatureActive, loadFeatures } from '$lib/features';
+	import { destroyKeyring } from '$lib/keypairoom/keypair';
 	import { currentUser, pb } from '$lib/pocketbase';
+	import { Alert } from 'flowbite-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { z } from 'zod';
 
@@ -13,7 +16,7 @@
 
 	const schema = z.object({
 		name: z.string().min(3).optional(),
-		email: z.string().email(),
+		email: z.string().email().optional(),
 		emailVisibility: z.boolean().optional(),
 		avatar: z
 			.instanceof(File)
@@ -32,18 +35,52 @@
 		schema,
 		async ({ form }) => {
 			const formData = createFormData(form.data);
-			$currentUser = await pb.collection('users').update($currentUser!.id, formData);
+			let email = formData.get('email') as string;
+			$currentUser = await pb.collection('users').update($currentUser!.id, {
+				name: formData.get('name'),
+				emailVisibility: formData.get('emailVisibility')
+			});
+			let emailChangeSent = false;
+			if (isEmailChanged) {
+				email = formData.get('email') as string;
+				emailChangeSent = await pb.collection('users').requestEmailChange(email);
+			}
+			if (keypairoomActive && isEmailChanged && emailChangeSent) {
+				alert(
+					'Email change request sent. Please check your email and click on the link to confirm the change.Your keys will be destroyed and you will need to regenerate them.'
+				);
+				destroyKeyring();
+				pb.collection('users').update($currentUser!.id, {
+					ethereum_address: null,
+					ecdh_public_key: null,
+					eddsa_public_key: null,
+					reflow_public_key: null,
+					bitcoin_public_key: null
+				});
+			}
 			dispatch('success');
 		},
 		initialData
 	);
+	const { form } = superform;
+	let isEmailChanged = false;
+
+	const keypairoomActive = isFeatureActive($features, featuresNames.KEYPAIROOM);
+
+	$: {
+		if ($form.email !== $currentUser?.email) {
+			isEmailChanged = true;
+		} else {
+			isEmailChanged = false;
+		}
+	}
 </script>
 
 <Form {superform}>
 	<Input field="name" label="Username" />
 
 	<div class="space-y-2">
-		<Input field="email" type="email" />
+		<Input field="email" />
 		<Checkbox field="emailVisibility">
 			<span>Show email to other users</span>
 		</Checkbox>
@@ -53,7 +90,15 @@
 
 	<FormError />
 
-	<div class="flex justify-end">
-		<SubmitButton>Update profile</SubmitButton>
+	<div>
+		{#if isEmailChanged && keypairoomActive}
+			<Alert>
+				<span class="font-medium">Email is changed!</span> If you change your email, you will need to
+				regenerate your keys too.
+			</Alert>
+		{/if}
+		<div class="flex justify-end mt-1">
+			<SubmitButton>Update profile</SubmitButton>
+		</div>
 	</div>
 </Form>
