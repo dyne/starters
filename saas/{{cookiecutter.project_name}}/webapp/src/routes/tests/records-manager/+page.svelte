@@ -12,7 +12,7 @@
 	import Chip from '$lib/schema/recordsManager/views/fieldsComponents/cells/chip.svelte';
 	import RecordCard from '$lib/schema/recordsManager/views/recordCard.svelte';
 	import RecordsTable from '$lib/schema/recordsManager/views/recordsTable.svelte';
-	import { Heading, Hr, Skeleton } from 'flowbite-svelte';
+	import { CardPlaceholder, Heading, Hr, Skeleton } from 'flowbite-svelte';
 	import { XCircle } from 'svelte-heros-v2';
 
 	const slotTypeCaster = createSlotTypeCaster<CrudExampleRecord>();
@@ -64,23 +64,33 @@
 
 			<div class="space-y-4">
 				<Heading tag="h4">Cards</Heading>
-				{#if records.length === 0}
-					<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
-				{:else}
+
+				{#await loadRecords()}
 					<div class="grid grid-cols-4 gap-4">
-						{#each records as record}
-							<RecordCard
-								{record}
-								titleField="id"
-								fields={['text', 'select', 'textarea']}
-								fieldsComponents={{ select: Chip }}
-								showEdit
-								showCheckbox
-								showDelete
-							/>
+						{#each Array(4) as _}
+							<CardPlaceholder />
 						{/each}
 					</div>
-				{/if}
+				{:then}
+					{#if records.length === 0}
+						<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
+					{:else}
+						<div class="grid grid-cols-4 gap-4">
+							{#each records as record}
+								<RecordCard
+									{record}
+									titleField="id"
+									fieldsComponents={{ select: Chip }}
+									showEdit
+									showCheckbox
+									showDelete
+								/>
+							{/each}
+						</div>
+					{/if}
+				{:catch}
+					<EmptyState title={'Error'} description={'Something went wrong.'} icon={XCircle} />
+				{/await}
 			</div>
 		</div>
 	</RecordsManager>
