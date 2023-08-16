@@ -90,6 +90,7 @@ export enum HooksEventOptions {
 export enum HooksActionTypeOptions {
 	"command" = "command",
 	"post" = "post",
+	"sendmail" = "sendmail",
 }
 export type HooksRecord = {
 	collection: string
@@ -115,9 +116,9 @@ export type UsersRecord = {
 export type AuthorizationsResponse<Texpand = unknown> = Required<AuthorizationsRecord> & BaseSystemFields<Texpand>
 export type AuthorizationsExamplesResponse<Texpand = unknown> = Required<AuthorizationsExamplesRecord> & BaseSystemFields<Texpand>
 export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
-export type FeaturesResponse<TenvVariables = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields
-export type HooksResponse = Required<HooksRecord> & BaseSystemFields
-export type UsersResponse = Required<UsersRecord> & AuthSystemFields
+export type FeaturesResponse<TenvVariables = unknown, Texpand = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields<Texpand>
+export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSystemFields<Texpand>
+export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 

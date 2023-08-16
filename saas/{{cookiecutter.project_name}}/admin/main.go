@@ -21,6 +21,8 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+
+	"pb/webauthn"
 )
 
 func main() {
@@ -35,6 +37,7 @@ func main() {
 		"the directory to serve static files",
 	)
 
+	webauthn.Register(app)
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// serve static files
 		spa_mode := true // missing routes serve index.html
