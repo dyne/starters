@@ -83,6 +83,7 @@
 				method: "POST"
 			})
 			console.log(token);
+			pb.authStore.save(token.token, token.user)
 		}
 	}
 
