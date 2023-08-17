@@ -37,7 +37,6 @@ func main() {
 		"the directory to serve static files",
 	)
 
-	webauthn.Register(app)
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		// serve static files
 		spa_mode := true // missing routes serve index.html
@@ -104,6 +103,7 @@ func main() {
 		return nil
 	})
 
+	webauthn.Register(app)
 	hooks.Register(app)
 	jsvm.MustRegisterMigrations(app, &jsvm.MigrationsOptions{})
 	migratecmd.MustRegister(app, app.RootCmd, &migratecmd.Options{

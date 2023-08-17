@@ -65,22 +65,89 @@ func (u User) WebAuthnCredentials() []webauthn.Credential {
 	return u.credentials
 }
 
-func Register(app *pocketbase.PocketBase) error {
+// Could return (nil, nil) which means that the feature is not enabled
+func NewWebAuthnFromEnv(app *pocketbase.PocketBase) (*webauthn.WebAuthn, error) {
+	record, err := app.Dao().FindFirstRecordByData("features", "name", "webauthn")
+	if err != nil {
+		return nil, err
+	}
+
+	if !record.GetBool("active") {
+		return nil, nil
+	}
+
+	var envConfig struct {
+		DisplayName string `json:"DISPLAY_NAME"`
+		RPId        string `json:"RPID"`
+		RPOrigin    string `json:"RPORIGINS"`
+	}
+
+	err = json.Unmarshal([]byte(record.GetString("envVariables")), &envConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	if envConfig.DisplayName == "" {
+		return nil, errors.New("Display name is empty")
+	}
+
+	if envConfig.RPId == "" {
+		return nil, errors.New("Relying party not set")
+	}
+
+	if envConfig.RPOrigin == "" {
+		return nil, errors.New("Relying party origin not set")
+	}
+
 	wconfig := &webauthn.Config{
-		RPDisplayName: "Dyne.org",  // Display Name for your site
-		RPID:          "localhost", // Generally the FQDN for your site
-		RPOrigins:     []string{"http://localhost:5173"},
+		RPDisplayName: envConfig.DisplayName, // Display Name for your site
+		RPID:          envConfig.RPId,        // Generally the FQDN for your site
+		RPOrigins:     []string{envConfig.RPOrigin},
 	}
 
 	w, err := webauthn.New(wconfig)
-	if err != nil {
-		log.Println(err.Error())
+
+	return w, nil
+}
+
+func storeSessionData(app *pocketbase.PocketBase, userRecord *models.Record, sessionData *webauthn.SessionData) error {
+	// Remove old session data
+	record, err := app.Dao().FindFirstRecordByData("sessionDataWebauthn", "user", userRecord.Id)
+	if record != nil {
+		if err := app.Dao().DeleteRecord(record); err != nil {
+			return err
+		}
 	}
+
+	// store session data as marshaled JSON
+	sessionStore, err := app.Dao().FindCollectionByNameOrId("sessionDataWebauthn")
+	if err != nil {
+		return err
+	}
+	record = models.NewRecord(sessionStore)
+	record.Set("user", userRecord.Id)
+	record.Set("session", sessionData)
+
+	if err := app.Dao().SaveRecord(record); err != nil {
+		return err
+	}
+	return nil
+}
+
+func Register(app *pocketbase.PocketBase) error {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodGet,
 			Path:   "/api/webauthn/register/begin/:username",
 			Handler: func(c echo.Context) error {
+				w, err := NewWebAuthnFromEnv(app)
+				if err != nil {
+					return err
+				}
+				if w == nil {
+					return apis.NewNotFoundError("Webauthn not enabled", nil)
+				}
+
 				email := c.PathParam("username")
 
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
@@ -91,10 +158,11 @@ func Register(app *pocketbase.PocketBase) error {
 						return err
 					}
 
-					record := models.NewRecord(collection)
-					record.Set("email", email)
-					record.Set("username", email)
-					if err := app.Dao().SaveRecord(record); err != nil {
+					userRecord = models.NewRecord(collection)
+					userRecord.Set("email", email)
+					userRecord.Set("username", email)
+					userRecord.RefreshTokenKey()
+					if err := app.Dao().SaveRecord(userRecord); err != nil {
 						return err
 					}
 				}
@@ -105,29 +173,13 @@ func Register(app *pocketbase.PocketBase) error {
 				)
 
 				if err != nil {
-					log.Println(err)
 					return c.JSON(http.StatusInternalServerError, err.Error())
 				}
 
-				// Remove old session data
-				record, err := app.Dao().FindFirstRecordByData("sessionDataWebauthn", "user", userRecord.Id)
-				if record != nil {
-					if err := app.Dao().DeleteRecord(record); err != nil {
-						return err
-					}
-				}
+				err = storeSessionData(app, userRecord, sessionData)
 
-				// store session data as marshaled JSON
-				sessionStore, err := app.Dao().FindCollectionByNameOrId("sessionDataWebauthn")
 				if err != nil {
-					return err
-				}
-				record = models.NewRecord(sessionStore)
-				record.Set("user", userRecord.Id)
-				record.Set("session", sessionData)
-
-				if err := app.Dao().SaveRecord(record); err != nil {
-					return err
+					return c.JSON(http.StatusInternalServerError, err.Error())
 				}
 
 				return c.JSON(http.StatusOK, options)
@@ -140,6 +192,14 @@ func Register(app *pocketbase.PocketBase) error {
 			Method: http.MethodPost,
 			Path:   "/api/webauthn/register/finish/:username",
 			Handler: func(c echo.Context) error {
+				w, err := NewWebAuthnFromEnv(app)
+				if err != nil {
+					return err
+				}
+				if w == nil {
+					return apis.NewNotFoundError("Webauthn not enabled", nil)
+				}
+
 				email := c.PathParam("username")
 
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
@@ -180,6 +240,14 @@ func Register(app *pocketbase.PocketBase) error {
 			Method: http.MethodGet,
 			Path:   "/api/webauthn/login/begin/:username",
 			Handler: func(c echo.Context) error {
+				w, err := NewWebAuthnFromEnv(app)
+				if err != nil {
+					return err
+				}
+				if w == nil {
+					return apis.NewNotFoundError("Webauthn not enabled", nil)
+				}
+
 				email := c.PathParam("username")
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
 				if err != nil {
@@ -192,24 +260,11 @@ func Register(app *pocketbase.PocketBase) error {
 				if err != nil {
 					return err
 				}
-				// Remove old session data
-				record, err := app.Dao().FindFirstRecordByData("sessionDataWebauthn", "user", userRecord.Id)
-				if record != nil {
-					if err := app.Dao().DeleteRecord(record); err != nil {
-						return err
-					}
-				}
-				// store session data as marshaled JSON
-				sessionStore, err := app.Dao().FindCollectionByNameOrId("sessionDataWebauthn")
-				if err != nil {
-					return err
-				}
-				record = models.NewRecord(sessionStore)
-				record.Set("user", userRecord.Id)
-				record.Set("session", sessionData)
 
-				if err := app.Dao().SaveRecord(record); err != nil {
-					return err
+				err = storeSessionData(app, userRecord, sessionData)
+
+				if err != nil {
+					return c.JSON(http.StatusInternalServerError, err.Error())
 				}
 
 				return c.JSON(http.StatusOK, options)
@@ -222,6 +277,14 @@ func Register(app *pocketbase.PocketBase) error {
 			Method: http.MethodPost,
 			Path:   "/api/webauthn/login/finish/:username",
 			Handler: func(c echo.Context) error {
+				w, err := NewWebAuthnFromEnv(app)
+				if err != nil {
+					return err
+				}
+				if w == nil {
+					return apis.NewNotFoundError("Webauthn not enabled", nil)
+				}
+
 				email := c.PathParam("username")
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
 				if err != nil {
