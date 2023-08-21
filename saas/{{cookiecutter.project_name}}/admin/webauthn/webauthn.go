@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-webauthn/webauthn/webauthn"
 	"github.com/labstack/echo/v5"
+	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -18,36 +19,33 @@ import (
 )
 
 type User struct {
-	id          []byte
-	email       string
-	displayName string
-	credentials []webauthn.Credential
+	app   *pocketbase.PocketBase
+	model *models.Record
 }
 
-func NewUser(m *models.Record) *User {
+func NewUser(app *pocketbase.PocketBase, m *models.Record) *User {
 
-	user := &User{}
-	user.id = []byte(m.Id)
-	user.email = m.GetString("email")
-	user.displayName = m.GetString("email")
-	json.Unmarshal([]byte(m.GetString("webauthn_credentials")), &user.credentials)
+	user := &User{
+		model: m,
+		app:   app,
+	}
 
 	return user
 }
 
 // WebAuthnID returns the user's ID
 func (u User) WebAuthnID() []byte {
-	return u.id
+	return []byte(u.model.Id)
 }
 
 // WebAuthnName returns the user's username
 func (u User) WebAuthnName() string {
-	return u.email
+	return u.model.GetString("email")
 }
 
 // WebAuthnDisplayName returns the user's display name
 func (u User) WebAuthnDisplayName() string {
-	return u.displayName
+	return u.model.GetString("email")
 }
 
 // WebAuthnIcon is not (yet) implemented
@@ -56,13 +54,42 @@ func (u User) WebAuthnIcon() string {
 }
 
 // AddCredential associates the credential to the user
-func (u *User) AddCredential(cred webauthn.Credential) {
-	u.credentials = append(u.credentials, cred)
+func (u *User) AddCredential(cred webauthn.Credential) error {
+	credentialsStore, err := u.app.Dao().FindCollectionByNameOrId("webauthnCredentials")
+	if err != nil {
+		return err
+	}
+	record := models.NewRecord(credentialsStore)
+	record.Set("user", u.model.Id)
+	record.Set("credential", cred)
+
+	if err := u.app.Dao().SaveRecord(record); err != nil {
+		return err
+	}
+	return nil
 }
 
 // WebAuthnCredentials returns credentials owned by the user
 func (u User) WebAuthnCredentials() []webauthn.Credential {
-	return u.credentials
+	var credentials []webauthn.Credential
+	records, err := u.app.Dao().FindRecordsByExpr("webauthnCredentials",
+		dbx.NewExp("user = {:user}", dbx.Params{"user": u.model.Id}))
+	if err != nil {
+		log.Println(err.Error())
+		return nil
+	}
+
+	for i := 0; i < len(records); i++ {
+		var credential webauthn.Credential
+		err := json.Unmarshal([]byte(records[i].GetString("credential")), &credential)
+		if err != nil {
+			log.Printf("Should not be here, wrong data in JSON field: %s", err.Error())
+			return nil
+		} else {
+			credentials = append(credentials, credential)
+		}
+	}
+	return credentials
 }
 
 // Could return (nil, nil) which means that the feature is not enabled
@@ -168,7 +195,7 @@ func Register(app *pocketbase.PocketBase) error {
 					return apis.NewForbiddenError("Wrong email", nil)
 				}
 
-				user := NewUser(userRecord)
+				user := NewUser(app, userRecord)
 
 				options, sessionData, err := w.BeginRegistration(
 					user,
@@ -209,7 +236,7 @@ func Register(app *pocketbase.PocketBase) error {
 					log.Println(err)
 					return err
 				}
-				user := NewUser(userRecord)
+				user := NewUser(app, userRecord)
 				record, err := app.Dao().FindFirstRecordByData("sessionDataWebauthn", "user", userRecord.Id)
 				if err != nil {
 					return err
@@ -224,7 +251,6 @@ func Register(app *pocketbase.PocketBase) error {
 				}
 				user.AddCredential(*credential)
 
-				userRecord.Set("webauthn_credentials", user.credentials)
 				if err := app.Dao().SaveRecord(userRecord); err != nil {
 					return err
 				}
@@ -255,7 +281,7 @@ func Register(app *pocketbase.PocketBase) error {
 				if err != nil {
 					return err
 				}
-				user := NewUser(userRecord)
+				user := NewUser(app, userRecord)
 
 				// generate PublicKeyCredentialRequestOptions, session data
 				options, sessionData, err := w.BeginLogin(user)
@@ -292,7 +318,7 @@ func Register(app *pocketbase.PocketBase) error {
 				if err != nil {
 					return err
 				}
-				user := NewUser(userRecord)
+				user := NewUser(app, userRecord)
 				record, err := app.Dao().FindFirstRecordByData("sessionDataWebauthn", "user", userRecord.Id)
 				if err != nil {
 					return err
