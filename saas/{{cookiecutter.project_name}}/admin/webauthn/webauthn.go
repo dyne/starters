@@ -138,7 +138,7 @@ func Register(app *pocketbase.PocketBase) error {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodGet,
-			Path:   "/api/webauthn/register/begin/:username",
+			Path:   "/api/webauthn/register/begin/:email",
 			Handler: func(c echo.Context) error {
 				w, err := NewWebAuthnFromEnv(app)
 				if err != nil {
@@ -148,11 +148,10 @@ func Register(app *pocketbase.PocketBase) error {
 					return apis.NewNotFoundError("Webauthn not enabled", nil)
 				}
 
-				email := c.PathParam("username")
+				email := c.PathParam("email")
 
-				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
-
-				if err != nil {
+				userRecord, _ := c.Get(apis.ContextAuthRecordKey).(*models.Record)
+				if userRecord == nil {
 					collection, err := app.Dao().FindCollectionByNameOrId("users")
 					if err != nil {
 						return err
@@ -165,7 +164,10 @@ func Register(app *pocketbase.PocketBase) error {
 					if err := app.Dao().SaveRecord(userRecord); err != nil {
 						return err
 					}
+				} else if userRecord.Get("email") != email { // User is logged in
+					return apis.NewForbiddenError("Wrong email", nil)
 				}
+
 				user := NewUser(userRecord)
 
 				options, sessionData, err := w.BeginRegistration(
@@ -190,7 +192,7 @@ func Register(app *pocketbase.PocketBase) error {
 		})
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodPost,
-			Path:   "/api/webauthn/register/finish/:username",
+			Path:   "/api/webauthn/register/finish/:email",
 			Handler: func(c echo.Context) error {
 				w, err := NewWebAuthnFromEnv(app)
 				if err != nil {
@@ -200,7 +202,7 @@ func Register(app *pocketbase.PocketBase) error {
 					return apis.NewNotFoundError("Webauthn not enabled", nil)
 				}
 
-				email := c.PathParam("username")
+				email := c.PathParam("email")
 
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
 				if err != nil {
@@ -238,7 +240,7 @@ func Register(app *pocketbase.PocketBase) error {
 		})
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodGet,
-			Path:   "/api/webauthn/login/begin/:username",
+			Path:   "/api/webauthn/login/begin/:email",
 			Handler: func(c echo.Context) error {
 				w, err := NewWebAuthnFromEnv(app)
 				if err != nil {
@@ -248,7 +250,7 @@ func Register(app *pocketbase.PocketBase) error {
 					return apis.NewNotFoundError("Webauthn not enabled", nil)
 				}
 
-				email := c.PathParam("username")
+				email := c.PathParam("email")
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
 				if err != nil {
 					return err
@@ -275,7 +277,7 @@ func Register(app *pocketbase.PocketBase) error {
 		})
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodPost,
-			Path:   "/api/webauthn/login/finish/:username",
+			Path:   "/api/webauthn/login/finish/:email",
 			Handler: func(c echo.Context) error {
 				w, err := NewWebAuthnFromEnv(app)
 				if err != nil {
@@ -285,7 +287,7 @@ func Register(app *pocketbase.PocketBase) error {
 					return apis.NewNotFoundError("Webauthn not enabled", nil)
 				}
 
-				email := c.PathParam("username")
+				email := c.PathParam("email")
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
 				if err != nil {
 					return err
