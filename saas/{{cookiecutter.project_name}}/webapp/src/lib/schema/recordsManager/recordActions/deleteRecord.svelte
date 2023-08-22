@@ -12,6 +12,7 @@
 
 	async function deleteRecord() {
 		await recordService.delete(record.id);
+		open = false;
 		loadRecords();
 	}
 
