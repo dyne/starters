@@ -8,7 +8,9 @@ export enum Collections {
 	CrudExample = "crudExample",
 	Features = "features",
 	Hooks = "hooks",
+	SessionDataWebauthn = "sessionDataWebauthn",
 	Users = "users",
+	WebauthnCredentials = "webauthnCredentials",
 }
 
 // Alias types for improved usability
@@ -102,6 +104,11 @@ export type HooksRecord = {
 	disabled?: boolean
 }
 
+export type SessionDataWebauthnRecord<Tsession = unknown> = {
+	user?: RecordIdString
+	session?: null | Tsession
+}
+
 export type UsersRecord = {
 	name?: string
 	avatar?: string
@@ -112,13 +119,20 @@ export type UsersRecord = {
 	reflow_public_key?: string
 }
 
+export type WebauthnCredentialsRecord<Tcredential = unknown> = {
+	user?: RecordIdString
+	credential?: null | Tcredential
+}
+
 // Response types include system fields and match responses from the PocketBase API
 export type AuthorizationsResponse<Texpand = unknown> = Required<AuthorizationsRecord> & BaseSystemFields<Texpand>
 export type AuthorizationsExamplesResponse<Texpand = unknown> = Required<AuthorizationsExamplesRecord> & BaseSystemFields<Texpand>
 export type CrudExampleResponse<Texpand = unknown> = Required<CrudExampleRecord> & BaseSystemFields<Texpand>
 export type FeaturesResponse<TenvVariables = unknown, Texpand = unknown> = Required<FeaturesRecord<TenvVariables>> & BaseSystemFields<Texpand>
 export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSystemFields<Texpand>
+export type SessionDataWebauthnResponse<Tsession = unknown, Texpand = unknown> = Required<SessionDataWebauthnRecord<Tsession>> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
+export type WebauthnCredentialsResponse<Tcredential = unknown, Texpand = unknown> = Required<WebauthnCredentialsRecord<Tcredential>> & BaseSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 
@@ -128,7 +142,9 @@ export type CollectionRecords = {
 	crudExample: CrudExampleRecord
 	features: FeaturesRecord
 	hooks: HooksRecord
+	sessionDataWebauthn: SessionDataWebauthnRecord
 	users: UsersRecord
+	webauthnCredentials: WebauthnCredentialsRecord
 }
 
 export type CollectionResponses = {
@@ -137,5 +153,7 @@ export type CollectionResponses = {
 	crudExample: CrudExampleResponse
 	features: FeaturesResponse
 	hooks: HooksResponse
+	sessionDataWebauthn: SessionDataWebauthnResponse
 	users: UsersResponse
+	webauthnCredentials: WebauthnCredentialsResponse
 }
