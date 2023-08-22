@@ -177,25 +177,38 @@ func Register(app *pocketbase.PocketBase) error {
 
 				email := c.PathParam("email")
 
+				authenticated := true
 				userRecord, _ := c.Get(apis.ContextAuthRecordKey).(*models.Record)
 				if userRecord == nil {
-					collection, err := app.Dao().FindCollectionByNameOrId("users")
+					authenticated = false
+					// User not authenticated I have to create a new user,
+					// but if a user exists I may go on if that user doesn't
+					// have neither a password nor a credential
+					userRecord, err = app.Dao().FindAuthRecordByEmail("users", email)
 					if err != nil {
-						return err
-					}
+						// Could not fetch the user, try to create a new one
+						collection, err := app.Dao().FindCollectionByNameOrId("users")
+						if err != nil {
+							return err
+						}
 
-					userRecord = models.NewRecord(collection)
-					userRecord.Set("email", email)
-					userRecord.Set("username", email)
-					userRecord.RefreshTokenKey()
-					if err := app.Dao().SaveRecord(userRecord); err != nil {
-						return err
+						userRecord = models.NewRecord(collection)
+						userRecord.Set("email", email)
+						userRecord.Set("username", email)
+						userRecord.RefreshTokenKey()
+						if err := app.Dao().SaveRecord(userRecord); err != nil {
+							return err
+						}
 					}
 				} else if userRecord.Get("email") != email { // User is logged in
 					return apis.NewForbiddenError("Wrong email", nil)
 				}
 
 				user := NewUser(app, userRecord)
+
+				if !authenticated && (len(user.WebAuthnCredentials()) > 0 || userRecord.PasswordHash() != "") {
+					return apis.NewForbiddenError("A user already exists with this email", nil)
+				}
 
 				options, sessionData, err := w.BeginRegistration(
 					user,
