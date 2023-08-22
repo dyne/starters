@@ -8,6 +8,12 @@ help: ## 🛟 Show this help message
 doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
 
+setup_submodules: ## 📦 Setup the submodules
+	rm -rf admin/zencode/zenflows-crypto
+	rm -rf webapp/zenflows-crypto
+	cd admin && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
+	cd webapp && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
+
 setup: ## ⛏️ Setup the project
 	git init
 	rm -rf admin/zencode/zenflows-crypto
