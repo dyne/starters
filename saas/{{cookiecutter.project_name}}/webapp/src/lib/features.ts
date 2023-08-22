@@ -32,5 +32,6 @@ export function areFeaturesActive(features: FeaturesResponse[], names: string[])
 export const featuresNames = {
 	AUTH: 'auth',
 	DID: 'DID',
-	KEYPAIROOM: 'keypairoom'
+	KEYPAIROOM: 'keypairoom',
+	WEBAUTHN: 'webauthn'
 } as const;
