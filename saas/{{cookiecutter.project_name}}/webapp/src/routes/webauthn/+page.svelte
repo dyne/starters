@@ -32,7 +32,8 @@
 					response: {
 						attestationObject: bufferEncode(attestationObject),
 						clientDataJSON: bufferEncode(clientDataJSON)
-					}
+					},
+					description: "my little pc"
 				},
 				method: 'POST'
 			});
