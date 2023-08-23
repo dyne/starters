@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { features, featuresNames, isFeatureActive } from '$lib/features';
 	import { z } from 'zod';
+	import { currentEmail } from './+layout.svelte';
 
 	// Components
 	import { A, Heading } from 'flowbite-svelte';
@@ -24,28 +25,33 @@
 		})
 		.refine((data) => data.password === data.passwordConfirm, 'PASSWORDS_DO_NOT_MATCH');
 
-	const superform = createForm(schema, async ({ form }) => {
-		const { data } = form;
-		const u = pb.collection(Collections.Users);
-		await u.create(data);
-		await u.authWithPassword(data.email, data.password);
-		await u.requestVerification(data.email);
-		if (isFeatureActive($features, featuresNames.KEYPAIROOM)) {
-			await goto('/keypairoom');
-		} else {
-			await goto('/my');
-		}
-	});
+	const superform = createForm(
+		schema,
+		async ({ form }) => {
+			const { data } = form;
+			const u = pb.collection(Collections.Users);
+			await u.create(data);
+			await u.authWithPassword(data.email, data.password);
+			await u.requestVerification(data.email);
+			if (isFeatureActive($features, featuresNames.KEYPAIROOM)) {
+				await goto('/keypairoom');
+			} else {
+				await goto('/my');
+			}
+		},
+		{ email: $currentEmail },
+		{ taintedMessage: null }
+	);
 	const keys = schema.innerType().keyof().Enum;
 
-	const { capture, restore } = superform;
+	const { capture, restore, form } = superform;
 	export const snapshot = { capture, restore };
+
+	$: $currentEmail = $form.email;
 </script>
 
 <Form {superform}>
-	<Heading tag="h3">Create an account</Heading>
-
-	<Input type="email" label="Your email" field={keys.email} placeholder="name@foundation.org" />
+	<Input type="email" label="Your email" field={keys.email} placeholder="name@example.org" />
 	<Input type="password" label="Your password" field={keys.password} placeholder="•••••" />
 	<Input
 		type="password"
@@ -54,7 +60,7 @@
 		placeholder="•••••"
 	/>
 	<Checkbox field={keys.acceptTerms}>
-		I accept the <A href="/">Terms and Conditions</A>
+		I accept the<A class="ml-1" href="/">Terms and Conditions</A>
 	</Checkbox>
 
 	<FormError />
@@ -62,8 +68,3 @@
 		<SubmitButton>Create an account</SubmitButton>
 	</div>
 </Form>
-
-<p class="text-sm text-gray-500 dark:text-gray-400">
-	Already have an account?
-	<A href="/login">Login here</A>
-</p>
