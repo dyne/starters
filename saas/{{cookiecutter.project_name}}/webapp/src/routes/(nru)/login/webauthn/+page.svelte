@@ -4,7 +4,6 @@
 	import { z } from 'zod';
 
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import { Heading } from 'flowbite-svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import FormError from '$lib/components/forms/formError.svelte';
 	import SubmitButton from '$lib/components/forms/submitButton.svelte';
