@@ -78,6 +78,12 @@ export async function loginUser(username: string) {
 	}
 }
 
-export async function isWebauthnSupported() {
+export function isWebauthnSupported() {
 	return Boolean(window.PublicKeyCredential);
+}
+
+export async function isPlatformAuthenticatorAvailable() {
+	if (isWebauthnSupported())
+		return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+	else return false;
 }

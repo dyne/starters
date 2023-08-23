@@ -1,12 +1,19 @@
 <script lang="ts">
-	import { registerUser, isWebauthnSupported } from '$lib/webauthn';
+	import { onMount } from 'svelte';
+	import {
+		registerUser,
+		isWebauthnSupported,
+		isPlatformAuthenticatorAvailable
+	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
+	import { Collections } from '$lib/pocketbase-types';
 
-	import { Alert, Button, Card, Heading, P } from 'flowbite-svelte';
 	import { InformationCircle, Plus } from 'svelte-heros-v2';
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
-	import { Collections } from '$lib/pocketbase-types';
 	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
+	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
+
+	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
 </script>
 
 <Heading tag="h6">Your devices</Heading>
@@ -27,7 +34,31 @@
 	</div>
 </RecordsManager>
 
-{#if !isWebauthnSupported()}
+{#if isWebauthnSupported()}
+	{#await platformAuthenticatorAvailable}
+		<Spinner />
+	{:then response}
+		{#if response}
+			<div class="flex justify-end mt-2">
+				<Button
+					color="alternative"
+					on:click={() => {
+						registerUser($currentUser?.email);
+					}}
+				>
+					<Plus size="20" class="mr-1" /> Add this device
+				</Button>
+			</div>
+		{:else}
+			<Alert color="red" class="mt-2">
+				<svelte:fragment slot="icon">
+					<InformationCircle />
+				</svelte:fragment>
+				<span> Your device does not support Webauthn.</span>
+			</Alert>
+		{/if}
+	{/await}
+{:else}
 	<Alert color="red" class="mt-2">
 		<svelte:fragment slot="icon">
 			<InformationCircle />
@@ -37,15 +68,4 @@
 			Safari or Edge.
 		</span>
 	</Alert>
-{:else}
-	<div class="flex justify-end mt-2">
-		<Button
-			color="alternative"
-			on:click={() => {
-				registerUser($currentUser?.email);
-			}}
-		>
-			<Plus size="20" class="mr-1" /> Add this device
-		</Button>
-	</div>
 {/if}
