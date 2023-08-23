@@ -7,7 +7,7 @@
 	import { page } from '$app/stores';
 	import FeatureFlag from '$lib/components/featureFlag.svelte';
 	import type { Link } from '$lib/utils/types';
-	import { Button, ButtonGroup, Heading, P } from 'flowbite-svelte';
+	import { A, Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
 	import { featuresNames } from '$lib/features';
 
 	const modes: Link[] = [
@@ -37,4 +37,12 @@
 
 <div class="pt-4">
 	<slot />
+</div>
+
+<div class="flex flex-col items-center gap-4">
+	<Hr />
+	<P color="text-gray-500 dark:text-gray-400" size="sm">
+		Don't have an account?
+		<A href="/register">Register here</A>
+	</P>
 </div>
