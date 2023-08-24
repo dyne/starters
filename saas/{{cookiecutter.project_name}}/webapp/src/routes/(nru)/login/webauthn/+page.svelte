@@ -1,25 +1,23 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
+	import { loginUser } from '$lib/webauthn/index';
+	import { z } from 'zod';
+
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
-	import { z } from 'zod';
 	import FormError from '$lib/components/forms/formError.svelte';
 	import SubmitButton from '$lib/components/forms/submitButton.svelte';
-	import { currentEmail } from './+layout.svelte';
+	import { currentEmail } from '../+layout.svelte';
 
 	const schema = z.object({
-		email: z.string().email(),
-		password: z.string()
+		email: z.string().email()
 	});
 
 	const superform = createForm(
 		schema,
 		async ({ form }) => {
 			const { data } = form;
-			const u = pb.collection(Collections.Users);
-			await u.authWithPassword(data.email, data.password);
+			await loginUser(data.email);
 			await goto('/my');
 		},
 		{ email: $currentEmail },
@@ -41,15 +39,8 @@
 		field={keys.email}
 		placeholder="name@foundation.org"
 	/>
-	<Input
-		id="password"
-		type="password"
-		label="Your password"
-		field={keys.password}
-		placeholder="•••••"
-	/>
 	<FormError />
 	<div class="flex justify-end">
-		<SubmitButton>Log in</SubmitButton>
+		<SubmitButton>Log in with webauthn</SubmitButton>
 	</div>
 </Form>
