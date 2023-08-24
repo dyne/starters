@@ -12,17 +12,19 @@
 
 	const modes: Link[] = [
 		{
-			href: '/login',
+			href: '/register',
 			text: 'Email and password'
 		},
 		{
-			href: '/login/webauthn',
+			href: '/register/webauthn',
 			text: 'Webauthn'
 		}
 	];
+
+	$: loginHref = $page.url.pathname.includes('webauthn') ? '/login/webauthn' : '/login';
 </script>
 
-<Heading tag="h4">Log in</Heading>
+<Heading tag="h4">Create an account</Heading>
 <FeatureFlag flag={featuresNames.WEBAUTHN}>
 	<div class="space-y-2">
 		<P size="sm" color="text-gray-500">Choose your authentication method</P>
@@ -42,7 +44,7 @@
 <div class="flex flex-col items-center gap-4">
 	<Hr />
 	<P color="text-gray-500 dark:text-gray-400" size="sm">
-		Don't have an account?
-		<A href="/register">Register here</A>
+		Already have an account?
+		<A href={loginHref}>Login here</A>
 	</P>
 </div>
