@@ -122,6 +122,7 @@ export type UsersRecord = {
 export type WebauthnCredentialsRecord<Tcredential = unknown> = {
 	user?: RecordIdString
 	credential?: null | Tcredential
+	description?: string
 }
 
 // Response types include system fields and match responses from the PocketBase API
