@@ -12,6 +12,7 @@
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
 	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
+	import EditRecord from '$lib/schema/recordsManager/recordActions/editRecord.svelte';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
 </script>
@@ -19,15 +20,23 @@
 <Heading tag="h6">Your devices</Heading>
 <P color="gray" size="sm">Manage the devices you use to login.</P>
 
-<RecordsManager collection={Collections.WebauthnCredentials} let:records>
+<RecordsManager
+	collection={Collections.WebauthnCredentials}
+	let:records
+	editFormSettings={{ excludedFields: ['user', 'credential'] }}
+>
 	<div class="space-y-2 py-4">
 		{#each records as record}
+			{@const label = Boolean(record.description) ? record.description : record.credential.ID}
 			<Card class="max-w-none">
 				<div class="flex justify-between gap-4 items-center">
 					<div class="w-0 grow overflow-hidden">
-						<P>{record.credential.ID}</P>
+						<P>{label}</P>
 					</div>
-					<DeleteRecord {record} />
+					<div class="flex gap-2">
+						<EditRecord {record} />
+						<DeleteRecord {record} />
+					</div>
 				</div>
 			</Card>
 		{/each}
@@ -43,10 +52,10 @@
 				<Button
 					color="alternative"
 					on:click={() => {
-						registerUser($currentUser?.email);
+						registerUser($currentUser?.email, navigator.userAgent);
 					}}
 				>
-					<Plus size="20" class="mr-1" /> Add this device
+					<Plus size="20" class="mr-1" /> Add a device
 				</Button>
 			</div>
 		{:else}
