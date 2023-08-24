@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
@@ -54,7 +56,7 @@ func (u User) WebAuthnIcon() string {
 }
 
 // AddCredential associates the credential to the user
-func (u *User) AddCredential(cred webauthn.Credential) error {
+func (u *User) AddCredential(cred webauthn.Credential, description string) error {
 	credentialsStore, err := u.app.Dao().FindCollectionByNameOrId("webauthnCredentials")
 	if err != nil {
 		return err
@@ -62,6 +64,7 @@ func (u *User) AddCredential(cred webauthn.Credential) error {
 	record := models.NewRecord(credentialsStore)
 	record.Set("user", u.model.Id)
 	record.Set("credential", cred)
+	record.Set("description", description)
 
 	if err := u.app.Dao().SaveRecord(record); err != nil {
 		return err
@@ -92,7 +95,6 @@ func (u User) WebAuthnCredentials() []webauthn.Credential {
 	return credentials
 }
 
-// Could return (nil, nil) which means that the feature is not enabled
 func NewWebAuthnFromEnv(app *pocketbase.PocketBase) (*webauthn.WebAuthn, error) {
 	record, err := app.Dao().FindFirstRecordByData("features", "name", "webauthn")
 	if err != nil {
@@ -100,7 +102,7 @@ func NewWebAuthnFromEnv(app *pocketbase.PocketBase) (*webauthn.WebAuthn, error) 
 	}
 
 	if !record.GetBool("active") {
-		return nil, nil
+		return nil, apis.NewNotFoundError("Webauthn not enabled", nil)
 	}
 
 	var envConfig struct {
@@ -171,9 +173,6 @@ func Register(app *pocketbase.PocketBase) error {
 				if err != nil {
 					return err
 				}
-				if w == nil {
-					return apis.NewNotFoundError("Webauthn not enabled", nil)
-				}
 
 				email := c.PathParam("email")
 
@@ -238,10 +237,24 @@ func Register(app *pocketbase.PocketBase) error {
 				if err != nil {
 					return err
 				}
-				if w == nil {
-					return apis.NewNotFoundError("Webauthn not enabled", nil)
-				}
 
+				data := new(struct {
+					Description string `json:"description" form:"description" query:"description"`
+				})
+				var b []byte
+
+				// I have to read c.Request() twice.. :(
+				if c.Request().Body != nil {
+					// TODO: check that the body is not tooo big (it should not)
+					b, _ = io.ReadAll(c.Request().Body)
+					c.Request().Body = io.NopCloser(bytes.NewBuffer(b))
+
+					if err := c.Bind(data); err != nil {
+						return c.String(http.StatusBadRequest, err.Error())
+					}
+					c.Request().Body = io.NopCloser(bytes.NewBuffer(b))
+				}
+				fmt.Printf("data: %v\n", data)
 				email := c.PathParam("email")
 
 				userRecord, err := app.Dao().FindAuthRecordByEmail("users", email)
@@ -262,7 +275,7 @@ func Register(app *pocketbase.PocketBase) error {
 					fmt.Println(c.Request())
 					return err
 				}
-				user.AddCredential(*credential)
+				user.AddCredential(*credential, data.Description)
 
 				if err := app.Dao().SaveRecord(userRecord); err != nil {
 					return err

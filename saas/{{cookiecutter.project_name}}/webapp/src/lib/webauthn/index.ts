@@ -2,7 +2,7 @@ import { pb } from '$lib/pocketbase';
 import { bufferDecode, bufferEncode } from '$lib/utils/buffer';
 import { log } from '$lib/utils/devLog';
 
-export async function registerUser(username: string) {
+export async function registerUser(username: string, description = '') {
 	const credentialCreationOptions = await pb.send('/api/webauthn/register/begin/' + username, {});
 
 	credentialCreationOptions.publicKey.challenge = bufferDecode(
@@ -30,7 +30,8 @@ export async function registerUser(username: string) {
 				response: {
 					attestationObject: bufferEncode(attestationObject),
 					clientDataJSON: bufferEncode(clientDataJSON)
-				}
+				},
+				description
 			},
 			method: 'POST'
 		});
