@@ -11,7 +11,7 @@
 	import { features, featuresNames, isFeatureActive } from '$lib/features';
 	import { Collections } from '$lib/pocketbase-types';
 	import { pb } from '$lib/pocketbase';
-	import { A, Checkbox } from 'flowbite-svelte';
+	import { A, Checkbox, P } from 'flowbite-svelte';
 
 	const schema = z.object({
 		email: z.string().email(),
@@ -24,8 +24,9 @@
 			const { data } = form;
 			const { email } = data;
 			await registerUser(email);
-			const u = pb.collection(Collections.Users);
-			await u.requestVerification(email);
+			await pb.collection(Collections.Users).requestVerification(email);
+			alert('You will be now asked to login with your webauthn device');
+			await loginUser(email);
 			if (isFeatureActive($features, featuresNames.KEYPAIROOM)) {
 				await goto('/keypairoom');
 			} else {
