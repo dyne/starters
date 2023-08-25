@@ -7,16 +7,13 @@
 	"description": "{{cookiecutter.project_description}}",
 	"version": "0.0.1",
 	"private": true,
-	"pnpm": {
-		"allowedPrePostScripts": true
-	},
 	"engines": {
 		"node": ">=17",
 		"pnpm": ">=8"
 	},
 	"scripts": {
 		"schema": "node scripts/generate_schema.mjs",
-		"predev": "pnpm run schema",
+		"predev": "pnpm run schema && pnpm run types",
 		"dev": "vite dev",
 		"prebuild": "pnpm run schema",
 		"build": "vite build",
