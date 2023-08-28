@@ -5,13 +5,10 @@
 	import FormError from '$lib/components/forms/formError.svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import SubmitButton from '$lib/components/forms/submitButton.svelte';
-	import { features, featuresNames, getFeatureByName, isFeatureActive } from '$lib/features';
-	import { destroyKeyring, getKeyringFromLocalStorage } from '$lib/keypairoom/keypair';
+	import { features, featuresNames,  isFeatureActive } from '$lib/features';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { Alert } from 'flowbite-svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { zencode_exec } from 'zenroom';
-	import deactivate_did from '/zenflows-crypto/src/deactivate_did.zen?raw';
 	import { z } from 'zod';
 
 	let error: string | null = null;
@@ -34,32 +31,6 @@
 		email: $currentUser!.email,
 		emailVisibility: $currentUser!.emailVisibility
 	};
-	const disableDID = async () => {
-		const didVariables = getFeatureByName($features, featuresNames.DID)?.envVariables;
-		//@ts-ignore
-		const didSpec = didVariables?.DID_SPEC;
-		const keyring = getKeyringFromLocalStorage();
-		if (!keyring) {
-			return;
-		}
-		const data = {
-			keyring,
-			signer_did_spec: didSpec,
-			eddsa_public_key: $currentUser!.eddsa_public_key,
-			did_spec: didSpec
-		};
-		const { result } = await zencode_exec(deactivate_did, { data: JSON.stringify(data) });
-		const response = await fetch('/api/deactivateDid/', {
-			method: 'POST',
-			body: JSON.stringify({ data: JSON.parse(result) }),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		if (response.status !== 200) {
-			throw new Error('Error deactivating DID');
-		}
-	};
 
 	const superform = createForm(
 		schema,
@@ -70,30 +41,12 @@
 				name: formData.get('name'),
 				emailVisibility: formData.get('emailVisibility')
 			});
-			let emailChangeSent = false;
 			if (isEmailChanged) {
 				email = formData.get('email') as string;
-				emailChangeSent = await pb.collection('users').requestEmailChange(email);
-			}
-			if (keypairoomActive && isEmailChanged && emailChangeSent) {
+				await pb.collection('users').requestEmailChange(email);
 				alert(
-					'Email change request sent. Please check your email and click on the link to confirm the change.Your keys will be destroyed and you will need to recreate them.'
+					'Email change request sent. Please check your email and click on the link to confirm the change.'
 				);
-				try {
-					await disableDID();
-				} catch (error) {
-					console.error(error);
-					error = 'Error deactivating DID';
-					return;
-				}
-				destroyKeyring();
-				pb.collection('users').update($currentUser!.id, {
-					ethereum_address: null,
-					ecdh_public_key: null,
-					eddsa_public_key: null,
-					reflow_public_key: null,
-					bitcoin_public_key: null
-				});
 			} 
 			dispatch('success');
 		},
@@ -117,7 +70,7 @@
 	<Input field="name" label="Username" />
 
 	<div class="space-y-2">
-		<Input field="email" />
+		<Input field="email" disabled={keypairoomActive}/>
 		<Checkbox field="emailVisibility">
 			<span>Show email to other users</span>
 		</Checkbox>
@@ -128,12 +81,6 @@
 	<FormError />
 
 	<div>
-		{#if isEmailChanged && keypairoomActive}
-			<Alert>
-				<span class="font-medium">Email is changed!</span> If you change your email, you will need to
-				regenerate your keys too.
-			</Alert>
-		{/if}
 		{#if error}
 			<Alert type="error">
 				<span class="font-medium">Error!</span>
