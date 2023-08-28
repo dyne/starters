@@ -12,7 +12,6 @@
 		"pnpm": ">=8"
 	},
 	"scripts": {
-		"schema": "node scripts/generate_schema.mjs",
 		"predev": "pnpm run schema && pnpm run types",
 		"dev": "vite dev",
 		"prebuild": "pnpm run schema",
@@ -26,6 +25,8 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "npx -y pocketbase-typegen --db ../admin/pb_data/data.db --out src/lib/pocketbase-types.ts",
+		"schema": "node scripts/generate_schema.mjs",
+		"definitions": "pnpm run types && pnpm run schema",
 		"serve": "pnpm build && pnpm preview --host"
 	},
 	"devDependencies": {
