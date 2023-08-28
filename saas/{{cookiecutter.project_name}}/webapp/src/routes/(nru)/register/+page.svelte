@@ -2,7 +2,7 @@
 	import { pb } from '$lib/pocketbase';
 	import { Collections } from '$lib/pocketbase-types';
 	import { goto } from '$app/navigation';
-	import { features, featuresNames, isFeatureActive } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 	import { z } from 'zod';
 
 	// Components
@@ -30,7 +30,7 @@
 		await u.create(data);
 		await u.authWithPassword(data.email, data.password);
 		await u.requestVerification(data.email);
-		if (isFeatureActive($features, featuresNames.KEYPAIROOM)) {
+		if ($featureFlags.KEYPAIROOM) {
 			await goto('/keypairoom');
 		} else {
 			await goto('/my');
