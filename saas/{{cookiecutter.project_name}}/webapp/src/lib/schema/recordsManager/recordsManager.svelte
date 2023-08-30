@@ -1,14 +1,13 @@
 <script lang="ts" context="module">
-	import type { Record as PBRecord, RecordService } from 'pocketbase';
-	import { getContext, onMount, setContext } from 'svelte';
+	import { getContext } from 'svelte';
+	import type { RecordService } from 'pocketbase';
 	import type { Writable } from 'svelte/store';
-	import type { FormSettings } from '../CRUDForm.svelte';
-
-	//
+	import type { FieldsSettings } from '../CRUDForm.svelte';
+	import type { PBRecord } from '$lib/utils/types';
 
 	export const RECORDS_MANAGER_KEY = Symbol('rmk');
 
-	export type RecordsManagerContext = {
+	export type RecordsManagerContext<T = PBRecord> = {
 		collection: string;
 		dataManager: {
 			recordService: RecordService;
@@ -21,51 +20,54 @@
 			toggleSelectAllRecords: () => void;
 			discardSelection: () => void;
 		};
-		formSettings: Partial<FormSettings>;
-		editFormSettings: Partial<FormSettings>;
+		formFieldsSettings: {
+			base: Partial<FieldsSettings<T>>;
+			create: Partial<FieldsSettings<T>>;
+			edit: Partial<FieldsSettings<T>>;
+		};
 	};
 
-	export function getRecordsManagerContext(): RecordsManagerContext {
+	export function getRecordsManagerContext<T = PBRecord>(): RecordsManagerContext<T> {
 		return getContext(RECORDS_MANAGER_KEY);
-	}
-
-	//
-
-	type SlotTypeCaster<RecordGeneric> = RecordGeneric[];
-	export function createSlotTypeCaster<RecordGeneric>(): SlotTypeCaster<RecordGeneric> {
-		return [];
 	}
 </script>
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { onMount, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 
+	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 
 	import { pb } from '$lib/pocketbase';
 	import type { RecordFullListQueryParams } from 'pocketbase';
 	import type { Collections } from '$lib/pocketbase-types';
-	import { writable } from 'svelte/store';
-	import { PaginationItem, Pagination } from 'flowbite-svelte';
+	import type { PBResponse } from '$lib/utils/types';
+	import { createTypeProp } from '$lib/utils/typeProp';
+
+	import { Pagination } from 'flowbite-svelte';
 	import GridSpinner from '$lib/components/gridSpinner.svelte';
 
+	//
+
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let recordType = createTypeProp<RecordGeneric>();
+	recordType;
 
 	//
 
 	export let collection: Collections | string;
-	export let formSettings: Partial<FormSettings> = {};
-	export let editFormSettings: Partial<FormSettings> = {};
+
+	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let createFormSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let editFormSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+
 	export let initialQueryParams: RecordFullListQueryParams = {};
 	export let subscribe: string[] = [];
 
-	/* Slot typing */
-
-	type RecordGeneric = $$Generic;
-	export let slotTypeCaster = createSlotTypeCaster<RecordGeneric>();
-	slotTypeCaster; // avoid 'unused' warning
-
 	/* Data load */
+
 	$: pages = Array.from({ length: totalPages }, (_, i) => ({
 		name: `${i + 1}`,
 		href: `?page=${i + 1}`
@@ -88,11 +90,17 @@
 
 	const recordService = pb.collection(collection);
 
-	let records: PBRecord[] = [];
+	let records: PBResponse<RecordGeneric>[] = [];
 	let totalPages: number = 0;
 
 	async function loadRecords() {
-		const res = await recordService.getList(Number(currentPage), perPage, { ...$queryParams });
+		const res = await recordService.getList<PBResponse<RecordGeneric>>(
+			Number(currentPage),
+			perPage,
+			{
+				...$queryParams
+			}
+		);
 		records = res.items;
 		totalPages = res.totalPages;
 		totalItems = res.totalItems;
@@ -147,7 +155,7 @@
 
 	/* Context */
 
-	setContext<RecordsManagerContext>(RECORDS_MANAGER_KEY, {
+	setContext<RecordsManagerContext<RecordGeneric>>(RECORDS_MANAGER_KEY, {
 		collection,
 		dataManager: {
 			recordService,
@@ -160,8 +168,11 @@
 			toggleSelectAllRecords,
 			discardSelection
 		},
-		formSettings,
-		editFormSettings
+		formFieldsSettings: {
+			base: formSettings,
+			create: createFormSettings,
+			edit: editFormSettings
+		}
 	});
 </script>
 

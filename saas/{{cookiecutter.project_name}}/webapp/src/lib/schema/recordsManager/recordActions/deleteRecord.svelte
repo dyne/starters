@@ -1,11 +1,13 @@
 <script lang="ts">
+	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import { getRecordsManagerContext } from '../recordsManager.svelte';
+
 	import { Button, Modal, P } from 'flowbite-svelte';
 	import { Trash, XMark } from 'svelte-heros-v2';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
-	import type { Record } from 'pocketbase';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 
-	export let record: Record;
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let record: PBResponse<RecordGeneric>;
 
 	const { dataManager } = getRecordsManagerContext();
 	const { loadRecords, recordService } = dataManager;
