@@ -2,31 +2,29 @@
 	import { currentUser } from '$lib/pocketbase';
 	import { Collections, type CrudExampleRecord } from '$lib/pocketbase-types';
 	import FilterRecords from '$lib/schema/recordsManager/filterRecords.svelte';
-	import RecordsManager, {
-		createSlotTypeCaster
-	} from '$lib/schema/recordsManager/recordsManager.svelte';
+	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
 	import RecordsManagerTopbar from '$lib/schema/recordsManager/recordsManagerTopbar.svelte';
 	import EmptyState from '$lib/schema/recordsManager/views/emptyState.svelte';
 	import Chip from '$lib/schema/recordsManager/views/fieldsComponents/cells/chip.svelte';
 	import RecordCard from '$lib/schema/recordsManager/views/recordCard.svelte';
 	import RecordsTable from '$lib/schema/recordsManager/views/recordsTable.svelte';
+	import { createTypeProp } from '$lib/utils/typeProp';
 	import { Heading, Hr } from 'flowbite-svelte';
 	import { XCircle } from 'svelte-heros-v2';
 
-	const slotTypeCaster = createSlotTypeCaster<CrudExampleRecord>();
+	const recordType = createTypeProp<CrudExampleRecord>();
 </script>
 
 <div class="p-4">
 	<RecordsManager
+		{recordType}
 		collection={Collections.CrudExample}
 		formSettings={{
-			hiddenFields: ['owner'],
-			hiddenFieldsValues: { owner: $currentUser?.id }
+			hide: { owner: $currentUser?.id }
 		}}
 		editFormSettings={{
-			excludedFields: ['select', 'text']
+			exclude: ['select', 'text']
 		}}
-		{slotTypeCaster}
 		let:records
 	>
 		<div class="space-y-8">
@@ -44,8 +42,7 @@
 						description: 'There are no records to show.'
 					}}
 				/>
-				<!-- add this component where you like, within recordsManager and indicate which fields to search for -->
-				<FilterRecords searchableFields={['text', 'textarea']} />
+				<FilterRecords {recordType} searchableFields={['text', 'textarea']} />
 				<RecordsTable {records} fields={['id', 'text', 'textarea']} />
 			</div>
 
@@ -54,7 +51,7 @@
 			<div class="space-y-4">
 				<Heading tag="h4">Cards</Heading>
 				{#if records.length === 0}
-					<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle}/>
+					<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
 				{:else}
 					<div class="grid grid-cols-4 gap-4">
 						{#each records as record}
