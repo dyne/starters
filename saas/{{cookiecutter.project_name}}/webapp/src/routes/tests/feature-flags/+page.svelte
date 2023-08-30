@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { featureFlags, FeatureDisplay } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 </script>
 
 <div class="p-4 space-y-8">
@@ -9,14 +9,13 @@
 			<p>Feature: {name} | Active: {flag}</p>
 			<div class="flex gap-4 items-stretch">
 				<div class="font-mono w-0 grow bg-gray-200 overflow-x-auto p-4 rounded-lg">
-					<FeatureDisplay flags={flag}>
+					{#if flag}
 						<div>
 							This is feature {name} and it is {flag ? 'active' : 'not active'}
 						</div>
-					</FeatureDisplay>
-					<FeatureDisplay flags={!flag}>
+					{:else}
 						<p class="text-gray-400">This feature is not active</p>
-					</FeatureDisplay>
+					{/if}
 				</div>
 			</div>
 		</div>

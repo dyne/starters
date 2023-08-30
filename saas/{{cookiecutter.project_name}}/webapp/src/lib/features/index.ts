@@ -3,7 +3,6 @@ import { Collections, type FeaturesResponse } from '../pocketbase-types';
 import { pb } from '../pocketbase';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import FeatureDisplay from './featureDisplay.svelte';
 
 //
 
@@ -28,5 +27,4 @@ export async function loadFeatureFlags(): Promise<FeatureFlags> {
 	return flags as FeatureFlags;
 }
 
-export { FeatureDisplay };
 export * from './list';
