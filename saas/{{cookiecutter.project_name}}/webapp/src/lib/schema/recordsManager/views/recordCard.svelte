@@ -10,19 +10,18 @@
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
 
 	import type { FieldsComponents } from './fieldComponent.svelte';
-	import type { Record } from 'pocketbase';
 	import { Card, P } from 'flowbite-svelte';
+	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
 
 	//
 
-	type RecordGeneric = $$Generic;
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let record: PBResponse<RecordGeneric>;
 
-	export let record: Record & RecordGeneric;
-
-	export let fields: string[] = [];
+	export let fields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
 	export let titleField = '';
 
-	export let fieldsComponents: FieldsComponents = {};
+	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
 
 	export let showDelete = false;
 	export let showEdit = false;

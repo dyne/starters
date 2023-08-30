@@ -3,7 +3,6 @@
 	import { Clock } from 'svelte-heros-v2';
 	import EmptyState from './emptyState.svelte';
 	import FieldComponent, { type FieldsComponents } from './fieldComponent.svelte';
-	import type { Record as PBRecord } from 'pocketbase';
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
 
 	// Components
@@ -21,20 +20,22 @@
 	import SelectionCheckbox from '../recordActions/selectRecord.svelte';
 	import EditRecord from '../recordActions/editRecord.svelte';
 	import DeleteRecord from '../recordActions/deleteRecord.svelte';
+	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
 
 	//
 
-	type RecordGeneric = $$Generic;
+	type RecordGeneric = $$Generic<PBRecord>;
 
-	export let records: (PBRecord & RecordGeneric)[] = [];
-	export let fields: string[] = ['id'];
+	export let records: PBResponse<RecordGeneric>[] = [];
+	export let fields: PBResponseKeys<PBResponse<RecordGeneric>>[] = ['id'];
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
 	export let showShare: boolean = false;
 
 	export let showDelete = true;
 	export let showEdit = true;
 	export let showCheckboxes = true;
-	export let emptyState: { title?: string; description?: string; icon?: typeof SvelteComponent } = {};
+	export let emptyState: { title?: string; description?: string; icon?: typeof SvelteComponent } =
+		{};
 	const {
 		title = 'No records',
 		description = 'There are no records to show.',
@@ -81,22 +82,22 @@
 							<FieldComponent {record} {field} {component} />
 						</TableBodyCell>
 					{/each}
-          {#if hasActions}
-            <TableBodyCell>
-              <div class="flex items-center space-x-2">
-                {#if showEdit}
-                  <EditRecord {record} />
-                {/if}
-                {#if showDelete}
-                  <DeleteRecord {record} />
-                {/if}
-                {#if showShare}
-                  <ShareRecord {record} />
-                {/if}
-                <slot {record} />
-              </div>
-            </TableBodyCell>
-          {/if}
+					{#if hasActions}
+						<TableBodyCell>
+							<div class="flex items-center space-x-2">
+								{#if showEdit}
+									<EditRecord {record} />
+								{/if}
+								{#if showDelete}
+									<DeleteRecord {record} />
+								{/if}
+								{#if showShare}
+									<ShareRecord {record} />
+								{/if}
+								<slot {record} />
+							</div>
+						</TableBodyCell>
+					{/if}
 				</TableBodyRow>
 			{/each}
 		</TableBody>
