@@ -12,7 +12,6 @@
 	import { Share } from 'svelte-heros-v2';
 	import type { Record } from 'pocketbase';
 	import ShareRecord from '$lib/schema/recordsManager/recordActions/shareRecord.svelte';
-	import Ll from '$lib/components/ll.svelte';
 
 	let shareModal = false;
 	let record: Record;
