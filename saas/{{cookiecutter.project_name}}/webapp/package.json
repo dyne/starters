@@ -7,18 +7,14 @@
 	"description": "{{cookiecutter.project_description}}",
 	"version": "0.0.1",
 	"private": true,
-	"pnpm": {
-		"allowedPrePostScripts": true
-	},
 	"engines": {
 		"node": ">=17",
 		"pnpm": ">=8"
 	},
 	"scripts": {
-		"schema": "node scripts/generate_schema.mjs",
-		"predev": "pnpm run schema",
+		"predev": "pnpm definitions",
 		"dev": "vite dev",
-		"prebuild": "pnpm run schema",
+		"prebuild": "pnpm definitions",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
@@ -30,7 +26,9 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "npx -y pocketbase-typegen --db ../admin/pb_data/data.db --out src/lib/pocketbase-types.ts",
 		"features": "node ./src/lib/features/generateFeaturesList.mjs",
-		"serve": "sleep 2 && pnpm types && pnpm schema && pnpm build && pnpm preview --host"
+		"schema": "node scripts/generate_schema.mjs",
+		"definitions": "pnpm types && pnpm schema && pnpm features",
+		"serve": "pnpm build && pnpm preview --host"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.33.0",
