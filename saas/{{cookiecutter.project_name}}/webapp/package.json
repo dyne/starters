@@ -12,9 +12,9 @@
 		"pnpm": ">=8"
 	},
 	"scripts": {
-		"predev": "pnpm run schema && pnpm run types",
+		"predev": "pnpm run definitions",
 		"dev": "vite dev",
-		"prebuild": "pnpm run schema",
+		"prebuild": "pnpm run definitions",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
