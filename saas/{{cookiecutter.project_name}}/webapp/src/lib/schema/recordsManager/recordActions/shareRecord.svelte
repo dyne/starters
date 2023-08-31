@@ -1,40 +1,45 @@
 <script lang="ts">
-	import { Collections, type AuthorizationsRecord } from '$lib/pocketbase-types';
-	import type { Record } from 'pocketbase';
+	import type { PBResponse, PBRecord } from '$lib/utils/types';
 
-	import CrudForm, { formMode, type FormMode } from '$lib/schema/CRUDForm.svelte';
+	import { createTypeProp } from '$lib/utils/typeProp';
+
+	import {
+		Collections,
+		type AuthorizationsRecord,
+		type AuthorizationsResponse
+	} from '$lib/pocketbase-types';
+
+	import CrudForm from '$lib/schema/CRUDForm.svelte';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { ArrowLeft, Share, Trash } from 'svelte-heros-v2';
 	import { createEventDispatcher } from 'svelte';
 
-	let open = false;
-	export let record: Record;
-
-	let openShareModal = (r: Record) => {
-		open = true;
-	};
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let record: PBResponse<RecordGeneric>;
 
 	const dispatch = createEventDispatcher<{ add: {}; remove: {} }>();
 
+	/* */
+
+	let open = false;
+	const openModal = () => {
+		open = true;
+	};
+
 	/* Load */
 
-	type Authorization = Record & AuthorizationsRecord;
-	let authorizationRecord: Authorization | undefined;
+	let authorization: AuthorizationsResponse | undefined;
 	const authorizationRequest = loadAuthorization();
+	const recordType = createTypeProp<AuthorizationsRecord>();
 
-	async function loadAuthorization(): Promise<{
-		authorization: Authorization | undefined;
-		mode: FormMode;
-	}> {
+	async function loadAuthorization() {
 		try {
-			const authorization = await pb
+			authorization = await pb
 				.collection(Collections.Authorizations)
-				.getFirstListItem<Authorization>(`record_id="${record.id}"`);
-			authorizationRecord = authorization;
-			return { authorization, mode: formMode.EDIT };
+				.getFirstListItem<AuthorizationsResponse>(`record_id="${record.id}"`);
 		} catch (e) {
-			return { authorization: undefined, mode: formMode.CREATE };
+			authorization = undefined;
 		}
 	}
 
@@ -55,46 +60,50 @@
 	}
 
 	async function removeAuthorization() {
-		if (!authorizationRecord) return;
+		if (!authorization) return;
 		removeLoading = true;
-		await pb.collection(Collections.Authorizations).delete(authorizationRecord.id);
+		await pb.collection(Collections.Authorizations).delete(authorization.id);
 		open = false;
 		dispatch('remove');
 	}
 </script>
 
-<Button
-	class="!p-2"
-	color="alternative"
-	on:click={() => {
-		openShareModal(record);
-	}}
->
-	<Share size="20" />
-</Button>
+<slot {openModal}>
+	<Button
+		class="!p-2"
+		color="alternative"
+		on:click={() => {
+			openModal();
+		}}
+	>
+		<Share size="20" />
+	</Button>
+</slot>
 
 {#await authorizationRequest}
 	<Spinner />
-{:then { authorization, mode }}
+{:then response}
 	<div class="fixed z-50">
 		<Modal bind:open size="xl" title="Share signature">
 			<div class="w-[500px] relative">
 				{#if !removeAccess}
 					<CrudForm
+						{recordType}
 						on:success={handleSuccess}
 						initialData={authorization}
-						{mode}
+						recordId={authorization?.id}
 						submitButtonText="Share"
 						collection={Collections.Authorizations}
-						formSettings={{
-							hiddenFields: ['record_id', 'collection_id', 'owner'],
-							hiddenFieldsValues: {
+						fieldsSettings={{
+							hide: {
 								record_id: record.id,
 								collection_id: record.collectionId,
 								owner: $currentUser?.id
 							},
-							relationsDisplayFields: {
-								users: ['email']
+							relations: {
+								users: {
+									displayFields: ['email']
+								}
 							}
 						}}
 					/>
@@ -125,4 +134,3 @@
 		</Modal>
 	</div>
 {/await}
-

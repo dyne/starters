@@ -25,8 +25,9 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "npx -y pocketbase-typegen --db ../admin/pb_data/data.db --out src/lib/pocketbase-types.ts",
+		"features": "node ./src/lib/features/generateFeaturesList.mjs",
 		"schema": "node scripts/generate_schema.mjs",
-		"definitions": "pnpm run types && pnpm run schema",
+		"definitions": "pnpm types && pnpm schema && pnpm features",
 		"serve": "pnpm build && pnpm preview --host"
 	},
 	"devDependencies": {
