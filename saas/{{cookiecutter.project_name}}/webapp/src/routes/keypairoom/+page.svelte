@@ -11,7 +11,7 @@
 	} from '$lib/keypairoom/updateUserPublicKeys';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { z } from 'zod';
-	import { areFeaturesActive, features, featuresNames, isFeatureActive } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 
 	// Components
 	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
@@ -46,12 +46,12 @@
 		saveKeyringToLocalStorage(keypair.keyring);
 		seed = keypair.seed;
 
-		if (isFeatureActive($features, featuresNames.AUTH) && $currentUser) {
+		if ($featureFlags.AUTH && $currentUser) {
 			const publicKeys = getPublicKeysFromKeypair(keypair);
 			await updateUserPublicKeys($currentUser?.id!, publicKeys);
 		}
 
-		if (areFeaturesActive($features, [featuresNames.DID, featuresNames.AUTH]) && $currentUser) {
+		if ($featureFlags.DID && $featureFlags.AUTH && $currentUser) {
 			await pb.send('/api/did', {});
 		}
 	});
