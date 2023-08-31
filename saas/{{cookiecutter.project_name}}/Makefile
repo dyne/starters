@@ -43,11 +43,20 @@ setup: setup_submodules setup_backend setup_frontend ## 📦 Setup the project
 # before the webapp tries to connect to it and generate the schema
 # check the webapp/package.json for the predev and prebuild scripts
 
+be: ## ⚙️ Run the backend
+	./admin/pb serve
+
+fe: ## ⚙️ Run the frontend
+	sleep 2 && cd webapp && pnpm serve
+
+fe_dev: ## ⚙️ Watch the frontend
+	sleep 2 && cd webapp && pnpm dev
+
 dev: ## ⚙️ Run the project in development mode
-	./admin/pb serve & (sleep 2 && cd webapp && pnpm dev)
+	$(MAKE) be fe_dev -j2
 
 up: setup ## ⚙️ Run the project
-	./admin/pb serve & (sleep 2 && cd webapp && pnpm serve)
+	$(MAKE) be fe -j2
 
 doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
