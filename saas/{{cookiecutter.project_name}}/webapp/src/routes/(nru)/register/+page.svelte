@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
+	import { Collections } from '$lib/pocketbase/types';
 	import { goto } from '$app/navigation';
 	import { featureFlags } from '$lib/features';
 	import { z } from 'zod';

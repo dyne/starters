@@ -4,7 +4,7 @@ import {
 	type CrudExampleResponse,
 	type FeaturesResponse,
 	type UsersResponse
-} from '$lib/pocketbase-types';
+} from '$lib/pocketbase/types';
 
 export const load = async () => {
 	try {

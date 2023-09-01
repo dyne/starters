@@ -8,7 +8,7 @@
 	} from '$lib/components/relationsManager.svelte';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 	import { getFormContext } from '../form.svelte';
-	import type { Collections } from '$lib/pocketbase-types';
+	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 
 	export let field: string;

@@ -19,7 +19,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { pb } from '$lib/pocketbase';
 
-	import type { Collections } from '$lib/pocketbase-types';
+	import type { Collections } from '$lib/pocketbase/types';
 	import type { FieldSchema } from './types';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
