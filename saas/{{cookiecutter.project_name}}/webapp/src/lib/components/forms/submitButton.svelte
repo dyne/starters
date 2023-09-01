@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
 	import { formHasErrors, getFormContext } from './form.svelte';
-	import type { ButtonColorType } from 'flowbite-svelte/dist/types';
+	import type { ComponentProps } from 'svelte';
 
 	export let id = 'submit';
-	export let color: ButtonColorType = 'primary';
+	export let color: ComponentProps<Button>['color'] = 'primary';
 
 	const { superform } = getFormContext();
 	const { allErrors } = superform;
