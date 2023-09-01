@@ -12,5 +12,7 @@ const getSchema = async () => {
 	return JSON.stringify(await pb.collections.getFullList(), null, 4);
 };
 
-fs.writeFileSync('./src/lib/schema/pb_schema.json', await getSchema());
-console.log('📦 Created pocketbase definitions at /src/lib/schema/pb_schema.json');
+const filePath = './src/lib/pocketbase/schema.json';
+
+fs.writeFileSync(filePath, await getSchema());
+console.log(`📦 Created pocketbase definitions at ${filePath}`);
