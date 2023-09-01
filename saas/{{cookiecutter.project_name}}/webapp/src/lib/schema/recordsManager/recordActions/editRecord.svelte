@@ -2,7 +2,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	import CrudForm from '$lib/schema/CRUDForm.svelte';
+	import { RecordForm } from '$lib/recordForm';
 
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
@@ -46,7 +46,7 @@
 <ModalWrapper>
 	<Modal bind:open title="Edit record" size="lg">
 		<div class="w-[500px]">
-			<CrudForm
+			<RecordForm
 				collection={record.collectionId}
 				recordId={record.id}
 				initialData={record}

@@ -9,7 +9,7 @@
 		type AuthorizationsResponse
 	} from '$lib/pocketbase/types';
 
-	import CrudForm from '$lib/schema/CRUDForm.svelte';
+	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { ArrowLeft, Share, Trash } from 'svelte-heros-v2';
@@ -87,7 +87,7 @@
 		<Modal bind:open size="xl" title="Share signature">
 			<div class="w-[500px] relative">
 				{#if !removeAccess}
-					<CrudForm
+					<RecordForm
 						{recordType}
 						on:success={handleSuccess}
 						initialData={authorization}

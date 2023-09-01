@@ -4,7 +4,7 @@
 	import { getRecordsManagerContext } from '../recordsManager.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
-	import CrudForm from '$lib/schema/CRUDForm.svelte';
+	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal } from 'flowbite-svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Plus } from 'svelte-heros-v2';
@@ -49,7 +49,7 @@
 <ModalWrapper>
 	<Modal bind:open title="Create record" size="lg">
 		<div class="w-[500px]">
-			<CrudForm
+			<RecordForm
 				{collection}
 				{fieldsSettings}
 				{initialData}

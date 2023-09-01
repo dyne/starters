@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import type { RecordService } from 'pocketbase';
 	import type { Writable } from 'svelte/store';
-	import type { FieldsSettings } from '../CRUDForm.svelte';
+	import type { FieldsSettings } from '$lib/recordForm';
 	import type { PBRecord } from '$lib/utils/types';
 
 	export const RECORDS_MANAGER_KEY = Symbol('rmk');
