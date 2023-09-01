@@ -2,7 +2,7 @@
 	import GridSpinner from '$lib/components/gridSpinner.svelte';
 	import TableSkeleton from '$lib/components/tableSkeleton.svelte';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections, type CrudExampleRecord } from '$lib/pocketbase-types';
+	import { Collections, type CrudExampleRecord } from '$lib/pocketbase/types';
 	import FilterRecords from '$lib/schema/recordsManager/filterRecords.svelte';
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
 	import RecordsManagerTopbar from '$lib/schema/recordsManager/recordsManagerTopbar.svelte';

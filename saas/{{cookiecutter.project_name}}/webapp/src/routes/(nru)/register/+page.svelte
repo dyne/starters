@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
+	import { Collections } from '$lib/pocketbase/types';
 	import { goto } from '$app/navigation';
 	import { featureFlags } from '$lib/features';
 	import { z } from 'zod';
 
 	// Components
 	import { A, Heading, Hr, P } from 'flowbite-svelte';
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
-	import Checkbox from '$lib/components/forms/checkbox.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
+	import { Form, createForm, Input, Checkbox, FormError, SubmitButton } from '$lib/forms';
 
 	//
 

@@ -108,7 +108,7 @@
 <script lang="ts">
 	import { setContext } from 'svelte';
 	import { Spinner, Modal } from 'flowbite-svelte';
-	import ModalWrapper from '../modalWrapper.svelte';
+	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 
 	type T = $$Generic<AnyZodObject>;
 

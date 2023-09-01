@@ -7,7 +7,7 @@
 		Collections,
 		type AuthorizationsRecord,
 		type AuthorizationsResponse
-	} from '$lib/pocketbase-types';
+	} from '$lib/pocketbase/types';
 
 	import CrudForm from '$lib/schema/CRUDForm.svelte';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';

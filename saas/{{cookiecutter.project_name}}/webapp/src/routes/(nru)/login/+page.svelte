@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
+	import { Collections } from '$lib/pocketbase/types';
+	import { Heading } from 'flowbite-svelte';
+	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
 	import { z } from 'zod';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
 	import { currentEmail } from './+layout.svelte';
 
 	const schema = z.object({
