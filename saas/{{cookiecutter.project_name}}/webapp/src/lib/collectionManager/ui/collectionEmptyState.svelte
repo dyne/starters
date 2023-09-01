@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Heading, P } from 'flowbite-svelte';
-	import CreateRecord from '../recordActions/createRecord.svelte';
+	import { CreateRecord } from './recordActions';
 	import { Clock } from 'svelte-heros-v2';
 	import type { SvelteComponent } from 'svelte';
-	
+
 	export let title: string;
 	export let description: string;
 	export let icon: typeof SvelteComponent = Clock;

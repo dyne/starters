@@ -7,7 +7,7 @@
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
 	import { Pencil } from 'svelte-heros-v2';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
 	//
 

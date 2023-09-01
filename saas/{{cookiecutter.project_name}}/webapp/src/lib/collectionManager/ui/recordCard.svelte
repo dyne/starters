@@ -1,17 +1,13 @@
 <script lang="ts">
-	import ShareRecord from '../recordActions/shareRecord.svelte';
-
-	import SelectRecord from '../recordActions/selectRecord.svelte';
-
-	import FieldComponent from './fieldComponent.svelte';
-
-	import DeleteRecord from '../recordActions/deleteRecord.svelte';
-	import EditRecord from '../recordActions/editRecord.svelte';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
-
-	import type { FieldsComponents } from './fieldComponent.svelte';
-	import { Card, P } from 'flowbite-svelte';
 	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
+	import { getRecordsManagerContext } from '../collectionManager.svelte';
+
+	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './recordActions';
+	import FieldComponent, {
+		type FieldsComponents
+	} from './fieldComponents/fieldComponentRenderer.svelte';
+
+	import { Card, P } from 'flowbite-svelte';
 
 	//
 

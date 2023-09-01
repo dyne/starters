@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 	import { Checkbox } from 'flowbite-svelte';
 

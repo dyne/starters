@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { TableHeadCell } from 'flowbite-svelte';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	export let field: string;
 

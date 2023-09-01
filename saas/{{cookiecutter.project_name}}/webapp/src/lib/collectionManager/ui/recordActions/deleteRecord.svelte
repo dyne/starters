@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
 	import { Button, Modal, P } from 'flowbite-svelte';
 	import { Trash, XMark } from 'svelte-heros-v2';

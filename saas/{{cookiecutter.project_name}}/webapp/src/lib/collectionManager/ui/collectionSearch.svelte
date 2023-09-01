@@ -3,7 +3,7 @@
 	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
 
 	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
-	import { getRecordsManagerContext } from './recordsManager.svelte';
+	import { getRecordsManagerContext } from '../collectionManager.svelte';
 	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { ChevronDown } from 'svelte-heros-v2';
 

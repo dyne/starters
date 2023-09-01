@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button, Heading, Modal, P } from 'flowbite-svelte';
-	import { getRecordsManagerContext } from './recordsManager.svelte';
+	import { getRecordsManagerContext } from '../collectionManager.svelte';
 	import { Trash, XMark } from 'svelte-heros-v2';
-	import CreateRecord from './recordActions/createRecord.svelte';
+	import { CreateRecord } from './recordActions';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 
 	//

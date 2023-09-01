@@ -4,7 +4,7 @@
 
 	export type FieldComponent<RecordGeneric extends PBRecord = PBRecord> =
 		typeof SvelteComponentTyped<{
-			value: unknown;
+			value?: unknown;
 			record?: PBResponse<RecordGeneric>;
 		}>;
 

@@ -174,6 +174,13 @@
 			edit: editFormSettings
 		}
 	});
+
+	//
+
+	function handlePaginationClick(e: Event) {
+		e.preventDefault();
+		goto((e.target as any)?.href);
+	}
 </script>
 
 {#await promise}
@@ -210,10 +217,7 @@
 							if (Number(currentPage) + 1 > totalPages) return;
 							goto(`?page=${Number(currentPage) + 1}`);
 						}}
-						on:click={(e) => {
-							e.preventDefault();
-							goto(e.target?.href);
-						}}
+						on:click={handlePaginationClick}
 					/>
 				</div>
 			</div>

@@ -1,9 +1,11 @@
 <script lang="ts">
-	import ShareRecord from '../recordActions/shareRecord.svelte';
+	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './recordActions';
 	import { Clock } from 'svelte-heros-v2';
-	import EmptyState from './emptyState.svelte';
-	import FieldComponent, { type FieldsComponents } from './fieldComponent.svelte';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import EmptyState from './collectionEmptyState.svelte';
+	import FieldComponent, {
+		type FieldsComponents
+	} from './fieldComponents/fieldComponentRenderer.svelte';
+	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	// Components
 	import {
@@ -16,10 +18,7 @@
 		Checkbox
 	} from 'flowbite-svelte';
 	import type { SvelteComponent } from 'svelte';
-	import RecordsTableHead from './recordsTableHead.svelte';
-	import SelectionCheckbox from '../recordActions/selectRecord.svelte';
-	import EditRecord from '../recordActions/editRecord.svelte';
-	import DeleteRecord from '../recordActions/deleteRecord.svelte';
+	import RecordsTableHead from './collectionTableHeader.svelte';
 	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
 
 	//
@@ -73,7 +72,7 @@
 				<TableBodyRow>
 					{#if showCheckboxes}
 						<TableBodyCell>
-							<SelectionCheckbox {record} />
+							<SelectRecord {record} />
 						</TableBodyCell>
 					{/if}
 					{#each fields as field}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { getRecordsManagerContext } from '../recordsManager.svelte';
+	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
 	import { RecordForm } from '$lib/recordForm';
