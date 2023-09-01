@@ -14,7 +14,6 @@
 	import Chip from '$lib/collectionManager/ui/fieldComponents/chip.svelte';
 
 	import { Heading, Hr } from 'flowbite-svelte';
-	import { XCircle } from 'svelte-heros-v2';
 
 	const recordType = createTypeProp<CrudExampleRecord>();
 </script>
