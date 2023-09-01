@@ -6,28 +6,31 @@
 		isPlatformAuthenticatorAvailable
 	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
+	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase-types';
 
 	import { InformationCircle, Plus } from 'svelte-heros-v2';
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
 	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
 	import EditRecord from '$lib/schema/recordsManager/recordActions/editRecord.svelte';
+	import { createTypeProp } from '$lib/utils/typeProp';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
+	const recordType = createTypeProp<WebauthnCredentialsRecord<{ ID: string }>>();
 </script>
 
 <Heading tag="h6">Your devices</Heading>
 <P color="gray" size="sm">Manage the devices you use to login.</P>
 
 <RecordsManager
+	{recordType}
 	collection={Collections.WebauthnCredentials}
 	let:records
-	editFormSettings={{ excludedFields: ['user', 'credential'] }}
+	editFormSettings={{ exclude: ['user', 'credential'] }}
 >
 	<div class="space-y-2 py-4">
 		{#each records as record}
-			{@const label = Boolean(record.description) ? record.description : record.credential.ID}
+			{@const label = Boolean(record.description) ? record.description : record.credential?.ID}
 			<Card class="max-w-none">
 				<div class="flex justify-between gap-4 items-center">
 					<div class="w-0 grow overflow-hidden">
