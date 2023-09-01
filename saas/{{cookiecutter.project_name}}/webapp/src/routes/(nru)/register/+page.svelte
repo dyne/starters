@@ -4,10 +4,9 @@
 	import { goto } from '$app/navigation';
 	import { featureFlags } from '$lib/features';
 	import { z } from 'zod';
-	import { currentEmail } from './+layout.svelte';
 
 	// Components
-	import { A, Heading } from 'flowbite-svelte';
+	import { A, Heading, Hr, P } from 'flowbite-svelte';
 	import Form, { createForm } from '$lib/components/forms/form.svelte';
 	import Input from '$lib/components/forms/input.svelte';
 	import Checkbox from '$lib/components/forms/checkbox.svelte';
@@ -25,31 +24,26 @@
 		})
 		.refine((data) => data.password === data.passwordConfirm, 'PASSWORDS_DO_NOT_MATCH');
 
-	const superform = createForm(
-		schema,
-		async ({ form }) => {
-			const { data } = form;
-			const u = pb.collection(Collections.Users);
-			await u.create(data);
-			await u.authWithPassword(data.email, data.password);
-			await u.requestVerification(data.email);
-			if ($featureFlags.KEYPAIROOM) {
-				await goto('/keypairoom');
-			} else {
-				await goto('/my');
-			}
-		},
-		{ email: $currentEmail },
-		{ taintedMessage: null }
-	);
+	const superform = createForm(schema, async ({ form }) => {
+		const { data } = form;
+		const u = pb.collection(Collections.Users);
+		await u.create(data);
+		await u.authWithPassword(data.email, data.password);
+		await u.requestVerification(data.email);
+		if ($featureFlags.KEYPAIROOM) {
+			await goto('/keypairoom');
+		} else {
+			await goto('/my');
+		}
+	});
 
 	const keys = schema.innerType().keyof().Enum;
 
-	const { capture, restore, form } = superform;
+	const { capture, restore } = superform;
 	export const snapshot = { capture, restore };
-
-	$: $currentEmail = $form.email;
 </script>
+
+<Heading tag="h4">Create an account</Heading>
 
 <Form {superform}>
 	<Input type="email" label="Your email" field={keys.email} placeholder="name@example.org" />
@@ -69,3 +63,11 @@
 		<SubmitButton>Create an account</SubmitButton>
 	</div>
 </Form>
+
+<div class="flex flex-col items-center gap-4">
+	<Hr />
+	<P color="text-gray-500 dark:text-gray-400" size="sm">
+		Already have an account?
+		<A href="/login">Login here</A>
+	</P>
+</div>
