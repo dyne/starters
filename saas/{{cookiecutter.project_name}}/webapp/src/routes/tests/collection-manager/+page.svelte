@@ -40,14 +40,14 @@
 				<Heading tag="h4">Table</Heading>
 
 				<CollectionSearch {recordType} searchableFields={['text', 'textarea']} />
-				<CollectionTable
-					{records}
-					fields={['id', 'text', 'textarea']}
-					emptyState={{
-						title: 'No records',
-						description: 'There are no records to show.'
-					}}
-				/>
+				<CollectionTable {records} fields={['id', 'text', 'textarea']}>
+					<svelte:fragment slot="emptyState">
+						<CollectionEmptyState
+							title="Custom empty state"
+							description="Displaying some custom text here!"
+						/>
+					</svelte:fragment>
+				</CollectionTable>
 			</div>
 
 			<Hr />
@@ -55,12 +55,7 @@
 			<div class="space-y-4">
 				<Heading tag="h4">Cards</Heading>
 				{#if records.length === 0}
-					<!-- Todo: show a custom empty state -->
-					<CollectionEmptyState
-						title={'No records'}
-						description={'Start adding records.'}
-						icon={XCircle}
-					/>
+					<CollectionEmptyState />
 				{:else}
 					<div class="grid grid-cols-4 gap-4">
 						{#each records as record}

@@ -33,13 +33,6 @@
 	export let showDelete = true;
 	export let showEdit = true;
 	export let showCheckboxes = true;
-	export let emptyState: { title?: string; description?: string; icon?: typeof SvelteComponent } =
-		{};
-	const {
-		title = 'No records',
-		description = 'There are no records to show.',
-		icon = Clock
-	} = emptyState;
 
 	const { selectionManager } = getRecordsManagerContext();
 	const { allRecordsSelected, toggleSelectAllRecords, selectedRecords } = selectionManager;
@@ -49,8 +42,8 @@
 </script>
 
 {#if records.length === 0}
-	<slot name="empty_state">
-		<EmptyState {title} {description} {icon} />
+	<slot name="emptyState">
+		<EmptyState />
 	</slot>
 {:else}
 	<Table>
