@@ -1,9 +1,9 @@
-import { featuresNames, isFeatureActive, loadFeatures } from '$lib/features';
+import { loadFeatureFlags } from '$lib/features';
 import { error } from '@sveltejs/kit';
 
 export const load = async () => {
-	const features = await loadFeatures();
-	if (!isFeatureActive(features, featuresNames.WEBAUTHN)) {
+	const { WEBAUTHN } = await loadFeatureFlags();
+	if (!WEBAUTHN) {
 		throw error(404);
 	}
 };

@@ -5,10 +5,9 @@
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import FeatureFlag from '$lib/components/featureFlag.svelte';
 	import type { Link } from '$lib/utils/types';
 	import { A, Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
-	import { featuresNames } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 
 	const modes: Link[] = [
 		{
@@ -25,7 +24,7 @@
 </script>
 
 <Heading tag="h4">Create an account</Heading>
-<FeatureFlag flag={featuresNames.WEBAUTHN}>
+{#if $featureFlags.WEBAUTHN}
 	<div class="space-y-2">
 		<P size="sm" color="text-gray-500">Choose your authentication method</P>
 		<ButtonGroup class="w-full">
@@ -35,7 +34,7 @@
 			{/each}
 		</ButtonGroup>
 	</div>
-</FeatureFlag>
+{/if}
 
 <div class="pt-4">
 	<slot />

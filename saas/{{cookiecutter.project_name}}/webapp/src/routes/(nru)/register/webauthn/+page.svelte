@@ -8,7 +8,7 @@
 	import FormError from '$lib/components/forms/formError.svelte';
 	import SubmitButton from '$lib/components/forms/submitButton.svelte';
 	import { currentEmail } from '../+layout.svelte';
-	import { features, featuresNames, isFeatureActive } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 	import { Collections } from '$lib/pocketbase-types';
 	import { pb } from '$lib/pocketbase';
 	import { A, Checkbox, P } from 'flowbite-svelte';
@@ -27,7 +27,7 @@
 			await pb.collection(Collections.Users).requestVerification(email);
 			alert('You will be now asked to login with your webauthn device');
 			await loginUser(email);
-			if (isFeatureActive($features, featuresNames.KEYPAIROOM)) {
+			if ($featureFlags.KEYPAIROOM) {
 				await goto('/keypairoom');
 			} else {
 				await goto('/my');
