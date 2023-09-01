@@ -20,7 +20,7 @@
 	import { pb } from '$lib/pocketbase';
 
 	import type { Collections } from '$lib/pocketbase/types';
-	import type { FieldSchema } from './types';
+	import type { FieldSchema } from '../pocketbase/schema/types';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
@@ -32,7 +32,7 @@
 		mockFileFieldsInitialData
 	} from './CRUDFormSetup';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { getCollectionSchema } from './getCollectionSchema';
+	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { fieldsSchemaToZod } from './collectionSchemaToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';

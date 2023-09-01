@@ -11,7 +11,7 @@
 		type RelationDisplayFields
 	} from '$lib/forms/fields';
 	import { isArrayField } from './collectionSchemaToZod';
-	import { type FieldSchema, FieldType } from './types';
+	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
 
 	//
 

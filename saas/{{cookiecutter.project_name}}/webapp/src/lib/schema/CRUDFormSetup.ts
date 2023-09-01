@@ -1,6 +1,11 @@
 import { isFile, isFileArray } from '$lib/forms/fields';
 import { isArrayField } from './collectionSchemaToZod';
-import { FieldType, type FieldSchema, type CollectionSchema, type FieldOptions } from './types';
+import {
+	FieldType,
+	type FieldSchema,
+	type CollectionSchema,
+	type FieldOptions
+} from '$lib/pocketbase/schema/types';
 
 //
 

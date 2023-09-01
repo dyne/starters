@@ -4,7 +4,7 @@
 
 	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from './recordsManager.svelte';
-	import { getCollectionSchema } from '../getCollectionSchema';
+	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { ChevronDown } from 'svelte-heros-v2';
 
 	type RecordGeneric = $$Generic<PBRecord>;

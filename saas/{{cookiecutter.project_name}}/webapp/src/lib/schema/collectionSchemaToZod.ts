@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ZodEffects, ZodTypeAny } from 'zod';
 import { log } from '$lib/utils/devLog';
 import type { ValueOf } from '$lib/utils/types';
-import { type FieldSchema, FieldType } from './types';
+import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
 
 //
 
@@ -82,12 +82,13 @@ const arrayRefiners: Record<string, ArrayRefiner> = {
 
 function fieldSchemaToZod(fieldschema: FieldSchema) {
 	const type = fieldschema.type as FieldType;
+	const fieldOptions = fieldschema.options as Record<string, unknown>;
 
 	let zodSchema: ZodTypeAny = FieldTypeToZod[type];
 
 	const refiners = FieldTypeRefiners[type];
 	for (const [key, refiner] of Object.entries(refiners)) {
-		if (fieldschema.options[key]) zodSchema = refiner(zodSchema, fieldschema.options);
+		if (fieldOptions[key]) zodSchema = refiner(zodSchema, fieldOptions);
 	}
 
 	if (!fieldschema.required) zodSchema = zodSchema.nullish();
@@ -96,8 +97,7 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 	else {
 		let arraySchema = z.array(zodSchema);
 		for (const [key, refiner] of Object.entries(arrayRefiners)) {
-			if (fieldschema.options[key])
-				arraySchema = refiner(arraySchema as ZodArrayAny, fieldschema.options);
+			if (fieldOptions[key]) arraySchema = refiner(arraySchema as ZodArrayAny, fieldOptions);
 		}
 		if (fieldschema.required) return arraySchema.nonempty();
 		else return arraySchema;

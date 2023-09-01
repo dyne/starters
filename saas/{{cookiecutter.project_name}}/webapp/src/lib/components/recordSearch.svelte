@@ -6,7 +6,7 @@
 
 	// @ts-ignore
 	import Svelecte from 'svelecte';
-	import { getCollectionSchema } from '$lib/schema/getCollectionSchema';
+	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { createEventDispatcher } from 'svelte';
 
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
