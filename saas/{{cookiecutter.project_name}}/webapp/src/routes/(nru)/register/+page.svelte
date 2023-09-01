@@ -7,11 +7,7 @@
 
 	// Components
 	import { A, Heading } from 'flowbite-svelte';
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
-	import Checkbox from '$lib/components/forms/checkbox.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
+	import { Form, createForm, Input, Checkbox, FormError, SubmitButton } from '$lib/forms';
 
 	//
 

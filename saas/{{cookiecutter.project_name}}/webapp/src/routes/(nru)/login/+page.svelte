@@ -3,11 +3,8 @@
 	import { pb } from '$lib/pocketbase';
 	import { Collections } from '$lib/pocketbase-types';
 	import { Heading } from 'flowbite-svelte';
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
+	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
 	import { z } from 'zod';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
 
 	const schema = z.object({
 		email: z.string().email(),

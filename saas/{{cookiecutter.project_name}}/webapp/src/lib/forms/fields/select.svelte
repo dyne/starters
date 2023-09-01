@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFormContext } from './form.svelte';
+	import { getFormContext } from '../form.svelte';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 	import { Select, MultiSelect } from 'flowbite-svelte';
 	import type { SelectOptionType } from 'flowbite-svelte/dist/types';

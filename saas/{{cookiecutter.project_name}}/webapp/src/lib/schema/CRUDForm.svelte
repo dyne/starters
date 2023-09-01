@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import type { RelationDisplayFields } from '$lib/components/forms/relations.svelte';
+	import type { RelationDisplayFields } from '$lib/forms/fields';
 	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 
 	export type RelationFieldSettings = {
@@ -25,7 +25,7 @@
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
-	import Form, { createForm, createFormData } from '$lib/components/forms/form.svelte';
+	import { Form, createForm, createFormData, FormError, SubmitButton } from '$lib/forms';
 	import {
 		cleanFormDataFiles,
 		getFileFieldsInitialData,
@@ -35,8 +35,6 @@
 	import { getCollectionSchema } from './getCollectionSchema';
 	import { fieldsSchemaToZod } from './collectionSchemaToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
 	//
