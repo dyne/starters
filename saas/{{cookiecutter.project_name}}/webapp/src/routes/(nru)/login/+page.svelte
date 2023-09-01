@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase/types.js';
+	import { Collections } from '$lib/pocketbase/types';
 	import { Heading } from 'flowbite-svelte';
 	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
 	import { z } from 'zod';
