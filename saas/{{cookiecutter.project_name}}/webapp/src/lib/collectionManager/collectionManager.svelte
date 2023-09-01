@@ -48,6 +48,9 @@
 
 	import { Pagination } from 'flowbite-svelte';
 	import GridSpinner from '$lib/components/gridSpinner.svelte';
+	import CollectionEmptyState from './ui/collectionEmptyState.svelte';
+
+	import { ExclamationTriangle } from 'svelte-heros-v2';
 
 	//
 
@@ -224,7 +227,9 @@
 		{/if}
 	</slot>
 {:catch}
-	<div class="flex items-center justify-center min-h-screen justify-items-center">
-		Some error occured
-	</div>
+	<CollectionEmptyState
+		icon={ExclamationTriangle}
+		title="Loading error"
+		description="Some error occurred while loading records."
+	/>
 {/await}
