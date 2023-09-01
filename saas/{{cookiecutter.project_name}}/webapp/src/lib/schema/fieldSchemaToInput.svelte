@@ -10,7 +10,7 @@
 		Textarea,
 		type RelationDisplayFields
 	} from '$lib/forms/fields';
-	import { isArrayField } from './collectionSchemaToZod';
+	import { isArrayField } from '$lib/pocketbase/schema';
 	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
 
 	//

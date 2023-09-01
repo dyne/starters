@@ -33,7 +33,7 @@
 	} from './CRUDFormSetup';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { getCollectionSchema } from '$lib/pocketbase/schema';
-	import { fieldsSchemaToZod } from './collectionSchemaToZod';
+	import { fieldsSchemaToZod } from '$lib/pocketbaseToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 

@@ -1,5 +1,5 @@
 import { isFile, isFileArray } from '$lib/forms/fields';
-import { isArrayField } from './collectionSchemaToZod';
+import { isArrayField } from '$lib/pocketbase/schema';
 import {
 	FieldType,
 	type FieldSchema,

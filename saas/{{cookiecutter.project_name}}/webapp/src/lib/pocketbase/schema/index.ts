@@ -1,10 +1,10 @@
 import jsonSchema from './db_schema.json';
 import { Collections } from '../types';
-import type { CollectionSchema } from './types';
+import { FieldType, type CollectionSchema, type FieldSchema } from './types';
 
 export * from './types';
 
-//
+/* Main */
 
 export function getCollectionSchema(
 	collection: Collections | string
@@ -26,4 +26,14 @@ function createSchemasRecord(): Record<Collections, CollectionSchema> {
 	}
 
 	return schemas as Record<Collections, CollectionSchema>;
+}
+
+/* Helpers */
+
+export function isArrayField(fieldSchema: FieldSchema): boolean {
+	const type = fieldSchema.type;
+	if (type !== FieldType.SELECT && type !== FieldType.RELATION && type !== FieldType.FILE)
+		return false;
+	if (fieldSchema.options.maxSelect === 1) return false;
+	else return true;
 }

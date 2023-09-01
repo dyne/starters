@@ -3,6 +3,7 @@ import type { ZodEffects, ZodTypeAny } from 'zod';
 import { log } from '$lib/utils/devLog';
 import type { ValueOf } from '$lib/utils/types';
 import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
+import { isArrayField } from '$lib/pocketbase/schema';
 
 //
 
@@ -61,14 +62,6 @@ const FieldTypeRefiners: FieldTypeRefiners = {
 };
 
 //
-
-export function isArrayField(fieldSchema: FieldSchema): boolean {
-	const type = fieldSchema.type;
-	if (type !== FieldType.SELECT && type !== FieldType.RELATION && type !== FieldType.FILE)
-		return false;
-	if (fieldSchema.options.maxSelect === 1) return false;
-	else return true;
-}
 
 type ZodArrayAny = z.ZodArray<z.ZodTypeAny>;
 type ArrayRefiner = (schema: ZodArrayAny, options: FieldOptions) => ZodArrayAny;
