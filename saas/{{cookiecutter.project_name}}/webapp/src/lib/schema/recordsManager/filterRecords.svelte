@@ -1,10 +1,17 @@
 <script lang="ts">
+	import { createTypeProp } from '$lib/utils/typeProp';
+	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
+
 	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from './recordsManager.svelte';
 	import { getCollectionSchema } from '../getCollectionSchema';
 	import { ChevronDown } from 'svelte-heros-v2';
 
-	export let searchableFields: string[] | undefined = undefined;
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let recordType = createTypeProp<RecordGeneric>();
+	recordType;
+
+	export let searchableFields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
 	export let placeholder: string = 'Search...';
 	export let allFieldsCaption: string = 'All fields';
 	export let filtersActiveCaption: string = 'Filters active';

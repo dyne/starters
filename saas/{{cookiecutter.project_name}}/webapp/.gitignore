@@ -11,3 +11,4 @@ vite.config.ts.timestamp-*
 src/lib/schema/pb_schema.json
 src/lib/pocketbase-types.ts
 /playwright
+src/lib/features/list.ts

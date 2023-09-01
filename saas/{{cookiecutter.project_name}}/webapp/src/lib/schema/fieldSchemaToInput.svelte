@@ -1,12 +1,13 @@
 <script lang="ts">
+	import type { RelationDisplayFields } from '$lib/components/forms/relations.svelte';
+	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 	import Checkbox from '$lib/components/forms/checkbox.svelte';
 	import File from '$lib/components/forms/file.svelte';
 	import Hidden from '$lib/components/forms/hidden.svelte';
 	import Input from '$lib/components/forms/input.svelte';
-	import Relations, { type RelationDisplayFields } from '$lib/components/forms/relations.svelte';
+	import Relations from '$lib/components/forms/relations.svelte';
 	import Select from '$lib/components/forms/select.svelte';
 	import Textarea from '$lib/components/forms/textarea.svelte';
-	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 	import { isArrayField } from './collectionSchemaToZod';
 	import { type FieldSchema, FieldType } from './types';
 
