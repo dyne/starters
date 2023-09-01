@@ -1,5 +1,5 @@
 import { Features } from './list';
-import { Collections, type FeaturesResponse } from '../pocketbase-types';
+import { Collections, type FeaturesResponse } from '../pocketbase/types';
 import { pb } from '../pocketbase';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';

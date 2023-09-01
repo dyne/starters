@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections, type CrudExampleRecord } from '$lib/pocketbase-types';
+	import { Collections, type CrudExampleRecord } from '$lib/pocketbase/types.js';
 	import CrudForm from '$lib/schema/CRUDForm.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 
