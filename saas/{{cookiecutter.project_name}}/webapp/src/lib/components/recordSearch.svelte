@@ -2,7 +2,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase-types';
+	import { Collections } from '$lib/pocketbase/types';
 
 	// @ts-ignore
 	import Svelecte from 'svelecte';

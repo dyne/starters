@@ -42,7 +42,7 @@
 
 	import { pb } from '$lib/pocketbase';
 	import type { RecordFullListQueryParams } from 'pocketbase';
-	import type { Collections } from '$lib/pocketbase-types';
+	import type { Collections } from '$lib/pocketbase/types';
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 

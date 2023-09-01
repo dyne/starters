@@ -1,4 +1,4 @@
-import { isFile, isFileArray } from '$lib/components/forms/file.svelte';
+import { isFile, isFileArray } from '$lib/forms/fields';
 import { isArrayField } from './collectionSchemaToZod';
 import { FieldType, type FieldSchema, type CollectionSchema, type FieldOptions } from './types';
 

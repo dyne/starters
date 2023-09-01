@@ -1,4 +1,4 @@
-import type { BaseSystemFields } from '$lib/pocketbase-types';
+import type { BaseSystemFields } from '$lib/pocketbase/types';
 
 export type ValueOf<T> = T[keyof T];
 
