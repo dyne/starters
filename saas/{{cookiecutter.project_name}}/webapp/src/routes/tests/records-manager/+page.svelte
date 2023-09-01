@@ -28,7 +28,6 @@
 			exclude: ['select', 'text']
 		}}
 		let:records
-		let:loadRecords
 	>
 		<div class="space-y-8">
 			<RecordsManagerTopbar />
@@ -37,26 +36,16 @@
 
 			<div class="space-y-4">
 				<Heading tag="h4">Table</Heading>
-				{#await loadRecords()}
-					<TableSkeleton columns={['checkbox', 'image', 'short text', 'long text', 'actions']} />
-				{:then}
-					{#if records.length === 0}
-						<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
-					{:else}
-            <RecordsTable
-              {records}
-              fields={['id', 'text', 'textarea']}
-              emptyState={{
-                title: 'No records',
-                description: 'There are no records to show.'
-              }}
-            />
-            <FilterRecords {recordType} searchableFields={['text', 'textarea']} />
-            <RecordsTable {records} fields={['id', 'text', 'textarea']} />
-					{/if}
-				{:catch}
-					<EmptyState title={'Error'} description={'Something went wrong.'} icon={XCircle} />
-				{/await}
+
+				<FilterRecords {recordType} searchableFields={['text', 'textarea']} />
+				<RecordsTable
+					{records}
+					fields={['id', 'text', 'textarea']}
+					emptyState={{
+						title: 'No records',
+						description: 'There are no records to show.'
+					}}
+				/>
 			</div>
 
 			<Hr />
@@ -66,32 +55,19 @@
 				{#if records.length === 0}
 					<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
 				{:else}
-				{#await loadRecords()}
 					<div class="grid grid-cols-4 gap-4">
-						{#each Array(4) as _}
-							<CardPlaceholder />
+						{#each records as record}
+							<RecordCard
+								{record}
+								titleField="id"
+								fieldsComponents={{ select: Chip }}
+								showEdit
+								showCheckbox
+								showDelete
+							/>
 						{/each}
 					</div>
-				{:then}
-					{#if records.length === 0}
-						<EmptyState title={'No records'} description={'Start adding records.'} icon={XCircle} />
-					{:else}
-						<div class="grid grid-cols-4 gap-4">
-							{#each records as record}
-								<RecordCard
-									{record}
-									titleField="id"
-									fieldsComponents={{ select: Chip }}
-									showEdit
-									showCheckbox
-									showDelete
-								/>
-							{/each}
-						</div>
-					{/if}
-				{:catch}
-					<EmptyState title={'Error'} description={'Something went wrong.'} icon={XCircle} />
-				{/await}
+				{/if}
 			</div>
 		</div>
 	</RecordsManager>
