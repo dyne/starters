@@ -69,6 +69,9 @@
 	export let initialQueryParams: RecordFullListQueryParams = {};
 	export let subscribe: string[] = [];
 
+	export let perPage = 5;
+	export let disablePagination = false;
+
 	/* Data load */
 
 	$: pages = Array.from({ length: totalPages }, (_, i) => ({
@@ -78,7 +81,6 @@
 	let currentPage = '';
 	let totalItems = 0;
 	$: currentPage = $page.url.searchParams.get('page') || '1';
-	export let perPage = 5;
 
 	const queryParams = writable<RecordFullListQueryParams>({
 		sort: '-created',
@@ -97,16 +99,23 @@
 	let totalPages: number = 0;
 
 	async function loadRecords() {
-		const res = await recordService.getList<PBResponse<RecordGeneric>>(
-			Number(currentPage),
-			perPage,
-			{
+		if (!disablePagination) {
+			const res = await recordService.getList<PBResponse<RecordGeneric>>(
+				Number(currentPage),
+				perPage,
+				{
+					...$queryParams
+				}
+			);
+			records = res.items;
+			totalPages = res.totalPages;
+			totalItems = res.totalItems;
+		} else {
+			const res = await recordService.getFullList<PBResponse<RecordGeneric>>({
 				...$queryParams
-			}
-		);
-		records = res.items;
-		totalPages = res.totalPages;
-		totalItems = res.totalItems;
+			});
+			records = res;
+		}
 	}
 
 	let promise = loadRecords();
@@ -192,40 +201,44 @@
 	</div>
 {:then}
 	<slot {records} {loadRecords} />
-	<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
-		{#if totalPages > 1}
-			<div class="flex flex-col items-center justify-center gap-2 my-5">
-				<div class="text-sm text-gray-700 dark:text-gray-400">
-					Showing <span class="font-semibold text-gray-900 dark:text-white"
-						>{perPage * Number(currentPage) - perPage + 1}</span
-					>
-					to
-					<span class="font-semibold text-gray-900 dark:text-white"
-						>{Number(currentPage) == totalPages ? totalItems : perPage * Number(currentPage)}</span
-					>
-					of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
-				</div>
+	{#if !disablePagination}
+		<slot name="pagination" {totalItems} {totalPages} {currentPage} {perPage}>
+			{#if totalPages > 1}
+				<div class="flex flex-col items-center justify-center gap-2 my-5">
+					<div class="text-sm text-gray-700 dark:text-gray-400">
+						Showing <span class="font-semibold text-gray-900 dark:text-white"
+							>{perPage * Number(currentPage) - perPage + 1}</span
+						>
+						to
+						<span class="font-semibold text-gray-900 dark:text-white"
+							>{Number(currentPage) == totalPages
+								? totalItems
+								: perPage * Number(currentPage)}</span
+						>
+						of <span class="font-semibold text-gray-900 dark:text-white">{totalItems}</span> Entries
+					</div>
 
-				<div class="flex w-full justify-center">
-					<Pagination
-						{pages}
-						activeClass="bg-blue-500 text-white"
-						on:previous={(e) => {
-							e.preventDefault();
-							if (Number(currentPage) - 1 < 1) return;
-							goto(`?page=${Number(currentPage) - 1}`);
-						}}
-						on:next={(e) => {
-							e.preventDefault();
-							if (Number(currentPage) + 1 > totalPages) return;
-							goto(`?page=${Number(currentPage) + 1}`);
-						}}
-						on:click={handlePaginationClick}
-					/>
+					<div class="flex w-full justify-center">
+						<Pagination
+							{pages}
+							activeClass="bg-blue-500 text-white"
+							on:previous={(e) => {
+								e.preventDefault();
+								if (Number(currentPage) - 1 < 1) return;
+								goto(`?page=${Number(currentPage) - 1}`);
+							}}
+							on:next={(e) => {
+								e.preventDefault();
+								if (Number(currentPage) + 1 > totalPages) return;
+								goto(`?page=${Number(currentPage) + 1}`);
+							}}
+							on:click={handlePaginationClick}
+						/>
+					</div>
 				</div>
-			</div>
-		{/if}
-	</slot>
+			{/if}
+		</slot>
+	{/if}
 {:catch}
 	<CollectionEmptyState
 		icon={ExclamationTriangle}
