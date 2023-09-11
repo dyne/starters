@@ -1,6 +1,17 @@
 <script lang="ts">
 	import Layout from '$lib/components/LayoutTopSide.svelte';
-	import { GlobeAlt, Pencil, Document, RocketLaunch, Inbox, User, Cog, QuestionMarkCircle, ArrowRightOnRectangle } from 'svelte-heros-v2';
+	import {
+		GlobeAlt,
+		Document,
+		RocketLaunch,
+		Inbox,
+		User,
+		Cog,
+		QuestionMarkCircle,
+		ArrowRightOnRectangle
+	} from 'svelte-heros-v2';
+	import BottomSidebarMenu from '$lib/components/BottomSidebarMenu.svelte';
+
 	let breakPoint: number = 1024;
 	let width: number;
 	const primaryMenu = [
@@ -105,7 +116,7 @@
 
 <svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<Layout {breakPoint} {width} {primaryMenu} {secondaryMenu}>
+	<Layout {breakPoint} {width} {primaryMenu} {secondaryMenu} bottomMenu={BottomSidebarMenu}>
 		<slot />
 	</Layout>
 </div>

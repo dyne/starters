@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		NavBrand,
 		Sidebar,
@@ -9,15 +8,15 @@
 		Drawer,
 		CloseButton,
 		SidebarDropdownWrapper,
-		SidebarDropdownItem,
+		SidebarDropdownItem
 	} from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
 	import type { MenuLink } from './LayoutTopSide.svelte';
-	import BottomSidebarMenu from './BottomSidebarMenu.svelte';
 
 	export let logo = '/logo.svg';
 	export let secondaryMenu: MenuLink[] = [];
 	export let primaryMenu: MenuLink[] = [];
+	export let bottomMenu: ConstructorOfATypedSvelteComponent | null | undefined;
 
 	let appTitle = '{{ cookiecutter.project_name }}';
 
@@ -82,7 +81,9 @@
 						{/each}
 					</SidebarGroup>
 					<SidebarGroup class="absolute bottom-0 w-full">
-						<BottomSidebarMenu />
+						{#if Boolean(bottomMenu)}
+							<svelte:component this={bottomMenu} />
+						{/if}
 					</SidebarGroup>
 				</SidebarWrapper>
 			</Sidebar>

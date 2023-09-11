@@ -17,11 +17,13 @@
 	import { currentUser } from '$lib/pocketbase';
 	import { goto } from '$app/navigation';
 
+
 	export let breakPoint: number = 1024;
 	export let width: number;
 	export let primaryMenu: MenuLink[];
 	export let secondaryMenu: MenuLink[];
 	export let hideNavbar: boolean = false;
+	export let bottomMenu: ConstructorOfATypedSvelteComponent | null | undefined;
 
 	let activateClickOutside = true;
 	let drawerHidden: boolean = false;
@@ -86,7 +88,7 @@
 		{secondaryMenu}
 		{drawerHidden}
 		{activateClickOutside}
-	>
+		{bottomMenu}>
 		<slot />
 	</SidebarMenu>
 </div>
