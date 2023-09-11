@@ -6,7 +6,7 @@
 		isPlatformAuthenticatorAvailable
 	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase-types';
+	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
 
 	import { InformationCircle, Plus } from 'svelte-heros-v2';
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';

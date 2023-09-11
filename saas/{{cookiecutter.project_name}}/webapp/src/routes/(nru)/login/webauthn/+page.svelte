@@ -3,10 +3,7 @@
 	import { loginUser } from '$lib/webauthn/index';
 	import { z } from 'zod';
 
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
+	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
 	import { currentEmail } from '../+layout.svelte';
 
 	const schema = z.object({
