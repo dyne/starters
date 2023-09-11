@@ -48,7 +48,7 @@
 
 {#await platformAuthenticatorAvailable}
 	<div class="flex flex-col items-center">
-		<!-- <Spinner /> -->
+		<Spinner />
 		<P>Checking your device</P>
 	</div>
 {:then response}
