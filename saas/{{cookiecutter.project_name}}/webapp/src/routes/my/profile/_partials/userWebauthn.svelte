@@ -9,11 +9,10 @@
 	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
 
 	import { InformationCircle, Pencil, Plus } from 'svelte-heros-v2';
-	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
-	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
+	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
-	import EditRecord from '$lib/schema/recordsManager/recordActions/editRecord.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
+	import { DeleteRecord, EditRecord } from '$lib/collectionManager';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
 	const recordType = createTypeProp<WebauthnCredentialsRecord<{ ID: string }>>();
@@ -22,7 +21,7 @@
 <Heading tag="h6">Your devices</Heading>
 <P color="gray" size="sm">Manage the devices you use to login.</P>
 
-<RecordsManager
+<CollectionManager
 	{recordType}
 	collection={Collections.WebauthnCredentials}
 	let:records
@@ -44,7 +43,7 @@
 			</Card>
 		{/each}
 	</div>
-</RecordsManager>
+</CollectionManager>
 
 {#await platformAuthenticatorAvailable}
 	<div class="flex flex-col items-center">
