@@ -10,9 +10,9 @@ const features = [
     {
         name: "webauthn",
         envVariables: {
-            DISPLAY_NAME: "Foo srl",
+            DISPLAY_NAME: "{{cookiecutter.project_name}}",
             RPID: "localhost",
-            RPORIGINS: "http://localhost:5173"
+            RPORIGINS: "http://localhost:5173",
         },
     },
 ];
