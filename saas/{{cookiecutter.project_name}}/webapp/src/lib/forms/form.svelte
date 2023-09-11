@@ -34,7 +34,8 @@
 	export function createForm<T extends AnyZodObject>(
 		schema: any,
 		submitFunction: SubmitFunction<T> = async () => {},
-		initialData: any = undefined
+		initialData: any = undefined,
+		options: FormOptions<T, unknown> = {}
 	) {
 		const form = superValidateSync(initialData, schema, { errors: false });
 		return superForm<T, ClientResponseErrorData>(form, {
@@ -56,7 +57,8 @@
 					}
 					setMessage(input.form, error);
 				}
-			}
+			},
+			...options
 		});
 	}
 
