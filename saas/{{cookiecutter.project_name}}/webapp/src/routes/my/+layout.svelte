@@ -1,19 +1,17 @@
 <script lang="ts">
 	import Layout from '$lib/components/LayoutTopSide.svelte';
-	import { Pencil } from 'svelte-heros-v2';
-	// export let data: PageData;
-
+	import { GlobeAlt, Pencil, Document, RocketLaunch, Inbox, User, Cog, QuestionMarkCircle, ArrowRightOnRectangle } from 'svelte-heros-v2';
 	let breakPoint: number = 1024;
 	let width: number;
 	const primaryMenu = [
 		{
 			label: 'Overview',
 			href: '/my',
-			icon: Pencil
+			icon: GlobeAlt
 		},
 		{
 			label: 'Pages',
-			icon: Pencil,
+			icon: Document,
 			subMenu: [
 				{
 					label: 'Profile',
@@ -31,7 +29,7 @@
 		},
 		{
 			label: 'Sales',
-			icon: Pencil,
+			icon: RocketLaunch,
 			subMenu: [
 				{
 					label: 'Products',
@@ -50,7 +48,7 @@
 		{
 			label: 'Messages',
 			href: '/',
-			icon: Pencil,
+			icon: Inbox,
 			subMenu: [
 				{
 					label: 'Inbox',
@@ -68,7 +66,7 @@
 		},
 		{
 			label: 'Authentication',
-			icon: Pencil,
+			icon: User,
 			subMenu: [
 				{
 					label: 'Sign In',
@@ -90,17 +88,17 @@
 		{
 			label: 'Settings',
 			href: '/my/settings',
-			icon: Pencil
+			icon: Cog
 		},
 		{
 			label: 'Help',
 			href: '/my/help',
-			icon: Pencil
+			icon: QuestionMarkCircle
 		},
 		{
 			label: 'Sign Out',
 			href: '/my/signout',
-			icon: Pencil
+			icon: ArrowRightOnRectangle
 		}
 	];
 </script>

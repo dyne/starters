@@ -10,14 +10,9 @@
 		CloseButton,
 		SidebarDropdownWrapper,
 		SidebarDropdownItem,
-		Dropdown,
-		DropdownItem,
-		Button
 	} from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import { SidebarBottomNav, SidebarBottomNavItem } from 'flowbite-svelte-blocks';
 	import type { MenuLink } from './LayoutTopSide.svelte';
-	import SelectCountries from './selectCountries.svelte';
 	import BottomSidebarMenu from './BottomSidebarMenu.svelte';
 
 	export let logo = '/logo.svg';
@@ -49,9 +44,9 @@
 			id="sidebar"
 			divClass="overflow-hidden z-50 p-4 bg-white dark:bg-gray-800 w-fit fixed inset-y-0 left-0"
 		>
-			<div class="flex items-center mb-2">
+			<div class="flex items-center mb-2 px-3">
 				<NavBrand href="/my">
-					<img src={logo} class="mr-3 h-6 sm:h-9" alt={appTitle} />
+					<img src={logo} class="h-9" alt={appTitle} />
 				</NavBrand>
 				<CloseButton on:click={() => (drawerHidden = true)} class="dark:text-white md:hidden" />
 			</div>
