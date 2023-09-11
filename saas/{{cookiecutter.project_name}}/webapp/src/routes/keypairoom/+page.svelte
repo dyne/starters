@@ -11,15 +11,12 @@
 	} from '$lib/keypairoom/updateUserPublicKeys';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { z } from 'zod';
-	import { areFeaturesActive, features, featuresNames, isFeatureActive } from '$lib/features';
+	import { featureFlags } from '$lib/features';
 
 	// Components
 	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
-	import Form, { createForm } from '$lib/components/forms/form.svelte';
-	import Input from '$lib/components/forms/input.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
+	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
 	import { InformationCircle } from 'svelte-heros-v2';
 
 	//
@@ -46,12 +43,12 @@
 		saveKeyringToLocalStorage(keypair.keyring);
 		seed = keypair.seed;
 
-		if (isFeatureActive($features, featuresNames.AUTH) && $currentUser) {
+		if ($featureFlags.AUTH && $currentUser) {
 			const publicKeys = getPublicKeysFromKeypair(keypair);
 			await updateUserPublicKeys($currentUser?.id!, publicKeys);
 		}
 
-		if (areFeaturesActive($features, [featuresNames.DID, featuresNames.AUTH]) && $currentUser) {
+		if ($featureFlags.DID && $featureFlags.AUTH && $currentUser) {
 			await pb.send('/api/did', {});
 		}
 	});

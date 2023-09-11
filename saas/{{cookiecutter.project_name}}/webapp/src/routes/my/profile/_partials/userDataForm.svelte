@@ -1,11 +1,16 @@
 <script lang="ts">
-	import Checkbox from '$lib/components/forms/checkbox.svelte';
-	import FileInput from '$lib/components/forms/file.svelte';
-	import Form, { createForm, createFormData } from '$lib/components/forms/form.svelte';
-	import FormError from '$lib/components/forms/formError.svelte';
-	import Input from '$lib/components/forms/input.svelte';
-	import SubmitButton from '$lib/components/forms/submitButton.svelte';
-	import { features, featuresNames,  isFeatureActive } from '$lib/features';
+	import { featureFlags } from '$lib/features';
+	import {
+		Form,
+		createForm,
+		createFormData,
+		FormError,
+		SubmitButton,
+		Input,
+		Checkbox,
+		File
+	} from '$lib/forms';
+
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { Alert } from 'flowbite-svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -55,7 +60,6 @@
 	const { form } = superform;
 	let isEmailChanged = false;
 
-	const keypairoomActive = isFeatureActive($features, featuresNames.KEYPAIROOM);
 
 	$: {
 		if ($form.email !== $currentUser?.email) {
@@ -70,13 +74,13 @@
 	<Input field="name" label="Username" />
 
 	<div class="space-y-2">
-		<Input field="email" disabled={keypairoomActive}/>
+		<Input field="email" disabled={$featureFlags.KEYPAIROOM}/>
 		<Checkbox field="emailVisibility">
 			<span>Show email to other users</span>
 		</Checkbox>
 	</div>
 
-	<FileInput field="avatar" />
+	<File field="avatar" />
 
 	<FormError />
 
