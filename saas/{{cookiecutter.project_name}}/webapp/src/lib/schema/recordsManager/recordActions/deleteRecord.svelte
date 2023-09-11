@@ -15,6 +15,7 @@
 	async function deleteRecord() {
 		await recordService.delete(record.id);
 		loadRecords();
+		open = false;
 	}
 
 	let open = false;
