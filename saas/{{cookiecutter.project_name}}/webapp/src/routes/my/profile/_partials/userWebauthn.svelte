@@ -46,38 +46,32 @@
 	</div>
 </RecordsManager>
 
-{#if isWebauthnSupported()}
+{#if !isWebauthnSupported()}
 	{#await platformAuthenticatorAvailable}
-		<Spinner />
+		<div class="flex flex-col items-center">
+			<Spinner />
+			<P>Checking your device</P>
+		</div>
 	{:then response}
-		{#if response}
-			<div class="flex justify-end mt-2">
-				<Button
-					color="alternative"
-					on:click={() => {
-						registerUser($currentUser?.email, navigator.userAgent);
-					}}
-				>
-					<Plus size="20" class="mr-1" /> Add a device
-				</Button>
-			</div>
-		{:else}
-			<Alert color="red" class="mt-2">
-				<svelte:fragment slot="icon">
-					<InformationCircle />
-				</svelte:fragment>
-				<span> Your device does not support Webauthn.</span>
-			</Alert>
-		{/if}
+		<Alert color="yellow" class="mt-2">
+			<svelte:fragment slot="icon">
+				<InformationCircle />
+			</svelte:fragment>
+			<span>
+				Your device does not have integrated Webauthn support. An external authenticator is
+				required.
+			</span>
+		</Alert>
 	{/await}
-{:else}
-	<Alert color="red" class="mt-2">
-		<svelte:fragment slot="icon">
-			<InformationCircle />
-		</svelte:fragment>
-		<span>
-			Your browser does not support Webauthn. Please use a modern browser like Chrome, Firefox,
-			Safari or Edge.
-		</span>
-	</Alert>
 {/if}
+
+<div class="flex justify-end mt-2">
+	<Button
+		color="alternative"
+		on:click={() => {
+			registerUser($currentUser?.email, navigator.userAgent);
+		}}
+	>
+		<Plus size="20" class="mr-1" /> Add a device
+	</Button>
+</div>
