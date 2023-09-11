@@ -52,7 +52,7 @@
 </script>
 
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<slot name="navbar">
+	<slot name="navbar" {toggleSide}>
 		<div class="shrink-0">
 			{#if !hideNavbar}
 				<Navbar {toggleSide}>

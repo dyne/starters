@@ -90,7 +90,7 @@
 		</Drawer>
 
 		<div
-			class="p-1 md:p-8 pt-20 md:pt-32 bg-slate-100 grow bg-[url('/bg.png')] bg-cover md:ml-72 min-h-screen overflow-auto"
+			class="p-1 lg:p-8 pt-20 lg:pt-32 bg-slate-100 grow bg-[url('/bg.png')] bg-cover lg:ml-72 min-h-screen overflow-auto"
 		>
 			<main class="rounded-lg p-2 md:p-4 bg-white flex flex-col space gap-10 shadow-md">
 				<slot />
