@@ -8,7 +8,7 @@
 	import { currentUser } from '$lib/pocketbase';
 	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
 
-	import { InformationCircle, Plus } from 'svelte-heros-v2';
+	import { InformationCircle, Pencil, Plus } from 'svelte-heros-v2';
 	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
 	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
@@ -46,13 +46,13 @@
 	</div>
 </RecordsManager>
 
-{#if !isWebauthnSupported()}
-	{#await platformAuthenticatorAvailable}
-		<div class="flex flex-col items-center">
-			<Spinner />
-			<P>Checking your device</P>
-		</div>
-	{:then response}
+{#await platformAuthenticatorAvailable}
+	<div class="flex flex-col items-center">
+		<!-- <Spinner /> -->
+		<P>Checking your device</P>
+	</div>
+{:then response}
+	{#if !response || !isWebauthnSupported()}
 		<Alert color="yellow" class="mt-2">
 			<svelte:fragment slot="icon">
 				<InformationCircle />
@@ -62,8 +62,8 @@
 				required.
 			</span>
 		</Alert>
-	{/await}
-{/if}
+	{/if}
+{/await}
 
 <div class="flex justify-end mt-2">
 	<Button
