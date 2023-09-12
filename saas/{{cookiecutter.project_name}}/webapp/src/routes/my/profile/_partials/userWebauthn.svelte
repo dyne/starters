@@ -1,18 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		registerUser,
 		isWebauthnSupported,
 		isPlatformAuthenticatorAvailable
 	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
 
-	import { InformationCircle, Pencil, Plus } from 'svelte-heros-v2';
-	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
+	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
+	import { CollectionManager, DeleteRecord, EditRecord } from '$lib/collectionManager';
+
+	import { InformationCircle, Plus } from 'svelte-heros-v2';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { DeleteRecord, EditRecord } from '$lib/collectionManager';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
 	const recordType = createTypeProp<WebauthnCredentialsRecord<{ ID: string }>>();
