@@ -14,6 +14,7 @@
 	import Chip from '$lib/collectionManager/ui/fieldComponents/chip.svelte';
 
 	import { Heading, Hr } from 'flowbite-svelte';
+	import Pagination from '$lib/collectionManager/ui/pagination.svelte';
 
 	const recordType = createTypeProp<CrudExampleRecord>();
 </script>
@@ -47,6 +48,7 @@
 						/>
 					</svelte:fragment>
 				</CollectionTable>
+				<Pagination />
 			</div>
 
 			<Hr />
@@ -68,6 +70,7 @@
 							/>
 						{/each}
 					</div>
+					<Pagination />
 				{/if}
 			</div>
 		</div>
