@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		registerUser,
 		isWebauthnSupported,
 		isPlatformAuthenticatorAvailable
 	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
-	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
 
-	import { InformationCircle, Pencil, Plus } from 'svelte-heros-v2';
-	import RecordsManager from '$lib/schema/recordsManager/recordsManager.svelte';
-	import DeleteRecord from '$lib/schema/recordsManager/recordActions/deleteRecord.svelte';
+	import { Collections, type WebauthnCredentialsRecord } from '$lib/pocketbase/types';
+	import { CollectionManager, DeleteRecord, EditRecord } from '$lib/collectionManager';
+
+	import { InformationCircle, Plus } from 'svelte-heros-v2';
 	import { Alert, Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
-	import EditRecord from '$lib/schema/recordsManager/recordActions/editRecord.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
@@ -22,7 +20,7 @@
 <Heading tag="h6">Your devices</Heading>
 <P color="gray" size="sm">Manage the devices you use to login.</P>
 
-<RecordsManager
+<CollectionManager
 	{recordType}
 	collection={Collections.WebauthnCredentials}
 	let:records
@@ -44,7 +42,7 @@
 			</Card>
 		{/each}
 	</div>
-</RecordsManager>
+</CollectionManager>
 
 {#await platformAuthenticatorAvailable}
 	<div class="flex flex-col items-center">
