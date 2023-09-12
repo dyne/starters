@@ -106,9 +106,9 @@ func NewWebAuthnFromEnv(app *pocketbase.PocketBase) (*webauthn.WebAuthn, error) 
 	}
 
 	var envConfig struct {
-		DisplayName string `json:"DISPLAY_NAME"`
-		RPId        string `json:"RPID"`
-		RPOrigin    string `json:"RPORIGINS"`
+		DisplayName string   `json:"DISPLAY_NAME"`
+		RPId        string   `json:"RPID"`
+		RPOrigins   []string `json:"RPORIGINS"`
 	}
 
 	err = json.Unmarshal([]byte(record.GetString("envVariables")), &envConfig)
@@ -124,14 +124,14 @@ func NewWebAuthnFromEnv(app *pocketbase.PocketBase) (*webauthn.WebAuthn, error) 
 		return nil, errors.New("Relying party not set")
 	}
 
-	if envConfig.RPOrigin == "" {
+	if len(envConfig.RPOrigins) == 0 {
 		return nil, errors.New("Relying party origin not set")
 	}
 
 	wconfig := &webauthn.Config{
 		RPDisplayName: envConfig.DisplayName, // Display Name for your site
 		RPID:          envConfig.RPId,        // Generally the FQDN for your site
-		RPOrigins:     []string{envConfig.RPOrigin},
+		RPOrigins:     envConfig.RPOrigins,
 	}
 
 	w, err := webauthn.New(wconfig)
