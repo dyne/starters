@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Layout from '$lib/components/LayoutTopSide.svelte';
+	import TopAndSideBar from '$lib/layout/TopAndSideBar.svelte';
 	import {
 		GlobeAlt,
 		Document,
@@ -10,7 +10,7 @@
 		QuestionMarkCircle,
 		ArrowRightOnRectangle
 	} from 'svelte-heros-v2';
-	import BottomSidebarMenu from '$lib/components/BottomSidebarMenu.svelte';
+	import BottomSidebarMenu from '$lib/layout/BottomSidebarMenu.svelte';
 
 	let breakPoint: number = 1024;
 	let width: number;
@@ -116,7 +116,7 @@
 
 <svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<Layout {breakPoint} {width} {primaryMenu} {secondaryMenu} bottomMenu={BottomSidebarMenu}>
+	<TopAndSideBar {breakPoint} {width} {primaryMenu} {secondaryMenu} bottomMenu={BottomSidebarMenu}>
 		<slot />
-	</Layout>
+	</TopAndSideBar>
 </div>

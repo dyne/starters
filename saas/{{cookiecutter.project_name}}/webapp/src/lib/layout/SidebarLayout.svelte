@@ -11,7 +11,7 @@
 		SidebarDropdownItem
 	} from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import type { MenuLink } from './LayoutTopSide.svelte';
+	import type { MenuLink } from './TopAndSideBar.svelte';
 
 	export let logo = '/logo.svg';
 	export let secondaryMenu: MenuLink[] = [];

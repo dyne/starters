@@ -9,9 +9,9 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import SidebarMenu from '$lib/components/SidebarLayout.svelte';
-	import Navbar from '$lib/components/NavbarMenu.svelte';
-	import UserAvatar from './userAvatar.svelte';
+	import SidebarMenu from '$lib/layout/SidebarLayout.svelte';
+	import Navbar from '$lib/layout/TopBar.svelte';
+	import UserAvatar from '../components/userAvatar.svelte';
 	import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
 	import { Fire } from 'svelte-heros-v2';
 	import { currentUser } from '$lib/pocketbase';

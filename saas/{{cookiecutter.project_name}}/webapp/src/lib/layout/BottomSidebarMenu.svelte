@@ -1,6 +1,6 @@
 <script>
 	import { SidebarBottomNav, SidebarBottomNavItem } from 'flowbite-svelte-blocks';
-	import SelectCountries from './selectCountries.svelte';
+	import SelectCountries from './SelectCountries.svelte';
 </script>
 
 <SidebarBottomNav divClass="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full bg-white dark:bg-gray-800 z-20">
