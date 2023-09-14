@@ -1,122 +1,41 @@
 <script lang="ts">
-	import TopAndSideBar from '$lib/layout/TopAndSideBar.svelte';
-	import {
-		GlobeAlt,
-		Document,
-		RocketLaunch,
-		Inbox,
-		User,
-		Cog,
-		QuestionMarkCircle,
-		ArrowRightOnRectangle
-	} from 'svelte-heros-v2';
-	import BottomSidebarMenu from '$lib/layout/BottomSidebarMenu.svelte';
-
+	import UiShell from '$lib/uiShell/UiShell.svelte';
+	import BottomSidebarMenu from '$lib/uiShell/BottomSidebarMenu.svelte';
+	import Sidebar from '$lib/uiShell/Sidebar.svelte';
+	import Navbar from '$lib/uiShell/Navbar.svelte';
+	import Hamburger from '$lib/uiShell/Hamburger.svelte';
+	import { currentUser } from '$lib/pocketbase';
+	import DidButton from '$lib/uiShell/DidButton.svelte';
+	import AvatarMenu from '$lib/uiShell/AvatarMenu.svelte';
+	import primaryMenu from './primaryMenu';
+	import secondaryMenu from './secondaryMenu';
 	let breakPoint: number = 1024;
-	let width: number;
-	const primaryMenu = [
-		{
-			label: 'Overview',
-			href: '/my',
-			icon: GlobeAlt
-		},
-		{
-			label: 'Pages',
-			icon: Document,
-			subMenu: [
-				{
-					label: 'Profile',
-					href: '/my/profile'
-				},
-				{
-					label: 'Kanban',
-					href: '/'
-				},
-				{
-					label: 'Calendar',
-					href: '/'
-				}
-			]
-		},
-		{
-			label: 'Sales',
-			icon: RocketLaunch,
-			subMenu: [
-				{
-					label: 'Products',
-					href: '/'
-				},
-				{
-					label: 'Billing',
-					href: '/'
-				},
-				{
-					label: 'Invoice',
-					href: '/'
-				}
-			]
-		},
-		{
-			label: 'Messages',
-			href: '/',
-			icon: Inbox,
-			subMenu: [
-				{
-					label: 'Inbox',
-					href: '/'
-				},
-				{
-					label: 'Sent',
-					href: '/'
-				},
-				{
-					label: 'Drafts',
-					href: '/'
-				}
-			]
-		},
-		{
-			label: 'Authentication',
-			icon: User,
-			subMenu: [
-				{
-					label: 'Sign In',
-					href: '/'
-				},
-				{
-					label: 'Sign Up',
-					href: '/'
-				},
-				{
-					label: 'Forgot Password',
-					href: '/'
-				}
-			]
-		}
-	];
-
-	const secondaryMenu = [
-		{
-			label: 'Settings',
-			href: '/my/settings',
-			icon: Cog
-		},
-		{
-			label: 'Help',
-			href: '/my/help',
-			icon: QuestionMarkCircle
-		},
-		{
-			label: 'Sign Out',
-			href: '/my/signout',
-			icon: ArrowRightOnRectangle
-		}
-	];
 </script>
 
-<svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<TopAndSideBar {breakPoint} {width} {primaryMenu} {secondaryMenu} bottomMenu={BottomSidebarMenu}>
-		<slot />
-	</TopAndSideBar>
+	<UiShell {breakPoint}>
+		<div class="shrink-0">
+			<Navbar>
+				<div slot="start">
+					<Hamburger />
+				</div>
+				<div slot="center">
+					<div>
+						<span
+							>Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span
+							></span
+						>
+						<DidButton />
+					</div>
+				</div>
+				<div class="flex items-center hover:cursor-pointer" slot="end">
+					<AvatarMenu />
+				</div>
+			</Navbar>
+		</div>
+
+		<Sidebar bottomMenu={BottomSidebarMenu} {primaryMenu} {secondaryMenu}>
+			<slot />
+		</Sidebar>
+	</UiShell>
 </div>

@@ -11,11 +11,13 @@
 		SidebarDropdownItem
 	} from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import type { MenuLink } from './TopAndSideBar.svelte';
+	import { getUiShellContext, type MenuLink } from './UiShell.svelte';
 
+	const { drawerHidden, activateClickOutside, backdrop } = getUiShellContext();
+
+	export let primaryMenu: MenuLink[];
+	export let secondaryMenu: MenuLink[];
 	export let logo = '/logo.svg';
-	export let secondaryMenu: MenuLink[] = [];
-	export let primaryMenu: MenuLink[] = [];
 	export let bottomMenu: ConstructorOfATypedSvelteComponent | null | undefined;
 
 	let appTitle = '{{ cookiecutter.project_name }}';
@@ -25,20 +27,16 @@
 		duration: 200,
 		easing: sineIn
 	};
-
-	export let drawerHidden: boolean;
-	export let activateClickOutside = true;
-	export let backdrop: boolean = false;
 </script>
 
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<div class="h-0 grow flex">
 		<Drawer
 			transitionType="fly"
-			{backdrop}
+			backdrop={$backdrop}
 			{transitionParams}
-			bind:hidden={drawerHidden}
-			bind:activateClickOutside
+			bind:hidden={$drawerHidden}
+			activateClickOutside={$activateClickOutside}
 			width="w-64"
 			id="sidebar"
 			divClass="overflow-hidden z-50 p-4 bg-white dark:bg-gray-800 w-fit fixed inset-y-0 left-0"
@@ -47,7 +45,7 @@
 				<NavBrand href="/my">
 					<img src={logo} class="h-9" alt={appTitle} />
 				</NavBrand>
-				<CloseButton on:click={() => (drawerHidden = true)} class="dark:text-white md:hidden" />
+				<CloseButton on:click={() => ($drawerHidden = true)} class="dark:text-white md:hidden" />
 			</div>
 			<Sidebar asideClass="w-54">
 				<SidebarWrapper divClass="overflow-y-auto py-4 px-3 rounded dark:bg-gray-800">
