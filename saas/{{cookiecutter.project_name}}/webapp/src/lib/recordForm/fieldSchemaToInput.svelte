@@ -19,9 +19,9 @@
 	export let hidden = false;
 	export let relationDisplayFields: RelationDisplayFields = [];
 	export let relationInputMode: RelationInputMode = 'search';
+	export let label = fieldSchema.name;
 
 	const field = fieldSchema.name;
-	const label = fieldSchema.name;
 
 	const multiple = isArrayField(fieldSchema);
 
