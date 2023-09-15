@@ -4,6 +4,7 @@ import keypairoomClient from '../../../zenflows-crypto/src/keypairoomClient-8-9-
 import keypairoomClientRecreateKeys from '../../../zenflows-crypto/src/keypairoomClientRecreateKeys.zen?raw';
 import { pb } from '$lib/pocketbase';
 import { browser } from '$app/environment';
+import { features, isFeatureActive } from '$lib/features';
 
 //
 
@@ -76,6 +77,9 @@ export const KEYRING_STORAGE_KEY = 'keyring';
 
 export function saveKeyringToLocalStorage(keyring: Keyring) {
 	localStorage.setItem(KEYRING_STORAGE_KEY, JSON.stringify(keyring));
+}
+export function destroyKeyring() {
+	localStorage.removeItem(KEYRING_STORAGE_KEY);
 }
 
 export function getKeyringFromLocalStorage(): Keyring | null {

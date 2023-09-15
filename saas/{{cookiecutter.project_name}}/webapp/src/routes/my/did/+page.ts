@@ -10,6 +10,7 @@ export const load = async () => {
 	const keyring = getKeyringFromLocalStorage();
 	if (!keyring) throw redirect(303, '/keypairoom/regenerate');
 
-	const { did } = await pb.send<{ did: JSON }>('/api/did', {});
-	return { did };
+	const p = await pb.send<{ did: JSON }>('/api/did', {});
+	console.log(p);
+	return p.did;
 };

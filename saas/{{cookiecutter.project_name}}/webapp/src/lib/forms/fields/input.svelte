@@ -10,6 +10,7 @@
 	export let type: InputType = 'text';
 	export let id = '';
 	export let placeholder = '';
+	export let disabled = false;
 
 	const { superform } = getFormContext();
 	const { value, errors, constraints } = formFieldProxy(superform, field);
@@ -25,5 +26,6 @@
 		bind:value={$value}
 		{...$constraints}
 		{placeholder}
+		{disabled}
 	/>
 </FieldWrapper>

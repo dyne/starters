@@ -14,7 +14,8 @@
 		'reflow_public_key',
 		'bitcoin_public_key'
 	];
-	const hasKeys = keys.map((k) => $currentUser?.[k]).every((k) => Boolean(k));
+	let hasKeys = false;
+	$: hasKeys = keys.map((k) => $currentUser?.[k]).every((k) => Boolean(k));
 </script>
 
 <Heading tag="h6" class="mb-1">Your keys</Heading>
