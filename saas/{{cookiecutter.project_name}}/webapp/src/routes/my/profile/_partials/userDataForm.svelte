@@ -18,7 +18,7 @@
 
 	let error: string | null = null;
 
-	const dispatch = createEventDispatcher<{ success: {} }>();
+	const dispatch = createEventDispatcher<{ success: undefined }>();
 
 	const schema = z.object({
 		name: z.string().min(3).optional(),
