@@ -21,7 +21,6 @@
 
 	const { dataManager, formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
 	const { base, edit } = formFieldsSettings;
-	const { loadRecords } = dataManager;
 
 	const fieldsSettings = {
 		...base,
@@ -34,6 +33,9 @@
 
 	function openModal() {
 		open = true;
+	}
+	function closeModal() {
+		open = false;
 	}
 </script>
 
@@ -51,10 +53,7 @@
 				recordId={record.id}
 				initialData={record}
 				{fieldsSettings}
-				on:success={async () => {
-					await loadRecords();
-					open = false;
-				}}
+				on:success={closeModal}
 			/>
 		</div>
 	</Modal>
