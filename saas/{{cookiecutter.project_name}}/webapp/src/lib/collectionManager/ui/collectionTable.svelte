@@ -69,10 +69,12 @@
 						</TableBodyCell>
 					{/if}
 					{#each fields as field}
-						<TableBodyCell>
-							{@const component = fieldsComponents[field]}
-							<FieldComponent {record} {field} {component} />
-						</TableBodyCell>
+						{#key record}
+							<TableBodyCell>
+								{@const component = fieldsComponents[field]}
+								<FieldComponent {record} {field} {component} />
+							</TableBodyCell>
+						{/key}
 					{/each}
 					{#if hasActions}
 						<TableBodyCell>
