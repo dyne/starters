@@ -26,6 +26,9 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
 
+	/**
+	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
+	 */
 	export let breakPoint: number;
 
 	let width: number;
@@ -73,3 +76,20 @@
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<slot />
 </div>
+
+<!-- 
+	@component 
+	the shell provide the context to build the layout
+	
+	### Components using the shell context:
+	- `sidebar` - the sidebar component
+	- `navbar` - the navbar component
+	- `bottomMenu` - the bottom menu component for the bottom of the sidebar
+	- `hamburger` - the hamburger menu component (should be use in the navbar)
+	- `didButton` - the did button component (if the flag `did` is set to true)
+	- `avatarMenu` - the avatar menu component (should be use in the navbar)
+
+	### Props
+	- `breakPoint` - The window width (px) at which the SideNav is expanded and the hamburger menu is hidden. Default 1024
+
+-->

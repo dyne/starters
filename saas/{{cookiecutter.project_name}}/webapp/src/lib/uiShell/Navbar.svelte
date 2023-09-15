@@ -19,3 +19,13 @@
 		<div />
 	</slot>
 </Navbar>
+
+<!-- 
+	@component 
+
+	### Slots
+	- start - the right side of the navbar
+	- center - the center of the navbar
+	- end - the right side of the navbar
+	
+-->

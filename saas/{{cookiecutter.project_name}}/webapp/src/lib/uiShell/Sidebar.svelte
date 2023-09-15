@@ -15,9 +15,24 @@
 
 	const { drawerHidden, activateClickOutside, backdrop } = getUiShellContext();
 
+	/**
+	 * The primary menu items
+	 * type MenuLink
+	 */
 	export let primaryMenu: MenuLink[];
+	/**
+	 * The secondary menu items
+	 * type MenuLink
+	 */
 	export let secondaryMenu: MenuLink[];
+	/**
+	 * The logo image
+	 */
 	export let logo = '/logo.svg';
+	/**
+	 * The bottom menu items
+	 * type svelte component
+	 */
 	export let bottomMenu: ConstructorOfATypedSvelteComponent | null | undefined;
 
 	let appTitle = '{{ cookiecutter.project_name }}';
@@ -96,3 +111,13 @@
 		</div>
 	</div>
 </div>
+
+<!-- 
+	@component 
+
+	### Props
+	- `primaryMenu` - The primary menu items 
+	- `secondaryMenu` - The secondary menu items 
+	- `logo` - The logo image
+	- `bottomMenu` - The bottom menu items 
+-->
