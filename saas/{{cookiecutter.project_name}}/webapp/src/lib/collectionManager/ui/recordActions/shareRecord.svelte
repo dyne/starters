@@ -84,8 +84,8 @@
 	<Spinner />
 {:then response}
 	<div class="fixed z-50">
-		<Modal bind:open size="xl" title="Share signature">
-			<div class="w-[500px] relative">
+		<Modal bind:open size="md" title="Share signature">
+			<div class="w-full relative">
 				{#if !removeAccess}
 					<RecordForm
 						{recordType}

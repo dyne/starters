@@ -47,8 +47,8 @@
 </slot>
 
 <ModalWrapper>
-	<Modal bind:open title="Create record" size="lg">
-		<div class="w-[500px]">
+	<Modal bind:open title="Create record" size="md">
+		<div class="w-full">
 			<RecordForm
 				{collection}
 				{fieldsSettings}

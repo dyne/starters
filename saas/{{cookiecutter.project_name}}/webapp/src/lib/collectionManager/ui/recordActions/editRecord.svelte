@@ -46,8 +46,8 @@
 </slot>
 
 <ModalWrapper>
-	<Modal bind:open title="Edit record" size="lg">
-		<div class="w-[500px]">
+	<Modal bind:open title="Edit record" size="md">
+		<div class="w-full">
 			<RecordForm
 				collection={record.collectionId}
 				recordId={record.id}
