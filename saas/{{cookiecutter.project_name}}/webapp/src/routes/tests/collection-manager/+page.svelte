@@ -14,6 +14,7 @@
 	import Chip from '$lib/collectionManager/ui/fieldComponents/chip.svelte';
 
 	import { Heading, Hr } from 'flowbite-svelte';
+	import EditRecord from '$lib/collectionManager/ui/recordActions/editRecord.svelte';
 
 	const recordType = createTypeProp<CrudExampleRecord>();
 </script>
@@ -26,7 +27,7 @@
 			hide: { owner: $currentUser?.id }
 		}}
 		editFormSettings={{
-			exclude: ['select', 'text']
+			exclude: ['select']
 		}}
 		let:records
 	>
@@ -39,13 +40,15 @@
 				<Heading tag="h4">Table</Heading>
 
 				<CollectionSearch {recordType} searchableFields={['text', 'textarea']} />
-				<CollectionTable {records} fields={['id', 'text', 'textarea']}>
+				<CollectionTable {records} fields={['id', 'text', 'textarea']} let:record>
 					<svelte:fragment slot="emptyState">
 						<CollectionEmptyState
 							title="Custom empty state"
 							description="Displaying some custom text here!"
 						/>
 					</svelte:fragment>
+
+					<EditRecord {record} formSettings={{ exclude: ['relation_single'] }} />
 				</CollectionTable>
 			</div>
 

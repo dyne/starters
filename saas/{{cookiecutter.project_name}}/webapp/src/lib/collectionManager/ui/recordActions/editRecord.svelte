@@ -2,7 +2,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	import { RecordForm } from '$lib/recordForm';
+	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
@@ -16,6 +16,7 @@
 	recordType;
 
 	export let record: PBResponse<RecordGeneric>;
+	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
 	//
 
@@ -24,7 +25,8 @@
 
 	const fieldsSettings = {
 		...base,
-		...edit
+		...edit,
+		...formSettings
 	};
 
 	//
