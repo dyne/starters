@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Section, SidebarBottomNav, SidebarBottomNavItem } from 'flowbite-svelte-blocks';
+	import { SidebarBottomNav, SidebarBottomNavItem } from 'flowbite-svelte-blocks';
 	import '../../app.postcss';
 	import { page } from '$app/stores';
 
