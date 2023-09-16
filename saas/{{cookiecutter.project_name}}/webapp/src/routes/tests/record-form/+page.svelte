@@ -26,7 +26,12 @@
 				relation_single: { displayFields: ['name'], inputMode: 'search' },
 				owner: { displayFields: ['name', 'username', 'email'], inputMode: 'search' }
 			},
-			hide: { owner: $currentUser?.id }
+			hide: { owner: $currentUser?.id },
+			labels: {
+				text: 'Name',
+				file_only_pdf_json: 'PDF or JSON file',
+				boolean: 'Test check'
+			}
 		}}
 		on:success={invalidateAll}
 	/>

@@ -24,12 +24,14 @@
 	//
 
 	type RecordGeneric = $$Generic<PBRecord>;
+	type Keys<T extends PBRecord> = PBResponseKeys<PBResponse<T>>;
 
 	export let records: PBResponse<RecordGeneric>[] = [];
-	export let fields: PBResponseKeys<PBResponse<RecordGeneric>>[] = ['id'];
+	export let fields: Keys<RecordGeneric>[] = ['id'];
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
-	export let showShare: boolean = false;
+	export let fieldsLabels: Partial<Record<Keys<RecordGeneric>, string>> = {};
 
+	export let showShare: boolean = false;
 	export let showDelete = true;
 	export let showEdit = true;
 	export let showCheckboxes = true;
@@ -54,7 +56,8 @@
 				</TableHeadCell>
 			{/if}
 			{#each fields as field}
-				<RecordsTableHead {field} />
+				{@const label = fieldsLabels[field] ?? field}
+				<RecordsTableHead field={label} />
 			{/each}
 			{#if hasActions}
 				<TableHeadCell>Actions</TableHeadCell>
