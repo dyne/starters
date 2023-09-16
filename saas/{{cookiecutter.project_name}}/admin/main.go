@@ -105,8 +105,8 @@ func main() {
 
 	webauthn.Register(app)
 	hooks.Register(app)
-	jsvm.MustRegisterMigrations(app, &jsvm.MigrationsOptions{})
-	migratecmd.MustRegister(app, app.RootCmd, &migratecmd.Options{
+	jsvm.MustRegister(app, jsvm.Config{})
+	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
 		TemplateLang: migratecmd.TemplateLangJS,
 		Automigrate:  true,
 	})
