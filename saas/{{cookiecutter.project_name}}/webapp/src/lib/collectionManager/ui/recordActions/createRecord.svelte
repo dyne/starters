@@ -4,7 +4,7 @@
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
-	import { RecordForm } from '$lib/recordForm';
+	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 	import { Button, Modal } from 'flowbite-svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Plus } from 'svelte-heros-v2';
@@ -16,6 +16,7 @@
 	recordType;
 
 	export let initialData: Partial<RecordGeneric> = {};
+	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
 	//
 
@@ -27,7 +28,7 @@
 
 	const { collection, dataManager, formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
 	const { base, create } = formFieldsSettings;
-	const fieldsSettings = { ...base, ...create };
+	const fieldsSettings = { ...base, ...create, ...formSettings };
 	const { loadRecords } = dataManager;
 
 	//
@@ -47,8 +48,8 @@
 </slot>
 
 <ModalWrapper>
-	<Modal bind:open title="Create record" size="lg">
-		<div class="w-[500px]">
+	<Modal bind:open title="Create record" size="md">
+		<div class="w-full">
 			<RecordForm
 				{collection}
 				{fieldsSettings}

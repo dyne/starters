@@ -2,7 +2,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	import { RecordForm } from '$lib/recordForm';
+	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
@@ -16,16 +16,17 @@
 	recordType;
 
 	export let record: PBResponse<RecordGeneric>;
+	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
 	//
 
 	const { dataManager, formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
 	const { base, edit } = formFieldsSettings;
-	const { loadRecords } = dataManager;
 
 	const fieldsSettings = {
 		...base,
-		...edit
+		...edit,
+		...formSettings
 	};
 
 	//
@@ -34,6 +35,9 @@
 
 	function openModal() {
 		open = true;
+	}
+	function closeModal() {
+		open = false;
 	}
 </script>
 
@@ -44,17 +48,14 @@
 </slot>
 
 <ModalWrapper>
-	<Modal bind:open title="Edit record" size="lg">
-		<div class="w-[500px]">
+	<Modal bind:open title="Edit record" size="md">
+		<div class="w-full">
 			<RecordForm
 				collection={record.collectionId}
 				recordId={record.id}
 				initialData={record}
 				{fieldsSettings}
-				on:success={async () => {
-					await loadRecords();
-					open = false;
-				}}
+				on:success={closeModal}
 			/>
 		</div>
 	</Modal>

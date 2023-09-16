@@ -21,7 +21,7 @@
 	export let field: string;
 	export let component: FieldComponent | undefined;
 
-	const value = record[field];
+	$: value = record[field];
 </script>
 
 {#if component}
