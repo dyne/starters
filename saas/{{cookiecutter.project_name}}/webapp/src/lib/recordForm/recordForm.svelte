@@ -8,6 +8,7 @@
 	};
 
 	export type FieldsSettings<T> = {
+		labels: { [K in keyof T]?: string };
 		order: Array<keyof T>;
 		exclude: Array<keyof T>;
 		hide: { [K in keyof T]?: T[K] };
@@ -49,7 +50,7 @@
 	export let recordId = '';
 
 	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
-	let { order = [], exclude = [], hide, relations } = fieldsSettings;
+	let { order = [], exclude = [], hide, relations, labels } = fieldsSettings;
 
 	export let submitButtonText = '';
 
@@ -143,7 +144,14 @@
 		{@const relationFieldSettings = relations?.[fieldSchema.name]}
 		{@const relationDisplayFields = relationFieldSettings?.displayFields ?? []}
 		{@const relationInputMode = relationFieldSettings?.inputMode ?? 'search'}
-		<FieldSchemaToInput {fieldSchema} {hidden} {relationDisplayFields} {relationInputMode} />
+		{@const label = labels?.[fieldSchema.name] ?? fieldSchema.name}
+		<FieldSchemaToInput
+			{label}
+			{fieldSchema}
+			{hidden}
+			{relationDisplayFields}
+			{relationInputMode}
+		/>
 	{/each}
 
 	<FormError />
