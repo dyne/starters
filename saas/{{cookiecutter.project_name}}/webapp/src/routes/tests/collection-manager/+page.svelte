@@ -45,7 +45,10 @@
 				<Heading tag="h4">Table</Heading>
 
 				<CollectionSearch {recordType} searchableFields={['text', 'textarea']} />
-				<CollectionTable {records} fields={['id', 'text', 'textarea']} let:record>
+				<CollectionTable {records} 
+                         fields={['id', 'text', 'textarea']}
+                         fieldsLabels={{ id: 'Unique ID', text: 'Title' }}
+                         let:record>
 					<svelte:fragment slot="emptyState">
 						<CollectionEmptyState
 							title="Custom empty state"
