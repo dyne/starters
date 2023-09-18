@@ -15,6 +15,7 @@
 		activateClickOutside: Writable<boolean>;
 		toggleSide: () => void;
 		backdrop: Writable<boolean>;
+		mobile: Writable<boolean>;
 	};
 
 	export function getUiShellContext(): uiShellContext {
@@ -35,25 +36,30 @@
 	let activateClickOutside = writable(false);
 	let drawerHidden: Writable<boolean> = writable(false);
 	let backdrop = writable(false);
+	let mobile = writable(false);
 
 	$: if (width >= breakPoint) {
 		$drawerHidden = false;
 		$activateClickOutside = false;
 		$backdrop = false;
+		$mobile = false
 	} else {
 		$drawerHidden = true;
 		$activateClickOutside = true;
 		$backdrop = true;
+		$mobile = true
 	}
 	onMount(() => {
 		if (width >= breakPoint) {
 			$drawerHidden = false;
 			$activateClickOutside = false;
 			$backdrop = false;
+			$mobile = false
 		} else {
 			$drawerHidden = true;
 			$activateClickOutside = true;
 			$backdrop = true;
+			$mobile = true
 		}
 	});
 	const toggleSide = () => {
@@ -68,7 +74,8 @@
 		breakPoint,
 		activateClickOutside,
 		toggleSide,
-		backdrop
+		backdrop,
+		mobile
 	});
 </script>
 
