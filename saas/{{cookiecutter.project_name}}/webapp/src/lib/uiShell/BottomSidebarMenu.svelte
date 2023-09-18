@@ -3,7 +3,7 @@
 	import SelectCountries from './SelectCountries.svelte';
 </script>
 
-<SidebarBottomNav divClass="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full bg-white dark:bg-gray-800 z-20">
+<SidebarBottomNav divClass="justify-center p-4 space-x-2 w-full bg-white z-20">
 	<SidebarBottomNavItem href="/my/profile" tooltip="Profile">
 		<svg
 			aria-hidden="true"

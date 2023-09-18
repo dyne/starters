@@ -9,14 +9,19 @@
 	import AvatarMenu from '$lib/uiShell/AvatarMenu.svelte';
 	import primaryMenu from './primaryMenu';
 	import secondaryMenu from './secondaryMenu';
+	import Logo from '$lib/uiShell/Logo.svelte';
 
 	let breakPoint: number = 1024;
 </script>
 
-<UiShell {breakPoint}>
+<UiShell {breakPoint} let:mobile>
 	<TopbarNav>
 		<div slot="left">
-			<Hamburger />
+			{#if mobile}
+				<Hamburger />
+			{:else}
+				<Logo />
+			{/if}
 		</div>
 		<div slot="center">
 			<div>
@@ -29,7 +34,6 @@
 			<AvatarMenu />
 		</div>
 	</TopbarNav>
-
 	<SidebarShell bottomMenu={BottomSidebarMenu} {primaryMenu} {secondaryMenu}>
 		<slot />
 	</SidebarShell>

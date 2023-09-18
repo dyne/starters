@@ -42,24 +42,24 @@
 		$drawerHidden = false;
 		$activateClickOutside = false;
 		$backdrop = false;
-		$mobile = false
+		$mobile = false;
 	} else {
 		$drawerHidden = true;
 		$activateClickOutside = true;
 		$backdrop = true;
-		$mobile = true
+		$mobile = true;
 	}
 	onMount(() => {
 		if (width >= breakPoint) {
 			$drawerHidden = false;
 			$activateClickOutside = false;
 			$backdrop = false;
-			$mobile = false
+			$mobile = false;
 		} else {
 			$drawerHidden = true;
 			$activateClickOutside = true;
 			$backdrop = true;
-			$mobile = true
+			$mobile = true;
 		}
 	});
 	const toggleSide = () => {
@@ -81,7 +81,7 @@
 
 <svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<slot />
+	<slot mobile={$mobile}/>
 </div>
 
 <!-- 
