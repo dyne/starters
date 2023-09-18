@@ -41,7 +41,7 @@
 				on:next={(e) => {
 					e.preventDefault();
 					if (Number($currentPage) + 1 > $totalPages) return;
-					goto(`?page={Number($currentPage) + 1}`);
+					goto(`?page=${Number($currentPage) + 1}`);
 				}}
 				on:click={handlePaginationClick}
 			/>
