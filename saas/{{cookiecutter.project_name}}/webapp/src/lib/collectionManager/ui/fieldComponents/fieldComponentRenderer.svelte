@@ -6,11 +6,6 @@
 		value?: unknown;
 		record?: PBResponse<RecordGeneric>;
 	}>;
-
-	export type FieldsComponents<RecordGeneric extends PBRecord = PBRecord> = Record<
-		string,
-		FieldComponent<RecordGeneric>
-	>;
 </script>
 
 <script lang="ts">
