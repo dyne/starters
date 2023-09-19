@@ -7,11 +7,13 @@
 		SidebarItem,
 		SidebarWrapper
 	} from 'flowbite-svelte';
-	import type { MenuLink } from './UiShell.svelte';
+	import { getUiShellContext, type MenuLink } from './UiShell.svelte';
 
 	export let bottomMenu: any;
 	export let primaryMenu: MenuLink[];
 	export let secondaryMenu: MenuLink[];
+
+	const {toggleSide} = getUiShellContext();
 </script>
 
 <Sidebar asideClass="w-54 h-full">
@@ -26,11 +28,11 @@
 									<svelte:component this={entry.icon} />
 								</svelte:fragment>
 								{#each entry.subMenu as subEntry}
-									<SidebarDropdownItem label={subEntry.label} href={subEntry.href} />
+									<SidebarDropdownItem label={subEntry.label} href={subEntry.href} on:click={()=>toggleSide()}/>
 								{/each}
 							</SidebarDropdownWrapper>
 						{:else}
-							<SidebarItem label={entry.label} href={entry.href}>
+							<SidebarItem label={entry.label} href={entry.href} on:click={()=>toggleSide()}>
 								<svelte:fragment slot="icon">
 									<svelte:component this={entry.icon} />
 								</svelte:fragment>
