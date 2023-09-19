@@ -14,6 +14,7 @@
 	import Chip from '$lib/collectionManager/ui/fieldComponents/chip.svelte';
 
 	import { Heading, Hr } from 'flowbite-svelte';
+	import Pagination from '$lib/collectionManager/ui/pagination.svelte';
 	import EditRecord from '$lib/collectionManager/ui/recordActions/editRecord.svelte';
 
 	const recordType = createTypeProp<CrudExampleRecord>();
@@ -61,6 +62,7 @@
 						<EditRecord {record} formSettings={{ exclude: ['relation_single'] }} />
 					</svelte:fragment>
 				</CollectionTable>
+				<Pagination />
 			</div>
 
 			<Hr />
@@ -75,6 +77,7 @@
 							<RecordCard {record} titleField="id" fieldsComponents={{ select: Chip }} />
 						{/each}
 					</div>
+					<Pagination />
 				{/if}
 			</div>
 		</div>
