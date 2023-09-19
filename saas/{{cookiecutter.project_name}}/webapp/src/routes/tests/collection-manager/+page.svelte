@@ -45,18 +45,21 @@
 				<Heading tag="h4">Table</Heading>
 
 				<CollectionSearch {recordType} searchableFields={['text', 'textarea']} />
-				<CollectionTable {records} 
-                         fields={['id', 'text', 'textarea']}
-                         fieldsLabels={{ id: 'Unique ID', text: 'Title' }}
-                         let:record>
+				<CollectionTable
+					{records}
+					fields={['id', 'text', 'textarea']}
+					fieldsLabels={{ id: 'Unique ID', text: 'Title' }}
+					hideActions={['edit', 'delete']}
+				>
 					<svelte:fragment slot="emptyState">
 						<CollectionEmptyState
 							title="Custom empty state"
 							description="Displaying some custom text here!"
 						/>
 					</svelte:fragment>
-
-					<EditRecord {record} formSettings={{ exclude: ['relation_single'] }} />
+					<svelte:fragment slot="actions" let:record>
+						<EditRecord {record} formSettings={{ exclude: ['relation_single'] }} />
+					</svelte:fragment>
 				</CollectionTable>
 			</div>
 
@@ -69,14 +72,7 @@
 				{:else}
 					<div class="grid grid-cols-4 gap-4">
 						{#each records as record}
-							<RecordCard
-								{record}
-								titleField="id"
-								fieldsComponents={{ select: Chip }}
-								showEdit
-								showCheckbox
-								showDelete
-							/>
+							<RecordCard {record} titleField="id" fieldsComponents={{ select: Chip }} />
 						{/each}
 					</div>
 				{/if}
