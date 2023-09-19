@@ -36,7 +36,6 @@
 	const superform = createForm(
 		schema,
 		async ({ form }) => {
-			console.log(form.data);
 			const formData = createFormData(form.data);
 			$currentUser = await pb.collection('users').update($currentUser!.id, formData);
 			dispatch('success');
