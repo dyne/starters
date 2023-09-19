@@ -14,7 +14,7 @@
 	 * The secondary menu items
 	 * type MenuLink
 	 */
-	export let secondaryMenu: MenuLink[];
+	export let secondaryMenu: MenuLink[] | undefined = undefined
 	/**
 	 * The bottom menu items
 	 * type svelte component

@@ -11,7 +11,7 @@
 
 	export let bottomMenu: any;
 	export let primaryMenu: MenuLink[];
-	export let secondaryMenu: MenuLink[];
+	export let secondaryMenu: MenuLink[] | undefined = undefined;
 
 	const {toggleSide} = getUiShellContext();
 </script>
@@ -41,6 +41,7 @@
 					{/each}
 				</SidebarGroup>
 				<SidebarGroup border>
+					{#if secondaryMenu}
 					{#each secondaryMenu as entry}
 						<SidebarItem label={entry.label} href={entry.href}>
 							<svelte:fragment slot="icon">
@@ -48,6 +49,7 @@
 							</svelte:fragment>
 						</SidebarItem>
 					{/each}
+					{/if}
 				</SidebarGroup>
 			</div>
 			<SidebarGroup class="pb-4 w-full">
