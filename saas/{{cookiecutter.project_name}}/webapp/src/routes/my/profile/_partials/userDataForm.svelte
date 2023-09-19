@@ -7,7 +7,7 @@
 		SubmitButton,
 		Input,
 		Checkbox,
-		File
+		File as FileInput
 	} from '$lib/forms';
 
 	import { currentUser, pb } from '$lib/pocketbase';
@@ -54,7 +54,7 @@
 		</Checkbox>
 	</div>
 
-	<File field="avatar" />
+	<FileInput field="avatar" />
 
 	<FormError />
 
