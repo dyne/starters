@@ -7,7 +7,7 @@
 		SubmitButton,
 		Input,
 		Checkbox,
-		File
+		File as FileInput
 	} from '$lib/forms';
 
 	import { currentUser, pb } from '$lib/pocketbase';
@@ -36,6 +36,7 @@
 	const superform = createForm(
 		schema,
 		async ({ form }) => {
+			console.log(form.data);
 			const formData = createFormData(form.data);
 			$currentUser = await pb.collection('users').update($currentUser!.id, formData);
 			dispatch('success');
@@ -54,7 +55,7 @@
 		</Checkbox>
 	</div>
 
-	<File field="avatar" />
+	<FileInput field="avatar" />
 
 	<FormError />
 
