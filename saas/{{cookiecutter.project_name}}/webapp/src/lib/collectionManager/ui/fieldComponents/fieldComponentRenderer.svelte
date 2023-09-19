@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	import type { SvelteComponentTyped } from 'svelte';
+	import type { SvelteComponent } from 'svelte';
 
-	export type FieldComponent<RecordGeneric extends PBRecord = PBRecord> =
-		typeof SvelteComponentTyped<{
-			value?: unknown;
-			record?: PBResponse<RecordGeneric>;
-		}>;
+	export type FieldComponent<RecordGeneric extends PBRecord = PBRecord> = typeof SvelteComponent<{
+		value?: unknown;
+		record?: PBResponse<RecordGeneric>;
+	}>;
 
 	export type FieldsComponents<RecordGeneric extends PBRecord = PBRecord> = Record<
 		string,
