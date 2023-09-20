@@ -68,7 +68,7 @@ type ArrayRefiner = (schema: ZodArrayAny, options: FieldOptions) => ZodArrayAny;
 
 const arrayRefiners: Record<string, ArrayRefiner> = {
 	maxSelect: (s, o) => s.max(o.maxSelect as number),
-	minSelect: (s, o) => s.max(o.maxSelect as number)
+	minSelect: (s, o) => s.min(o.maxSelect as number)
 };
 
 //
