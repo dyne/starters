@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getUiShellContext, type MenuLink } from './UiShell.svelte';
 	import Drawer from './Drawer.svelte';
+	import Test from './test.svelte';
 	import SidebarNav from './SidebarNav.svelte';
 
 	const { mobile } = getUiShellContext();
@@ -14,7 +15,7 @@
 	 * The secondary menu items
 	 * type MenuLink
 	 */
-	export let secondaryMenu: MenuLink[] | undefined = undefined
+	export let secondaryMenu: MenuLink[] | undefined = undefined;
 	/**
 	 * The bottom menu items
 	 * type svelte component
@@ -24,26 +25,13 @@
 	 *If true the sidebar will be in a drawer in mobile mode
 	 */
 	export let responsive = true;
+
+	$: comp = $mobile && responsive ? Drawer : Test;
 </script>
 
-<div class="h-0 grow flex">
-	<div class={$mobile ? 'pr-0 border-r-2' : 'pr-8 border-r-2'}>
-		{#if $mobile && responsive}
-			<Drawer>
-				<SidebarNav {primaryMenu} {secondaryMenu} {bottomMenu} />
-			</Drawer>
-		{:else}
-			<SidebarNav {primaryMenu} {secondaryMenu} {bottomMenu} />
-		{/if}
-	</div>
-	<div
-		class="p-1 lg:p-4 pt-8 lg:pt-16 bg-slate-100 grow bg-[url('/bg.png')] bg-cover min-h-screen overflow-auto"
-	>
-		<main class="rounded-lg bg-white flex flex-col shadow-md p-2 lg:p-8 pb-16 w-full">
-			<slot />
-		</main>
-	</div>
-</div>
+<svelte:component this={comp}>
+	<SidebarNav {primaryMenu} {secondaryMenu} {bottomMenu} />
+</svelte:component>
 
 <!-- 
 	@component 
