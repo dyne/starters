@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { currentUser } from '$lib/pocketbase';
+	import { goto } from '$app/navigation';
+
 	import {
 		UIShell,
 		Sidebar,
@@ -6,16 +9,15 @@
 		HamburgerButton,
 		AvatarMenu,
 		Logo,
-		SidebarLinks
+		SidebarLinks,
+		MainContent,
+		SidebarCloseButton
 	} from '$lib/layout';
-	import { currentUser } from '$lib/pocketbase';
-	import { links } from './sidebarLinks';
 	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
-	import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
-	import { goto } from '$app/navigation';
-	import { Fire } from 'svelte-heros-v2';
-	import MainContent from '$lib/layout/MainContent.svelte';
 	import DIDButton from '$lib/components/DIDButton.svelte';
+	import { Fire } from 'svelte-heros-v2';
+
+	import { links } from './sidebarLinks';
 
 	let sidebarLayoutBreakpoint = 1024;
 </script>
