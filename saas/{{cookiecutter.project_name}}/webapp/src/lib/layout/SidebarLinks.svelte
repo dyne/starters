@@ -22,10 +22,16 @@
 		SidebarItem,
 		SidebarWrapper
 	} from 'flowbite-svelte';
+	import { getUiShellContext } from './UiShell.svelte';
 
 	export let links: SidebarLink[];
 
-	const toggleSidebar = () => {};
+	const { toggleSidebar, useDrawerLayout } = getUiShellContext();
+	const toggleSidebarHandler = () => {
+		if ($useDrawerLayout) {
+			toggleSidebar()
+		}
+	}
 </script>
 
 <SidebarWrapper>
@@ -40,12 +46,12 @@
 						<SidebarDropdownItem
 							label={subEntry.label}
 							href={subEntry.href}
-							on:click={() => toggleSidebar()}
+							on:click={() => toggleSidebarHandler()}
 						/>
 					{/each}
 				</SidebarDropdownWrapper>
 			{:else}
-				<SidebarItem label={entry.label} href={entry.href} on:click={() => toggleSidebar()}>
+				<SidebarItem label={entry.label} href={entry.href} on:click={() => toggleSidebarHandler()}>
 					<svelte:fragment slot="icon">
 						<svelte:component this={entry.icon} />
 					</svelte:fragment>
