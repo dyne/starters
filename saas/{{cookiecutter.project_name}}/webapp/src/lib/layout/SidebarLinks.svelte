@@ -26,9 +26,9 @@
 
 	export let links: SidebarLink[];
 
-	const { toggleSidebar, useDrawerLayout } = getUIShellContext();
+	const { toggleSidebar, sidebarLayoutMode } = getUIShellContext();
 	const toggleSidebarHandler = () => {
-		if ($useDrawerLayout) {
+		if ($sidebarLayoutMode == 'drawer') {
 			toggleSidebar();
 		}
 	};

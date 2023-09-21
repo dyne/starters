@@ -21,11 +21,11 @@
 </script>
 
 <UIShell {sidebarLayoutBreakpoint}>
-	<Topbar slot="top" let:useDrawerLayout>
+	<Topbar slot="top" let:sidebarLayoutMode>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
 				<Hamburger />
-				{#if !useDrawerLayout}
+				{#if sidebarLayoutMode == 'default'}
 					<Logo />
 				{/if}
 			</div>
