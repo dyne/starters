@@ -3,7 +3,7 @@
 		UIShell,
 		Sidebar,
 		Topbar,
-		Hamburger,
+		HamburgerButton,
 		DidButton,
 		AvatarMenu,
 		Logo,
@@ -24,7 +24,7 @@
 	<Topbar slot="top" let:sidebarLayoutMode>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
-				<Hamburger />
+				<HamburgerButton />
 				{#if sidebarLayoutMode == 'default'}
 					<Logo />
 				{/if}
