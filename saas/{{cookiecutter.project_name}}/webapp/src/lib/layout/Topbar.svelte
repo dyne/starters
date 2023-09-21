@@ -2,7 +2,7 @@
 	import { Navbar } from 'flowbite-svelte';
 </script>
 
-<div class="shrink-0 border-b-2">
+<div class="shrink-0 border-b">
 	<Navbar fluid classNavDiv="!flex-nowrap !space-x-4 items-center !p-2 !md:p-4" class="!p-0">
 		<div class="shrink-0 items-center justify-start">
 			<slot name="left" />
