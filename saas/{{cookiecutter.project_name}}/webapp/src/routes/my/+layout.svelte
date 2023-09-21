@@ -4,7 +4,6 @@
 		Sidebar,
 		Topbar,
 		HamburgerButton,
-		DidButton,
 		AvatarMenu,
 		Logo,
 		SidebarLinks
@@ -16,6 +15,7 @@
 	import { goto } from '$app/navigation';
 	import { Fire } from 'svelte-heros-v2';
 	import MainContent from '$lib/layout/MainContent.svelte';
+	import DIDButton from '$lib/components/DIDButton.svelte';
 
 	let sidebarLayoutBreakpoint = 1024;
 </script>
@@ -38,7 +38,7 @@
 					</span>
 				</div>
 				<div class="shrink-0">
-					<DidButton />
+					<DIDButton />
 				</div>
 			</div>
 		</svelte:fragment>
