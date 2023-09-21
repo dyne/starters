@@ -52,7 +52,7 @@
 		$drawerHidden = !$drawerHidden;
 	};
 
-	setContext(UI_SHELL_KEY, {
+	setContext<UIShellContext>(UI_SHELL_KEY, {
 		drawerHidden,
 		toggleSidebar,
 		sidebarLayoutMode
