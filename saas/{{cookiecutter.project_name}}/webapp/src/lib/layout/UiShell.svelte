@@ -6,7 +6,7 @@
 	export const UI_SHELL_KEY = Symbol('usk');
 
 	export type UIShellContext = {
-		drawerHidden: Writable<boolean>;
+		isSidebarHidden: Writable<boolean>;
 		toggleSidebar: () => void;
 		sidebarLayoutMode: Writable<SidebarLayoutMode>;
 	};
@@ -27,33 +27,33 @@
 
 	let width: number;
 
-	let drawerHidden: Writable<boolean> = writable(false);
+	const isSidebarHidden = writable(false);
 	const sidebarLayoutMode = writable<SidebarLayoutMode>('default');
 
 	$: if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
-		$drawerHidden = true;
+		$isSidebarHidden = false;
 		$sidebarLayoutMode = 'default';
 	} else {
-		$drawerHidden = true;
+		$isSidebarHidden = true;
 		$sidebarLayoutMode = 'drawer';
 	}
 
 	onMount(() => {
 		if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
-			$drawerHidden = true;
+			$isSidebarHidden = false;
 			$sidebarLayoutMode = 'default';
 		} else {
-			$drawerHidden = true;
+			$isSidebarHidden = true;
 			$sidebarLayoutMode = 'drawer';
 		}
 	});
 
 	const toggleSidebar = () => {
-		$drawerHidden = !$drawerHidden;
+		$isSidebarHidden = !$isSidebarHidden;
 	};
 
 	setContext<UIShellContext>(UI_SHELL_KEY, {
-		drawerHidden,
+		isSidebarHidden,
 		toggleSidebar,
 		sidebarLayoutMode
 	});

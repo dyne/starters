@@ -2,7 +2,7 @@
 	import { CloseButton } from 'flowbite-svelte';
 	import { getUIShellContext } from './UIShell.svelte';
 
-	const { drawerHidden } = getUIShellContext();
+	const { isSidebarHidden } = getUIShellContext();
 </script>
 
-<CloseButton on:click={() => ($drawerHidden = true)} />
+<CloseButton on:click={() => ($isSidebarHidden = true)} />
