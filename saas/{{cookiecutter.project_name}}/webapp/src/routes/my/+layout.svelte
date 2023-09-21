@@ -23,13 +23,10 @@
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
 				<Hamburger />
-				<Logo />
+				{#if !mobile}
+					<Logo />
+				{/if}
 			</div>
-			<!-- {#if mobile}
-				<Hamburger />
-			{:else}
-				<Logo />
-			{/if} -->
 		</svelte:fragment>
 		<svelte:fragment slot="center">
 			<div>
