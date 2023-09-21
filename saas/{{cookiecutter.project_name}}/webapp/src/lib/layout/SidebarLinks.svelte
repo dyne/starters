@@ -34,7 +34,7 @@
 	};
 </script>
 
-<SidebarWrapper>
+<div class="p-3">
 	<SidebarGroup>
 		{#each links as entry}
 			{#if entry.subLinks}
@@ -59,4 +59,4 @@
 			{/if}
 		{/each}
 	</SidebarGroup>
-</SidebarWrapper>
+</div>

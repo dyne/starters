@@ -16,7 +16,7 @@
 </script>
 
 <svelte:component this={comp} {width}>
-	<Sidebar class="flex flex-col grow" asideClass={width}>
+	<Sidebar class="flex flex-col grow bg-white border-r" asideClass={width}>
 		<div class="flex flex-col overflow-hidden grow">
 			{#if $sidebarLayoutMode == 'drawer'}
 				<div class="shrink-0">
