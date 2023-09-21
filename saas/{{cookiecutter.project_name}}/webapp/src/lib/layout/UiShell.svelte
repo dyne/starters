@@ -25,12 +25,12 @@
 	 */
 	export let sidebarLayoutBreakpoint: number | undefined = undefined;
 
-	let width: number;
+	let windowWidth: number;
 
 	const isSidebarHidden = writable(false);
 	const sidebarLayoutMode = writable<SidebarLayoutMode>('default');
 
-	$: if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
+	$: if (sidebarLayoutBreakpoint && windowWidth >= sidebarLayoutBreakpoint) {
 		$isSidebarHidden = false;
 		$sidebarLayoutMode = 'default';
 	} else {
@@ -39,7 +39,7 @@
 	}
 
 	onMount(() => {
-		if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
+		if (sidebarLayoutBreakpoint && windowWidth >= sidebarLayoutBreakpoint) {
 			$isSidebarHidden = false;
 			$sidebarLayoutMode = 'default';
 		} else {
@@ -59,7 +59,7 @@
 	});
 </script>
 
-<svelte:window bind:innerWidth={width} />
+<svelte:window bind:innerWidth={windowWidth} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<div class="shrink-0">
 		<slot name="top" sidebarLayoutMode={$sidebarLayoutMode} />
