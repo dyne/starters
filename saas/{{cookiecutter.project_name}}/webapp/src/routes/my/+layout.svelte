@@ -17,10 +17,10 @@
 	import { Fire } from 'svelte-heros-v2';
 	import MainContent from '$lib/layout/MainContent.svelte';
 
-	let sidebarWidthThreshold: number = 1024;
+	let sidebarLayoutBreakpoint = 1024;
 </script>
 
-<UIShell {sidebarWidthThreshold}>
+<UIShell {sidebarLayoutBreakpoint}>
 	<Topbar slot="top" let:useDrawerLayout>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">

@@ -6,7 +6,6 @@
 
 	export type UIShellContext = {
 		drawerHidden: Writable<boolean>;
-		breakPoint: number;
 		toggleSidebar: () => void;
 		useDrawerLayout: Writable<boolean>;
 	};
@@ -23,13 +22,13 @@
 	/**
 	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
 	 */
-	export let sidebarWidthThreshold: number | undefined = undefined;
+	export let sidebarLayoutBreakpoint: number | undefined = undefined;
 
 	let width: number;
 	let drawerHidden: Writable<boolean> = writable(false);
 	let useDrawerLayout = writable(false);
 
-	$: if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
+	$: if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
 		$drawerHidden = true;
 		$useDrawerLayout = false;
 	} else {
@@ -37,7 +36,7 @@
 		$useDrawerLayout = true;
 	}
 	onMount(() => {
-		if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
+		if (sidebarLayoutBreakpoint && width >= sidebarLayoutBreakpoint) {
 			$drawerHidden = true;
 			$useDrawerLayout = false;
 		} else {
@@ -51,7 +50,6 @@
 
 	setContext(UI_SHELL_KEY, {
 		drawerHidden,
-		sidebarWidthThreshold,
 		toggleSidebar,
 		useDrawerLayout
 	});
