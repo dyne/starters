@@ -27,7 +27,7 @@
 	const isSidebarHidden = writable(false);
 	const sidebarLayoutMode = writable<SidebarLayoutMode>('default');
 
-	$: if (sidebarLayoutBreakpoint && windowWidth >= sidebarLayoutBreakpoint) {
+	$: if (sidebarLayoutBreakpoint && windowWidth && windowWidth >= sidebarLayoutBreakpoint) {
 		$isSidebarHidden = false;
 		$sidebarLayoutMode = 'default';
 	} else {
