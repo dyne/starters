@@ -17,12 +17,9 @@
 </script>
 
 <script lang="ts">
-	import { onMount, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 
-	/**
-	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
-	 */
 	export let sidebarLayoutBreakpoint: number | undefined = undefined;
 
 	let windowWidth: number;
@@ -38,16 +35,6 @@
 		$sidebarLayoutMode = 'drawer';
 	}
 
-	onMount(() => {
-		if (sidebarLayoutBreakpoint && windowWidth >= sidebarLayoutBreakpoint) {
-			$isSidebarHidden = false;
-			$sidebarLayoutMode = 'default';
-		} else {
-			$isSidebarHidden = true;
-			$sidebarLayoutMode = 'drawer';
-		}
-	});
-
 	const toggleSidebar = () => {
 		$isSidebarHidden = !$isSidebarHidden;
 	};
@@ -60,6 +47,7 @@
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} />
+
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<div class="shrink-0">
 		<slot name="top" sidebarLayoutMode={$sidebarLayoutMode} />
