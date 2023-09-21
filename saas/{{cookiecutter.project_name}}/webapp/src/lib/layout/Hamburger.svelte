@@ -1,9 +1,9 @@
 <script>
 	import { Button } from 'flowbite-svelte';
-	import { getUiShellContext } from './UIShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
 	import { Bars3 } from 'svelte-heros-v2';
 
-	const { toggleSidebar } = getUiShellContext();
+	const { toggleSidebar } = getUIShellContext();
 </script>
 
 <Button color="alternative" class="!p-1.5" on:click={toggleSidebar}>

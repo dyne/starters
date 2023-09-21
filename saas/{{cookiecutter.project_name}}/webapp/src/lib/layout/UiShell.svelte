@@ -1,26 +1,29 @@
 <script context="module" lang="ts">
+	import type { Writable } from 'svelte/store';
+	import { getContext } from 'svelte';
+
 	export const UI_SHELL_KEY = Symbol('usk');
 
-	export type uiShellContext = {
+	export type UIShellContext = {
 		drawerHidden: Writable<boolean>;
 		breakPoint: number;
 		toggleSidebar: () => void;
 		useDrawerLayout: Writable<boolean>;
 	};
 
-	export function getUiShellContext(): uiShellContext {
+	export function getUIShellContext(): UIShellContext {
 		return getContext(UI_SHELL_KEY);
 	}
 </script>
 
 <script lang="ts">
-	import { getContext, onMount, setContext } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
+	import { onMount, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 
 	/**
 	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
 	 */
-	export let sidebarWidthThreshold: number | undefined = undefined
+	export let sidebarWidthThreshold: number | undefined = undefined;
 
 	let width: number;
 	let drawerHidden: Writable<boolean> = writable(false);

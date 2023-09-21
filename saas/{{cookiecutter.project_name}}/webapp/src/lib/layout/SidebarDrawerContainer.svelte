@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Drawer } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import { getUiShellContext } from './UIShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
 
-	const { drawerHidden } = getUiShellContext();
+	const { drawerHidden } = getUIShellContext();
 
 	export let placement: 'left' | 'right' = 'left';
 	export let width = 'w-40';

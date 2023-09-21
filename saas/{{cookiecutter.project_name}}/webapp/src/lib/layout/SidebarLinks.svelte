@@ -22,11 +22,11 @@
 		SidebarItem,
 		SidebarWrapper
 	} from 'flowbite-svelte';
-	import { getUiShellContext } from './UIShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
 
 	export let links: SidebarLink[];
 
-	const { toggleSidebar, useDrawerLayout } = getUiShellContext();
+	const { toggleSidebar, useDrawerLayout } = getUIShellContext();
 	const toggleSidebarHandler = () => {
 		if ($useDrawerLayout) {
 			toggleSidebar();

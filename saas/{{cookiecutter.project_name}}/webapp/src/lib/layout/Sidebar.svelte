@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getUiShellContext } from './UIShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
 	import SidebarDefaultContainer from './SidebarDefaultContainer.svelte';
 	import SidebarDrawerContainer from './SidebarDrawerContainer.svelte';
 	import { Sidebar } from 'flowbite-svelte';
 
-	const { useDrawerLayout } = getUiShellContext();
+	const { useDrawerLayout } = getUIShellContext();
 
 	export let width = 'w-60';
 

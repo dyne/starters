@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getUiShellContext } from './UIShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
 	import { slide } from 'svelte/transition';
 
 	export let width = 'w-40';
 
-	const { drawerHidden } = getUiShellContext();
+	const { drawerHidden } = getUIShellContext();
 </script>
 
 {#if $drawerHidden}
