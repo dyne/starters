@@ -21,11 +21,15 @@
 <UiShell {breakPoint}>
 	<Topbar slot="top" let:mobile>
 		<svelte:fragment slot="left">
-			{#if mobile}
+			<div class="flex space-x-2">
+				<Hamburger />
+				<Logo />
+			</div>
+			<!-- {#if mobile}
 				<Hamburger />
 			{:else}
 				<Logo />
-			{/if}
+			{/if} -->
 		</svelte:fragment>
 		<svelte:fragment slot="center">
 			<div>

@@ -55,9 +55,9 @@
 		}
 	});
 	const toggleSide = () => {
-		if (width < breakPoint) {
-			$drawerHidden = !$drawerHidden;
-		}
+		// if (width < breakPoint) {
+		$drawerHidden = !$drawerHidden;
+		// }
 	};
 
 	setContext(UI_SHELL_KEY, {

@@ -4,13 +4,13 @@
 
 <div class="shrink-0 border-b-2">
 	<Navbar fluid classNavDiv="!flex-nowrap">
-		<div>
+		<div class="flex">
 			<slot name="left" />
 		</div>
-		<div>
+		<div class="flex">
 			<slot name="center" />
 		</div>
-		<div>
+		<div class="flex">
 			<slot name="right" />
 		</div>
 	</Navbar>
