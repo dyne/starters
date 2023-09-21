@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { CloseButton, Drawer } from 'flowbite-svelte';
+	import { Drawer } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
 	import { getUiShellContext } from './UiShell.svelte';
-	import Logo from './Logo.svelte';
 
 	const { drawerHidden, activateClickOutside, backdrop } = getUiShellContext();
 
 	export let placement: 'left' | 'right' = 'left';
+	export let width = 'w-40';
 
 	let transitionParams = {
 		x: placement == 'right' ? 320 : -320,
@@ -22,11 +22,8 @@
 	bind:hidden={$drawerHidden}
 	activateClickOutside={$activateClickOutside}
 	{placement}
-	width="w-64"
+	class={`flex flex-col !p-0`}
+	{width}
 >
-	<div class="flex items-center mb-2 px-3">
-		<Logo />
-		<CloseButton on:click={() => ($drawerHidden = true)} class="dark:text-white md:hidden" />
-	</div>
 	<slot />
 </Drawer>

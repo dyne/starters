@@ -1,47 +1,71 @@
 <script lang="ts">
-	import UiShell from '$lib/uiShell/UiShell.svelte';
-	import BottomSidebarMenu from '$lib/uiShell/BottomSidebarMenu.svelte';
-	import SidebarShell from '$lib/uiShell/SidebarShell.svelte';
-	import TopbarNav from '$lib/uiShell/TopbarNav.svelte';
-	import Hamburger from '$lib/uiShell/Hamburger.svelte';
+	import UiShell from '$lib/layout/UiShell.svelte';
+	import Sidebar from '$lib/layout/Sidebar.svelte';
+	import Topbar from '$lib/layout/Topbar.svelte';
+	import Hamburger from '$lib/layout/Hamburger.svelte';
 	import { currentUser } from '$lib/pocketbase';
-	import DidButton from '$lib/uiShell/DidButton.svelte';
-	import AvatarMenu from '$lib/uiShell/AvatarMenu.svelte';
-	import primaryMenu from './primaryMenu';
-	import secondaryMenu from './secondaryMenu';
-	import Logo from '$lib/uiShell/Logo.svelte';
+	import DidButton from '$lib/layout/DidButton.svelte';
+	import AvatarMenu from '$lib/layout/AvatarMenu.svelte';
+	import { links } from './sidebarLinks';
+	import Logo from '$lib/layout/Logo.svelte';
+	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
+	import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
+	import SidebarLinks from '$lib/layout/SidebarLinks.svelte';
+	import { goto } from '$app/navigation';
+	import { Fire } from 'svelte-heros-v2';
+	import MainContent from '$lib/layout/MainContent.svelte';
 
 	let breakPoint: number = 1024;
 </script>
 
-<UiShell {breakPoint} let:mobile>
-	<TopbarNav>
-		<div slot="left">
+<UiShell {breakPoint}>
+	<Topbar slot="top" let:mobile>
+		<svelte:fragment slot="left">
 			{#if mobile}
 				<Hamburger />
 			{:else}
 				<Logo />
 			{/if}
-		</div>
-		<div slot="center">
+		</svelte:fragment>
+		<svelte:fragment slot="center">
 			<div>
 				<span>Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span></span
 				>
 				<DidButton />
 			</div>
-		</div>
-		<div class="flex items-center hover:cursor-pointer" slot="right">
-			<AvatarMenu />
-		</div>
-	</TopbarNav>
-	<div class="h-0 grow flex">
-		<SidebarShell bottomMenu={BottomSidebarMenu} {primaryMenu} {secondaryMenu} />
-		<div
-			class="p-1 lg:p-4 pt-8 lg:pt-16 bg-slate-100 grow bg-[url('/bg.png')] bg-cover min-h-screen overflow-auto"
-		>
-			<main class="rounded-lg bg-white flex flex-col shadow-md p-2 lg:p-8 pb-16 w-full">
-				<slot />
-			</main>
-		</div>
-	</div>
+		</svelte:fragment>
+		<svelte:fragment slot="right">
+			<AvatarMenu>
+				<DropdownHeader>
+					<span class="block truncate text-xs font-medium text-gray-500">
+						{$currentUser?.email}
+					</span>
+				</DropdownHeader>
+				<DropdownItem href="/my/profile">My profile</DropdownItem>
+				<DropdownDivider />
+				<DropdownItem href="/pro" class="flex items-center">
+					<Fire class="text-red-500 mr-2 w-5" /> Go Pro</DropdownItem
+				>
+				<DropdownDivider />
+				<DropdownItem on:click={() => goto('/my/logout')} class="text-primary-600">
+					Sign out
+				</DropdownItem>
+			</AvatarMenu>
+		</svelte:fragment>
+	</Topbar>
+
+	<Sidebar>
+		<svelte:fragment slot="top">
+			<div class="flex items-center mb-2 px-3">
+				<Logo />
+				<SidebarCloseButton />
+			</div>
+		</svelte:fragment>
+		<SidebarLinks {links} />
+		<svelte:fragment slot="bottom">bottom</svelte:fragment>
+	</Sidebar>
+
+	<MainContent>
+		<slot />
+	</MainContent>
 </UiShell>

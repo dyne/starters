@@ -1,16 +1,8 @@
 <script context="module" lang="ts">
-	export interface MenuLink {
-		label: string;
-		href?: string;
-		icon?: ConstructorOfATypedSvelteComponent | null | undefined;
-		subMenu?: MenuLink[];
-	}
-
 	export const UI_SHELL_KEY = Symbol('usk');
 
 	export type uiShellContext = {
 		drawerHidden: Writable<boolean>;
-		topMenu: MenuLink[];
 		breakPoint: number;
 		activateClickOutside: Writable<boolean>;
 		toggleSide: () => void;
@@ -70,7 +62,6 @@
 
 	setContext(UI_SHELL_KEY, {
 		drawerHidden,
-		topMenu: [],
 		breakPoint,
 		activateClickOutside,
 		toggleSide,
@@ -81,7 +72,12 @@
 
 <svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
-	<slot mobile={$mobile}/>
+	<div class="shrink-0">
+		<slot name="top" mobile={$mobile} />
+	</div>
+	<div class="h-0 grow flex items-stretch">
+		<slot mobile={$mobile} />
+	</div>
 </div>
 
 <!-- 

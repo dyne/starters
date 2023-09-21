@@ -14,14 +14,5 @@
 	triggeredBy="#avatar-menu"
 	footerClass="w-full min-h-screen md:w-fit md:min-h-fit"
 >
-	<DropdownHeader>
-		<span class="block truncate text-sm font-medium">{$currentUser?.email}</span>
-	</DropdownHeader>
-	<DropdownItem href="/my/profile">My profile</DropdownItem>
-	<DropdownDivider />
-	<DropdownItem href="/pro" class="flex items-center"
-		><Fire class="text-red-500 mr-2 w-5" /> Go Pro</DropdownItem
-	>
-	<DropdownDivider />
-	<DropdownItem on:click={() => goto('/my/logout')} class="text-primary-600">Sign out</DropdownItem>
+	<slot />
 </Dropdown>

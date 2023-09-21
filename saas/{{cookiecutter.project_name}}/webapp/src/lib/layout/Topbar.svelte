@@ -3,16 +3,16 @@
 </script>
 
 <div class="shrink-0 border-b-2">
-	<Navbar fluid={true}>
-		<slot name="left">
-			<div />
-		</slot>
-		<slot name="center">
-			<div />
-		</slot>
-		<slot name="right">
-			<div />
-		</slot>
+	<Navbar fluid classNavDiv="!flex-nowrap">
+		<div>
+			<slot name="left" />
+		</div>
+		<div>
+			<slot name="center" />
+		</div>
+		<div>
+			<slot name="right" />
+		</div>
 	</Navbar>
 </div>
 
