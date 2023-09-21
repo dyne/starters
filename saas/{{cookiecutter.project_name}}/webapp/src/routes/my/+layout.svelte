@@ -1,29 +1,22 @@
 <script lang="ts">
-	import UiShell from '$lib/layout/UiShell.svelte';
-	import Sidebar from '$lib/layout/Sidebar.svelte';
-	import Topbar from '$lib/layout/Topbar.svelte';
-	import Hamburger from '$lib/layout/Hamburger.svelte';
+	import {UiShell, Sidebar, Topbar, Hamburger, DidButton, AvatarMenu, Logo, SidebarLinks} from '$lib/layout';
 	import { currentUser } from '$lib/pocketbase';
-	import DidButton from '$lib/layout/DidButton.svelte';
-	import AvatarMenu from '$lib/layout/AvatarMenu.svelte';
 	import { links } from './sidebarLinks';
-	import Logo from '$lib/layout/Logo.svelte';
 	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
 	import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
-	import SidebarLinks from '$lib/layout/SidebarLinks.svelte';
 	import { goto } from '$app/navigation';
 	import { Fire } from 'svelte-heros-v2';
 	import MainContent from '$lib/layout/MainContent.svelte';
 
-	let breakPoint: number = 1024;
+	let sidebarWidthThreshold: number = 1024;
 </script>
 
-<UiShell {breakPoint}>
-	<Topbar slot="top" let:mobile>
+<UiShell {sidebarWidthThreshold}>
+	<Topbar slot="top" let:useDrawerLayout>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
 				<Hamburger />
-				{#if !mobile}
+				{#if !useDrawerLayout}
 					<Logo />
 				{/if}
 			</div>
@@ -57,7 +50,7 @@
 
 	<Sidebar>
 		<svelte:fragment slot="top">
-			<div class="flex items-center mb-2 px-3">
+			<div class="flex items-center p-3">
 				<Logo />
 				<SidebarCloseButton />
 			</div>

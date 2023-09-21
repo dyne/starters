@@ -4,10 +4,8 @@
 	export type uiShellContext = {
 		drawerHidden: Writable<boolean>;
 		breakPoint: number;
-		activateClickOutside: Writable<boolean>;
-		toggleSide: () => void;
-		backdrop: Writable<boolean>;
-		mobile: Writable<boolean>;
+		toggleSidebar: () => void;
+		useDrawerLayout: Writable<boolean>;
 	};
 
 	export function getUiShellContext(): uiShellContext {
@@ -22,61 +20,47 @@
 	/**
 	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
 	 */
-	export let breakPoint: number;
+	export let sidebarWidthThreshold: number | undefined = undefined
 
 	let width: number;
-	let activateClickOutside = writable(false);
 	let drawerHidden: Writable<boolean> = writable(false);
-	let backdrop = writable(false);
-	let mobile = writable(false);
+	let useDrawerLayout = writable(false);
 
-	$: if (width >= breakPoint) {
-		$drawerHidden = false;
-		$activateClickOutside = false;
-		$backdrop = false;
-		$mobile = false;
+	$: if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
+		$drawerHidden = true;
+		$useDrawerLayout = false;
 	} else {
 		$drawerHidden = true;
-		$activateClickOutside = true;
-		$backdrop = true;
-		$mobile = true;
+		$useDrawerLayout = true;
 	}
 	onMount(() => {
-		if (width >= breakPoint) {
-			$drawerHidden = false;
-			$activateClickOutside = false;
-			$backdrop = false;
-			$mobile = false;
+		if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
+			$drawerHidden = true;
+			$useDrawerLayout = false;
 		} else {
 			$drawerHidden = true;
-			$activateClickOutside = true;
-			$backdrop = true;
-			$mobile = true;
+			$useDrawerLayout = true;
 		}
 	});
-	const toggleSide = () => {
-		// if (width < breakPoint) {
+	const toggleSidebar = () => {
 		$drawerHidden = !$drawerHidden;
-		// }
 	};
 
 	setContext(UI_SHELL_KEY, {
 		drawerHidden,
-		breakPoint,
-		activateClickOutside,
-		toggleSide,
-		backdrop,
-		mobile
+		sidebarWidthThreshold,
+		toggleSidebar,
+		useDrawerLayout
 	});
 </script>
 
 <svelte:window bind:innerWidth={width} />
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<div class="shrink-0">
-		<slot name="top" mobile={$mobile} />
+		<slot name="top" useDrawerLayout={$useDrawerLayout} />
 	</div>
 	<div class="h-0 grow flex items-stretch">
-		<slot mobile={$mobile} />
+		<slot useDrawerLayout={$useDrawerLayout} />
 	</div>
 </div>
 
@@ -93,6 +77,6 @@
 	- `avatarMenu` - the avatar menu component (should be use in the navbar)
 
 	### Props
-	- `breakPoint` - The window width (px) at which the SideNav is expanded and the hamburger menu is hidden. Default 1024
+	- `sidebarWidthThreshold` - The window width (px) at which the SideNav is expanded and the hamburger menu is hidden. Default 1024
 
 -->

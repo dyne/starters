@@ -25,7 +25,7 @@
 
 	export let links: SidebarLink[];
 
-	const toggleSide = () => {};
+	const toggleSidebar = () => {};
 </script>
 
 <SidebarWrapper>
@@ -40,12 +40,12 @@
 						<SidebarDropdownItem
 							label={subEntry.label}
 							href={subEntry.href}
-							on:click={() => toggleSide()}
+							on:click={() => toggleSidebar()}
 						/>
 					{/each}
 				</SidebarDropdownWrapper>
 			{:else}
-				<SidebarItem label={entry.label} href={entry.href} on:click={() => toggleSide()}>
+				<SidebarItem label={entry.label} href={entry.href} on:click={() => toggleSidebar()}>
 					<svelte:fragment slot="icon">
 						<svelte:component this={entry.icon} />
 					</svelte:fragment>

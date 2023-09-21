@@ -1,12 +1,12 @@
 <script>
 	import { Button } from 'flowbite-svelte';
-	import { getUiShellContext } from './UiShell.svelte';
+	import { getUiShellContext } from './';
 	import { Bars3 } from 'svelte-heros-v2';
 
-	const { toggleSide } = getUiShellContext();
+	const { toggleSidebar } = getUiShellContext();
 </script>
 
-<Button color="alternative" class="!p-1.5" on:click={toggleSide}>
+<Button color="alternative" class="!p-1.5" on:click={toggleSidebar}>
 	<Bars3 size="24" />
 </Button>
 

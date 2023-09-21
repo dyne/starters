@@ -1,9 +1,6 @@
 <script>
-	import { goto } from '$app/navigation';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import { currentUser } from '$lib/pocketbase';
-	import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
-	import { Fire } from 'svelte-heros-v2';
+	import { Dropdown } from 'flowbite-svelte';
 </script>
 
 <button id="avatar-menu">

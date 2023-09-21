@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { Drawer } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import { getUiShellContext } from './UiShell.svelte';
+	import { getUiShellContext } from './';
 
-	const { drawerHidden, activateClickOutside, backdrop } = getUiShellContext();
+	const { drawerHidden } = getUiShellContext();
 
 	export let placement: 'left' | 'right' = 'left';
 	export let width = 'w-40';
+	export let backdrop = true;
+	export let closeOnClickOutside = true;
 
 	let transitionParams = {
 		x: placement == 'right' ? 320 : -320,
@@ -17,10 +19,10 @@
 
 <Drawer
 	transitionType="fly"
-	backdrop={$backdrop}
+	{backdrop}
 	{transitionParams}
 	bind:hidden={$drawerHidden}
-	activateClickOutside={$activateClickOutside}
+	activateClickOutside={closeOnClickOutside}
 	{placement}
 	class={`flex flex-col !p-0`}
 	{width}

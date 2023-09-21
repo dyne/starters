@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button, Dropdown, DropdownItem } from "flowbite-svelte";
-
 </script>
 
 <Dropdown placement="top" triggeredBy="#countries">
