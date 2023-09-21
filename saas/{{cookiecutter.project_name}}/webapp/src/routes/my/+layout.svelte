@@ -31,10 +31,15 @@
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="center">
-			<div>
-				<span>Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span></span
-				>
-				<DidButton />
+			<div class="flex items-center">
+				<div>
+					<span class="whitespace-nowrap">
+						Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span>
+					</span>
+				</div>
+				<div class="shrink-0">
+					<DidButton />
+				</div>
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="right">

@@ -3,14 +3,14 @@
 </script>
 
 <div class="shrink-0 border-b-2">
-	<Navbar fluid classNavDiv="!flex-nowrap">
-		<div class="flex">
+	<Navbar fluid classNavDiv="!flex-nowrap !space-x-4 items-center !p-2 !md:p-4" class="!p-0">
+		<div class="shrink-0 items-center justify-start">
 			<slot name="left" />
 		</div>
-		<div class="flex">
+		<div class="justify-center">
 			<slot name="center" />
 		</div>
-		<div class="flex">
+		<div class="shrink-0 flex items-center justify-end">
 			<slot name="right" />
 		</div>
 	</Navbar>
