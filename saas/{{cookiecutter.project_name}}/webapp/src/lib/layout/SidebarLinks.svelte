@@ -1,6 +1,8 @@
 <script lang="ts" context="module">
 	import type { IconComponent } from '$lib/utils/types';
 
+	type BadgeColor = ComponentProps<Badge>['color'];
+
 	export interface SidebarLink {
 		label: string;
 		disabled?: boolean;
@@ -9,35 +11,37 @@
 		subLinks?: SidebarLink[];
 		badge?: {
 			text: string;
-			color: string;
+			color: BadgeColor;
 		};
 	}
 </script>
 
 <script lang="ts">
 	import {
+		Badge,
 		SidebarDropdownItem,
 		SidebarDropdownWrapper,
 		SidebarGroup,
-		SidebarItem,
-		SidebarWrapper
+		SidebarItem
 	} from 'flowbite-svelte';
-	import { getUiShellContext } from './UiShell.svelte';
+	import { getUIShellContext } from './UIShell.svelte';
+	import type { ComponentProps } from 'svelte';
 
 	export let links: SidebarLink[];
 
-	const { toggleSidebar, useDrawerLayout } = getUiShellContext();
+	const { toggleSidebar, sidebarLayoutMode } = getUIShellContext();
+
 	const toggleSidebarHandler = () => {
-		if ($useDrawerLayout) {
-			toggleSidebar()
+		if ($sidebarLayoutMode == 'drawer') {
+			toggleSidebar();
 		}
-	}
+	};
 </script>
 
-<SidebarWrapper>
+<div class="p-3">
 	<SidebarGroup>
 		{#each links as entry}
-			{#if entry.subLinks}
+			{#if entry.subLinks && entry.subLinks.length > 0}
 				<SidebarDropdownWrapper label={entry.label}>
 					<svelte:fragment slot="icon">
 						<svelte:component this={entry.icon} />
@@ -55,8 +59,13 @@
 					<svelte:fragment slot="icon">
 						<svelte:component this={entry.icon} />
 					</svelte:fragment>
+					<svelte:fragment slot="subtext">
+						{#if entry.badge}
+							<Badge color={entry.badge.color}>{entry.badge.text}</Badge>
+						{/if}
+					</svelte:fragment>
 				</SidebarItem>
 			{/if}
 		{/each}
 	</SidebarGroup>
-</SidebarWrapper>
+</div>

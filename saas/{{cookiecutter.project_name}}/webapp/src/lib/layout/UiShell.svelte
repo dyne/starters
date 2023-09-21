@@ -1,65 +1,58 @@
 <script context="module" lang="ts">
+	import type { Writable } from 'svelte/store';
+	import { getContext } from 'svelte';
+	import type { SidebarLayoutMode } from './Sidebar.svelte';
+
 	export const UI_SHELL_KEY = Symbol('usk');
 
-	export type uiShellContext = {
-		drawerHidden: Writable<boolean>;
-		breakPoint: number;
+	export type UIShellContext = {
+		isSidebarHidden: Writable<boolean>;
 		toggleSidebar: () => void;
-		useDrawerLayout: Writable<boolean>;
+		sidebarLayoutMode: Writable<SidebarLayoutMode>;
 	};
 
-	export function getUiShellContext(): uiShellContext {
+	export function getUIShellContext(): UIShellContext {
 		return getContext(UI_SHELL_KEY);
 	}
 </script>
 
 <script lang="ts">
-	import { getContext, onMount, setContext } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
+	import { setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 
-	/**
-	 * The window width (px) at which the SideNav is expanded and the hamburger menu is hidden.
-	 */
-	export let sidebarWidthThreshold: number | undefined = undefined
+	export let sidebarLayoutBreakpoint: number | undefined = undefined;
 
-	let width: number;
-	let drawerHidden: Writable<boolean> = writable(false);
-	let useDrawerLayout = writable(false);
+	let windowWidth: number;
 
-	$: if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
-		$drawerHidden = true;
-		$useDrawerLayout = false;
+	const isSidebarHidden = writable(false);
+	const sidebarLayoutMode = writable<SidebarLayoutMode>('default');
+
+	$: if (sidebarLayoutBreakpoint && windowWidth && windowWidth >= sidebarLayoutBreakpoint) {
+		$isSidebarHidden = false;
+		$sidebarLayoutMode = 'default';
 	} else {
-		$drawerHidden = true;
-		$useDrawerLayout = true;
+		$isSidebarHidden = true;
+		$sidebarLayoutMode = 'drawer';
 	}
-	onMount(() => {
-		if (sidebarWidthThreshold && width >= sidebarWidthThreshold) {
-			$drawerHidden = true;
-			$useDrawerLayout = false;
-		} else {
-			$drawerHidden = true;
-			$useDrawerLayout = true;
-		}
-	});
+
 	const toggleSidebar = () => {
-		$drawerHidden = !$drawerHidden;
+		$isSidebarHidden = !$isSidebarHidden;
 	};
 
-	setContext(UI_SHELL_KEY, {
-		drawerHidden,
-		sidebarWidthThreshold,
+	setContext<UIShellContext>(UI_SHELL_KEY, {
+		isSidebarHidden,
 		toggleSidebar,
-		useDrawerLayout
+		sidebarLayoutMode
 	});
 </script>
 
-<svelte:window bind:innerWidth={width} />
+<svelte:window bind:innerWidth={windowWidth} />
+
 <div class="w-screen h-screen overflow-hidden flex flex-col">
 	<div class="shrink-0">
-		<slot name="top" useDrawerLayout={$useDrawerLayout} />
+		<slot name="top" sidebarLayoutMode={$sidebarLayoutMode} />
 	</div>
 	<div class="h-0 grow flex items-stretch">
-		<slot useDrawerLayout={$useDrawerLayout} />
+		<slot sidebarLayoutMode={$sidebarLayoutMode} />
 	</div>
 </div>

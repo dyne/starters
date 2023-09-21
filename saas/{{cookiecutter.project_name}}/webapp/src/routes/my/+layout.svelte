@@ -1,31 +1,47 @@
 <script lang="ts">
-	import {UiShell, Sidebar, Topbar, Hamburger, DidButton, AvatarMenu, Logo, SidebarLinks} from '$lib/layout';
 	import { currentUser } from '$lib/pocketbase';
-	import { links } from './sidebarLinks';
-	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
-	import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
 	import { goto } from '$app/navigation';
-	import { Fire } from 'svelte-heros-v2';
-	import MainContent from '$lib/layout/MainContent.svelte';
 
-	let sidebarWidthThreshold: number = 1024;
+	import {
+		UIShell,
+		Sidebar,
+		Topbar,
+		HamburgerButton,
+		AvatarMenu,
+		Logo,
+		SidebarLinks,
+		MainContent,
+		SidebarCloseButton
+	} from '$lib/layout';
+	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
+	import DIDButton from '$lib/components/DIDButton.svelte';
+	import { Fire } from 'svelte-heros-v2';
+
+	import { links } from './sidebarLinks';
+
+	let sidebarLayoutBreakpoint = 1024;
 </script>
 
-<UiShell {sidebarWidthThreshold}>
-	<Topbar slot="top" let:useDrawerLayout>
+<UIShell {sidebarLayoutBreakpoint}>
+	<Topbar slot="top" let:sidebarLayoutMode>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
-				<Hamburger />
-				{#if !useDrawerLayout}
+				<HamburgerButton />
+				{#if sidebarLayoutMode == 'default'}
 					<Logo />
 				{/if}
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="center">
-			<div>
-				<span>Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span></span
-				>
-				<DidButton />
+			<div class="flex items-center">
+				<div>
+					<span class="whitespace-nowrap">
+						Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span>
+					</span>
+				</div>
+				<div class="shrink-0">
+					<DIDButton />
+				</div>
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="right">
@@ -62,4 +78,4 @@
 	<MainContent>
 		<slot />
 	</MainContent>
-</UiShell>
+</UIShell>

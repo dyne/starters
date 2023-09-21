@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Drawer } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import { getUiShellContext } from './';
+	import { getUIShellContext } from './UIShell.svelte';
 
-	const { drawerHidden } = getUiShellContext();
+	const { isSidebarHidden } = getUIShellContext();
 
 	export let placement: 'left' | 'right' = 'left';
 	export let width = 'w-40';
@@ -21,7 +21,7 @@
 	transitionType="fly"
 	{backdrop}
 	{transitionParams}
-	bind:hidden={$drawerHidden}
+	bind:hidden={$isSidebarHidden}
 	activateClickOutside={closeOnClickOutside}
 	{placement}
 	class={`flex flex-col !p-0`}
