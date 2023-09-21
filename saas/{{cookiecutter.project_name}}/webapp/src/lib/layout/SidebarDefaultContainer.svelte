@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getUiShellContext } from './';
+	import { getUiShellContext } from './UIShell.svelte';
 	import { slide } from 'svelte/transition';
 
 	export let width = 'w-40';

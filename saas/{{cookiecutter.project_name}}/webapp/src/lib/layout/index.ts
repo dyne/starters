@@ -1,5 +1,4 @@
-import UiShell from './UiShell.svelte';
-import { getUiShellContext } from './UiShell.svelte';
+import UIShell from './UIShell.svelte';
 import type { SidebarLink } from './SidebarLinks.svelte';
 import AvatarMenu from './AvatarMenu.svelte';
 import DidButton from './DidButton.svelte';
@@ -15,8 +14,7 @@ import SidebarLinks from './SidebarLinks.svelte';
 import Topbar from './Topbar.svelte';
 
 export {
-	UiShell,
-	getUiShellContext,
+	UIShell,
 	SidebarLink,
 	AvatarMenu,
 	DidButton,

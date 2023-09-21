@@ -1,5 +1,14 @@
 <script lang="ts">
-	import {UiShell, Sidebar, Topbar, Hamburger, DidButton, AvatarMenu, Logo, SidebarLinks} from '$lib/layout';
+	import {
+		UIShell,
+		Sidebar,
+		Topbar,
+		Hamburger,
+		DidButton,
+		AvatarMenu,
+		Logo,
+		SidebarLinks
+	} from '$lib/layout';
 	import { currentUser } from '$lib/pocketbase';
 	import { links } from './sidebarLinks';
 	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
@@ -11,7 +20,7 @@
 	let sidebarWidthThreshold: number = 1024;
 </script>
 
-<UiShell {sidebarWidthThreshold}>
+<UIShell {sidebarWidthThreshold}>
 	<Topbar slot="top" let:useDrawerLayout>
 		<svelte:fragment slot="left">
 			<div class="flex space-x-2">
@@ -62,4 +71,4 @@
 	<MainContent>
 		<slot />
 	</MainContent>
-</UiShell>
+</UIShell>

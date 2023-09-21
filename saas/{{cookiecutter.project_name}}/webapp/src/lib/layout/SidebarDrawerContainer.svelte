@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Drawer } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
-	import { getUiShellContext } from './';
+	import { getUiShellContext } from './UIShell.svelte';
 
 	const { drawerHidden } = getUiShellContext();
 

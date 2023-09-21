@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CloseButton } from 'flowbite-svelte';
-	import { getUiShellContext } from './';
+	import { getUiShellContext } from './UIShell.svelte';
 
 	const { drawerHidden } = getUiShellContext();
 </script>

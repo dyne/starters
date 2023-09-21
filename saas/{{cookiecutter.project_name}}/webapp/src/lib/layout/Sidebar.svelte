@@ -1,5 +1,7 @@
 <script lang="ts">
-	import {SidebarDefaultContainer, SidebarDrawerContainer, getUiShellContext} from './';
+	import { getUiShellContext } from './UIShell.svelte';
+	import SidebarDefaultContainer from './SidebarDefaultContainer.svelte';
+	import SidebarDrawerContainer from './SidebarDrawerContainer.svelte';
 	import { Sidebar } from 'flowbite-svelte';
 
 	const { useDrawerLayout } = getUiShellContext();
