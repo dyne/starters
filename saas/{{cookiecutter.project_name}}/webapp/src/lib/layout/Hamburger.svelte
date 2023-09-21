@@ -10,10 +10,3 @@
 	<Bars3 size="24" />
 </Button>
 
-<!--
-	@component
-	
-	## Hamburger
-	this hamburger is useful for opening the drawer, if there is one
-
--->
