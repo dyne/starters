@@ -16,7 +16,6 @@
 	<div>
 		<ButtonGroup>
 			<Button href={href('general')}>General</Button>
-			<Button href={href('roles')}>Roles</Button>
 			<Button href={href('members')}>Members</Button>
 		</ButtonGroup>
 	</div>
