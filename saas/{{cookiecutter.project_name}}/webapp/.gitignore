@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*
 src/lib/pocketbase/schema/db_schema.json
 src/lib/pocketbase/types.ts
 src/lib/features/list.ts
+src/lib/roles/list.ts
