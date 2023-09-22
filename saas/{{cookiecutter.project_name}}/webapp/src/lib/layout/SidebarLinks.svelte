@@ -26,6 +26,7 @@
 	} from 'flowbite-svelte';
 	import { getUIShellContext } from './UIShell.svelte';
 	import type { ComponentProps } from 'svelte';
+	import { page } from '$app/stores';
 
 	export let links: SidebarLink[];
 
@@ -36,6 +37,7 @@
 			toggleSidebar();
 		}
 	};
+	export let activeClass = "flex items-center p-2 pl-11 text-base font-normal text-gray-900 bg-gray-200 dark:bg-gray-700 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
 </script>
 
 <div class="p-3">
@@ -51,6 +53,8 @@
 							label={subEntry.label}
 							href={subEntry.href}
 							on:click={() => toggleSidebarHandler()}
+							active={$page.url.pathname === subEntry.href}
+							{activeClass}
 						/>
 					{/each}
 				</SidebarDropdownWrapper>
