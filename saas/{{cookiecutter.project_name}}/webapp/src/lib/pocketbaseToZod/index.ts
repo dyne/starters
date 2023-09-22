@@ -68,7 +68,7 @@ type ArrayRefiner = (schema: ZodArrayAny, options: FieldOptions) => ZodArrayAny;
 
 const arrayRefiners: Record<string, ArrayRefiner> = {
 	maxSelect: (s, o) => s.max(o.maxSelect as number),
-	minSelect: (s, o) => s.max(o.maxSelect as number)
+	minSelect: (s, o) => s.min(o.maxSelect as number)
 };
 
 //
@@ -90,7 +90,9 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 	else {
 		let arraySchema = z.array(zodSchema);
 		for (const [key, refiner] of Object.entries(arrayRefiners)) {
-			if (fieldOptions[key]) arraySchema = refiner(arraySchema as ZodArrayAny, fieldOptions);
+			if (fieldOptions[key]) {
+				arraySchema = refiner(arraySchema as ZodArrayAny, fieldOptions);
+			}
 		}
 		if (fieldschema.required) return arraySchema.nonempty();
 		else return arraySchema;
