@@ -25,7 +25,7 @@
 	editFormSettings={{
 		exclude: ['user']
 	}}
-	initialQueryParams={{ expand: 'user,role' }}
+	initialQueryParams={{ expand: 'user,role', filter: `organization.id="${organization.id}"` }}
 	let:records
 >
 	<div class="flex justify-between mb-4 items-center">
