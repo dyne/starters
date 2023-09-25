@@ -25,10 +25,10 @@ setup_backend: ## 📦 Setup the frontend
     	mkdir ./admin/pb_data; \
 	fi
 	cd admin && ./setup
-	wget -O /usr/local/bin/zencode-exec https://github.com/dyne/Zenroom/releases/download/v3.13.2/zencode-exec
-	chmod 755 /usr/local/bin/zencode-exec
-	wget -O /usr/local/bin/zenroom https://github.com/dyne/Zenroom/releases/download/v3.13.2/zenroom
-	chmod 755 /usr/local/bin/zenroom
+	wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec
+	chmod +x /usr/local/bin/zencode-exec
+	wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom
+	chmod +x /usr/local/bin/zenroom
 	@echo " "
 
 setup_frontend: ## 📦 Setup the frontend
