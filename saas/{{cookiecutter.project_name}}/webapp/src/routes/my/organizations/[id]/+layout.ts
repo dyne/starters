@@ -11,7 +11,7 @@ export const load = async ({ params }) => {
 			.getOne<OrganizationsResponse>(organizationId);
 
 		const user = pb.authStore.model;
-		if (!organization.owners.includes(user.id)) throw new Error('Unauthorized');
+
 		if (user) await fetchUserAuthorizations(user.id);
 
 		return { organization };

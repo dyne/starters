@@ -32,9 +32,6 @@
 		collection={Collections.Organizations}
 		recordId={organization.id}
 		initialData={organization}
-		fieldsSettings={{
-			exclude: ['owners']
-		}}
 		submitButtonText="Save changes"
 		on:success={invalidateAll}
 	/>

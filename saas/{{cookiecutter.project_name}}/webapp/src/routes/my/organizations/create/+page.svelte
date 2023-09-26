@@ -24,9 +24,6 @@
 				name: 'Organization name',
 				description: 'Short description',
 				avatar: 'Avatar'
-			},
-			hide: {
-				owners: [userId]
 			}
 		}}
 		submitButtonText="Create organization"

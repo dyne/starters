@@ -25,7 +25,6 @@
 		{recordType}
 		collection={Collections.CrudExample}
 		formSettings={{
-			hide: { owner: $currentUser?.id },
 			labels: {
 				text: 'Titolo',
 				file_only_pdf_json: 'PDF or JSON file',
