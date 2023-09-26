@@ -1,3 +1,5 @@
+/// <reference path="../pb_data/types.d.ts" />
+
 const FEATURES_COLLECTION_NAME = "features";
 
 /**
@@ -30,8 +32,8 @@ const features = [
     {
         name: "maintenance",
         envVariables: {},
-        active: false
-    }
+        active: false,
+    },
 ];
 
 migrate(
