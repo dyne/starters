@@ -5,5 +5,6 @@ pb.authStore.loadFromCookie(document.cookie);
 pb.authStore.onChange(async () => {
 	currentUser.set(pb.authStore.model as AuthStoreModel);
 	document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
-	if (pb.authStore.model) await fetchUserAuthorizations(pb.authStore.model.id);
+	// const userId = pb.authStore.model?.id;
+	// if (userId) await fetchUserAuthorizations(userId);
 });
