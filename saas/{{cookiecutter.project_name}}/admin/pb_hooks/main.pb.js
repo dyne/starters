@@ -1,15 +1,18 @@
 /// <reference path="../pb_data/types.d.ts" />
+/**
+ * @typedef {import('./utils.js')} Utils
+ */
 
 onRecordAfterCreateRequest((e) => {
     console.log("Hook - Creating admin role for new organization");
 
-    const userId = $apis.requestInfo(e.httpContext).authRecord.id;
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const userId = utils.getUserFromEvent(e).id;
     const organizationId = e.record.id;
 
-    const adminRole = $app
-        .dao()
-        .findFirstRecordByData("organizationRoles", "name", "admin");
-    if (!adminRole) throw new Error("missing admin role!");
+    const adminRole = utils.getAdminRole();
     const adminRoleId = adminRole.id;
 
     const collection = $app
@@ -22,3 +25,27 @@ onRecordAfterCreateRequest((e) => {
     });
     $app.dao().saveRecord(record);
 }, "organizations");
+
+onRecordBeforeDeleteRequest((e) => {
+    console.log("Hook - Checking if deleting admin role is possible");
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const organizationId = e.record.get("organization");
+    const roleId = e.record.get("role");
+    const adminRoleId = utils.getAdminRole().id;
+
+    if (roleId !== adminRoleId) return;
+
+    const adminAuthorizations = $app
+        .dao()
+        .findRecordsByFilter(
+            "organizationAuthorizations",
+            `organization="${organizationId}" && role="${adminRoleId}"`
+        );
+
+    if (adminAuthorizations.length > 1) return;
+
+    throw new Error("Can't remove the last admin role!");
+}, "organizationAuthorizations");
