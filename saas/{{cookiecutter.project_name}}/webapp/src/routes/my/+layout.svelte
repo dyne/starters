@@ -76,6 +76,8 @@
 	</Sidebar>
 
 	<MainContent>
-		<slot />
+		<div class="p-8">
+			<slot />
+		</div>
 	</MainContent>
 </UIShell>
