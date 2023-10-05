@@ -38,7 +38,14 @@
 </Button>
 
 <ModalWrapper>
-	<Modal bind:open title="Delete record" size="xs">
+	<Modal
+		bind:open
+		title="Delete record"
+		size="xs"
+		on:close={() => {
+			error = undefined;
+		}}
+	>
 		<div class="text-center space-y-6">
 			<P>Are you sure you want to delete this record?</P>
 			{#if error}
