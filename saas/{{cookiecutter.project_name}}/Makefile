@@ -46,6 +46,9 @@ setup: setup_submodules setup_backend setup_frontend ## 📦 Setup the project
 be: ## ⚙️ Run the backend
 	./admin/pb serve
 
+be_debug: ## ⚙️ Run the backend in debug mode
+	./admin/pb serve --debug
+
 fe: ## ⚙️ Run the frontend
 	sleep 2 && cd webapp && pnpm serve
 
@@ -54,6 +57,9 @@ fe_dev: ## ⚙️ Watch the frontend
 
 dev: ## ⚙️ Run the project in development mode
 	$(MAKE) be fe_dev -j2
+
+dev_debug: ## ⚙️ Run the project in development and debug mode
+	$(MAKE) be_debug fe_dev -j2
 
 up: setup ## ⚙️ Run the project
 	$(MAKE) be fe -j2
@@ -83,6 +89,8 @@ clean_build: ## 🧹 Clean project build
 	rm -fr webapp/node_modules
 	rm -f webapp/src/lib/pocketbase/types.ts
 	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
+	rm -f webapp/src/lib/roles/list.ts
+	rm -f webapp/src/lib/features/list.ts
 	@echo " "
 
 clean: clean_submodules clean_build ## 🧹 Clean the project

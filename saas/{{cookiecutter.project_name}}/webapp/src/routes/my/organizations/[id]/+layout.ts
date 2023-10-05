@@ -1,5 +1,6 @@
 import { pb } from '$lib/pocketbase';
 import { Collections, type OrganizationsResponse } from '$lib/pocketbase/types';
+import { fetchUserAuthorizations } from '$lib/roles';
 import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ params }) => {
@@ -9,8 +10,9 @@ export const load = async ({ params }) => {
 			.collection(Collections.Organizations)
 			.getOne<OrganizationsResponse>(organizationId);
 
-		const userId = pb.authStore.model?.id;
-		if (!organization.owners.includes(userId)) throw new Error('Unauthorized');
+		const user = pb.authStore.model;
+
+		// if (user) await fetchUserAuthorizations(user.id);
 
 		return { organization };
 	} catch (e) {
