@@ -12,7 +12,7 @@ export const load = async ({ params }) => {
 
 		const user = pb.authStore.model;
 
-		if (user) await fetchUserAuthorizations(user.id);
+		// if (user) await fetchUserAuthorizations(user.id);
 
 		return { organization };
 	} catch (e) {
