@@ -15,9 +15,7 @@ onRecordAfterCreateRequest((e) => {
     const adminRole = utils.getAdminRole();
     const adminRoleId = adminRole.id;
 
-    const collection = $app
-        .dao()
-        .findCollectionByNameOrId("organizationAuthorizations");
+    const collection = $app.dao().findCollectionByNameOrId("orgAuthorizations");
     const record = new Record(collection, {
         organization: organizationId,
         role: adminRoleId,
@@ -41,11 +39,26 @@ onRecordBeforeDeleteRequest((e) => {
     const adminAuthorizations = $app
         .dao()
         .findRecordsByFilter(
-            "organizationAuthorizations",
+            "orgAuthorizations",
             `organization="${organizationId}" && role="${adminRoleId}"`
         );
 
     if (adminAuthorizations.length > 1) return;
 
     throw new Error("Can't remove the last admin role!");
-}, "organizationAuthorizations");
+}, "orgAuthorizations");
+
+routerAdd("GET", "/verify-org-authorization", (c) => {
+    console.log("Route - Checking if user has the correct org authorization");
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const userId = utils.getUserFromEvent(e).id;
+
+    throw new Error("not allows");
+    // c.redirect(303, "http://localhost:5173/");
+    // return c.redirect(307, "https://example.com");
+    // return c.redirect(307, "https://example.com");
+    // return c.json(200, { message: "Hello " });
+});

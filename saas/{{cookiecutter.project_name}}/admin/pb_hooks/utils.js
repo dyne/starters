@@ -14,7 +14,7 @@ module.exports = {
     getAdminRole: () => {
         const adminRole = $app
             .dao()
-            .findFirstRecordByData("organizationRoles", "name", "admin");
+            .findFirstRecordByData("orgRoles", "name", "admin");
         if (!adminRole) throw new Error("missing admin role!");
         return adminRole;
     },
