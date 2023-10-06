@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 const objectName = 'OrganizationRoles';
 const typeName = 'OrganizationRole';
-const filePath = './src/lib/roles/list.ts';
+const filePath = './src/lib/rbac/roles.ts';
 
 // Pocketbase setup
 
@@ -15,7 +15,7 @@ const { PB_ADMIN_USER, PB_ADMIN_PASS, PUBLIC_POCKETBASE_URL } = process.env;
 const pb = new PocketBase(PUBLIC_POCKETBASE_URL);
 await pb.admins.authWithPassword(PB_ADMIN_USER, PB_ADMIN_PASS);
 
-const roles = await pb.collection('organizationRoles').getFullList();
+const roles = await pb.collection('orgRoles').getFullList();
 
 // Building file
 

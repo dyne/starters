@@ -89,7 +89,7 @@ clean_build: ## 🧹 Clean project build
 	rm -fr webapp/node_modules
 	rm -f webapp/src/lib/pocketbase/types.ts
 	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
-	rm -f webapp/src/lib/roles/list.ts
+	rm -f webapp/src/lib/rbac/roles.ts
 	rm -f webapp/src/lib/features/list.ts
 	@echo " "
 
