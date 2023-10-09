@@ -1,30 +1,32 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-//
-
-/** @type {import("../../webapp/src/lib/pocketbase/types").OrganizationRolesRecord[]} */
-const roles = [
-    {
-        name: "admin",
-        label: "Admin",
-        level: 0,
-    },
-    {
-        name: "member",
-        label: "Member",
-        level: 1,
-    },
-];
-
-const ROLES_COLLECTION_NAME = "organizationRoles";
+const roles = ["owner", "admin", "member"];
 
 migrate((db) => {
     const dao = new Dao(db);
-    const collection = dao.findCollectionByNameOrId(ROLES_COLLECTION_NAME);
+    const rolesCollection = dao.findCollectionByNameOrId("orgRoles");
 
     for (const role of roles) {
-        const record = new Record(collection, role);
-
+        const record = new Record(rolesCollection, { name: role });
         dao.saveRecord(record);
     }
+
+    // -- Seeding protected paths -- //
+
+    const ownerRole = dao.findFirstRecordByData("orgRoles", "name", "owner");
+    const adminRole = dao.findFirstRecordByData("orgRoles", "name", "admin");
+
+    const pathsCollection = dao.findCollectionByNameOrId("orgProtectedPaths");
+    dao.saveRecord(
+        new Record(pathsCollection, {
+            pathRegex: "/organizations/(.*)/general",
+            roles: [ownerRole.id],
+        })
+    );
+    dao.saveRecord(
+        new Record(pathsCollection, {
+            pathRegex: "/organizations/(.*)/members",
+            roles: [ownerRole.id, adminRole.id],
+        })
+    );
 });

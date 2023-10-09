@@ -5,17 +5,17 @@ module.exports = {
      * @param {core.RecordCreateEvent} e
      * @returns {models.Record | undefined}
      */
-    getUserFromEvent: (e) => {
-        return $apis.requestInfo(e.httpContext).authRecord;
+    getUserFromContext: (c) => {
+        return $apis.requestInfo(c).authRecord;
     },
     /**
      * @returns {models.Record | undefined}
      */
-    getAdminRole: () => {
-        const adminRole = $app
+    getOwnerRole: () => {
+        const ownerRole = $app
             .dao()
-            .findFirstRecordByData("organizationRoles", "name", "admin");
-        if (!adminRole) throw new Error("missing admin role!");
-        return adminRole;
+            .findFirstRecordByData("orgRoles", "name", "owner");
+        if (!ownerRole) throw new Error("missing owner role!");
+        return ownerRole;
     },
 };

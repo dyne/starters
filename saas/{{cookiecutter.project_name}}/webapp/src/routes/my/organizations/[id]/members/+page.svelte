@@ -2,23 +2,23 @@
 	import { CollectionManager } from '$lib/collectionManager';
 	import CollectionTable from '$lib/collectionManager/ui/collectionTable.svelte';
 	import CreateRecord from '$lib/collectionManager/ui/recordActions/createRecord.svelte';
-	import { Collections, type OrganizationAuthorizationsRecord } from '$lib/pocketbase/types';
+	import { Collections, type OrgAuthorizationsRecord } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { Heading, P } from 'flowbite-svelte';
 
 	export let data;
 	$: organization = data.organization;
 
-	const recordType = createTypeProp<OrganizationAuthorizationsRecord>();
+	const recordType = createTypeProp<OrgAuthorizationsRecord>();
 </script>
 
 <CollectionManager
 	{recordType}
-	collection={Collections.OrganizationAuthorizations}
+	collection={Collections.OrgAuthorizations}
 	formSettings={{
 		hide: { organization: organization.id },
 		relations: {
-			role: { inputMode: 'select', displayFields: ['label'] },
+			role: { inputMode: 'select', displayFields: ['name'] },
 			user: { displayFields: ['email'] }
 		}
 	}}
@@ -37,7 +37,7 @@
 	<CollectionTable {records} hideActions={['select', 'share']} let:record>
 		<P class="space-x-4">
 			<span>{record.expand.user.email}</span>
-			<span>{record.expand.role.label}</span>
+			<span>{record.expand.role.name}</span>
 		</P>
 	</CollectionTable>
 </CollectionManager>
