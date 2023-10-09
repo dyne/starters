@@ -9,7 +9,7 @@ onRecordAfterCreateRequest((e) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
 
-    const userId = utils.getUserFromEvent(e).id;
+    const userId = utils.getUserFromContext(e.httpContext).id;
     const organizationId = e.record.id;
 
     const adminRole = utils.getAdminRole();
@@ -48,17 +48,51 @@ onRecordBeforeDeleteRequest((e) => {
     throw new Error("Can't remove the last admin role!");
 }, "orgAuthorizations");
 
-routerAdd("GET", "/verify-org-authorization", (c) => {
+routerAdd("POST", "/verify-org-authorization", (c) => {
     console.log("Route - Checking if user has the correct org authorization");
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
 
-    const userId = utils.getUserFromEvent(e).id;
+    const userId = utils.getUserFromContext(c).id;
 
-    throw new Error("not allows");
-    // c.redirect(303, "http://localhost:5173/");
-    // return c.redirect(307, "https://example.com");
-    // return c.redirect(307, "https://example.com");
-    // return c.json(200, { message: "Hello " });
+    /**  @type {{organizationId: string, url: string}}*/
+    const { organizationId, url } = $apis.requestInfo(c).data;
+    if (!organizationId || !url) throw new Error("Missing data in request");
+
+    const organization = $app
+        .dao()
+        .findRecordById("organizations", organizationId);
+    if (!organization) throw new Error("Invalid organization id");
+
+    const userAuthorization = $app
+        .dao()
+        .findFirstRecordByFilter(
+            "orgAuthorizations",
+            `organization="${organizationId}" && user="${userId}"`
+        );
+    // Here we assume that there is only one role for each organization
+    // Also enforced by API rules
+    if (!userAuthorization) throw new Error("Not authorized");
+    const userRole = userAuthorization.get("role");
+    console.log("user role", userRole);
+
+    const protectedPaths = $app
+        .dao()
+        .findRecordsByFilter("orgProtectedPaths", "pathRegex != ''");
+
+    const matchingPaths = protectedPaths.filter((p) => {
+        const regex = new RegExp(p.get("pathRegex"));
+        return regex.test(url);
+    });
+
+    const isAllowed = matchingPaths
+        .map((p) => {
+            /** @type {string[]} */
+            const roles = p.get("roles");
+            return roles;
+        })
+        .every((roles) => roles.includes(userRole));
+
+    if (!isAllowed) throw new Error("Not authorized");
 });
