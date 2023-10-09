@@ -18,13 +18,17 @@
 
 <CollectionManager {recordType} collection={Collections.Organizations} let:records perPage={200}>
 	<div class="border rounded-lg divide-y">
-		{#each records as record}
-			<div class="px-4 py-3 flex justify-between items-center">
-				<A href={`/my/organizations/${record.id}`}>{record.name}</A>
-				<Button size="sm" color="alternative" href={`/organizations/${record.id}/settings`}>
-					Settings
-				</Button>
-			</div>
-		{/each}
+		{#if records.length == 0}
+			<div class="p-4 text-gray-600">No organizations found. Create one!</div>
+		{:else}
+			{#each records as record}
+				<div class="px-4 py-3 flex justify-between items-center">
+					<A href={`/my/organizations/${record.id}`}>{record.name}</A>
+					<Button size="sm" color="alternative" href={`/organizations/${record.id}/settings`}>
+						Settings
+					</Button>
+				</div>
+			{/each}
+		{/if}
 	</div>
 </CollectionManager>
