@@ -5,8 +5,8 @@ module.exports = {
      * @param {core.RecordCreateEvent} e
      * @returns {models.Record | undefined}
      */
-    getUserFromEvent: (e) => {
-        return $apis.requestInfo(e.httpContext).authRecord;
+    getUserFromContext: (c) => {
+        return $apis.requestInfo(c).authRecord;
     },
     /**
      * @returns {models.Record | undefined}
