@@ -55,6 +55,7 @@ routerAdd("POST", "/verify-org-authorization", (c) => {
     const utils = require(`${__hooks}/utils.js`);
 
     const userId = utils.getUserFromContext(c).id;
+    if (!userId) throw new Error("User must be logged!");
 
     /**  @type {{organizationId: string, url: string}}*/
     const { organizationId, url } = $apis.requestInfo(c).data;
@@ -75,7 +76,6 @@ routerAdd("POST", "/verify-org-authorization", (c) => {
     // Also enforced by API rules
     if (!userAuthorization) throw new Error("Not authorized");
     const userRole = userAuthorization.get("role");
-    console.log("user role", userRole);
 
     const protectedPaths = $app
         .dao()

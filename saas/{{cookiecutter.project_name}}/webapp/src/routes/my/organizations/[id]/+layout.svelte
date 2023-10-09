@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Button, ButtonGroup, Heading, Hr, P, A } from 'flowbite-svelte';
+	import { ProtectedOrgLayout } from '$lib/rbac/index';
+	import { Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
 
 	export let data;
 	$: organization = data.organization;
@@ -7,13 +8,12 @@
 	const href = (path: string) => `/my/organizations/${organization.id}/${path}`;
 </script>
 
-<A href="/my/organizations" class="mb-4">← My organizations</A>
+<!--  -->
+
 <div class="flex justify-between items-center">
-	<div>
-		<Heading tag="h3">{organization.name}</Heading>
-		<P size="base" color="text-gray-400">Manage your organization</P>
-	</div>
-	<div>
+	<Heading tag="h3">{organization.name}</Heading>
+	<div class="flex justify-end items-center space-x-4">
+		<P color="text-gray-600" size="sm">Settings</P>
 		<ButtonGroup>
 			<Button href={href('general')}>General</Button>
 			<Button href={href('members')}>Members</Button>
@@ -23,4 +23,6 @@
 
 <Hr />
 
-<slot />
+<ProtectedOrgLayout orgId={organization.id}>
+	<slot />
+</ProtectedOrgLayout>

@@ -80,9 +80,6 @@
 			</NavUl>
 		</Navbar>
 	</header>
-	<Section>
-		{JSON.stringify($currentUser)}
-	</Section>
 
 	<Section name="contentwithimg">
 		<ContentWithImage>
