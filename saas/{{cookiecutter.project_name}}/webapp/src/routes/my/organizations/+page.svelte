@@ -24,7 +24,7 @@
 			{#each records as record}
 				<div class="px-4 py-3 flex justify-between items-center">
 					<A href={`/my/organizations/${record.id}`}>{record.name}</A>
-					<Button size="sm" color="alternative" href={`/organizations/${record.id}/settings`}>
+					<Button size="sm" color="alternative" href={`/my/organizations/${record.id}/settings`}>
 						Settings
 					</Button>
 				</div>
