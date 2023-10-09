@@ -4,7 +4,7 @@
  */
 
 onRecordAfterCreateRequest((e) => {
-    console.log("Hook - Creating admin role for new organization");
+    console.log("Hook - Creating owner role for new organization");
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
@@ -12,40 +12,40 @@ onRecordAfterCreateRequest((e) => {
     const userId = utils.getUserFromContext(e.httpContext).id;
     const organizationId = e.record.id;
 
-    const adminRole = utils.getAdminRole();
-    const adminRoleId = adminRole.id;
+    const ownerRole = utils.getOwnerRole();
+    const ownerRoleId = ownerRole.id;
 
     const collection = $app.dao().findCollectionByNameOrId("orgAuthorizations");
     const record = new Record(collection, {
         organization: organizationId,
-        role: adminRoleId,
+        role: ownerRoleId,
         user: userId,
     });
     $app.dao().saveRecord(record);
 }, "organizations");
 
 onRecordBeforeDeleteRequest((e) => {
-    console.log("Hook - Checking if deleting admin role is possible");
+    console.log("Hook - Checking if deleting owner role is possible");
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
 
     const organizationId = e.record.get("organization");
     const roleId = e.record.get("role");
-    const adminRoleId = utils.getAdminRole().id;
+    const ownerRoleId = utils.getOwnerRole().id;
 
-    if (roleId !== adminRoleId) return;
+    if (roleId !== ownerRoleId) return;
 
     const adminAuthorizations = $app
         .dao()
         .findRecordsByFilter(
             "orgAuthorizations",
-            `organization="${organizationId}" && role="${adminRoleId}"`
+            `organization="${organizationId}" && role="${ownerRoleId}"`
         );
 
     if (adminAuthorizations.length > 1) return;
 
-    throw new Error("Can't remove the last admin role!");
+    throw new Error("Can't remove the last owner role!");
 }, "orgAuthorizations");
 
 routerAdd("POST", "/verify-org-authorization", (c) => {
