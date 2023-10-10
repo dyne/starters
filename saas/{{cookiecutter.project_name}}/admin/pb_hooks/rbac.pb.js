@@ -1,4 +1,3 @@
-/// <reference path="../pb_data/types.d.ts" />
 /**
  * @typedef {import('./utils.js')} Utils
  */
