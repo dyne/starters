@@ -4,8 +4,8 @@ import 'dotenv/config';
 
 //
 
-const objectName = 'OrganizationRoles';
-const typeName = 'OrganizationRole';
+const objectName = 'OrgRoles';
+const typeName = 'OrgRole';
 const filePath = './src/lib/rbac/roles.ts';
 
 // Pocketbase setup
