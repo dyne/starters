@@ -35,13 +35,6 @@ test('it should edit organization name', async () => {
 	await page.locator('input[name="name"]').fill(orgName);
 	await page.getByRole('button', { name: 'Save changes' }).click();
 	await expect(page.getByRole('heading', { name: orgName })).toBeVisible();
-
-	// await page.getByRole('button', { name: 'plus Add entry' }).click();
-	// await page.locator('form div').filter({ hasText: 'Select' }).nth(3).click();
-	// await page.getByPlaceholder('Select').fill('userC');
-	// await page.getByText('userC | userC@example.org | p8zavjpobesyk44').click();
-	// await page.locator('select[name="role"]').selectOption('csbo0gf4tnmn6xa');
-	// await page.getByRole('button', { name: 'Create record' }).click();
 });
 
 test('it should add user B to the organization as admin', async () => {
@@ -92,4 +85,54 @@ test('it should fail to add A as member', async () => {
 	await page.locator('select[name="role"]').selectOption({ label: role });
 	await page.getByRole('button', { name: 'Create record' }).click();
 	await expect(page.getByText('Failed to create record.')).toBeVisible();
+});
+
+test("it should hide the 'general' section to admin", async ({ browser }) => {
+	page.close();
+	page = await userLogin(browser, 'B');
+	await page.goto('/my/organizations');
+
+	const orgLink = page.getByRole('link', { name: orgName });
+	const settingsButton = page.getByText(`${orgName} Settings`);
+
+	await expect(orgLink).toBeVisible();
+	await expect(settingsButton).toBeVisible();
+
+	await orgLink.click();
+
+	await expect(page.getByText('general')).toBeHidden();
+	await expect(page.getByText('members')).toBeVisible();
+
+	const orgUrl = page.url();
+
+	await page.goto(`${orgUrl}/general`);
+	await expect(page.getByText('unauthorized')).toBeVisible();
+
+	await page.goto(`${orgUrl}/members`);
+	await expect(page.getByRole('button', { name: 'Add entry' })).toBeVisible();
+});
+
+test("it should hide the 'settings' section to user", async ({ browser }) => {
+	page.close();
+	page = await userLogin(browser, 'C');
+	await page.goto('/my/organizations');
+
+	const orgLink = page.getByRole('link', { name: orgName });
+	const settingsButton = page.getByText(`${orgName} Settings`);
+
+	await expect(orgLink).toBeVisible();
+	await expect(settingsButton).toBeHidden();
+
+	await orgLink.click();
+
+	await expect(page.getByText('general')).toBeHidden();
+	await expect(page.getByText('members')).toBeHidden();
+
+	const orgUrl = page.url();
+
+	await page.goto(`${orgUrl}/general`);
+	await expect(page.getByText('unauthorized')).toBeVisible();
+
+	await page.goto(`${orgUrl}/members`);
+	await expect(page.getByText('unauthorized')).toBeVisible();
 });
