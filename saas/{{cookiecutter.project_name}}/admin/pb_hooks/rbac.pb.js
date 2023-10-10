@@ -101,7 +101,7 @@ routerAdd("POST", "/verify-user-role", (c) => {
     const userId = utils.getUserFromContext(c).id;
     if (!userId) throw new Error("User must be logged!");
 
-    /**  @type {{organizationId: string, roles: string[]}}*/
+    /**  @type {organizationId: string, roles: string[]}*/
     const { organizationId, roles } = $apis.requestInfo(c).data;
     if (!organizationId || !roles || roles.length === 0)
         throw new Error("Missing data in request");
