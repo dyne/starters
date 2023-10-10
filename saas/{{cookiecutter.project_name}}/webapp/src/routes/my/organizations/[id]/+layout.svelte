@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import { ProtectedOrgLayout } from '$lib/rbac/index';
+	import { ProtectedOrgLayout, ProtectedOrgUI, OrgRoles } from '$lib/rbac';
 	import { A, Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
 
 	export let data;
@@ -8,19 +8,26 @@
 	$: avatarPath = pb.files.getUrl(organization, organization.avatar);
 
 	const href = (path = '') => `/my/organizations/${organization.id}${path}`;
+	const { OWNER, ADMIN } = OrgRoles;
 </script>
 
 <!--  -->
 
+<A href="/my/organizations" class="mb-4">← My organizations</A>
+
 <div class="flex justify-between items-center">
 	<Heading tag="h3"><A href={href()}>{organization.name}</A></Heading>
-	<div class="flex justify-end items-center space-x-4">
-		<P color="text-gray-600" size="sm">Settings</P>
-		<ButtonGroup>
-			<Button href={href('/general')}>General</Button>
-			<Button href={href('/members')}>Members</Button>
-		</ButtonGroup>
-	</div>
+	<ProtectedOrgUI orgId={organization.id} roles={[OWNER, ADMIN]}>
+		<div class="flex justify-end items-center space-x-4">
+			<P color="text-gray-600" size="sm">Settings</P>
+			<ButtonGroup>
+				<ProtectedOrgUI orgId={organization.id} roles={[OWNER]}>
+					<Button href={href('/general')}>General</Button>
+				</ProtectedOrgUI>
+				<Button href={href('/members')}>Members</Button>
+			</ButtonGroup>
+		</div>
+	</ProtectedOrgUI>
 </div>
 
 <Hr />

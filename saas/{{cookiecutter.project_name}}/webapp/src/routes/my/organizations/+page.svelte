@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { CollectionManager } from '$lib/collectionManager';
 	import { Collections, type OrganizationsRecord } from '$lib/pocketbase/types';
-	import { createTypeProp } from '$lib/utils/typeProp';
+	import { OrgRoles } from '$lib/rbac';
 	import { Heading, Button, A } from 'flowbite-svelte';
+	import { ProtectedOrgUI } from '$lib/rbac';
 	import { Plus } from 'svelte-heros-v2';
+	import { createTypeProp } from '$lib/utils/typeProp';
 
 	const recordType = createTypeProp<OrganizationsRecord>();
+	const { ADMIN, OWNER } = OrgRoles;
 </script>
 
 <div class="flex justify-between items-center mb-6">
@@ -24,9 +27,11 @@
 			{#each records as record}
 				<div class="px-4 py-3 flex justify-between items-center">
 					<A href={`/my/organizations/${record.id}`}>{record.name}</A>
-					<Button size="sm" color="alternative" href={`/my/organizations/${record.id}/settings`}>
-						Settings
-					</Button>
+					<ProtectedOrgUI orgId={record.id} roles={[ADMIN, OWNER]}>
+						<Button size="sm" color="alternative" href={`/my/organizations/${record.id}/settings`}>
+							Settings
+						</Button>
+					</ProtectedOrgUI>
 				</div>
 			{/each}
 		{/if}
