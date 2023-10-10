@@ -61,11 +61,6 @@ routerAdd("POST", "/verify-org-authorization", (c) => {
     const { organizationId, url } = $apis.requestInfo(c).data;
     if (!organizationId || !url) throw new Error("Missing data in request");
 
-    const organization = $app
-        .dao()
-        .findRecordById("organizations", organizationId);
-    if (!organization) throw new Error("Invalid organization id");
-
     const userAuthorization = $app
         .dao()
         .findFirstRecordByFilter(
@@ -95,4 +90,33 @@ routerAdd("POST", "/verify-org-authorization", (c) => {
         .every((roles) => roles.includes(userRole));
 
     if (!isAllowed) throw new Error("Not authorized");
+});
+
+routerAdd("POST", "/verify-user-role", (c) => {
+    console.log("Route - Checking if user has the required role");
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const userId = utils.getUserFromContext(c).id;
+    if (!userId) throw new Error("User must be logged!");
+
+    /**  @type {{organizationId: string, roles: string[]}}*/
+    const { organizationId, roles } = $apis.requestInfo(c).data;
+    if (!organizationId || !roles || roles.length === 0)
+        throw new Error("Missing data in request");
+
+    const roleFilter = `( ${roles
+        .map((r) => `role.name="${r}"`)
+        .join(" || ")} )`;
+
+    const userAuthorization = $app
+        .dao()
+        .findFirstRecordByFilter(
+            "orgAuthorizations",
+            `organization="${organizationId}" && user="${userId}" && ${roleFilter}`
+        );
+    // Here we assume that there is only one role for each organization
+    // Also enforced by API rules
+    if (!userAuthorization) throw new Error("Not authorized");
 });
