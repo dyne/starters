@@ -17,7 +17,8 @@ export async function verifyAuthorizations(organizationId: string) {
 		body: {
 			organizationId,
 			url: window.location.href
-		}
+		},
+		requestKey: null
 	});
 }
 
@@ -27,6 +28,7 @@ export async function verifyRole(organizationId: string, roles: OrgRole[]) {
 		body: {
 			organizationId,
 			roles
-		}
+		},
+		requestKey: null
 	});
 }
