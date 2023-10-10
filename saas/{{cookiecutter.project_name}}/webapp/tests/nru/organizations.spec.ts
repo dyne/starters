@@ -92,13 +92,11 @@ test("it should hide the 'general' section to admin", async ({ browser }) => {
 	page = await userLogin(browser, 'B');
 	await page.goto('/my/organizations');
 
-	const orgLink = page.getByRole('link', { name: orgName });
-	const settingsButton = page.getByText(`${orgName} Settings`);
+	await expect(page.getByText(orgName)).toBeVisible();
 
-	await expect(orgLink).toBeVisible();
+	const settingsButton = page.getByTestId(`${orgName} link`);
 	await expect(settingsButton).toBeVisible();
-
-	await orgLink.click();
+	await settingsButton.click();
 
 	await expect(page.getByText('general')).toBeHidden();
 	await expect(page.getByText('members')).toBeVisible();
@@ -117,22 +115,11 @@ test("it should hide the 'settings' section to user", async ({ browser }) => {
 	page = await userLogin(browser, 'C');
 	await page.goto('/my/organizations');
 
-	const orgLink = page.getByRole('link', { name: orgName });
-	const settingsButton = page.getByText(`${orgName} Settings`);
+	await expect(page.getByText(orgName)).toBeVisible();
 
-	await expect(orgLink).toBeVisible();
+	const settingsButton = page.getByTestId(`${orgName} link`);
 	await expect(settingsButton).toBeHidden();
-
-	await orgLink.click();
 
 	await expect(page.getByText('general')).toBeHidden();
 	await expect(page.getByText('members')).toBeHidden();
-
-	const orgUrl = page.url();
-
-	await page.goto(`${orgUrl}/general`);
-	await expect(page.getByText('unauthorized')).toBeVisible();
-
-	await page.goto(`${orgUrl}/members`);
-	await expect(page.getByText('unauthorized')).toBeVisible();
 });

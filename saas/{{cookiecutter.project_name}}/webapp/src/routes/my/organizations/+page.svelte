@@ -28,13 +28,18 @@
 			{@const role = a.expand.role}
 			<div class="px-4 py-3 flex justify-between items-center">
 				<div class="flex items-center space-x-4">
-					<P href={`/my/organizations/${org?.id}`}>{org?.name}</P>
+					<P href={`/my/organizations/${org.id}`}>{org.name}</P>
 					{#if role.name == ADMIN || role.name == OWNER}
 						<Badge large color="dark">{c(role.name)}</Badge>
 					{/if}
 				</div>
-				<ProtectedOrgUI orgId={org?.id} roles={[ADMIN, OWNER]}>
-					<Button size="sm" color="alternative" href={`/my/organizations/${org?.id}`}>
+				<ProtectedOrgUI orgId={org.id} roles={[ADMIN, OWNER]}>
+					<Button
+						data-testid={`${org.name} link`}
+						size="sm"
+						color="alternative"
+						href={`/my/organizations/${org.id}`}
+					>
 						Settings
 					</Button>
 				</ProtectedOrgUI>
