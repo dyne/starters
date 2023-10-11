@@ -1,4 +1,4 @@
-import UIShell from './UIShell.svelte';
+import UIShell from './UiShell.svelte';
 import type { SidebarLink } from './SidebarLinks.svelte';
 import AvatarMenu from './AvatarMenu.svelte';
 import HamburgerButton from './HamburgerButton.svelte';

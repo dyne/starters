@@ -2,7 +2,7 @@
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
-	import { Button, Modal, P } from 'flowbite-svelte';
+	import { Alert, Button, Modal, P } from 'flowbite-svelte';
 	import { Trash, XMark } from 'svelte-heros-v2';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 
@@ -13,12 +13,18 @@
 	const { loadRecords, recordService } = dataManager;
 
 	async function deleteRecord() {
-		await recordService.delete(record.id);
-		loadRecords();
-		open = false;
+		try {
+			await recordService.delete(record.id);
+			loadRecords();
+			open = false;
+		} catch (e) {
+			error = e;
+			if (e && typeof e == 'object' && 'response' in e) error = e.response;
+		}
 	}
 
 	let open = false;
+	let error: unknown;
 </script>
 
 <Button
@@ -32,9 +38,22 @@
 </Button>
 
 <ModalWrapper>
-	<Modal bind:open title="Delete record" size="xs">
+	<Modal
+		bind:open
+		title="Delete record"
+		size="xs"
+		on:close={() => {
+			error = undefined;
+		}}
+	>
 		<div class="text-center space-y-6">
 			<P>Are you sure you want to delete this record?</P>
+			{#if error}
+				<Alert color="red" dismissable>
+					<P weight="bold" color="text-red-800 dark:text-red-400">Error</P>
+					<pre class="text-left">{JSON.stringify(error, null, 2)}</pre>
+				</Alert>
+			{/if}
 			<div class="flex gap-2 justify-center">
 				<Button color="red" on:click={deleteRecord}>
 					<Trash size="20" /><span class="ml-1">Delete</span>

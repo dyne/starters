@@ -24,7 +24,7 @@
 	type RecordGeneric = $$Generic<PBRecord>;
 	export let records: PBResponse<RecordGeneric>[] = [];
 
-	export let fields: Keys<RecordGeneric>[] = ['id'];
+	export let fields: Keys<RecordGeneric>[] = [];
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
 	export let fieldsLabels: Partial<Record<Keys<RecordGeneric>, string>> = {};
 	export let hideActions: Array<ViewAction> = [];
@@ -57,6 +57,9 @@
 				{@const label = fieldsLabels[field] ?? field}
 				<RecordsTableHead field={label} />
 			{/each}
+			{#if $$slots.default}
+				<TableHeadCell />
+			{/if}
 			{#if !hasNoActionColumn}
 				<TableHeadCell>Actions</TableHeadCell>
 			{/if}
@@ -75,6 +78,11 @@
 							<FieldComponent {record} {field} {component} />
 						</TableBodyCell>
 					{/each}
+					{#if $$slots.default}
+						<TableBodyCell>
+							<slot {record} />
+						</TableBodyCell>
+					{/if}
 					{#if !hasNoActionColumn}
 						<TableBodyCell>
 							<div class="flex items-center space-x-2">

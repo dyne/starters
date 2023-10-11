@@ -90,7 +90,9 @@ function fieldSchemaToZod(fieldschema: FieldSchema) {
 	else {
 		let arraySchema = z.array(zodSchema);
 		for (const [key, refiner] of Object.entries(arrayRefiners)) {
-			if (fieldOptions[key]) arraySchema = refiner(arraySchema as ZodArrayAny, fieldOptions);
+			if (fieldOptions[key]) {
+				arraySchema = refiner(arraySchema as ZodArrayAny, fieldOptions);
+			}
 		}
 		if (fieldschema.required) return arraySchema.nonempty();
 		else return arraySchema;
