@@ -45,13 +45,11 @@
 	import { appTitle } from '$lib/strings';
 	import { featureFlags } from '$lib/features';
 
-	let navClass = 'bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800';
-	let navDivClass = 'flex flex-wrap justify-between items-center mx-auto max-w-screen-xl';
 </script>
 
 <div class="flex flex-col gap-20">
 	<header>
-		<Navbar let:hidden let:toggle fluid={false} {navClass} {navDivClass}>
+		<Navbar let:hidden let:toggle fluid={false}>
 			<NavBrand href="/">
 				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 			</NavBrand>

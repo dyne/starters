@@ -22,7 +22,8 @@
 	//
 
 	type RecordGeneric = $$Generic<PBRecord>;
-	export let records: PBResponse<RecordGeneric>[] = [];
+	type ExpandGeneric = $$Generic<PBRecord>;
+	export let records: PBResponse<RecordGeneric, ExpandGeneric>[] = [];
 
 	export let fields: Keys<RecordGeneric>[] = [];
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};

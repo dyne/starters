@@ -57,6 +57,9 @@
 	//
 
 	type RecordGeneric = $$Generic<PBRecord>;
+	type ExpandGeneric = $$Generic<PBRecord>;
+	export let expandType = createTypeProp<ExpandGeneric>()
+	expandType;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
@@ -93,12 +96,12 @@
 
 	const recordService = pb.collection(collection);
 
-	let records: PBResponse<RecordGeneric>[] = [];
+	let records: PBResponse<RecordGeneric, ExpandGeneric>[] = [];
 	let totalPages = writable(0);
 
 	async function loadRecords() {
 		if (!disablePagination) {
-			const res = await recordService.getList<PBResponse<RecordGeneric>>(
+			const res = await recordService.getList<PBResponse<RecordGeneric, ExpandGeneric>>(
 				Number($currentPage),
 				perPage,
 				{
@@ -109,7 +112,7 @@
 			totalPages.set(res.totalPages);
 			totalItems.set(res.totalItems);
 		} else {
-			const res = await recordService.getFullList<PBResponse<RecordGeneric>>({
+			const res = await recordService.getFullList<PBResponse<RecordGeneric, ExpandGeneric>>({
 				...$queryParams
 			});
 			records = res;
