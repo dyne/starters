@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 
+// Credits: https://github.com/romkor/svelte-portal/blob/master/src/Portal.svelte
 export function portal(
 	el: HTMLElement,
 	target: HTMLElement | string = 'body > div'
