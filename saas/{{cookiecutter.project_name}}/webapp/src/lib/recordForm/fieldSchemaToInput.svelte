@@ -1,3 +1,24 @@
+<script lang="ts" context="module">
+	import type { SvelteComponent, ComponentEvents, ComponentProps, ComponentType } from 'svelte';
+
+	type FieldComponent = SvelteComponent<{ field: string }>;
+
+	export function createFieldComponent<C extends FieldComponent>(
+		component: ComponentType<C>,
+		props?: ComponentProps<C>,
+		events?: ComponentEvents<C>
+	) {
+		return { component, props, events };
+	}
+
+	export type FieldComponentData<C extends FieldComponent = FieldComponent> = ReturnType<
+		typeof createFieldComponent<C>
+	>;
+	export type FieldComponentProp<C extends FieldComponent = FieldComponent> =
+		| FieldComponentData<C>
+		| undefined;
+</script>
+
 <script lang="ts">
 	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 	import {
@@ -20,6 +41,7 @@
 	export let relationDisplayFields: RelationDisplayFields = [];
 	export let relationInputMode: RelationInputMode = 'search';
 	export let label = fieldSchema.name;
+	export let component: FieldComponentProp = undefined;
 
 	const field = fieldSchema.name;
 
@@ -51,6 +73,14 @@
 
 {#if hidden}
 	<Hidden {field} />
+{:else if component}
+	<svelte:component
+		this={component.component}
+		{field}
+		{...component.props}
+		{...component.events}
+		{label}
+	/>
 {:else if fieldSchema.type == FieldType.TEXT}
 	<Input {field} {label} />
 {:else if fieldSchema.type == FieldType.JSON}
