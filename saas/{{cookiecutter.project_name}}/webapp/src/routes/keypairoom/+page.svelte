@@ -80,7 +80,7 @@
 	<Form {superform} className="space-y-6">
 		{#if !$currentUser}
 			<div class="space-y-1">
-				<Input field="email" label="User email" />
+				<Input field="email" label="User email" {superform} />
 				<P size="sm" color="text-gray-400">
 					Your email won't be stored anywhere, it will be used only to generate the keys.
 				</P>
@@ -88,7 +88,7 @@
 			<Hr />
 		{/if}
 		{#each userQuestions as question}
-			<Input field={`questions.${question.id}`} label={question.text} />
+			<Input field={`questions.${question.id}`} label={question.text} {superform} />
 		{/each}
 
 		<Hr />

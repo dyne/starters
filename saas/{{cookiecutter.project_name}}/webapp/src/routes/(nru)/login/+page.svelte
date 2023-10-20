@@ -37,6 +37,7 @@
 		label="Your email"
 		field={keys.email}
 		placeholder="name@foundation.org"
+		{superform}
 	/>
 	<Input
 		id="password"
@@ -44,6 +45,7 @@
 		label="Your password"
 		field={keys.password}
 		placeholder="•••••"
+		{superform}
 	/>
 	<FormError />
 	<div class="flex justify-end">

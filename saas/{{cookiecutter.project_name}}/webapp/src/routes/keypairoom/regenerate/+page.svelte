@@ -42,14 +42,14 @@
 
 		{#if !$currentUser}
 			<div class="space-y-1">
-				<Input field="email" label="User email" />
+				<Input field="email" label="User email" {superform}/>
 				<P size="sm" color="text-gray-400">
 					Your email won't be stored anywhere, it will be used only to generate the keys.
 				</P>
 			</div>
 		{/if}
 
-		<Textarea field={keys.seed} placeholder={textAreaPlaceholder} />
+		<Textarea field={keys.seed} placeholder={textAreaPlaceholder} {superform} />
 
 		<FormError />
 		<div class="flex justify-end">

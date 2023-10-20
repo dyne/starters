@@ -35,6 +35,7 @@
 		label="Your email"
 		field={keys.email}
 		placeholder="name@foundation.org"
+		{superform}
 	/>
 	<FormError />
 	<div class="flex justify-end">

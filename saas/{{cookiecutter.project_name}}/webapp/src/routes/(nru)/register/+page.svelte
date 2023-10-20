@@ -42,15 +42,28 @@
 <Heading tag="h4">Create an account</Heading>
 
 <Form {superform}>
-	<Input type="email" label="Your email" field={keys.email} placeholder="name@example.org" />
-	<Input type="password" label="Your password" field={keys.password} placeholder="•••••" />
+	<Input
+		type="email"
+		label="Your email"
+		field={keys.email}
+		placeholder="name@example.org"
+		{superform}
+	/>
+	<Input
+		type="password"
+		label="Your password"
+		field={keys.password}
+		placeholder="•••••"
+		{superform}
+	/>
 	<Input
 		type="password"
 		label="Confirm password"
 		field={keys.passwordConfirm}
 		placeholder="•••••"
+		{superform}
 	/>
-	<Checkbox field={keys.acceptTerms}>
+	<Checkbox field={keys.acceptTerms} {superform}>
 		I accept the<A class="ml-1" href="/">Terms and Conditions</A>
 	</Checkbox>
 

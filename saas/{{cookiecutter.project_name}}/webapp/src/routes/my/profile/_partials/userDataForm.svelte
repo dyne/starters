@@ -45,16 +45,16 @@
 </script>
 
 <Form {superform}>
-	<Input field="name" label="Username" />
+	<Input field="name" label="Username" {superform} />
 
 	<div class="space-y-2">
-		<Input field="email" type="email" />
-		<Checkbox field="emailVisibility">
+		<Input field="email" type="email" {superform} />
+		<Checkbox field="emailVisibility" {superform}>
 			<span>Show email to other users</span>
 		</Checkbox>
 	</div>
 
-	<FileInput field="avatar" />
+	<FileInput field="avatar" {superform} />
 
 	<FormError />
 
