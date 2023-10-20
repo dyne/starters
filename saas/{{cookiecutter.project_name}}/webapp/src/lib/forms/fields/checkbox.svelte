@@ -1,15 +1,23 @@
 <script lang="ts">
-	import { formFieldProxy } from 'sveltekit-superforms/client';
+	import type { ClientResponseErrorData } from '$lib/errorHandling';
+
+	import type { ZodValidation } from 'sveltekit-superforms';
+
+	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
 
 	import { Checkbox, Label } from 'flowbite-svelte';
 	import { getFormContext } from '../form.svelte';
 	import FieldError from './fieldParts/fieldError.svelte';
 	import FieldRequiredIndicator from './fieldParts/fieldRequiredIndicator.svelte';
 
+	type T = $$Generic<AnyZodObject>;
+
+
+	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
 	export let field: string;
 	export let label = '';
 
-	const { superform } = getFormContext();
+	// const { superform } = getFormContext();
 	const { value, errors, constraints } = formFieldProxy(superform, field);
 </script>
 

@@ -3,10 +3,14 @@
 </script>
 
 <script lang="ts">
+	import type { ClientResponseErrorData } from '$lib/errorHandling';
+
+	import type { ZodValidation } from 'sveltekit-superforms';
+
 	import RelationsManager, {
 		type InputMode as RelationInputMode
 	} from '$lib/components/relationsManager.svelte';
-	import { formFieldProxy } from 'sveltekit-superforms/client';
+	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
 	import { getFormContext } from '../form.svelte';
 	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
@@ -19,7 +23,11 @@
 	export let max: number | undefined = undefined;
 	export let inputMode: RelationInputMode = 'search';
 
-	const { superform } = getFormContext();
+	type T = $$Generic<AnyZodObject>;
+
+
+	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
+
 	const { validate } = superform;
 	const { value } = formFieldProxy(superform, field);
 

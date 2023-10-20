@@ -9,7 +9,11 @@
 </script>
 
 <script lang="ts">
-	import { formFieldProxy } from 'sveltekit-superforms/client';
+	import type { ClientResponseErrorData } from '$lib/errorHandling';
+
+	import type { ZodValidation } from 'sveltekit-superforms';
+
+	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
 
 	import { Badge, Fileupload, Helper, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { getFormContext } from '../form.svelte';
@@ -18,13 +22,17 @@
 	import ListgroupItemButton from '$lib/components/listgroupItemButton.svelte';
 
 	//
+	type T = $$Generic<AnyZodObject>;
+
+
+	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
 
 	export let field: string;
 	export let label = '';
 	export let multiple = false;
 	export let accept: string[] = [];
 
-	const { superform } = getFormContext();
+	// const { superform } = getFormContext();
 	const { validate } = superform;
 	const { value, errors } = formFieldProxy(superform, field);
 
