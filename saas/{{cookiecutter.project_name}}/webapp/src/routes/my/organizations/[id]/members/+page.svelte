@@ -2,7 +2,12 @@
 	import { CollectionManager } from '$lib/collectionManager';
 	import CollectionTable from '$lib/collectionManager/ui/collectionTable.svelte';
 	import CreateRecord from '$lib/collectionManager/ui/recordActions/createRecord.svelte';
-	import { Collections, type UsersRecord, type OrgAuthorizationsRecord, type OrgRolesRecord, type AuthSystemFields } from '$lib/pocketbase/types';
+	import {
+		Collections,
+		type OrgAuthorizationsRecord,
+		type OrgRolesResponse,
+		type UsersResponse
+	} from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { Heading, P } from 'flowbite-svelte';
 
@@ -10,7 +15,7 @@
 	$: organization = data.organization;
 
 	const recordType = createTypeProp<OrgAuthorizationsRecord>();
-	const expandType = createTypeProp<{user:AuthSystemFields, role:OrgRolesRecord}>()
+	const expandType = createTypeProp<{ user: UsersResponse; role: OrgRolesResponse }>();
 </script>
 
 <CollectionManager

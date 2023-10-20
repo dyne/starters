@@ -3,7 +3,7 @@
 	import type { RecordService } from 'pocketbase';
 	import type { Writable } from 'svelte/store';
 	import type { FieldsSettings } from '$lib/recordForm';
-	import type { PBRecord } from '$lib/utils/types';
+	import type { PBRecord, PBExpand } from '$lib/utils/types';
 	import type { RecordFullListOptions } from 'pocketbase';
 
 	export const RECORDS_MANAGER_KEY = Symbol('rmk');
@@ -57,11 +57,12 @@
 	//
 
 	type RecordGeneric = $$Generic<PBRecord>;
-	type ExpandGeneric = $$Generic<PBRecord>;
-	export let expandType = createTypeProp<ExpandGeneric>()
-	expandType;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
+
+	type ExpandGeneric = $$Generic<PBExpand>;
+	export let expandType = createTypeProp<ExpandGeneric>();
+	expandType;
 
 	//
 
