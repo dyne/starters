@@ -2,7 +2,7 @@ import { tick } from 'svelte';
 
 export function portal(
 	el: HTMLElement,
-	target: HTMLElement | string = 'body'
+	target: HTMLElement | string = 'body > div'
 ): {
 	update: (newTarget: HTMLElement | string) => Promise<void>;
 	destroy: () => void;
@@ -10,7 +10,7 @@ export function portal(
 	let targetEl: HTMLElement | null = null;
 
 	async function update(newTarget: HTMLElement | string): Promise<void> {
-        target = newTarget;
+		target = newTarget;
 		if (typeof target === 'string') {
 			targetEl = targetEl ?? document.querySelector(target);
 
@@ -40,5 +40,5 @@ export function portal(
 
 	update(target);
 
-    return { update, destroy };
+	return { update, destroy };
 }
