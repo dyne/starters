@@ -1,13 +1,10 @@
 <script lang="ts" context="module">
 	import type { SvelteComponent, ComponentEvents, ComponentProps, ComponentType } from 'svelte';
 
-
 	type FieldComponent = SvelteComponent<{
 		field: string;
 		superform: SuperForm<ZodValidation<AnyZodObject>, ClientResponseErrorData>;
 	}>;
-
-	
 
 	export function createFieldComponent<C extends FieldComponent>(
 		component: ComponentType<C>,
@@ -39,9 +36,7 @@
 	} from '$lib/forms/fields';
 	import { isArrayField } from '$lib/pocketbase/schema';
 	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
-	import type { Writable } from 'svelte/store';
-	import type { FormPathType } from 'sveltekit-superforms/dist/stringPath';
-	import type { InputConstraint, UnwrapEffects, ZodValidation } from 'sveltekit-superforms';
+	import type { ZodValidation } from 'sveltekit-superforms';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import { getFormContext } from '$lib/forms/form.svelte';
@@ -56,11 +51,10 @@
 	export let label = fieldSchema.name;
 	export let component: FieldComponentProp = undefined;
 
-
 	const field = fieldSchema.name;
 
 	const multiple = isArrayField(fieldSchema);
-	const { superform } = getFormContext()
+	const { superform } = getFormContext();
 
 	/* Select */
 
@@ -91,7 +85,7 @@
 {:else if component}
 	<svelte:component
 		this={component.component}
-		{field} 
+		{field}
 		{superform}
 		{...component.props}
 		{...component.events}
@@ -102,7 +96,7 @@
 {:else if fieldSchema.type == FieldType.JSON}
 	<Textarea {field} {superform} {label} />
 {:else if fieldSchema.type == FieldType.BOOL}
-	<Checkbox {field} {superform} >{label}</Checkbox>
+	<Checkbox {field} {superform}>{label}</Checkbox>
 {:else if fieldSchema.type == FieldType.FILE}
 	<File {field} {superform} {label} {multiple} {accept} />
 {:else if fieldSchema.type == FieldType.SELECT}
@@ -111,7 +105,8 @@
 	<Textarea {field} {superform} {label} />
 {:else if fieldSchema.type == FieldType.RELATION}
 	<Relations
-		{field} {superform}
+		{field}
+		{superform}
 		{label}
 		{multiple}
 		collection={collectionId}
