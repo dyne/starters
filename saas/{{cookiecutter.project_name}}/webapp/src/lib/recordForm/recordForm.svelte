@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	import type { RelationDisplayFields } from '$lib/forms/fields';
 	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
+	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
 
 	export type RelationFieldSettings = {
 		displayFields: RelationDisplayFields;
@@ -13,6 +14,7 @@
 		exclude: Array<keyof T>;
 		hide: { [K in keyof T]?: T[K] };
 		relations: { [K in keyof T]?: Partial<RelationFieldSettings> };
+		components: { [K in keyof T]?: FieldComponentProp };
 	};
 </script>
 
@@ -50,7 +52,7 @@
 	export let recordId = '';
 
 	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
-	let { order = [], exclude = [], hide, relations, labels } = fieldsSettings;
+	let { order = [], exclude = [], hide, relations, labels, components } = fieldsSettings;
 
 	export let submitButtonText = '';
 
@@ -145,12 +147,14 @@
 		{@const relationDisplayFields = relationFieldSettings?.displayFields ?? []}
 		{@const relationInputMode = relationFieldSettings?.inputMode ?? 'search'}
 		{@const label = labels?.[fieldSchema.name] ?? fieldSchema.name}
+		{@const component = components?.[fieldSchema.name]}
 		<FieldSchemaToInput
 			{label}
 			{fieldSchema}
 			{hidden}
 			{relationDisplayFields}
 			{relationInputMode}
+			{component}
 		/>
 	{/each}
 
