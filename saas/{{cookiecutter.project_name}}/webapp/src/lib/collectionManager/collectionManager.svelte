@@ -3,7 +3,7 @@
 	import type { RecordService } from 'pocketbase';
 	import type { Writable } from 'svelte/store';
 	import type { FieldsSettings } from '$lib/recordForm';
-	import type { PBRecord } from '$lib/utils/types';
+	import type { PBRecord, PBExpand } from '$lib/utils/types';
 	import type { RecordFullListOptions } from 'pocketbase';
 
 	export const RECORDS_MANAGER_KEY = Symbol('rmk');
@@ -60,6 +60,10 @@
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
+	type ExpandGeneric = $$Generic<PBExpand>;
+	export let expandType = createTypeProp<ExpandGeneric>();
+	expandType;
+
 	//
 
 	export let collection: Collections | string;
@@ -93,12 +97,12 @@
 
 	const recordService = pb.collection(collection);
 
-	let records: PBResponse<RecordGeneric>[] = [];
+	let records: PBResponse<RecordGeneric, ExpandGeneric>[] = [];
 	let totalPages = writable(0);
 
 	async function loadRecords() {
 		if (!disablePagination) {
-			const res = await recordService.getList<PBResponse<RecordGeneric>>(
+			const res = await recordService.getList<PBResponse<RecordGeneric, ExpandGeneric>>(
 				Number($currentPage),
 				perPage,
 				{
@@ -109,7 +113,7 @@
 			totalPages.set(res.totalPages);
 			totalItems.set(res.totalItems);
 		} else {
-			const res = await recordService.getFullList<PBResponse<RecordGeneric>>({
+			const res = await recordService.getFullList<PBResponse<RecordGeneric, ExpandGeneric>>({
 				...$queryParams
 			});
 			records = res;
