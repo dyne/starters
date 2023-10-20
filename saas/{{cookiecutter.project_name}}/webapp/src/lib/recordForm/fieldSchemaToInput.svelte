@@ -4,7 +4,7 @@
 
 	type FieldComponent = SvelteComponent<{
 		field: string;
-		superform: SuperForm<ZodValidation<AnyZodObject>, unknown>;
+		superform: SuperForm<ZodValidation<AnyZodObject>, ClientResponseErrorData>;
 	}>;
 
 	
@@ -45,6 +45,7 @@
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import { getFormContext } from '$lib/forms/form.svelte';
+	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
 	//
 

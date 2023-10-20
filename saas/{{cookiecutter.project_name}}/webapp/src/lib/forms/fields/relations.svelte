@@ -5,7 +5,9 @@
 <script lang="ts">
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
-	import type { ZodValidation } from 'sveltekit-superforms';
+	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
+	import type { z, AnyZodObject } from 'zod';
+
 
 	import RelationsManager, {
 		type InputMode as RelationInputMode
@@ -15,7 +17,9 @@
 	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 
-	export let field: string;
+	export let field: FormPathLeaves<z.infer<T>>;
+	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
+
 	export let label = '';
 	export let collection: string | Collections;
 	export let multiple = false;
@@ -24,9 +28,6 @@
 	export let inputMode: RelationInputMode = 'search';
 
 	type T = $$Generic<AnyZodObject>;
-
-
-	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
 
 	const { validate } = superform;
 	const { value } = formFieldProxy(superform, field);
