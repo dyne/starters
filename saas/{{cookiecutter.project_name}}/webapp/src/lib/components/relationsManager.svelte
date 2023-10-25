@@ -3,10 +3,15 @@
 </script>
 
 <script lang="ts">
+	import { sineIn } from 'svelte/easing';
+	import type { ComponentProps } from 'svelte';
+	import { writable, type Writable } from 'svelte/store';
+	import IconButton from './iconButton.svelte';
+	import { Eye, Plus } from 'svelte-heros-v2';
+	import { Button, Drawer, Heading } from 'flowbite-svelte';
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-
 	import RecordSelect from './recordSelect.svelte';
 	import RecordSearch from './recordSearch.svelte';
 	import ArrayOrItemManager from './arrayOrItemManager.svelte';
@@ -20,6 +25,7 @@
 	export let name = '';
 	export let max: number | undefined = undefined;
 	export let mode: InputMode = 'search';
+	export let addButtonText: string | undefined = undefined;
 
 	//
 
@@ -31,6 +37,11 @@
 
 	let tempIDs: string[] = [];
 	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
+	let item: string = '';
+
+	let record: PBRecord | undefined = undefined;
+
+	$: if ($hideDrawer) record = undefined;
 
 	$: {
 		if (Array.isArray(relation)) tempIDs = relation;
@@ -65,6 +76,33 @@
 		if (multiple) relation = [...relation, data.id];
 		else relation = data.id;
 	}
+
+	function createModalStore(initialValue = false) {
+		const open = writable(initialValue);
+		function toggleDrawer() {
+			open.update((v) => !v);
+		}
+		return { ...open, toggleDrawer };
+	}
+
+	const hideDrawer = createModalStore(true);
+	export const { toggleDrawer } = hideDrawer;
+
+	//
+
+	const drawerProps: ComponentProps<Drawer> = {
+		transitionType: 'fly',
+		backdrop: true,
+		activateClickOutside: true,
+		placement: 'right',
+		transitionParams: {
+			x: 320,
+			duration: 200,
+			easing: sineIn
+		},
+		class: '!p-6 !space-y-6',
+		width: 'w-full md:w-4/5 lg:w-3/5'
+	};
 </script>
 
 {#if mode == 'search'}
@@ -72,10 +110,35 @@
 {:else}
 	<RecordSelect on:select={handleSelect} {collection} {name} {displayFields} {disabled} />
 {/if}
-
-<ArrayOrItemManager bind:value={relation} let:item>
+<ArrayOrItemManager
+	bind:value={relation}
+	on:show={(e) => {
+		item = e.detail.item;
+		toggleDrawer();
+		record = tempRecords[item];
+	}}
+	let:item
+>
 	{@const record = tempRecords[item]}
 	{#if record}
 		{buildRecordString(record.id)}
 	{/if}
 </ArrayOrItemManager>
+{#if addButtonText}
+	<div class="flex justify-end pt-4">
+		<Button color="alternative" size="xs" on:click={toggleDrawer}>
+			<Plus size="16" />
+			<span class="ml-1">{addButtonText}</span>
+		</Button>
+	</div>
+{/if}
+<Drawer bind:hidden={$hideDrawer} {...drawerProps}>
+	<div class="flex justify-between items-center">
+		<Heading tag="h5">{addButtonText}</Heading>
+		<div class="flex gap-2">
+			<slot {record} name="actions" />
+			<IconButton on:click={toggleDrawer}></IconButton>
+		</div>
+	</div>
+	<slot {record} />
+</Drawer>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { Listgroup } from 'flowbite-svelte';
 	import ListgroupItemButton from './listgroupItemButton.svelte';
 
@@ -12,16 +13,25 @@
 		else tempItems = [];
 	}
 
+	const dispatch = createEventDispatcher<{
+		show: {
+			item: T;
+		};
+	}>();
+
 	function removeItem(item: T) {
 		if (Array.isArray(value)) value = value.filter((i) => i !== item);
 		else value = undefined;
+	}
+	function showItem(item: T) {
+		dispatch('show', {item} );
 	}
 </script>
 
 {#if tempItems.length > 0}
 	<Listgroup>
 		{#each tempItems as item (item)}
-			<ListgroupItemButton on:click={() => removeItem(item)}>
+			<ListgroupItemButton on:remove={() => removeItem(item)} on:show={() => showItem(item)}>
 				<slot {item} />
 			</ListgroupItemButton>
 		{/each}
