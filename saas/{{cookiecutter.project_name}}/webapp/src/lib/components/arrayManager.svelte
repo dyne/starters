@@ -1,6 +1,8 @@
-<script lang="ts" generics="T">
-	import { Button } from 'flowbite-svelte';
-	import { XMark } from 'svelte-heros-v2';
+<script lang="ts">
+	import { Listgroup } from 'flowbite-svelte';
+	import ListgroupItemButton from './listgroupItemButton.svelte';
+
+	type T = $$Generic;
 
 	export let array: T[];
 
@@ -10,18 +12,11 @@
 </script>
 
 {#if array.length > 0}
-	<div class="divide-y divide-gray-200 border border-gray-200 rounded-lg">
+	<Listgroup>
 		{#each array as item (item)}
-			<div class="p-1 pl-4 flex justify-between items-center text-sm">
+			<ListgroupItemButton on:click={() => removeItem(item)}>
 				<slot {item} />
-				<Button
-					class="!p-1 !border-transparent"
-					color="alternative"
-					on:click={() => removeItem(item)}
-				>
-					<XMark size="20" />
-				</Button>
-			</div>
+			</ListgroupItemButton>
 		{/each}
-	</div>
+	</Listgroup>
 {/if}

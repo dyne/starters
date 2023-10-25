@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Label, Input, Heading, P, Button } from 'flowbite-svelte';
-	import type { ActionData } from './$types';
 
-	export let form: ActionData;
+	export let form;
 </script>
 
 {#if !form}
@@ -14,7 +13,7 @@
 		</div>
 		<Label class="space-y-2">
 			<span>Your email</span>
-			<Input type="email" name="email" id="email" placeholder="name@company.com" required />
+			<Input type="email" name="email" id="email" placeholder="name@foundation.org" required />
 		</Label>
 		<Button type="submit" class="w-full">Recover password</Button>
 	</form>

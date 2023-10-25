@@ -1,84 +1,53 @@
+<script lang="ts" context="module">
+	export type InputMode = 'search' | 'select';
+</script>
+
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { Collections } from '$lib/pocketbase-types';
-	import type { Record as PBRecord } from 'pocketbase';
+	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import { createTypeProp } from '$lib/utils/typeProp';
 
-	// @ts-ignore
-	import Svelecte from 'svelecte';
-	import ArrayManager from './arrayManager.svelte';
-	import { onMount } from 'svelte';
-	import { getCollectionSchema } from '$lib/schema/getCollectionSchema';
+	import RecordSelect from './recordSelect.svelte';
+	import RecordSearch from './recordSearch.svelte';
+	import ArrayOrItemManager from './arrayOrItemManager.svelte';
 
 	//
 
 	export let relation: string[] | string;
-	export let collection: string | Collections;
-	export let multiple: boolean;
+	export let collection: string;
 	export let displayFields: string[];
+	export let multiple = false;
 	export let name = '';
 	export let max: number | undefined = undefined;
+	export let mode: InputMode = 'search';
+
+	//
+
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let recordType = createTypeProp<RecordGeneric>();
+	recordType;
 
 	//
 
 	let tempIDs: string[] = [];
-	if (Array.isArray(relation)) tempIDs = relation;
-	else if (relation) tempIDs = [relation];
+	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
 
-	$: relation = multiple ? tempIDs : tempIDs[0];
+	$: {
+		if (Array.isArray(relation)) tempIDs = relation;
+		else if (relation) tempIDs = [relation];
+		loadRecords();
+	}
 
-	//
-
-	let tempRecords: Record<string, PBRecord> = {};
-
-	onMount(async () => {
-		const initialData = await Promise.all(
-			tempIDs.map((id) => pb.collection(collection).getOne(id, { $autoCancel: false }))
+	async function loadRecords() {
+		const data = await Promise.all(
+			tempIDs.map((id) =>
+				pb.collection(collection).getOne<PBResponse<RecordGeneric>>(id, { $autoCancel: false })
+			)
 		);
-		initialData.forEach((d) => {
+		data.forEach((d) => {
 			tempRecords[d.id] = d;
 		});
-	});
-
-	//
-
-	const valueField = 'data';
-	const labelField = 'label';
-
-	function getCollectionFieldNames(): string[] {
-		const collectionSchema = getCollectionSchema(collection);
-		if (!collectionSchema) return [];
-		return collectionSchema.schema.map((f) => f.name);
 	}
-
-	function buildFilterString(text: string) {
-		return getCollectionFieldNames()
-			.map((f) => `${f}~'${text}'`)
-			.join(' || ');
-	}
-
-	async function fetchOptions(text: string) {
-		const data = await pb.collection(collection).getFullList({
-			filter: buildFilterString(text)
-		});
-		return data.map((d) => {
-			return {
-				[valueField]: d,
-				[labelField]: displayFields.map((f) => d[f]).join(' | ')
-			};
-		});
-	}
-
-	let selectValue: null;
-
-	function handleSelect(e: CustomEvent<Record<string, PBRecord>>) {
-		const data = e.detail[valueField];
-		tempRecords[data.id] = data;
-		if (multiple) tempIDs = [...tempIDs, data.id];
-		else tempIDs = [data.id];
-		selectValue = null;
-	}
-
-	//
 
 	function buildRecordString(id: string) {
 		return displayFields
@@ -87,25 +56,26 @@
 			.join(' | ');
 	}
 
-	$: disabled = Boolean(max) && tempIDs.length >= (max as number);
-	$: placeholder = disabled ? `Max items selected (${max})` : 'Search';
+	//
+
+	$: disabled = multiple && !!max && relation.length >= max;
+
+	function handleSelect(e: CustomEvent<{ record: PBResponse<PBRecord> }>) {
+		const data = e.detail.record;
+		if (multiple) relation = [...relation, data.id];
+		else relation = data.id;
+	}
 </script>
 
-<Svelecte
-	{name}
-	{valueField}
-	{labelField}
-	fetch={fetchOptions}
-	valueAsObject
-	clearable
-	bind:value={selectValue}
-	on:change={handleSelect}
-	{disabled}
-	{placeholder}
-/>
-<ArrayManager bind:array={tempIDs} let:item>
+{#if mode == 'search'}
+	<RecordSearch on:select={handleSelect} {collection} {name} {disabled} exclude={tempIDs} />
+{:else}
+	<RecordSelect on:select={handleSelect} {collection} {name} {displayFields} {disabled} />
+{/if}
+
+<ArrayOrItemManager bind:value={relation} let:item>
 	{@const record = tempRecords[item]}
 	{#if record}
 		{buildRecordString(record.id)}
 	{/if}
-</ArrayManager>
+</ArrayOrItemManager>

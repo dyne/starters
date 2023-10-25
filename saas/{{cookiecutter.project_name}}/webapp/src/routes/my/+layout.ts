@@ -1,8 +1,8 @@
-import { pb } from '$lib/pocketbase';
-import { redirect } from '@sveltejs/kit';
+import { verifyUser } from '$lib/auth/verifyUser';
+import { loadFeatureFlags } from '$lib/features';
+import { error, redirect } from '@sveltejs/kit';
 
 export const load = async () => {
-	if (!pb.authStore.model) {
-		throw redirect(303, '/login');
-	}
+	if (!(await loadFeatureFlags()).AUTH) throw error(404);
+	if (!(await verifyUser())) throw redirect(303, '/login');
 };

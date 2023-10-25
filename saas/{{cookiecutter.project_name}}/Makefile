@@ -1,25 +1,119 @@
 .DEFAULT_GOAL := help
 .PHONY: help
-MAKEFLAGS += -j2
 
-help: ## 🛟 Show this help message
+# detect the operating system
+OSFLAG 				:=
+ifneq ($(OS),Windows_NT)
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		OSFLAG += LINUX
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		OSFLAG += OSX
+	endif
+endif
+
+
+help: ## 🛟  Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
+
+# - Setup - #
+
+setup_git: ## 📦 Setup the Git (if not already done)
+	@echo "📦 Setup Git"
+	@(git status > /dev/null 2>&1 && echo "Git already set up") || (echo "git init" && git init)
+	@echo " "
+
+setup_submodules: setup_git ## 📦 Setup the submodules
+	@echo "📦 Setup the submodules"
+	rm -rf admin/zencode/zenflows-crypto
+	rm -rf webapp/zenflows-crypto
+	cd admin && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
+	cd webapp && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
+	@echo " "
+
+setup_backend: ## 📦 Setup the frontend
+	@echo "📦 Setup the backend"
+	if [ ! -d ./admin/pb_data ]; then \
+    	mkdir ./admin/pb_data; \
+	fi
+	cd admin && ./setup
+	
+	if [ $(OSFLAG) == "OSX" ]; then \
+		wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
+		wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
+		else \
+		wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec; \
+		wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom; \
+	fi
+	
+	chmod +x /usr/local/bin/zencode-exec
+	chmod +x /usr/local/bin/zenroom
+	@echo " "
+
+setup_frontend: ## 📦 Setup the frontend
+	@echo "📦 Setup the frontend"
+	if [ ! -f ./webapp/.env ]; then \
+		cp ./webapp/.env.example ./webapp/.env; \
+	fi
+	cd webapp && pnpm i
+	@echo " "
+
+setup: setup_submodules setup_backend setup_frontend ## 📦 Setup the project
+
+# - Running - #
+
+# sleep 2 is needed to wait for the admin server to start
+# before the webapp tries to connect to it and generate the schema
+# check the webapp/package.json for the predev and prebuild scripts
+
+be: ## ⚙️ Run the backend
+	./admin/pb serve
+
+fe: ## ⚙️ Run the frontend
+	sleep 2 && cd webapp && pnpm serve
+
+fe_dev: ## ⚙️ Watch the frontend
+	sleep 2 && cd webapp && pnpm dev
+
+dev: ## ⚙️ Run the project in development mode
+	$(MAKE) be fe_dev -j2
+
+up: setup ## ⚙️ Run the project
+	$(MAKE) be fe -j2
 
 doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
 
-bg:
-	@echo "🚀 Launching the Backend" 
-	cd admin && ./setup
-	./admin/pb serve
+definitions: ## ⚙️ Generate type definitions and schema
+	cd webapp && pnpm definitions
 
-fg:
-	@echo "🚀 Launching the Frontend" 
-	cd webapp && pnpm i && pnpm dev
+# - Cleaning - #
 
-clean: ## 🧹 Clean the containers
-	@echo "🧹 Cleaning the data"
-	rm -fr admin/pb_data/*
+remove_git: ## 🧹 Remove git
+	@echo "🧹 Removing git"
+	rm -rf .git
+	@echo " "
+
+clean_submodules: ## 🧹 Clean submodules
+	@echo "🧹 Clean submodules"
+	rm -rf admin/zencode/zenflows-crypto
+	rm -rf webapp/zenflows-crypto
+	@echo " "
+
+clean_build: ## 🧹 Clean project build
+	@echo "🧹 Clean project build"
 	rm -f admin/pb
+	rm -fr webapp/node_modules
+	rm -f webapp/src/lib/pocketbase/types.ts
+	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
+	rm -f webapp/src/lib/rbac/roles.ts
+	rm -f webapp/src/lib/features/list.ts
+	@echo " "
 
-up: bg fg ## 💄 Run all the components quickly
+clean: clean_submodules clean_build ## 🧹 Clean the project
+
+purge: ## ⛔ Purge the database
+	@echo "⛔ Purge the database"
+	rm -fr admin/pb_data/*
+	@echo " "

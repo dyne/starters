@@ -1,11 +1,13 @@
+/// <reference path="../pb_data/types.d.ts" />
+/**
+ * @typedef {import('../../webapp/src/lib/pocketbase/types').FeaturesRecord} Feature
+ */
+
 const FEATURES_COLLECTION_NAME = "features";
 
 /**
-    type Feature = {
-        name: string;
-        envVariables: Record<string, unknown>;
-    }
-*/
+ * @type {Feature[]}
+ */
 const features = [
     {
         name: "keypairoom",
@@ -23,6 +25,19 @@ const features = [
             DID_KEYRING: "json, currently passed base64 encoded",
         },
     },
+    {
+        name: "auth",
+        envVariables: {},
+    },
+    {
+        name: "maintenance",
+        envVariables: {},
+        active: false,
+    },
+    {
+        name: "organizations",
+        envVariables: {},
+    },
 ];
 
 migrate(
@@ -36,7 +51,7 @@ migrate(
             const record = new Record(collection, {
                 name: feature.name,
                 envVariables: feature.envVariables,
-                active: false,
+                active: feature.active ?? true,
             });
 
             dao.saveRecord(record);
