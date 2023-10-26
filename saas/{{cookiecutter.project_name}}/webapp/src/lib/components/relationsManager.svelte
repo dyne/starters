@@ -7,7 +7,7 @@
 	import type { ComponentProps } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
 	import IconButton from './iconButton.svelte';
-	import { Eye, Plus } from 'svelte-heros-v2';
+	import { Plus } from 'svelte-heros-v2';
 	import { Button, Drawer, Heading } from 'flowbite-svelte';
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
@@ -39,7 +39,7 @@
 	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
 	let item: string = '';
 
-	let record: PBRecord | undefined = undefined;
+	let record: PBResponse<RecordGeneric> | undefined = undefined;
 
 	$: if ($hideDrawer) record = undefined;
 

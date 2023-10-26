@@ -20,6 +20,10 @@
 </script>
 
 <script lang="ts">
+	import { createTypeProp } from '$lib/utils/typeProp';
+
+	import type { FieldsSettings, RelationFieldSettings } from './recordForm.svelte';
+
 	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 	import {
 		Checkbox,
@@ -36,12 +40,20 @@
 
 	//
 
+	type RecordGeneric = $$Generic<PBRecord>;
+	export let recordType = createTypeProp<RecordGeneric>();
+	recordType;
+
 	export let fieldSchema: FieldSchema;
 	export let hidden = false;
 	export let relationDisplayFields: RelationDisplayFields = [];
+	export let extendedRelationDisplayFields: RelationDisplayFields = [];
 	export let relationInputMode: RelationInputMode = 'search';
 	export let label = fieldSchema.name;
 	export let component: FieldComponentProp = undefined;
+	export let showRelationCreateButton: boolean = true;
+	export let showRelationEditButton: boolean = true;
+	export let relationFormFieldsSettings:Partial<FieldsSettings<RecordGeneric>> = {}
 
 	const field = fieldSchema.name;
 
@@ -100,7 +112,11 @@
 		{multiple}
 		collection={collectionId}
 		displayFields={relationDisplayFields}
+		extendedDisplayFields={extendedRelationDisplayFields}
 		inputMode={relationInputMode}
+		showCreateButton={showRelationCreateButton}
+		showEditButton={showRelationEditButton}
+		formFieldsSettings={relationFormFieldsSettings}
 		{max}
 	/>
 {/if}

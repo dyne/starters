@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { currentUser } from '$lib/pocketbase';
 	import { Collections, type CrudExampleRecord } from '$lib/pocketbase/types';
 
 	import { createTypeProp } from '$lib/utils/typeProp';
@@ -29,6 +28,20 @@
 				text: 'Titolo',
 				file_only_pdf_json: 'PDF or JSON file',
 				textarea: 'Short description'
+			},
+			relations: {
+				relation:{
+					displayFields:[
+						"name"
+					],
+					extendedDisplayFields: [
+						"name",
+						"envVariables",
+						"active"
+					],
+					showEditButton: true,
+					showCreateButton: true
+				}
 			}
 		}}
 		editFormSettings={{

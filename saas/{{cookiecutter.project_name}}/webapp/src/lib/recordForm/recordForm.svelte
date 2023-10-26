@@ -3,9 +3,13 @@
 	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
 
-	export type RelationFieldSettings = {
+	export type RelationFieldSettings<T> = {
 		displayFields: RelationDisplayFields;
 		inputMode: RelationInputMode;
+		extendedDisplayFields: RelationDisplayFields;
+		formFieldsSettings: FieldsSettings<T>;
+		showCreateButton: boolean;
+		showEditButton: boolean;
 	};
 
 	export type FieldsSettings<T> = {
@@ -13,7 +17,7 @@
 		order: Array<keyof T>;
 		exclude: Array<keyof T>;
 		hide: { [K in keyof T]?: T[K] };
-		relations: { [K in keyof T]?: Partial<RelationFieldSettings> };
+		relations: { [K in keyof T]?: Partial<RelationFieldSettings<T>> };
 		components: { [K in keyof T]?: FieldComponentProp };
 	};
 </script>
@@ -144,8 +148,12 @@
 	{#each fieldsSchema as fieldSchema}
 		{@const hidden = hide ? Object.keys(hide).includes(fieldSchema.name) : false}
 		{@const relationFieldSettings = relations?.[fieldSchema.name]}
+		{@const showRelationCreateButton = relationFieldSettings?.showCreateButton ?? false}
+		{@const showRelationEditButton = relationFieldSettings?.showEditButton ?? false}
 		{@const relationDisplayFields = relationFieldSettings?.displayFields ?? []}
+		{@const extendedRelationDisplayFields = relationFieldSettings?.extendedDisplayFields ?? []}
 		{@const relationInputMode = relationFieldSettings?.inputMode ?? 'search'}
+		{@const relationFormFieldsSettings = relationFieldSettings?.formFieldsSettings ?? {}}
 		{@const label = labels?.[fieldSchema.name] ?? fieldSchema.name}
 		{@const component = components?.[fieldSchema.name]}
 		<FieldSchemaToInput
@@ -153,7 +161,11 @@
 			{fieldSchema}
 			{hidden}
 			{relationDisplayFields}
+			{extendedRelationDisplayFields}
 			{relationInputMode}
+			{showRelationCreateButton}
+			{showRelationEditButton}
+			{relationFormFieldsSettings}
 			{component}
 		/>
 	{/each}
