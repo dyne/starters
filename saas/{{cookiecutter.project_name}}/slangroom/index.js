@@ -47,17 +47,22 @@ When I append 'end_filter' to 'pb'
 Then print data
 Then I connect to 'pb' and send headers 'headers' and do get and output into 'http_result'
 `;
-  const res = await slangroom.execute(script, {
-    data: {
-      pb: PB,
-      headers: {
-        authorization: "Bearer " + token,
+  try {
+    const res = await slangroom.execute(script, {
+      data: {
+        pb: PB,
+        headers: {
+          authorization: "Bearer " + token,
+        },
+        ...rest
       },
-      ...rest
-    },
-  });
-  // TODO: check errors
-  return res.result.http_result.result;
+    });
+    // TODO: check errors
+    return res.result.http_result.result;
+  } catch(e) {
+    console.log(e)
+    throw new Error(e)
+  }
 }
 
 // List of services of my org
@@ -97,7 +102,7 @@ When I write string '/api/collections/users/records/' in 'path'
 When I append 'path' to 'pb'
 When I append 'id' to 'pb'
 Then print data
-Then I connect to 'pb' and send headers 'headers' and send object 'user_data' and do post and output into 'http_result'
+Then I connect to 'pb' and send headers 'headers' and send object 'user_data' and do patch and output into 'http_result'
 `;
   const res = await slangroom.execute(script, {
     data: {
@@ -116,6 +121,9 @@ Then I connect to 'pb' and send headers 'headers' and send object 'user_data' an
 const main = async () => {
   const tokenData = await authWithPassword(IDENTITY, PASSWORD);
   console.log(tokenData)
+  if(tokenData.status != 200) {
+    return;
+  }
   const orgs = await orgAuthorizations(tokenData.result.token, tokenData.result.record.id);
   console.log(JSON.stringify(orgs));
   //const services = await organizationServices(tokenData.result.token, orgs.items[0].expand.organization.id);

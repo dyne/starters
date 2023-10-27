@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@slangroom/core':
-    specifier: ^1.4.0
-    version: 1.4.0
+    specifier: ^1.5.0
+    version: 1.5.0
   '@slangroom/http':
-    specifier: ^1.4.0
-    version: 1.4.0
+    specifier: ^1.5.0
+    version: 1.5.0
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -40,8 +40,8 @@ packages:
     resolution: {integrity: sha512-hBzuU5+JjB2cqNZyszkDHZgOSrUUT8V3dhgRl8Q9Gp6dAj/H5+KILGjbhDpc3Iy9qmqlm/akuOI2ut9VUtzJxQ==}
     dev: false
 
-  /@slangroom/core@1.4.0:
-    resolution: {integrity: sha512-+qla686lf7q5XeXNgEL2RiJxGpfoJ3nPUWGLhdfJm8NvTnkpW416VZ30Ijf7Mp0VwKSCnL+wW3B+htPVPl+b2w==}
+  /@slangroom/core@1.5.0:
+    resolution: {integrity: sha512-94pjnv1rFU2Xrx/yjqfX4J3n3fgxDLBb+aAbQPIOL4rKq9r1r+yrhr0kshfJoYXSYY/rD0GuLlwWne+a3FS1Ew==}
     dependencies:
       '@slangroom/deps': 1.3.1
       '@slangroom/ignored': 1.3.1
@@ -55,10 +55,10 @@ packages:
       zenroom: 3.23.4
     dev: false
 
-  /@slangroom/http@1.4.0:
-    resolution: {integrity: sha512-tfAGhfKMVPuxT+d8kz/fvMMWPH9TF6f02M/qyi+mdPdcJAUho78xW02IiTAxWthZkKNxiCn5njTWrkAZci6/AA==}
+  /@slangroom/http@1.5.0:
+    resolution: {integrity: sha512-HsrgbSaFCLqzT5HXMMtFIzKNkseqDpWUQ9GUTszs1zgtJReOggHH3WnxfbID6drcd0hbPRecBczvXg7DlqOxDg==}
     dependencies:
-      '@slangroom/core': 1.4.0
+      '@slangroom/core': 1.5.0
       '@slangroom/deps': 1.3.1
       '@slangroom/shared': 1.3.1
       axios: 1.5.1
