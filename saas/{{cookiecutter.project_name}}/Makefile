@@ -5,11 +5,16 @@
 OSFLAG 				:=
 ifneq ($(OS),Windows_NT)
 	UNAME_S := $(shell uname -s)
+	UNAME_M := $(shell uname -m)
 	ifeq ($(UNAME_S),Linux)
 		OSFLAG += LINUX
 	endif
 	ifeq ($(UNAME_S),Darwin)
-		OSFLAG += OSX
+		ifeq ($(UNAME_M),arm64)
+			OSFLAG += arm64
+		else
+			OSFLAG += OSX
+		endif
 	endif
 endif
 
@@ -40,15 +45,19 @@ setup_backend: ## 📦 Setup the frontend
 	cd admin && ./setup
 	
 	if [ $(OSFLAG) == "OSX" ]; then \
-		wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
-		wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
-		else \
+		wget -O /usr/local/bin/zencode-exec.command https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
+		wget -O /usr/local/bin/zenroom.command https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
+		ln -s /usr/local/bin/zenroom.command /usr/local/bin/zenroom; \
+		ln -s /usr/local/bin/zencode-exec.command /usr/local/bin/zencode-exec; \
+		chmod +x /usr/local/bin/zencode-exec; \
+		chmod +x /usr/local/bin/zenroom; \
+	fi
+	if [ $(OSFLAG) == "LINUX" ]; then \
 		wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec; \
 		wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom; \
+		chmod +x /usr/local/bin/zencode-exec; \
+		chmod +x /usr/local/bin/zenroom; \
 	fi
-	
-	chmod +x /usr/local/bin/zencode-exec
-	chmod +x /usr/local/bin/zenroom
 	@echo " "
 
 setup_frontend: ## 📦 Setup the frontend
