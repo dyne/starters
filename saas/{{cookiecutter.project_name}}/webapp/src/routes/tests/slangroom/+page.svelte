@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '$lib/pocketbase';
 	import * as slangroom from '$lib/slangroom';
-	import { Tabs, TabItem, Spinner } from 'flowbite-svelte';
+	import { Tabs, TabItem, Spinner, Heading } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 
 	let ls: any = null;
@@ -17,38 +17,42 @@
 	});
 
 	const slangroomKeys = Object.keys(slangroom).filter(
-		(key) => key !== 'authWithPassword' && key !== 'updateProfile'
+		(key) => key !== 'authWithPassword' && key !== 'updateProfile' && key !== 'organizationServices'
 	);
-	type Keys = typeof slangroomKeys[number];
-	const userId = pb.authStore.model?.id;
+	type Keys = (typeof slangroomKeys)[number];
+	const userId = $currentUser?.id;
 
-	const showSlanroomResult = async (key: Keys) => {
+	const showSlangroomResult = async (key: Keys, id = userId) => {
 		const token = getToken();
-		console.log(key,token, userId)
+		console.log(key, token, userId);
 		//@ts-ignore
-		results = await slangroom[key]({ userId, token });
+		results = await slangroom[key]({ id, token });
+		console.log(results);
 	};
 </script>
 
-<Tabs
-	style="full"
-	defaultClass="flex rounded-lg divide-x divide-gray-200 shadow dark:divide-gray-700"
->
-	{#each slangroomKeys as k}
-		<TabItem open>
-			<button slot="title" on:click={()=>showSlanroomResult(k)}>{k}</button>
-			<p class="text-sm text-gray-500 dark:text-gray-400">
-				<b>{k}</b>
-				{#await showSlanroomResult}
-					<Spinner />
-				{:then}
-					<pre>
-					{JSON.stringify(results, null, 2)}
-				</pre>
-				{:catch}
-					error
-				{/await}
-			</p>
-		</TabItem>
-	{/each}
-</Tabs>
+<div class="max-w-3xl mx-auto p-4">
+	<Heading class="my-4">Slangroom api</Heading>
+	<Tabs
+		style="full"
+		defaultClass="flex rounded-lg divide-x divide-gray-200 shadow dark:divide-gray-700"
+	>
+		{#each slangroomKeys as k}
+			<TabItem open on:click={() => showSlangroomResult(k)}>
+				<span slot="title">{k}</span>
+				<p class="text-sm text-gray-500 dark:text-gray-400">
+					<b class="mb-12">{k}</b>
+					{#await showSlangroomResult}
+						<Spinner />
+					{:then}
+						<pre>
+						{JSON.stringify(results, null, 2)}
+					</pre>
+					{:catch}
+						error
+					{/await}
+				</p>
+			</TabItem>
+		{/each}
+	</Tabs>
+</div>
