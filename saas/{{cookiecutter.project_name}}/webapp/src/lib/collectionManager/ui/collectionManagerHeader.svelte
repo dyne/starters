@@ -4,16 +4,18 @@
 	import { Trash, XMark } from 'svelte-heros-v2';
 	import { CreateRecord } from './recordActions';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import type { ComponentProps } from 'svelte';
 
 	//
+
+	export let headingTag: ComponentProps<Heading>['tag'] = 'h4';
+	export let showDeleteModal = false;
+	export let description: string | null = null;
+	export let hideCreateButton = false;
 
 	const { collection, selectionManager, dataManager } = getRecordsManagerContext();
 	const { recordService, loadRecords } = dataManager;
 	const { selectedRecords, discardSelection } = selectionManager;
-
-	let showDeleteModal = false;
-	let description: string | null = null;
-	let hideCreateButton: false;
 
 	async function deleteSelection() {
 		if (!$selectedRecords.length) return;
@@ -27,7 +29,7 @@
 	{#if $$slots.title}
 		<slot name="title" />
 	{:else}
-		<Heading tag="h2">{collection}</Heading>
+		<Heading tag={headingTag}>{collection}</Heading>
 	{/if}
 	{#if description}
 		<P class="text-slate-600 pt-6">{description}</P>
