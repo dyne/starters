@@ -37,27 +37,36 @@ setup_submodules: setup_git ## 📦 Setup the submodules
 	cd webapp && git submodule add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 	@echo " "
 
+setup_zenroom: ## 📦 Setup zenroom
+	@echo "📦 Setup zenroom"
+	@if ! test -f /usr/local/bin/zenroom; then \
+		echo -n "Need zenroom executables, do you want to download them (works only on Osx not arm64 and Linux)? [y/N] " && read ans && [ $${ans:-N} = y ]; \
+		if [ $(OSFLAG) == "OSX" ]; then \
+				wget -O /usr/local/bin/zencode-exec.command https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
+				wget -O /usr/local/bin/zenroom.command https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
+				ln -s /usr/local/bin/zenroom.command /usr/local/bin/zenroom; \
+				ln -s /usr/local/bin/zencode-exec.command /usr/local/bin/zencode-exec; \
+				chmod +x /usr/local/bin/zencode-exec; \
+				chmod +x /usr/local/bin/zenroom; \
+		fi; \
+		if [ $(OSFLAG) == "LINUX" ]; then \
+			wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec; \
+			wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom; \
+			chmod +x /usr/local/bin/zencode-exec; \
+			chmod +x /usr/local/bin/zenroom; \
+		fi; \
+	else \
+		echo "Zenroom executables already exists"; \
+	fi
+	@echo " "
+
 setup_backend: ## 📦 Setup the frontend
 	@echo "📦 Setup the backend"
-	if [ ! -d ./admin/pb_data ]; then \
+	@if [ ! -d ./admin/pb_data ]; then \
     	mkdir ./admin/pb_data; \
 	fi
-	cd admin && ./setup
+	@cd admin && ./setup
 	
-	if [ $(OSFLAG) == "OSX" ]; then \
-		wget -O /usr/local/bin/zencode-exec.command https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
-		wget -O /usr/local/bin/zenroom.command https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
-		ln -s /usr/local/bin/zenroom.command /usr/local/bin/zenroom; \
-		ln -s /usr/local/bin/zencode-exec.command /usr/local/bin/zencode-exec; \
-		chmod +x /usr/local/bin/zencode-exec; \
-		chmod +x /usr/local/bin/zenroom; \
-	fi
-	if [ $(OSFLAG) == "LINUX" ]; then \
-		wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec; \
-		wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom; \
-		chmod +x /usr/local/bin/zencode-exec; \
-		chmod +x /usr/local/bin/zenroom; \
-	fi
 	@echo " "
 
 setup_frontend: ## 📦 Setup the frontend
@@ -68,7 +77,7 @@ setup_frontend: ## 📦 Setup the frontend
 	cd webapp && pnpm i
 	@echo " "
 
-setup: setup_submodules setup_backend setup_frontend ## 📦 Setup the project
+setup: setup_submodules setup_backend setup_zenroom setup_frontend ## 📦 Setup the project
 
 # - Running - #
 
