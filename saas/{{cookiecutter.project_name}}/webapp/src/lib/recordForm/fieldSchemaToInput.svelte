@@ -65,9 +65,9 @@
 
 	/* File */
 
-	let accept: string[];
+	let accept: string;
 	if (fieldSchema.type == FieldType.FILE) {
-		accept = fieldSchema.options.mimeTypes as string[];
+		accept = (fieldSchema.options.mimeTypes as string[]).join(',');
 	}
 
 	/* Relation */
@@ -92,26 +92,28 @@
 		{label}
 	/>
 {:else if fieldSchema.type == FieldType.TEXT}
-	<Input {field} {superform} {label} />
+	<Input {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.JSON}
-	<Textarea {field} {superform} {label} />
+	<Textarea {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.BOOL}
-	<Checkbox {field} {superform}>{label}</Checkbox>
+	<Checkbox {superform} {field}>{label}</Checkbox>
 {:else if fieldSchema.type == FieldType.FILE}
-	<File {field} {superform} {label} {multiple} {accept} />
+	<File {superform} {field} options={{ label, multiple, accept }} />
 {:else if fieldSchema.type == FieldType.SELECT}
-	<Select {field} {superform} {label} {options} {multiple} />
+	<Select {superform} {field} options={{ label, options, multiple }} />
 {:else if fieldSchema.type == FieldType.EDITOR}
-	<Textarea {field} {superform} {label} />
+	<Textarea {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.RELATION}
 	<Relations
-		{field}
 		{superform}
-		{label}
-		{multiple}
-		collection={collectionId}
-		displayFields={relationDisplayFields}
-		inputMode={relationInputMode}
-		{max}
+		{field}
+		options={{
+			label,
+			multiple,
+			collection: collectionId,
+			displayFields: relationDisplayFields,
+			inputMode: relationInputMode,
+			max
+		}}
 	/>
 {/if}

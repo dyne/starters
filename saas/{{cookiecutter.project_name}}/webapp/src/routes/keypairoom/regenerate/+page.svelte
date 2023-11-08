@@ -42,16 +42,17 @@
 
 		{#if !$currentUser}
 			<div class="space-y-1">
-				<Input field="email" label="User email" {superform}/>
+				<Input {superform} field="email" options={{ label: 'User email' }} />
 				<P size="sm" color="text-gray-400">
 					Your email won't be stored anywhere, it will be used only to generate the keys.
 				</P>
 			</div>
 		{/if}
 
-		<Textarea field={keys.seed} placeholder={textAreaPlaceholder} {superform} />
+		<Textarea {superform} field="seed" options={{ placeholder: textAreaPlaceholder }} />
 
 		<FormError />
+
 		<div class="flex justify-end">
 			<SubmitButton>Regenerate keys</SubmitButton>
 		</div>

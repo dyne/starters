@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
 	import { getContext } from 'svelte';
 	import { normalizeError, type ClientResponseErrorData } from '$lib/errorHandling';
-	import type { AnyZodObject } from 'zod';
-	import type { UnwrapEffects } from 'sveltekit-superforms';
+	import type { AnyZodObject, ZodEffects } from 'zod';
+	import type { UnwrapEffects, ZodValidation } from 'sveltekit-superforms';
 	import {
 		superForm,
 		setMessage,
@@ -11,13 +11,14 @@
 		type SuperForm,
 		superValidateSync
 	} from 'sveltekit-superforms/client';
+	import type z from 'zod';
 
 	//
 
 	export const FORM_KEY = Symbol('form');
 
 	export type FormContext<T extends AnyZodObject> = {
-		superform: SuperForm<T, ClientResponseErrorData>;
+		superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
 		showRequiredIndicator: boolean;
 	};
 
@@ -28,20 +29,21 @@
 	//
 
 	export type SubmitFunction<T extends AnyZodObject> = NonNullable<
-		FormOptions<T, unknown>['onUpdate']
+		FormOptions<ZodValidation<T>, unknown>['onUpdate']
 	>;
 
 	export function createForm<T extends AnyZodObject>(
-		schema: any,
+		schema: T | ZodEffects<T>,
 		submitFunction: SubmitFunction<T> = async () => {},
-		initialData: any = undefined,
-		options: FormOptions<T, unknown> = {}
+		initialData: Partial<z.infer<T>> | undefined = undefined,
+		options: FormOptions<ZodValidation<T>, unknown> = {}
 	) {
 		const form = superValidateSync(initialData, schema, { errors: false });
-		return superForm<T, ClientResponseErrorData>(form, {
+		return superForm<ZodValidation<T>, ClientResponseErrorData>(form, {
 			SPA: true,
 			applyAction: false,
 			scrollToError: 'smooth',
+			// @ts-ignore
 			validators: schema,
 			dataType: 'json',
 			onUpdate: async (input) => {
@@ -58,7 +60,8 @@
 					setMessage(input.form, error);
 				}
 			},
-			...options
+			...options,
+			taintedMessage: null
 		});
 	}
 
