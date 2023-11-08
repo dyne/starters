@@ -7,7 +7,8 @@
 		SubmitButton,
 		Input,
 		Checkbox,
-		File as FileInput
+		File as FileInput,
+		zodFile
 	} from '$lib/forms';
 
 	import { currentUser, pb } from '$lib/pocketbase';
@@ -20,14 +21,10 @@
 		name: z.string().min(3).optional(),
 		email: z.string().email(),
 		emailVisibility: z.boolean().optional(),
-		avatar: z
-			.instanceof(File)
-			.refine((file) => file.type === 'image/png' || file.type === 'image/jpeg')
-			.refine((file) => file.size < 1024 * 1024 * 2)
-			.optional()
+		avatar: zodFile({ types: ['image/png', 'image/jpeg'], size: 1024 * 1024 * 2 }).optional()
 	});
 
-	const initialData: z.infer<typeof schema> = {
+	const initialData: Partial<z.infer<typeof schema>> = {
 		name: $currentUser!.name,
 		email: $currentUser!.email,
 		emailVisibility: $currentUser!.emailVisibility

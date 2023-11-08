@@ -16,6 +16,8 @@
 </script>
 
 <script lang="ts">
+	import type { an } from 'vitest/dist/reporters-cb94c88b';
+
 	import type { z } from 'zod';
 	import type { FormPath, ZodValidation } from 'sveltekit-superforms';
 	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
@@ -44,13 +46,13 @@
 	function removeFile() {
 		if (!isFile($value)) return;
 		$value = undefined;
-		validate(field);
+		validate(field as any);
 	}
 
 	function removeFileFromArray(file: File) {
 		if (!isFileArray($value)) return;
 		$value = $value.filter((item) => item !== file);
-		validate(field);
+		validate(field as any);
 	}
 
 	//
@@ -66,9 +68,9 @@
 		let data = !multiple ? fileList[0] : ([...($value as File[]), ...fileList] as any);
 		rejectedFiles = [];
 
-		const errors = await validate(field, { value: data, update: false });
+		const errors = await validate(field as any, { value: data, update: false });
 		if (!errors) {
-			await validate(field, { value: data, taint: true });
+			await validate(field as any, { value: data, taint: true });
 			return;
 		}
 
@@ -89,7 +91,7 @@
 				];
 			}
 			data = data.filter((_, index) => !rejectedFilesIndexes.includes(index));
-			await validate(field, { value: data, taint: true });
+			await validate(field as any, { value: data, taint: true });
 		}
 	}
 </script>

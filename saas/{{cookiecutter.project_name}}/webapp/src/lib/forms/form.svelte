@@ -60,7 +60,8 @@
 					setMessage(input.form, error);
 				}
 			},
-			...options
+			...options,
+			taintedMessage: null
 		});
 	}
 
