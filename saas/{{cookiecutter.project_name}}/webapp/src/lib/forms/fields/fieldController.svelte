@@ -1,9 +1,3 @@
-<script lang="ts" context="module">
-	import type { HTMLInputAttributes } from 'svelte/elements';
-
-	export type FormHiddenOptions = Partial<HTMLInputAttributes>;
-</script>
-
 <script lang="ts">
 	import type { z } from 'zod';
 	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
@@ -13,9 +7,12 @@
 
 	export let superform: SuperForm<ZodValidation<T>, unknown>;
 	export let field: FormPathLeaves<z.infer<T>>;
-	export let options: FormHiddenOptions = {};
 
-	const { value } = formFieldProxy(superform, field);
+	const { value, errors, constraints } = formFieldProxy(superform, field);
+
+	function updateValue(newValue: typeof $value) {
+		value.set(newValue);
+	}
 </script>
 
-<input {...options} type="hidden" id={field} name={field} bind:value={$value} />
+<slot value={$value} errors={$errors} constraints={$constraints} {updateValue} {field} />
