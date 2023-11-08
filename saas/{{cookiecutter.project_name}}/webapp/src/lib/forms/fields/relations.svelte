@@ -4,7 +4,6 @@
 	export type RelationDisplayFields = string[];
 
 	export type FormRelationsOptions = {
-		collection: string | Collections;
 		multiple?: boolean;
 		displayFields?: RelationDisplayFields;
 		max?: number | undefined;
@@ -27,10 +26,10 @@
 
 	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
-	export let options: FormRelationsOptions = { collection: '' };
+	export let collection: string | Collections;
+	export let options: FormRelationsOptions = {};
 
 	let {
-		collection = '',
 		multiple = false,
 		displayFields = [],
 		max = undefined,

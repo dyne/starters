@@ -107,10 +107,10 @@
 	<Relations
 		{superform}
 		{field}
+		collection={collectionId}
 		options={{
 			label,
 			multiple,
-			collection: collectionId,
 			displayFields: relationDisplayFields,
 			inputMode: relationInputMode,
 			max
