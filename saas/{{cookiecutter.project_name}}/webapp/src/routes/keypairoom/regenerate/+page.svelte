@@ -21,7 +21,6 @@
 		saveKeyringToLocalStorage(keypair.keyring);
 		success = true;
 	});
-	const keys = schema.keyof().Enum;
 
 	const { capture, restore, form } = superform;
 	export const snapshot = { capture, restore };

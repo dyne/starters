@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Form, Input } from '$lib/forms';
+	import { Form, Input, createForm } from '$lib/forms';
 	import Checkbox from '$lib/forms/fields/checkbox.svelte';
 	import FieldController from '$lib/forms/fields/fieldController.svelte';
 	import FileInput from '$lib/forms/fields/file.svelte';
@@ -16,9 +16,7 @@
 		file: z.any()
 	});
 
-	const superform = superForm(superValidateSync(schema), {
-		validators: schema
-	});
+	const superform = createForm(schema, ({ form }) => {});
 
 	const { form } = superform;
 </script>
@@ -46,7 +44,13 @@
 	<Hidden {superform} field="name" />
 
 	<Checkbox {superform} field="check" />
-	<Toggle {superform} field="check" />
+	<Toggle
+		{superform}
+		field="check"
+		options={{
+			label: 'maio'
+		}}
+	/>
 
 	<Textarea {superform} field="name" />
 
