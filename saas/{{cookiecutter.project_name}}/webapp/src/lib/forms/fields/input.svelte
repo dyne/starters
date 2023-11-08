@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
 	import { Input } from 'flowbite-svelte';
+	import type { LabelOption } from './types';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	export type FormInputOptions = Partial<HTMLInputAttributes & ComponentProps<Input>>;
+	export type FormInputOptions = Partial<HTMLInputAttributes & ComponentProps<Input>> & LabelOption;
 </script>
 
 <script lang="ts">
@@ -14,17 +15,16 @@
 
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, unknown>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
 	export let options: FormInputOptions = {};
 
 	let type = options.type ?? 'text';
-	let label = options['aria-label'];
 
-	const { value, errors, constraints } = formFieldProxy(superform, field);
+	const { value, errors, constraints } = formFieldProxy(superform, field as string);
 </script>
 
-<FieldWrapper {field} {label}>
+<FieldWrapper {field} label={options.label}>
 	<Input
 		{...options}
 		{type}

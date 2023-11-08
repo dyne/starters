@@ -2,8 +2,10 @@
 	import { Checkbox } from 'flowbite-svelte';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { LabelOption } from './types';
 
-	export type FormCheckboxOptions = Partial<HTMLInputAttributes & ComponentProps<Checkbox>>;
+	export type FormCheckboxOptions = Partial<HTMLInputAttributes & ComponentProps<Checkbox>> &
+		LabelOption;
 </script>
 
 <script lang="ts">
@@ -17,13 +19,11 @@
 
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, unknown>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
 	export let options: FormCheckboxOptions = {};
 
-	let label = options['aria-label'];
-
-	const { value, errors, constraints } = formFieldProxy(superform, field);
+	const { value, errors, constraints } = formFieldProxy(superform, field as string);
 </script>
 
 <div class="space-y-2">
@@ -39,7 +39,7 @@
 				{...$constraints}
 			/>
 			<div>
-				<span><slot>{label}</slot></span>
+				<span><slot>{options.label}</slot></span>
 				<FieldRequiredIndicator {field} />
 			</div>
 		</div>

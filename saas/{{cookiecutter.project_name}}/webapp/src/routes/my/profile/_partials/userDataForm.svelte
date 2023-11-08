@@ -45,16 +45,17 @@
 </script>
 
 <Form {superform}>
-	<Input field="name" label="Username" {superform} />
+	<Input {superform} field="name" options={{ label: 'Username' }} />
 
 	<div class="space-y-2">
-		<Input field="email" type="email" {superform} />
-		<Checkbox field="emailVisibility" {superform}>
+		<Input {superform} field="email" options={{ type: 'email' }} />
+
+		<Checkbox {superform} field="emailVisibility">
 			<span>Show email to other users</span>
 		</Checkbox>
 	</div>
 
-	<FileInput field="avatar" {superform} />
+	<FileInput {superform} field="avatar" />
 
 	<FormError />
 

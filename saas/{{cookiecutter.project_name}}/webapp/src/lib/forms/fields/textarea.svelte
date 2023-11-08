@@ -2,8 +2,10 @@
 	import { Textarea } from 'flowbite-svelte';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { LabelOption } from './types';
 
-	export type FormTextareaOptions = Partial<HTMLInputAttributes & ComponentProps<Textarea>>;
+	export type FormTextareaOptions = Partial<HTMLInputAttributes & ComponentProps<Textarea>> &
+		LabelOption;
 </script>
 
 <script lang="ts">
@@ -14,16 +16,14 @@
 
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, unknown>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
 	export let options: FormTextareaOptions = {};
 
-	let label = options['aria-label'];
-
-	const { value, errors, constraints } = formFieldProxy(superform, field);
+	const { value, errors, constraints } = formFieldProxy(superform, field as string);
 </script>
 
-<FieldWrapper {field} {label}>
+<FieldWrapper {field} label={options.label}>
 	<Textarea
 		{...options}
 		bind:value={$value}

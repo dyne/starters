@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+	import type { LabelOption } from './types';
+
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	export type FormSelectOptions = {
@@ -6,7 +8,7 @@
 	} & {
 		options?: string[];
 		size?: 'sm' | 'lg' | 'md' | undefined;
-	};
+	} & LabelOption;
 </script>
 
 <script lang="ts">
@@ -20,14 +22,13 @@
 
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, unknown>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
 	export let options: FormSelectOptions = {};
 
-	let { options: items = [], multiple = false } = options;
-	let label = options['aria-label'];
+	let { options: items = [], multiple = false, label = '' } = options;
 
-	const { value, errors, constraints } = formFieldProxy(superform, field);
+	const { value, errors, constraints } = formFieldProxy(superform, field as string);
 
 	const selectOptions: Array<SelectOptionType<string>> = items.map((i) => {
 		return { value: i, name: i };

@@ -1,4 +1,11 @@
 <script lang="ts" context="module">
+	import type { LabelOption } from './types';
+	import type { HTMLInputAttributes } from 'svelte/elements';
+
+	export type FormInputOptions = Partial<HTMLInputAttributes> & LabelOption;
+
+	//
+
 	export function isFileArray(value: unknown): value is File[] {
 		return Array.isArray(value) && value.every((item) => item instanceof File);
 	}
@@ -9,30 +16,25 @@
 </script>
 
 <script lang="ts">
-	import type { ClientResponseErrorData } from '$lib/errorHandling';
-
-	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
-	import type { z, AnyZodObject } from 'zod';
+	import type { z } from 'zod';
+	import type { FormPath, ZodValidation } from 'sveltekit-superforms';
 	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
 
 	import { Badge, Fileupload, Helper, Listgroup, ListgroupItem } from 'flowbite-svelte';
-	import { getFormContext } from '../form.svelte';
 	import FieldError, { fieldHasErrors } from './fieldParts/fieldError.svelte';
 	import FieldLabel from './fieldParts/fieldLabel.svelte';
 	import ListgroupItemButton from '$lib/components/listgroupItemButton.svelte';
 
-	//
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
+	export let field: FormPath<z.infer<T>>;
+	export let options: FormInputOptions = {};
 
-	export let field: FormPathLeaves<z.infer<T>>;
-	export let label = '';
-	export let multiple = false;
-	export let accept: string[] = [];
+	let { multiple = false, accept = '', label = '' } = options;
 
 	const { validate } = superform;
-	const { value, errors } = formFieldProxy(superform, field);
+	const { value, errors } = formFieldProxy(superform, field as string);
 
 	$: hasErrors = fieldHasErrors($errors);
 	const oldFiles = ([] as File[]).concat($value);
@@ -61,7 +63,7 @@
 		const fileList = (e.target as HTMLInputElement)?.files;
 		if (!fileList) return;
 
-		let data = !multiple ? fileList[0] : [...($value as File[]), ...fileList] as any
+		let data = !multiple ? fileList[0] : ([...($value as File[]), ...fileList] as any);
 		rejectedFiles = [];
 
 		const errors = await validate(field, { value: data, update: false });
@@ -93,13 +95,16 @@
 </script>
 
 <div class="space-y-3">
-	<FieldLabel {field} text={label} />
+	{#if label}
+		<FieldLabel {field} text={label} />
+	{/if}
 
 	<Fileupload
+		{...options}
 		id={field}
 		name={field}
 		{multiple}
-		accept={accept.join(', ')}
+		{accept}
 		data-invalid={hasErrors}
 		on:change={handleFileSelect}
 	/>

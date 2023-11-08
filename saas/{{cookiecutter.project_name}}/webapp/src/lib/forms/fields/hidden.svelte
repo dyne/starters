@@ -11,11 +11,11 @@
 
 	type T = $$Generic<AnyZodObject>;
 
-	export let superform: SuperForm<ZodValidation<T>, unknown>;
+	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
 	export let options: FormHiddenOptions = {};
 
-	const { value } = formFieldProxy(superform, field);
+	const { value } = formFieldProxy(superform, field as string);
 </script>
 
 <input {...options} type="hidden" id={field} name={field} bind:value={$value} />
