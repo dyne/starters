@@ -5,6 +5,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { FeaturesRecord } from '$lib/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
+	import RecordsManager from '$lib/components/records/recordsManager.svelte';
 
 	const collection = Collections.Features;
 
@@ -18,18 +19,23 @@
 		{recordType}
 		{collection}
 		bind:recordId={searchValue}
-		displayFields={['name']}
-		excludeIds={['qzum90ct7eymkv9']}
+		options={{
+			displayFields: ['name'],
+			excludeIds: ['qzum90ct7eymkv9']
+		}}
 	/>
 	<RecordSelect {recordType} {collection} bind:recordId={searchValue} />
 	<pre>{JSON.stringify(searchValue)}</pre>
 </div>
+
 <div class="p-8 space-y-4">
 	<p>Record search</p>
-	<RecordSearch {collection} bind:recordId={searchValue} placeholder="mimmo" />
+	<RecordSearch {collection} bind:recordId={searchValue} options={{ placeholder: 'mimmo' }} />
 </div>
-<!-- <RelationsManager collection={Collections.Features}></RelationsManager> -->
-<!-- <div class="mt-12">
-	<p>users</p>
-	<RecordSelect {recordType} collection={Collections.Users} />
-</div> -->
+
+<div class="p-8 space-y-4">
+	<p>Records manager</p>
+
+	<RecordsManager {collection} options={{ multiple: true }}></RecordsManager>
+	<RecordsManager {collection} options={{ multiple: true, inputMode: 'select' }}></RecordsManager>
+</div>

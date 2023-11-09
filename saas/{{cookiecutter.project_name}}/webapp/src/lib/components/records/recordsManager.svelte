@@ -1,5 +1,16 @@
 <script lang="ts" context="module">
+	import type { PBResponseKeys } from '$lib/utils/types';
+
 	export type InputMode = 'search' | 'select';
+
+	export type RecordsManagerOptions<R extends PBRecord> = {
+		inputMode: InputMode;
+		multiple: boolean;
+		name: string | undefined;
+		placeholder: string | undefined;
+		displayFields: PBResponseKeys<PBResponse<R>>[];
+		excludeIds: string[];
+	};
 </script>
 
 <script lang="ts">
@@ -10,12 +21,14 @@
 	import RecordSearch from './recordSearch.svelte';
 	import ArrayOrItemManager from '$lib/components/arrayOrItemManager.svelte';
 
+	import { createRecordLabel, filterStringArray } from './utils';
+	import { createTypeProp } from '$lib/utils/typeProp';
+
 	import { sineIn } from 'svelte/easing';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, SvelteComponent } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
 	import IconButton from '../iconButton.svelte';
 	import { Plus } from 'svelte-heros-v2';
-	import { createTypeProp } from '$lib/utils/typeProp';
 
 	//
 
@@ -24,65 +37,84 @@
 	recordType;
 
 	export let collection: string;
-	export let value: string[] | string;
+	export let value: string[] | string | undefined = undefined;
 
-	export let mode: InputMode = 'search';
+	export let options: Partial<RecordsManagerOptions<RecordGeneric>> = {};
 
-	// export let displayFields: string[];
-	// export let multiple = false;
+	let {
+		inputMode = 'search',
+		multiple = false,
+		name = undefined,
+		placeholder = undefined,
+		displayFields = [],
+		excludeIds = []
+	} = options;
+
 	// export let name = '';
 	// export let max: number | undefined = undefined;
 	// export let addButtonText: string | undefined = undefined;
 
 	//
 
+	let inputComponent: typeof RecordSearch<RecordGeneric> | typeof RecordSelect<RecordGeneric>;
+	$: if (inputMode == 'search') inputComponent = RecordSearch;
+	else if (inputMode == 'select') inputComponent = RecordSelect;
+
+	//
+
+	let tempId: string | undefined = undefined;
+	$: handleSelect(tempId);
+
+	function handleSelect(id: typeof tempId) {
+		if (!id) return;
+
+		if (!multiple) {
+			value = id;
+		} else {
+			if (!value) value = [id];
+			else {
+				if (!value.includes(id)) {
+					value = [...value, id];
+				}
+			}
+		}
+
+		tempId = undefined;
+	}
+
 	//
 
 	let tempIds: string[] = [];
-	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
-
-	// let record: PBResponse<RecordGeneric> | undefined = undefined;
-
-	// $: if ($hideDrawer) record = undefined;
-
-	$: {
-		loadRecords();
-	}
+	$: setupTempIds(value);
+	$: exclude = [...excludeIds, ...tempIds];
 
 	function setupTempIds(newValue: typeof value) {
 		if (Array.isArray(newValue)) tempIds = newValue;
 		else if (newValue) tempIds = [newValue];
 	}
 
-	// async function loadRecords() {
-	// 	const data = await Promise.all(
-	// 		tempIDs.map((id) =>
-	// 			pb.collection(collection).getOne<PBResponse<RecordGeneric>>(id, { $autoCancel: false })
-	// 		)
-	// 	);
-	// 	data.forEach((d) => {
-	// 		tempRecords[d.id] = d;
-	// 	});
-	// }
+	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
+	$: loadRecords(tempIds);
 
-	// let item: string = '';
+	async function loadRecords(ids: typeof tempIds) {
+		const records = await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+			filter: filterStringArray('id', '=', '||', ids),
+			requestKey: null
+		});
+		tempRecords = {};
+		records.forEach((r) => {
+			tempRecords[r.id] = r;
+		});
+	}
 
-	// function buildRecordString(id: string) {
-	// 	return displayFields
-	// 		.map((f) => tempRecords[id][f])
-	// 		.filter((f) => Boolean(f))
-	// 		.join(' | ');
-	// }
+	//
+
+	// let record: PBResponse<RecordGeneric> | undefined = undefined;
+	// $: if ($hideDrawer) record = undefined;
 
 	// //
 
 	// $: disabled = multiple && !!max && relation.length >= max;
-
-	// function handleSelect(e: CustomEvent<{ record: PBResponse<PBRecord> }>) {
-	// 	const data = e.detail.record;
-	// 	if (multiple) relation = [...relation, data.id];
-	// 	else relation = data.id;
-	// }
 
 	// function createModalStore(initialValue = false) {
 	// 	const open = writable(initialValue);
@@ -112,25 +144,23 @@
 	// };
 </script>
 
-{#if mode == 'search'}
-	<RecordSearch on:select={handleSelect} {collection} {name} {disabled} exclude={tempIDs} />
-{:else}
-	<RecordSelect on:select={handleSelect} {collection} {name} {displayFields} {disabled} />
-{/if}
-<!-- <ArrayOrItemManager
-	bind:value={relation}
-	on:show={(e) => {
-		item = e.detail.item;
-		toggleDrawer();
-		record = tempRecords[item];
-	}}
-	let:item
->
+<svelte:component
+	this={inputComponent}
+	{recordType}
+	{collection}
+	bind:recordId={tempId}
+	options={{ name, placeholder, displayFields, excludeIds: exclude }}
+/>
+
+<ArrayOrItemManager bind:value let:item>
 	{@const record = tempRecords[item]}
 	{#if record}
-		{buildRecordString(record.id)}
+		{createRecordLabel(record, displayFields)}
 	{/if}
 </ArrayOrItemManager>
+
+<!--
+
 {#if addButtonText}
 	<div class="flex justify-end pt-4">
 		<Button color="alternative" size="xs" on:click={toggleDrawer}>
@@ -139,6 +169,7 @@
 		</Button>
 	</div>
 {/if}
+
 <Drawer bind:hidden={$hideDrawer} {...drawerProps}>
 	<div class="flex justify-between items-center">
 		<Heading tag="h5">{addButtonText}</Heading>
