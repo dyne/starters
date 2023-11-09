@@ -24,7 +24,7 @@
 
 	import type { FieldsSettings, RelationFieldSettings } from './recordForm.svelte';
 
-	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
+	import type { InputMode as RelationInputMode } from '$lib/components/records/recordsManager.svelte';
 	import {
 		Checkbox,
 		File,
@@ -53,7 +53,7 @@
 	export let component: FieldComponentProp = undefined;
 	export let showRelationCreateButton: boolean = true;
 	export let showRelationEditButton: boolean = true;
-	export let relationFormFieldsSettings:Partial<FieldsSettings<RecordGeneric>> = {}
+	export let relationFormFieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
 	const field = fieldSchema.name;
 

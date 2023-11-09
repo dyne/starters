@@ -1,4 +1,4 @@
-    <script lang="ts" context="module">
+<script lang="ts" context="module">
 	export type RelationDisplayFields = string[];
 </script>
 
@@ -14,7 +14,7 @@
 
 	import RelationsManager, {
 		type InputMode as RelationInputMode
-	} from '$lib/components/relationsManager.svelte';
+	} from '$lib/components/records/recordsManager.svelte';
 	import { formFieldProxy } from 'sveltekit-superforms/client';
 	import { getFormContext } from '../form.svelte';
 	import type { Collections } from '$lib/pocketbase/types';
@@ -37,7 +37,7 @@
 	export let showCreateButton: boolean = true;
 	export let showEditButton: boolean = true;
 	export let fieldsComponents: Record<string, FieldComponent> = {};
-	export let formFieldsSettings:Partial<FieldsSettings<RecordGeneric>>
+	export let formFieldsSettings: Partial<FieldsSettings<RecordGeneric>>;
 
 	const { superform } = getFormContext();
 	const { validate, form } = superform;
@@ -47,7 +47,7 @@
 
 	const recordProp = createTypeProp<GenericRecord>();
 
-	$: valueIsArray = Array.isArray($value)
+	$: valueIsArray = Array.isArray($value);
 
 	$: if (valueIsArray && $value.length > 0) validateField($value as any);
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordSelect from '$lib/components/recordSelect.svelte';
-	import RelationsManager from '$lib/components/relationsManager.svelte';
+	import RelationsManager from '$lib/components/records/recordsManager.svelte';
 	import { Collections } from '$lib/pocketbase/types';
 	import { Heading, Hr } from 'flowbite-svelte';
 

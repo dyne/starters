@@ -18,7 +18,7 @@
 	//
 
 	export let collection: string | Collections;
-	export let value: string | undefined = undefined;
+	export let recordId: string | undefined = undefined;
 	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
 	let {
@@ -41,7 +41,7 @@
 	};
 
 	function handleChange(e: CustomEvent<null | Option>) {
-		value = e.detail?.[valueField];
+		recordId = e.detail?.[valueField];
 	}
 
 	//
@@ -81,7 +81,7 @@
 	//
 
 	let record: PBResponse<RecordGeneric> | undefined = undefined;
-	$: loadRecord(value);
+	$: loadRecord(recordId);
 
 	let actualPlaceholder: string | undefined = placeholder;
 	$: setPlaceholder(record);
@@ -103,7 +103,7 @@
 	{labelField}
 	placeholder={actualPlaceholder}
 	fetch={fetchOptions}
-	{value}
+	value={recordId}
 	on:change={handleChange}
 	{disabled}
 	{required}

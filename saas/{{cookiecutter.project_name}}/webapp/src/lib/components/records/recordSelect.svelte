@@ -19,7 +19,7 @@
 	//
 
 	export let collection: string | Collections;
-	export let value: string | undefined = undefined;
+	export let recordId: string | undefined = undefined;
 	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
 	let {
@@ -60,7 +60,7 @@
 
 	function handleInput(e: Event) {
 		// @ts-ignore
-		value = e.target.value;
+		recordId = e.target.value;
 	}
 </script>
 
@@ -68,5 +68,13 @@
 	<Spinner />
 {:then records}
 	{@const items = createItems(records)}
-	<Select {required} {placeholder} {disabled} {name} {items} {value} on:input={handleInput} />
+	<Select
+		{required}
+		{placeholder}
+		{disabled}
+		{name}
+		{items}
+		value={recordId}
+		on:input={handleInput}
+	/>
 {/await}

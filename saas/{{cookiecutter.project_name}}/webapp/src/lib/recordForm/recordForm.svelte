@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import type { RelationDisplayFields } from '$lib/forms/fields';
-	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
+	import type { InputMode as RelationInputMode } from '$lib/components/records/recordsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
 
 	export type RelationFieldSettings<T> = {

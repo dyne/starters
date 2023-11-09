@@ -17,16 +17,16 @@
 	<RecordSelect
 		{recordType}
 		{collection}
-		bind:value={searchValue}
+		bind:recordId={searchValue}
 		displayFields={['name']}
 		excludeIds={['qzum90ct7eymkv9']}
 	/>
-	<RecordSelect {recordType} {collection} bind:value={searchValue} />
+	<RecordSelect {recordType} {collection} bind:recordId={searchValue} />
 	<pre>{JSON.stringify(searchValue)}</pre>
 </div>
 <div class="p-8 space-y-4">
 	<p>Record search</p>
-	<RecordSearch {collection} bind:value={searchValue} placeholder="mimmo" />
+	<RecordSearch {collection} bind:recordId={searchValue} placeholder="mimmo" />
 </div>
 <!-- <RelationsManager collection={Collections.Features}></RelationsManager> -->
 <!-- <div class="mt-12">
