@@ -5,7 +5,7 @@
 
 	export type RecordManagerActions = 'edit' | 'create';
 
-	export type RecordsManagerOptions<R extends PBRecord> = {
+	export type RecordsManagerOptions<R extends PBRecord = PBRecord> = {
 		inputMode: InputMode;
 		multiple: boolean;
 		name: string | undefined;

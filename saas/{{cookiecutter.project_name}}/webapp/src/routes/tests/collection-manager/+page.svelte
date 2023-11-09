@@ -30,17 +30,8 @@
 				textarea: 'Short description'
 			},
 			relations: {
-				relation:{
-					displayFields:[
-						"name"
-					],
-					extendedDisplayFields: [
-						"name",
-						"envVariables",
-						"active"
-					],
-					showEditButton: true,
-					showCreateButton: true
+				relation: {
+					displayFields: ['name']
 				}
 			}
 		}}

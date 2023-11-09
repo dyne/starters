@@ -2,12 +2,14 @@
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
 
-	export type FieldsSettings<R extends PBRecord> = {
+	type Extract<T> = T extends (infer U)[] ? U : T;
+
+	export type FieldsSettings<R extends PBRecord = PBRecord, E extends PBExpand = PBExpand> = {
 		labels: { [K in keyof R]?: string };
 		order: Array<keyof R>;
 		exclude: Array<keyof R>;
 		hide: { [K in keyof R]?: R[K] };
-		relations: { [K in keyof R]?: Partial<RecordsManagerOptions<R>> };
+		relations: { [K in keyof E]?: Partial<RecordsManagerOptions<Extract<E[K]>>> };
 		components: { [K in keyof R]?: FieldComponentProp };
 	};
 </script>
@@ -31,7 +33,7 @@
 	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { fieldsSchemaToZod } from '$lib/pocketbaseToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import type { PBExpand, PBRecord, PBResponse } from '$lib/utils/types';
 
 	//
 
@@ -39,13 +41,17 @@
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
+	type ExpandGeneric = $$Generic<PBExpand>;
+	export let expandType = createTypeProp<ExpandGeneric>();
+	expandType;
+
 	//
 
 	export let collection: Collections | string;
 	export let initialData: Partial<RecordGeneric> = {};
 	export let recordId = '';
 
-	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric, ExpandGeneric>> = {};
 	let { order = [], exclude = [], hide, labels, components, relations } = fieldsSettings;
 
 	export let submitButtonText = '';
