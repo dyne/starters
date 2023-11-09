@@ -1,7 +1,10 @@
 <script lang="ts" context="module">
 	import type { SvelteComponent, ComponentEvents, ComponentProps, ComponentType } from 'svelte';
 
-	type FieldComponent = SvelteComponent<{ field: string }>;
+	type FieldComponent = SvelteComponent<{
+		field: string;
+		superform: SuperForm<ZodValidation<AnyZodObject>, ClientResponseErrorData>;
+	}>;
 
 	export function createFieldComponent<C extends FieldComponent>(
 		component: ComponentType<C>,
@@ -37,6 +40,11 @@
 	} from '$lib/forms/fields';
 	import { isArrayField } from '$lib/pocketbase/schema';
 	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
+	import type { ZodValidation } from 'sveltekit-superforms';
+	import type { SuperForm } from 'sveltekit-superforms/client';
+	import type { AnyZodObject } from 'zod';
+	import { getFormContext } from '$lib/forms/form.svelte';
+	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
 	//
 
@@ -58,6 +66,7 @@
 	const field = fieldSchema.name;
 
 	const multiple = isArrayField(fieldSchema);
+	const { superform } = getFormContext();
 
 	/* Select */
 
@@ -68,9 +77,9 @@
 
 	/* File */
 
-	let accept: string[];
+	let accept: string;
 	if (fieldSchema.type == FieldType.FILE) {
-		accept = fieldSchema.options.mimeTypes as string[];
+		accept = (fieldSchema.options.mimeTypes as string[]).join(',');
 	}
 
 	/* Relation */
@@ -84,32 +93,32 @@
 </script>
 
 {#if hidden}
-	<Hidden {field} />
+	<Hidden {field} {superform} />
 {:else if component}
 	<svelte:component
 		this={component.component}
 		{field}
+		{superform}
 		{...component.props}
 		{...component.events}
 		{label}
 	/>
 {:else if fieldSchema.type == FieldType.TEXT}
-	<Input {field} {label} />
+	<Input {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.JSON}
-	<Textarea {field} {label} />
+	<Textarea {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.BOOL}
-	<Checkbox {field}>{label}</Checkbox>
+	<Checkbox {superform} {field}>{label}</Checkbox>
 {:else if fieldSchema.type == FieldType.FILE}
-	<File {field} {label} {multiple} {accept} />
+	<File {superform} {field} options={{ label, multiple, accept }} />
 {:else if fieldSchema.type == FieldType.SELECT}
-	<Select {field} {label} {options} {multiple} />
+	<Select {superform} {field} options={{ label, options, multiple }} />
 {:else if fieldSchema.type == FieldType.EDITOR}
-	<Textarea {field} {label} />
+	<Textarea {superform} {field} options={{ label }} />
 {:else if fieldSchema.type == FieldType.RELATION}
 	<Relations
+		{superform}
 		{field}
-		{label}
-		{multiple}
 		collection={collectionId}
 		displayFields={relationDisplayFields}
 		extendedDisplayFields={extendedRelationDisplayFields}
@@ -118,5 +127,12 @@
 		showEditButton={showRelationEditButton}
 		formFieldsSettings={relationFormFieldsSettings}
 		{max}
+		options={{
+			label,
+			multiple,
+			displayFields: relationDisplayFields,
+			inputMode: relationInputMode,
+			max
+		}}
 	/>
 {/if}
