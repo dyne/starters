@@ -1,9 +1,12 @@
 <script lang="ts">
+	import type { Collections } from '$lib/pocketbase/types';
+
 	import { onMount } from 'svelte';
 	import type { PBResponse, PBRecord, PBResponseKeys } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { pb } from '$lib/pocketbase';
 	import { Select, Spinner } from 'flowbite-svelte';
+	import { createRecordLabel, excludeStringArray } from './utils';
 
 	//
 
@@ -13,7 +16,7 @@
 
 	//
 
-	export let collection: string;
+	export let collection: string | Collections;
 	export let value: string | undefined = undefined;
 
 	export let displayFields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
@@ -29,7 +32,7 @@
 	async function loadRecords(excludeIds: string[]) {
 		return await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
 			requestKey: null,
-			filter: excludeIds.map((eId) => `id != ${eId}`).join(' && ')
+			filter: excludeStringArray('id', excludeIds)
 		});
 	}
 
@@ -42,22 +45,12 @@
 		};
 	});
 
-	//
-
-	function createLabel(record: PBResponse<RecordGeneric>) {
-		const fields: string[] = [...displayFields];
-		if (fields.length === 0) fields.push(...Object.keys(record));
-		return fields
-			.map((f) => record[f])
-			.filter((f) => Boolean(f))
-			.join(' | ');
-	}
-
 	function createItems(records: PBResponse<RecordGeneric>[]) {
-		return records.map((r) => ({ name: createLabel(r), value: r.id }));
+		return records.map((r) => ({
+			name: createRecordLabel(r, displayFields),
+			value: r.id
+		}));
 	}
-
-	//
 
 	function handleInput(e: Event) {
 		// @ts-ignore

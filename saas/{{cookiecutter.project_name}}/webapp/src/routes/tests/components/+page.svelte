@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RecordSearch from '$lib/components/recordSearch.svelte';
+	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordSelect from '$lib/components/recordSelect.svelte';
 	import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { Collections } from '$lib/pocketbase/types';

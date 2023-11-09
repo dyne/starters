@@ -8,7 +8,7 @@
 	import { writable, type Writable } from 'svelte/store';
 	import IconButton from './iconButton.svelte';
 	import { Plus } from 'svelte-heros-v2';
-	import { Button, Drawer, Heading } from 'flowbite-svelte';
+	// import { Button, Drawer, H./records/recordSearch.sveltete-svelte';
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
