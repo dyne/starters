@@ -36,6 +36,5 @@
 <div class="p-8 space-y-4">
 	<p>Records manager</p>
 
-	<RecordsManager {collection} options={{ multiple: true }}></RecordsManager>
-	<RecordsManager {collection} options={{ multiple: true, inputMode: 'select' }}></RecordsManager>
+	<RecordsManager {collection} options={{ multiple: true, inputMode: 'select', max: 3 }} />
 </div>

@@ -3,6 +3,8 @@
 
 	export type InputMode = 'search' | 'select';
 
+	export type RecordManagerActions = 'edit' | 'create';
+
 	export type RecordsManagerOptions<R extends PBRecord> = {
 		inputMode: InputMode;
 		multiple: boolean;
@@ -10,10 +12,14 @@
 		placeholder: string | undefined;
 		displayFields: PBResponseKeys<PBResponse<R>>[];
 		excludeIds: string[];
+		hideActions: RecordManagerActions[];
+		max: number | undefined;
 	};
 </script>
 
 <script lang="ts">
+	import { Button } from 'flowbite-svelte';
+
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
@@ -47,7 +53,9 @@
 		name = undefined,
 		placeholder = undefined,
 		displayFields = [],
-		excludeIds = []
+		excludeIds = [],
+		hideActions = [],
+		max = undefined
 	} = options;
 
 	// export let name = '';
@@ -86,12 +94,23 @@
 
 	let tempIds: string[] = [];
 	$: setupTempIds(value);
-	$: exclude = [...excludeIds, ...tempIds];
 
-	function setupTempIds(newValue: typeof value) {
-		if (Array.isArray(newValue)) tempIds = newValue;
-		else if (newValue) tempIds = [newValue];
+	function setupTempIds(v: typeof value) {
+		if (Array.isArray(v)) tempIds = v;
+		else if (v) tempIds = [v];
 	}
+
+	//
+
+	$: exclude = [...excludeIds, ...tempIds];
+	$: disabled = isDisabled(value);
+
+	function isDisabled(v: typeof value): boolean {
+		if (!v || !Array.isArray(v) || !max) return false;
+		return v.length >= max;
+	}
+
+	//
 
 	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
 	$: loadRecords(tempIds);
@@ -114,15 +133,7 @@
 
 	// //
 
-	// $: disabled = multiple && !!max && relation.length >= max;
-
-	// function createModalStore(initialValue = false) {
-	// 	const open = writable(initialValue);
-	// 	function toggleDrawer() {
-	// 		open.update((v) => !v);
-	// 	}
-	// 	return { ...open, toggleDrawer };
-	// }
+	//
 
 	// const hideDrawer = createModalStore(true);
 	// export const { toggleDrawer } = hideDrawer;
@@ -144,13 +155,13 @@
 	// };
 </script>
 
-<div class="space-y-3">
+<div class="space-y-4">
 	<svelte:component
 		this={inputComponent}
 		{recordType}
 		{collection}
 		bind:recordId={tempId}
-		options={{ name, placeholder, displayFields, excludeIds: exclude }}
+		options={{ name, placeholder, displayFields, excludeIds: exclude, disabled }}
 	/>
 
 	<ArrayOrItemManager bind:value let:item>
@@ -159,18 +170,19 @@
 			{createRecordLabel(record, displayFields)}
 		{/if}
 	</ArrayOrItemManager>
+
+	{#if !hideActions.includes('create')}
+		<div class="flex justify-end">
+			<Button color="alternative" size="xs">
+				<Plus size="16" />
+				<span class="ml-1">{'sd'}</span>
+			</Button>
+		</div>
+	{/if}
 </div>
 
 <!--
 
-{#if addButtonText}
-	<div class="flex justify-end pt-4">
-		<Button color="alternative" size="xs" on:click={toggleDrawer}>
-			<Plus size="16" />
-			<span class="ml-1">{addButtonText}</span>
-		</Button>
-	</div>
-{/if}
 
 <Drawer bind:hidden={$hideDrawer} {...drawerProps}>
 	<div class="flex justify-between items-center">
