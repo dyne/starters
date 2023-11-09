@@ -12,8 +12,9 @@
 		placeholder: string | undefined;
 		displayFields: PBResponseKeys<PBResponse<R>>[];
 		excludeIds: string[];
-		hideActions: RecordManagerActions[];
+		showActions: RecordManagerActions[];
 		max: number | undefined;
+		formSettings: Partial<FieldsSettings<R>>;
 	};
 </script>
 
@@ -32,7 +33,7 @@
 	import { Button } from 'flowbite-svelte';
 	import { Plus } from 'svelte-heros-v2';
 	import { createToggleStore } from '../utils/toggleStore';
-	import RecordForm from '$lib/recordForm/recordForm.svelte';
+	import RecordForm, { type FieldsSettings } from '$lib/recordForm/recordForm.svelte';
 
 	//
 
@@ -51,8 +52,9 @@
 		placeholder = undefined,
 		displayFields = [],
 		excludeIds = [],
-		hideActions = [],
-		max = undefined
+		showActions = [],
+		max = undefined,
+		formSettings = {}
 	} = options;
 
 	//
@@ -140,7 +142,7 @@
 		{/if}
 	</ArrayOrItemManager>
 
-	{#if !hideActions.includes('create')}
+	{#if showActions.includes('create')}
 		<div class="flex justify-end">
 			<Button color="alternative" size="xs" on:click={hideCreateDrawer.off}>
 				<Plus size="16" />
@@ -154,6 +156,7 @@
 	<div class="p-6">
 		<RecordForm
 			{collection}
+			fieldsSettings={formSettings}
 			on:create={(e) => {
 				tempId = e.detail.record.id;
 				hideCreateDrawer.on();

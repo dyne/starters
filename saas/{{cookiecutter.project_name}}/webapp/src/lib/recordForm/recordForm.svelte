@@ -9,7 +9,7 @@
 		order: Array<keyof R>;
 		exclude: Array<keyof R>;
 		hide: { [K in keyof R]?: R[K] };
-		relations: { [K in keyof E]?: Partial<RecordsManagerOptions<Extract<E[K]>>> };
+		relations: { [K in keyof E & keyof R]?: Partial<RecordsManagerOptions<Extract<E[K]>>> };
 		components: { [K in keyof R]?: FieldComponentProp };
 	};
 </script>
