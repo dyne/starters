@@ -22,9 +22,8 @@
 	type T = $$Generic<AnyZodObject>;
 	export let superform: SuperForm<ZodValidation<T>, any>;
 	export let field: FormPathLeaves<z.infer<T>>;
-
-	export let collection: string | Collections;
 	export let options: Partial<RecordsManagerOptions<RecordGeneric>> & LabelOption = {};
+	export let collection: string | Collections;
 
 	//
 

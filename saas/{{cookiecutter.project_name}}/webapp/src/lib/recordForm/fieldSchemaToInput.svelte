@@ -23,21 +23,7 @@
 </script>
 
 <script lang="ts">
-	import { createTypeProp } from '$lib/utils/typeProp';
-
-	import type { FieldsSettings, RelationFieldSettings } from './recordForm.svelte';
-
-	import type { InputMode as RelationInputMode } from '$lib/components/records/recordsManager.svelte';
-	import {
-		Checkbox,
-		File,
-		Hidden,
-		Input,
-		Relations,
-		Select,
-		Textarea,
-		type RelationDisplayFields
-	} from '$lib/forms/fields';
+	import { Checkbox, File, Hidden, Input, Relations, Select, Textarea } from '$lib/forms/fields';
 	import { isArrayField } from '$lib/pocketbase/schema';
 	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
 	import type { ZodValidation } from 'sveltekit-superforms';
@@ -45,28 +31,23 @@
 	import type { AnyZodObject } from 'zod';
 	import { getFormContext } from '$lib/forms/form.svelte';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
+	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
-	export let recordType = createTypeProp<RecordGeneric>();
-	recordType;
+	type R = $$Generic<PBRecord>;
 
 	export let fieldSchema: FieldSchema;
-	export let hidden = false;
-	export let relationDisplayFields: RelationDisplayFields = [];
-	export let extendedRelationDisplayFields: RelationDisplayFields = [];
-	export let relationInputMode: RelationInputMode = 'search';
-	export let label = fieldSchema.name;
 	export let component: FieldComponentProp = undefined;
-	export let showRelationCreateButton: boolean = true;
-	export let showRelationEditButton: boolean = true;
-	export let relationFormFieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let hidden = false;
+	export let relationInputOptions: Partial<RecordsManagerOptions<R>> = {};
+	export let label = fieldSchema.name;
 
 	const field = fieldSchema.name;
-
 	const multiple = isArrayField(fieldSchema);
 	const { superform } = getFormContext();
+
+	//
 
 	/* Select */
 
@@ -120,18 +101,10 @@
 		{superform}
 		{field}
 		collection={collectionId}
-		displayFields={relationDisplayFields}
-		extendedDisplayFields={extendedRelationDisplayFields}
-		inputMode={relationInputMode}
-		showCreateButton={showRelationCreateButton}
-		showEditButton={showRelationEditButton}
-		formFieldsSettings={relationFormFieldsSettings}
-		{max}
 		options={{
+			...relationInputOptions,
 			label,
 			multiple,
-			displayFields: relationDisplayFields,
-			inputMode: relationInputMode,
 			max
 		}}
 	/>
