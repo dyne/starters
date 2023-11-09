@@ -48,7 +48,7 @@ export function createRecordLabel<R extends PBResponse<PBRecord>>(
 	}
 
 	return fields
-		.map((f) => record[f])
+		.map((f) => JSON.stringify(record[f]))
 		.filter((f) => Boolean(f))
 		.join(' | ');
 }
