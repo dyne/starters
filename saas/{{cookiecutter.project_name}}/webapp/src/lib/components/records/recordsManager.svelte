@@ -144,20 +144,22 @@
 	// };
 </script>
 
-<svelte:component
-	this={inputComponent}
-	{recordType}
-	{collection}
-	bind:recordId={tempId}
-	options={{ name, placeholder, displayFields, excludeIds: exclude }}
-/>
+<div class="space-y-3">
+	<svelte:component
+		this={inputComponent}
+		{recordType}
+		{collection}
+		bind:recordId={tempId}
+		options={{ name, placeholder, displayFields, excludeIds: exclude }}
+	/>
 
-<ArrayOrItemManager bind:value let:item>
-	{@const record = tempRecords[item]}
-	{#if record}
-		{createRecordLabel(record, displayFields)}
-	{/if}
-</ArrayOrItemManager>
+	<ArrayOrItemManager bind:value let:item>
+		{@const record = tempRecords[item]}
+		{#if record}
+			{createRecordLabel(record, displayFields)}
+		{/if}
+	</ArrayOrItemManager>
+</div>
 
 <!--
 
