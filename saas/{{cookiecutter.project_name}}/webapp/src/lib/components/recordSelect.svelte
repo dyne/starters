@@ -1,20 +1,9 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import type { PBResponse, PBRecord, PBResponseKeys } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-
-	import { createEventDispatcher, onMount } from 'svelte';
-	import type { SelectOptionType } from 'flowbite-svelte/dist/types';
-	import type { PBResponse, PBRecord } from '$lib/utils/types';
-
 	import { pb } from '$lib/pocketbase';
 	import { Select, Spinner } from 'flowbite-svelte';
-
-	//
-
-	export let collection: string;
-	export let displayFields: string[];
-	export let disabled = false;
-	export let name = '';
-	export let exclude: string[] = [];
 
 	//
 
@@ -22,20 +11,31 @@
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
-	$: recordsPromise = loadRecords(exclude);
-	let records: PBResponse<RecordGeneric>[] = [];
+	//
 
-	async function loadRecords(exclude: string[]) {
-		const res = await pb
-			.collection(collection)
-			.getFullList<PBResponse<RecordGeneric>>({ $autoCancel: false });
-		records = res.filter((r) => !exclude.includes(r.id));
-		return records;
+	export let collection: string;
+	export let value: string | undefined = undefined;
+
+	export let displayFields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
+	export let disabled = false;
+	export let name: string | undefined = undefined;
+	export let placeholder: string | undefined = undefined;
+	export let excludeIds: string[] = [];
+
+	//
+
+	$: recordsPromise = loadRecords(excludeIds);
+
+	async function loadRecords(excludeIds: string[]) {
+		return await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+			requestKey: null,
+			filter: excludeIds.map((eId) => `id != ${eId}`).join(' && ')
+		});
 	}
 
 	onMount(() => {
 		pb.collection(collection).subscribe('*', async function (e) {
-			recordsPromise = loadRecords(exclude);
+			recordsPromise = loadRecords(excludeIds);
 		});
 		return () => {
 			pb.collection(collection).unsubscribe('*');
@@ -45,7 +45,9 @@
 	//
 
 	function createLabel(record: PBResponse<RecordGeneric>) {
-		return displayFields
+		const fields: string[] = [...displayFields];
+		if (fields.length === 0) fields.push(...Object.keys(record));
+		return fields
 			.map((f) => record[f])
 			.filter((f) => Boolean(f))
 			.join(' | ');
@@ -57,15 +59,9 @@
 
 	//
 
-	let value: string;
-
-	const dispatch = createEventDispatcher<{ select: { record: PBResponse<RecordGeneric> } }>();
-
-	function handleChange() {
-		const record = records.find((r) => r.id == value);
-		if (!record) return;
-		dispatch('select', { record });
-		value = '';
+	function handleInput(e: Event) {
+		// @ts-ignore
+		value = e.target.value;
 	}
 </script>
 
@@ -73,5 +69,5 @@
 	<Spinner />
 {:then records}
 	{@const items = createItems(records)}
-	<Select {disabled} {name} {items} bind:value on:change={handleChange} />
+	<Select {placeholder} {disabled} {name} {items} {value} on:input={handleInput} />
 {/await}
