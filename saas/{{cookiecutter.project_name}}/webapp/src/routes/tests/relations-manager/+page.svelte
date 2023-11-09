@@ -3,27 +3,18 @@
 	// import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { Collections } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import type { FeaturesRecord } from '$lib/pocketbase/types';
+	import type { CrudExampleRecord, FeaturesRecord } from '$lib/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordsManager from '$lib/components/records/recordsManager.svelte';
 
-	const collection = Collections.Features;
+	const collection = Collections.CrudExample;
 
-	let searchValue: string | undefined = 'bmr7acxvx09904l';
-	const recordType = createTypeProp<FeaturesRecord>();
+	let searchValue: string | undefined = undefined;
+	const recordType = createTypeProp<CrudExampleRecord>();
 </script>
 
 <div class="p-8 space-y-4">
 	<p>Record select</p>
-	<RecordSelect
-		{recordType}
-		{collection}
-		bind:recordId={searchValue}
-		options={{
-			displayFields: ['name'],
-			excludeIds: ['qzum90ct7eymkv9']
-		}}
-	/>
 	<RecordSelect {recordType} {collection} bind:recordId={searchValue} />
 	<pre>{JSON.stringify(searchValue)}</pre>
 </div>
