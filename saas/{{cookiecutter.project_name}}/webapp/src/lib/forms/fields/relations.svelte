@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+    <script lang="ts" context="module">
 	export type RelationDisplayFields = string[];
 </script>
 
@@ -47,10 +47,12 @@
 
 	const recordProp = createTypeProp<GenericRecord>();
 
-	$: if (Array.isArray($value) && $value.length > 0) validateField($value as any);
+	$: valueIsArray = Array.isArray($value)
+
+	$: if (valueIsArray && $value.length > 0) validateField($value as any);
 
 	async function validateField(value: string) {
-		await validate(field);
+		await validate(value);
 	}
 	let toggleDrawer: () => void;
 	let edit: boolean = false;
@@ -94,7 +96,7 @@
 					initialData={record}
 					{collection}
 					on:success={(e) => {
-						!multiple ? $form[field].push(e.detail.record.id) : ($form[field] = e.detail.record.id);
+						multiple ? $form[field].push(e.detail.record.id) : ($form[field] = e.detail.record.id);
 						toggleDrawer();
 					}}
 				/>
