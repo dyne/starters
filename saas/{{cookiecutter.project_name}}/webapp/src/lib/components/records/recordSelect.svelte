@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { RecordInputOptions } from './types';
+
 	import type { Collections } from '$lib/pocketbase/types';
 
 	import { onMount } from 'svelte';
@@ -18,12 +20,16 @@
 
 	export let collection: string | Collections;
 	export let value: string | undefined = undefined;
+	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
-	export let displayFields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
-	export let disabled = false;
-	export let name: string | undefined = undefined;
-	export let placeholder: string | undefined = undefined;
-	export let excludeIds: string[] = [];
+	let {
+		displayFields = [],
+		disabled = false,
+		name = undefined,
+		excludeIds = [],
+		required = false,
+		placeholder = undefined
+	} = options;
 
 	//
 
@@ -62,5 +68,5 @@
 	<Spinner />
 {:then records}
 	{@const items = createItems(records)}
-	<Select {placeholder} {disabled} {name} {items} {value} on:input={handleInput} />
+	<Select {required} {placeholder} {disabled} {name} {items} {value} on:input={handleInput} />
 {/await}

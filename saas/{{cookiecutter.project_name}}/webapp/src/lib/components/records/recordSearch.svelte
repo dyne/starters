@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { RecordInputOptions } from './types';
+
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
 	import type { Collections } from '$lib/pocketbase/types';
@@ -17,13 +19,16 @@
 
 	export let collection: string | Collections;
 	export let value: string | undefined = undefined;
+	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
-	export let displayFields: PBResponseKeys<PBResponse<RecordGeneric>>[] = [];
-	export let disabled = false;
-	export let name: string | undefined = undefined;
-	export let excludeIds: string[] = [];
-	export let required = false;
-	export let placeholder: string | undefined = undefined;
+	let {
+		displayFields = [],
+		disabled = false,
+		name = undefined,
+		excludeIds = [],
+		required = false,
+		placeholder = undefined
+	} = options;
 
 	//
 
