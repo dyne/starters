@@ -4,7 +4,7 @@
 
 	import { Alert, Button, Modal, P } from 'flowbite-svelte';
 	import { Trash, XMark } from 'svelte-heros-v2';
-	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 
 	type RecordGeneric = $$Generic<PBRecord>;
 	export let record: PBResponse<RecordGeneric>;
@@ -37,7 +37,7 @@
 	<Trash size="20" />
 </Button>
 
-<ModalWrapper>
+<PortalWrapper>
 	<Modal
 		bind:open
 		title="Delete record"
@@ -70,4 +70,4 @@
 			</div>
 		</div>
 	</Modal>
-</ModalWrapper>
+</PortalWrapper>

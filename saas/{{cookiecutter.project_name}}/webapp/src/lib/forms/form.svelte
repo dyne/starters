@@ -108,7 +108,7 @@
 <script lang="ts">
 	import { setContext } from 'svelte';
 	import { Spinner, Modal } from 'flowbite-svelte';
-	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 
 	type T = $$Generic<AnyZodObject>;
 
@@ -130,9 +130,9 @@
 </form>
 
 {#if $delayed}
-	<ModalWrapper>
+	<PortalWrapper>
 		<Modal open={$delayed} dismissable={false}>
 			<Spinner />
 		</Modal>
-	</ModalWrapper>
+	</PortalWrapper>
 {/if}
