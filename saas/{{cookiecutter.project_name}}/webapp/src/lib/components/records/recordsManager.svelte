@@ -18,8 +18,6 @@
 </script>
 
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
-
 	import { pb } from '$lib/pocketbase';
 	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
@@ -30,11 +28,10 @@
 	import { createRecordLabel, filterStringArray } from './utils';
 	import { createTypeProp } from '$lib/utils/typeProp';
 
-	import { sineIn } from 'svelte/easing';
-	import type { ComponentProps, SvelteComponent } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
-	import IconButton from '../iconButton.svelte';
+	import Drawer from '$lib/components/drawer.svelte';
+	import { Button } from 'flowbite-svelte';
 	import { Plus } from 'svelte-heros-v2';
+	import { createToggleStore } from '../utils/toggleStore';
 
 	//
 
@@ -128,6 +125,8 @@
 
 	//
 
+	const hideCreateDrawer = createToggleStore(true);
+
 	// let record: PBResponse<RecordGeneric> | undefined = undefined;
 	// $: if ($hideDrawer) record = undefined;
 
@@ -135,7 +134,6 @@
 
 	//
 
-	// const hideDrawer = createModalStore(true);
 	// export const { toggleDrawer } = hideDrawer;
 
 	// //
@@ -173,7 +171,7 @@
 
 	{#if !hideActions.includes('create')}
 		<div class="flex justify-end">
-			<Button color="alternative" size="xs">
+			<Button color="alternative" size="xs" on:click={hideCreateDrawer.off}>
 				<Plus size="16" />
 				<span class="ml-1">{'sd'}</span>
 			</Button>
@@ -181,16 +179,14 @@
 	{/if}
 </div>
 
-<!--
-
-
-<Drawer bind:hidden={$hideDrawer} {...drawerProps}>
-	<div class="flex justify-between items-center">
+<Drawer bind:hidden={$hideCreateDrawer}>
+	helo
+	<!-- <div class="flex justify-between items-center">
 		<Heading tag="h5">{addButtonText}</Heading>
 		<div class="flex gap-2">
 			<slot {record} name="actions" />
 			<IconButton on:click={toggleDrawer}></IconButton>
 		</div>
 	</div>
-	<slot {record} />
-</Drawer> -->
+	<slot {record} /> -->
+</Drawer>
