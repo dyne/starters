@@ -42,7 +42,6 @@
 
 	export let collection: string;
 	export let value: string[] | string | undefined = undefined;
-
 	export let options: Partial<RecordsManagerOptions<RecordGeneric>> = {};
 
 	let {
@@ -55,10 +54,6 @@
 		hideActions = [],
 		max = undefined
 	} = options;
-
-	// export let name = '';
-	// export let max: number | undefined = undefined;
-	// export let addButtonText: string | undefined = undefined;
 
 	//
 
@@ -127,31 +122,6 @@
 	//
 
 	const hideCreateDrawer = createToggleStore(true);
-
-	// let record: PBResponse<RecordGeneric> | undefined = undefined;
-	// $: if ($hideDrawer) record = undefined;
-
-	// //
-
-	//
-
-	// export const { toggleDrawer } = hideDrawer;
-
-	// //
-
-	// const drawerProps: ComponentProps<Drawer> = {
-	// 	transitionType: 'fly',
-	// 	backdrop: true,
-	// 	activateClickOutside: true,
-	// 	placement: 'right',
-	// 	transitionParams: {
-	// 		x: 320,
-	// 		duration: 200,
-	// 		easing: sineIn
-	// 	},
-	// 	class: '!p-6 !space-y-6',
-	// 	width: 'w-full md:w-4/5 lg:w-3/5'
-	// };
 </script>
 
 <div class="space-y-4">
