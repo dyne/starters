@@ -40,7 +40,7 @@
 				</Heading>
 				<IconButton
 					on:click={() => {
-						hidden = false;
+						hidden = true;
 					}}
 				/>
 			</div>
