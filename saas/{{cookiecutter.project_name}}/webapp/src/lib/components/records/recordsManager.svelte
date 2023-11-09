@@ -32,6 +32,7 @@
 	import { Button } from 'flowbite-svelte';
 	import { Plus } from 'svelte-heros-v2';
 	import { createToggleStore } from '../utils/toggleStore';
+	import RecordForm from '$lib/recordForm/recordForm.svelte';
 
 	//
 
@@ -173,20 +174,20 @@
 		<div class="flex justify-end">
 			<Button color="alternative" size="xs" on:click={hideCreateDrawer.off}>
 				<Plus size="16" />
-				<span class="ml-1">{'sd'}</span>
+				<span class="ml-1">Create new record</span>
 			</Button>
 		</div>
 	{/if}
 </div>
 
-<Drawer bind:hidden={$hideCreateDrawer}>
-	helo
-	<!-- <div class="flex justify-between items-center">
-		<Heading tag="h5">{addButtonText}</Heading>
-		<div class="flex gap-2">
-			<slot {record} name="actions" />
-			<IconButton on:click={toggleDrawer}></IconButton>
-		</div>
+<Drawer bind:hidden={$hideCreateDrawer} placement="right" width="w-3/6" title="Create new record">
+	<div class="p-6">
+		<RecordForm
+			{collection}
+			on:create={(e) => {
+				tempId = e.detail.record.id;
+				hideCreateDrawer.on();
+			}}
+		/>
 	</div>
-	<slot {record} /> -->
 </Drawer>
