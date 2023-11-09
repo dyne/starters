@@ -2,7 +2,7 @@
 	import type { RecordInputOptions } from './types';
 
 	import { pb } from '$lib/pocketbase';
-	import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
+	import type { PBRecord, PBResponse } from '$lib/utils/types';
 	import type { Collections } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { createRecordLabel, excludeStringArray, getCollectionFieldNames } from './utils';
@@ -21,14 +21,9 @@
 	export let recordId: string | undefined = undefined;
 	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
-	let {
-		displayFields = [],
-		disabled = false,
-		name = undefined,
-		excludeIds = [],
-		required = false,
-		placeholder = undefined
-	} = options;
+	let { displayFields = [], name = undefined, required = false, placeholder = undefined } = options;
+	$: exclude = options.excludeIds ?? [];
+	$: disabled = options.disabled ?? false;
 
 	//
 
@@ -63,12 +58,12 @@
 	}
 
 	function filterString(text: string) {
-		let base = filterSearchString(text);
-		if (excludeIds.length > 0) {
-			const exclude = excludeStringArray('id', excludeIds);
-			base = `${base} && ${exclude}`;
+		let baseString = filterSearchString(text);
+		if (exclude.length > 0) {
+			const excludeString = excludeStringArray('id', exclude);
+			baseString = `${baseString} && ${excludeString}`;
 		}
-		return base;
+		return baseString;
 	}
 
 	function filterSearchString(text: string) {

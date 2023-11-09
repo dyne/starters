@@ -22,21 +22,17 @@
 	export let recordId: string | undefined = undefined;
 	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 
-	let {
-		displayFields = [],
-		disabled = false,
-		name = undefined,
-		excludeIds = [],
-		required = false,
-		placeholder = undefined
-	} = options;
+	let { displayFields = [], name = undefined, required = false, placeholder = undefined } = options;
+	$: exclude = options.excludeIds ?? [];
+	$: disabled = options.disabled ?? false;
 
 	//
 
-	$: recordsPromise = loadRecords(excludeIds);
+	let records: PBResponse<RecordGeneric>[] = [];
+	$: loadRecords(exclude);
 
 	async function loadRecords(excludeIds: string[]) {
-		return await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+		records = await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
 			requestKey: null,
 			filter: excludeStringArray('id', excludeIds)
 		});
@@ -44,7 +40,7 @@
 
 	onMount(() => {
 		pb.collection(collection).subscribe('*', async function (e) {
-			recordsPromise = loadRecords(excludeIds);
+			loadRecords(exclude);
 		});
 		return () => {
 			pb.collection(collection).unsubscribe('*');
@@ -64,17 +60,12 @@
 	}
 </script>
 
-{#await recordsPromise}
-	<Spinner />
-{:then records}
-	{@const items = createItems(records)}
-	<Select
-		{required}
-		{placeholder}
-		{disabled}
-		{name}
-		{items}
-		value={recordId}
-		on:input={handleInput}
-	/>
-{/await}
+<Select
+	{required}
+	{placeholder}
+	{disabled}
+	{name}
+	items={createItems(records)}
+	value={recordId}
+	on:input={handleInput}
+/>
