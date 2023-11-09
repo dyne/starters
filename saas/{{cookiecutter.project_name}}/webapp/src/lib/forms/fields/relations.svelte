@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-	export type RelationDisplayFields = string[];
-</script>
-
 <script lang="ts">
 	import type { PBRecord } from '$lib/utils/types';
 
