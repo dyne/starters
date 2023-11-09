@@ -10,6 +10,13 @@
 	export let closeOnClickOutside = true;
 </script>
 
-<Drawer bind:hidden={$isSidebarHidden} {placement} {width} {backdrop} {closeOnClickOutside}>
+<Drawer
+	bind:hidden={$isSidebarHidden}
+	{placement}
+	{width}
+	{backdrop}
+	{closeOnClickOutside}
+	hideTopbar
+>
 	<slot />
 </Drawer>
