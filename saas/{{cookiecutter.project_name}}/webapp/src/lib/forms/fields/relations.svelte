@@ -1,31 +1,48 @@
 <script lang="ts" context="module">
+	import type { LabelOption } from './types';
+
 	export type RelationDisplayFields = string[];
+
+	export type FormRelationsOptions = {
+		multiple?: boolean;
+		displayFields?: RelationDisplayFields;
+		max?: number | undefined;
+		inputMode?: RelationInputMode;
+	} & LabelOption;
 </script>
 
 <script lang="ts">
+	import type { z } from 'zod';
+	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
+	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
+
 	import RelationsManager, {
 		type InputMode as RelationInputMode
 	} from '$lib/components/relationsManager.svelte';
-	import { formFieldProxy } from 'sveltekit-superforms/client';
-	import { getFormContext } from '../form.svelte';
 	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 
-	export let field: string;
-	export let label = '';
+	type T = $$Generic<AnyZodObject>;
+
+	export let superform: SuperForm<ZodValidation<T>, any>;
+	export let field: FormPathLeaves<z.infer<T>>;
 	export let collection: string | Collections;
-	export let multiple = false;
-	export let displayFields: RelationDisplayFields = [];
-	export let max: number | undefined = undefined;
-	export let inputMode: RelationInputMode = 'search';
+	export let options: FormRelationsOptions = {};
 
-	const { superform } = getFormContext();
+	let {
+		multiple = false,
+		displayFields = [],
+		max = undefined,
+		inputMode = 'search',
+		label = ''
+	} = options;
+
 	const { validate } = superform;
-	const { value } = formFieldProxy(superform, field);
+	const { value } = formFieldProxy(superform, field as string);
 
-	$: if (Array.isArray($value) && $value.length > 0) validateField($value as any);
+	$: if (Array.isArray($value) && $value.length > 0) validateField($value);
 
-	async function validateField(value: string) {
+	async function validateField(value: unknown) {
 		await validate(field);
 	}
 </script>
