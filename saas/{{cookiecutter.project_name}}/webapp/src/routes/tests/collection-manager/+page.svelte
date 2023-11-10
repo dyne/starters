@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Collections, type CrudExampleResponse } from '$lib/pocketbase/types';
-
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import {
 		CollectionManager,

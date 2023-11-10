@@ -6,7 +6,6 @@
 	import RecordsManager, {
 		type RecordsManagerOptions
 	} from '$lib/components/records/recordsManager.svelte';
-
 	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';

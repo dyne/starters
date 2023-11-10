@@ -5,11 +5,8 @@
 	import { currentUser } from '$lib/pocketbase';
 	import {
 		Collections,
-		type CrudExampleRecord,
 		type CrudExampleResponse,
-		type FeaturesRecord,
 		type FeaturesResponse,
-		type UsersRecord,
 		type UsersResponse
 	} from '$lib/pocketbase/types';
 	import { RecordForm } from '$lib/recordForm';

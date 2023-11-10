@@ -30,7 +30,7 @@
 
 	import Drawer from '$lib/components/drawer.svelte';
 	import { Button } from 'flowbite-svelte';
-	import { Key, Plus } from 'svelte-heros-v2';
+	import { Plus } from 'svelte-heros-v2';
 	import { createToggleStore } from '../utils/toggleStore';
 	import RecordForm, { type FieldsSettings } from '$lib/recordForm/recordForm.svelte';
 

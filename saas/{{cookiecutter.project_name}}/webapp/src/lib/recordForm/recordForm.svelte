@@ -51,6 +51,10 @@
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
+	type ExpandGeneric = $$Generic<PBExpand>;
+	export let expandType = createTypeProp<ExpandGeneric>();
+	expandType;
+
 	//
 
 	export let collection: Collections | string;
