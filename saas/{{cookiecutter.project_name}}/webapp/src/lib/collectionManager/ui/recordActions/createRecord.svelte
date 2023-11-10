@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import type { PBResponse } from '$lib/utils/types';
 
 	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 	import { Button, Modal } from 'flowbite-svelte';
@@ -11,7 +11,7 @@
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
@@ -22,7 +22,7 @@
 
 	const dispatch = createEventDispatcher<{
 		success: {
-			record: PBResponse<RecordGeneric>;
+			record: RecordGeneric;
 		};
 	}>();
 

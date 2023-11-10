@@ -1,6 +1,6 @@
 import { getCollectionSchema } from '$lib/pocketbase/schema';
 import { Collections } from '$lib/pocketbase/types';
-import type { PBRecord, PBResponse } from '$lib/utils/types';
+import type { PBResponse } from '$lib/utils/types';
 
 export function filterStringArray(
 	field: string,
@@ -35,7 +35,7 @@ export function getCollectionFieldNames(collection: string | Collections): strin
 	return fieldNames;
 }
 
-export function createRecordLabel<R extends PBResponse<PBRecord>>(
+export function createRecordLabel<R extends PBResponse>(
 	record: R,
 	labelFields: string[] = []
 ): string {

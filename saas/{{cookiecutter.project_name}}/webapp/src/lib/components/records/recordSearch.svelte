@@ -2,7 +2,7 @@
 	import type { RecordInputOptions } from './types';
 
 	import { pb } from '$lib/pocketbase';
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import type { PBResponse } from '$lib/utils/types';
 	import type { Collections } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { createRecordLabel, excludeStringArray, getCollectionFieldNames } from './utils';
@@ -11,7 +11,7 @@
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
@@ -44,7 +44,7 @@
 	async function fetchOptions(text: string | undefined): Promise<Option[]> {
 		if (!text) return [];
 
-		const records = await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+		const records = await pb.collection(collection).getFullList<RecordGeneric>({
 			requestKey: null,
 			filter: filterString(text)
 		});
@@ -75,7 +75,7 @@
 
 	//
 
-	let record: PBResponse<RecordGeneric> | undefined = undefined;
+	let record: RecordGeneric | undefined = undefined;
 	$: loadRecord(recordId);
 
 	let actualPlaceholder: string | undefined = placeholder;

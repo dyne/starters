@@ -1,26 +1,25 @@
 <script lang="ts" context="module">
-	import type { PBResponseKeys } from '$lib/utils/types';
+	import type { PBResponse, StringKeys } from '$lib/utils/types';
 
 	export type InputMode = 'search' | 'select';
 
 	export type RecordManagerActions = 'edit' | 'create';
 
-	export type RecordsManagerOptions<R extends PBRecord = PBRecord> = {
+	export type RecordsManagerOptions<R extends PBResponse = PBResponse> = Partial<{
 		inputMode: InputMode;
 		multiple: boolean;
 		name: string | undefined;
 		placeholder: string | undefined;
-		displayFields: PBResponseKeys<PBResponse<R>>[];
+		displayFields: StringKeys<R>[];
 		excludeIds: string[];
 		showActions: RecordManagerActions[];
 		max: number | undefined;
 		formSettings: Partial<FieldsSettings<R>>;
-	};
+	}>;
 </script>
 
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
 
 	import RecordSelect from './recordSelect.svelte';
 	import RecordSearch from './recordSearch.svelte';
@@ -31,19 +30,19 @@
 
 	import Drawer from '$lib/components/drawer.svelte';
 	import { Button } from 'flowbite-svelte';
-	import { Plus } from 'svelte-heros-v2';
+	import { Key, Plus } from 'svelte-heros-v2';
 	import { createToggleStore } from '../utils/toggleStore';
 	import RecordForm, { type FieldsSettings } from '$lib/recordForm/recordForm.svelte';
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
 	export let collection: string;
 	export let value: string[] | string | undefined = undefined;
-	export let options: Partial<RecordsManagerOptions<RecordGeneric>> = {};
+	export let options: RecordsManagerOptions<RecordGeneric> = {};
 
 	let {
 		inputMode = 'search',
@@ -107,11 +106,11 @@
 
 	//
 
-	let tempRecords: Record<string, PBResponse<RecordGeneric>> = {};
+	let tempRecords: Record<string, RecordGeneric> = {};
 	$: loadRecords(tempIds);
 
 	async function loadRecords(ids: typeof tempIds) {
-		const records = await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+		const records = await pb.collection(collection).getFullList<RecordGeneric>({
 			filter: filterStringArray('id', '=', '||', ids),
 			requestKey: null
 		});

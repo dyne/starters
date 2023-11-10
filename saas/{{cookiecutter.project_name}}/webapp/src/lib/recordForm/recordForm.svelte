@@ -1,16 +1,27 @@
 <script lang="ts" context="module">
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
+	import type {
+		PBResponse,
+		ExtractPBRecord,
+		ExtractPBExpand,
+		StringKeys,
+		ArrayExtract
+	} from '$lib/utils/types';
 
-	type Extract<T> = T extends (infer U)[] ? U : T;
+	type Keys<R extends PBResponse> = StringKeys<ExtractPBRecord<R>>;
 
-	export type FieldsSettings<R extends PBRecord = PBRecord, E extends PBExpand = PBExpand> = {
-		labels: { [K in keyof R]?: string };
-		order: Array<keyof R>;
-		exclude: Array<keyof R>;
-		hide: { [K in keyof R]?: R[K] };
-		relations: { [K in keyof E & keyof R]?: Partial<RecordsManagerOptions<Extract<E[K]>>> };
-		components: { [K in keyof R]?: FieldComponentProp };
+	export type FieldsSettings<R extends PBResponse = PBResponse> = {
+		labels: { [K in Keys<R>]?: string };
+		order: Array<Keys<R>>;
+		exclude: Array<Keys<R>>;
+		hide: { [K in Keys<R>]?: R[K] };
+		relations: {
+			[K in Keys<R>]?: K extends keyof ExtractPBExpand<R>
+				? RecordsManagerOptions<ArrayExtract<ExtractPBExpand<R>[K]>>
+				: RecordsManagerOptions;
+		};
+		components: { [K in Keys<R>]?: FieldComponentProp };
 	};
 </script>
 
@@ -33,17 +44,12 @@
 	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { fieldsSchemaToZod } from '$lib/pocketbaseToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import type { PBExpand, PBRecord, PBResponse } from '$lib/utils/types';
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
-
-	type ExpandGeneric = $$Generic<PBExpand>;
-	export let expandType = createTypeProp<ExpandGeneric>();
-	expandType;
 
 	//
 
@@ -51,7 +57,7 @@
 	export let initialData: Partial<RecordGeneric> = {};
 	export let recordId = '';
 
-	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric, ExpandGeneric>> = {};
+	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 	let { order = [], exclude = [], hide, labels, components, relations } = fieldsSettings;
 
 	export let submitButtonText = '';
@@ -60,13 +66,13 @@
 
 	const dispatch = createEventDispatcher<{
 		success: {
-			record: PBResponse<RecordGeneric>;
+			record: RecordGeneric;
 		};
 		edit: {
-			record: PBResponse<RecordGeneric>;
+			record: RecordGeneric;
 		};
 		create: {
-			record: PBResponse<RecordGeneric>;
+			record: RecordGeneric;
 		};
 	}>();
 
@@ -96,7 +102,7 @@
 			async ({ form }) => {
 				const data = cleanFormDataFiles(form.data, fileFieldsInitialData);
 				const formData = createFormData(data);
-				let record: PBResponse<RecordGeneric>;
+				let record: RecordGeneric;
 				if (Boolean(recordId)) {
 					record = await pb.collection(collection).update(recordId, formData);
 					dispatch('edit', { record });
@@ -128,7 +134,7 @@
 	}
 
 	function filterFieldsSchema(schema: FieldSchema) {
-		return !exclude.includes(schema.name as keyof RecordGeneric);
+		return !exclude.includes(schema.name as Keys<RecordGeneric>);
 	}
 
 	/* */

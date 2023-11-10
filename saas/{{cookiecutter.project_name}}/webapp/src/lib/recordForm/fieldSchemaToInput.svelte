@@ -32,10 +32,11 @@
 	import { getFormContext } from '$lib/forms/form.svelte';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
+	import type { PBResponse } from '$lib/utils/types';
 
 	//
 
-	type R = $$Generic<PBRecord>;
+	type R = $$Generic<PBResponse>;
 
 	export let fieldSchema: FieldSchema;
 	export let component: FieldComponentProp = undefined;

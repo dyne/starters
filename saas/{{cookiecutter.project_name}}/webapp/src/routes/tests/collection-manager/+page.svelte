@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Collections, type CrudExampleRecord } from '$lib/pocketbase/types';
+	import { Collections, type CrudExampleResponse } from '$lib/pocketbase/types';
 
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import {
@@ -16,7 +16,7 @@
 	import Pagination from '$lib/collectionManager/ui/pagination.svelte';
 	import EditRecord from '$lib/collectionManager/ui/recordActions/editRecord.svelte';
 
-	const recordType = createTypeProp<CrudExampleRecord>();
+	const recordType = createTypeProp<CrudExampleResponse>();
 </script>
 
 <div class="p-4">

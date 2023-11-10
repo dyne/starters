@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
-	type RecordGeneric = $$Generic<PBRecord>;
+	import type { PBResponse } from '$lib/utils/types';
+	type RecordGeneric = $$Generic<PBResponse>;
 
 	export let value: unknown;
 </script>
