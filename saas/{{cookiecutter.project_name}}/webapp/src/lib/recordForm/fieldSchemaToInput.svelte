@@ -23,17 +23,7 @@
 </script>
 
 <script lang="ts">
-	import type { InputMode as RelationInputMode } from '$lib/components/relationsManager.svelte';
-	import {
-		Checkbox,
-		File,
-		Hidden,
-		Input,
-		Relations,
-		Select,
-		Textarea,
-		type RelationDisplayFields
-	} from '$lib/forms/fields';
+	import { Checkbox, File, Hidden, Input, Relations, Select, Textarea } from '$lib/forms/fields';
 	import { isArrayField } from '$lib/pocketbase/schema';
 	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
 	import type { ZodValidation } from 'sveltekit-superforms';
@@ -41,20 +31,23 @@
 	import type { AnyZodObject } from 'zod';
 	import { getFormContext } from '$lib/forms/form.svelte';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
+	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 
 	//
 
+	type R = $$Generic<PBRecord>;
+
 	export let fieldSchema: FieldSchema;
-	export let hidden = false;
-	export let relationDisplayFields: RelationDisplayFields = [];
-	export let relationInputMode: RelationInputMode = 'search';
-	export let label = fieldSchema.name;
 	export let component: FieldComponentProp = undefined;
+	export let hidden = false;
+	export let relationInputOptions: Partial<RecordsManagerOptions<R>> = {};
+	export let label = fieldSchema.name;
 
 	const field = fieldSchema.name;
-
 	const multiple = isArrayField(fieldSchema);
 	const { superform } = getFormContext();
+
+	//
 
 	/* Select */
 
@@ -109,10 +102,9 @@
 		{field}
 		collection={collectionId}
 		options={{
+			...relationInputOptions,
 			label,
 			multiple,
-			displayFields: relationDisplayFields,
-			inputMode: relationInputMode,
 			max
 		}}
 	/>

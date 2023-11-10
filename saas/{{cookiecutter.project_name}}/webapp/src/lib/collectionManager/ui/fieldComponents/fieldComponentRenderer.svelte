@@ -14,12 +14,14 @@
 	export let record: PBResponse<RecordGeneric>;
 	export let field: string;
 	export let component: FieldComponent | undefined;
+	export let showLabel: boolean = false;
 
 	$: value = record[field];
+	$: text = showLabel ? `${field}: ${value}` : field;
 </script>
 
 {#if component}
 	<svelte:component this={component} {record} {value} />
 {:else}
-	<div>{value}</div>
+	<div>{text}</div>
 {/if}
