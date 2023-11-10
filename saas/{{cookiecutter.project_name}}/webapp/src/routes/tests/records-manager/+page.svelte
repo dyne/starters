@@ -1,14 +1,22 @@
 <script lang="ts">
 	import RecordSelect from '$lib/components/records/recordSelect.svelte';
+	// import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { Collections } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import type { CrudExampleResponse } from '$lib/pocketbase/types';
+	import type {
+		CrudExampleRecord,
+		CrudExampleResponse,
+		FeaturesResponse,
+		UsersResponse
+	} from '$lib/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordsManager from '$lib/components/records/recordsManager.svelte';
+	import { boolean } from 'zod';
 
 	let searchValue: string | undefined = undefined;
 	const collection = Collections.CrudExample;
-	const recordType = createTypeProp<CrudExampleResponse>();
+	const recordType =
+		createTypeProp<CrudExampleResponse<{ owner: UsersResponse; relation: FeaturesResponse[] }>>();
 </script>
 
 <div class="p-8 space-y-4">
@@ -33,7 +41,24 @@
 			inputMode: 'select',
 			max: 3,
 			showActions: ['create'],
-			formSettings: {}
+			displayFields: ['id', 'text'],
+			formSettings: {
+				order: ['image', 'multiselect'],
+				hide: {
+					text: 'ao'
+				},
+				relations: {
+					owner: {
+						displayFields: ['id', 'email']
+					},
+					file_only_pdf_json: {
+						displayFields: ['sad']
+					},
+					relation: {
+						displayFields: ['name', 'id', 'created']
+					}
+				}
+			}
 		}}
 	/>
 </div>

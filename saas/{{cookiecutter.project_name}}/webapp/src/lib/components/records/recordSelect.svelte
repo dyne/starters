@@ -1,18 +1,16 @@
 <script lang="ts">
 	import type { RecordInputOptions } from './types';
-
 	import type { Collections } from '$lib/pocketbase/types';
-
 	import { onMount } from 'svelte';
-	import type { PBResponse, PBRecord, PBResponseKeys } from '$lib/utils/types';
+	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { pb } from '$lib/pocketbase';
-	import { Select, Spinner } from 'flowbite-svelte';
+	import { Select } from 'flowbite-svelte';
 	import { createRecordLabel, excludeStringArray } from './utils';
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
@@ -28,11 +26,11 @@
 
 	//
 
-	let records: PBResponse<RecordGeneric>[] = [];
+	let records: RecordGeneric[] = [];
 	$: loadRecords(exclude);
 
 	async function loadRecords(excludeIds: string[]) {
-		records = await pb.collection(collection).getFullList<PBResponse<RecordGeneric>>({
+		records = await pb.collection(collection).getFullList<RecordGeneric>({
 			requestKey: null,
 			filter: excludeStringArray('id', excludeIds)
 		});
@@ -47,7 +45,7 @@
 		};
 	});
 
-	function createItems(records: PBResponse<RecordGeneric>[]) {
+	function createItems(records: RecordGeneric[]) {
 		return records.map((r) => ({
 			name: createRecordLabel(r, displayFields),
 			value: r.id

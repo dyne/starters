@@ -10,11 +10,11 @@
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { LabelOption } from './types';
-	import type { PBRecord } from '$lib/utils/types';
-  
-  //
+	import type { PBResponse } from '$lib/utils/types';
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	//
+
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 

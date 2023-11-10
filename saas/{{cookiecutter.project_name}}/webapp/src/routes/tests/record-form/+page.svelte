@@ -5,10 +5,8 @@
 	import { currentUser } from '$lib/pocketbase';
 	import {
 		Collections,
-		type CrudExampleRecord,
-		type FeaturesRecord,
+		type CrudExampleResponse,
 		type FeaturesResponse,
-		type UsersRecord,
 		type UsersResponse
 	} from '$lib/pocketbase/types';
 	import { RecordForm } from '$lib/recordForm';
@@ -18,23 +16,23 @@
 	export let data;
 	console.log(data.item);
 
-	const recordType = createTypeProp<CrudExampleRecord>();
-	const expandType = createTypeProp<{
-		relation: FeaturesResponse[];
-		relation_single: FeaturesResponse;
-		owner: UsersResponse;
-	}>();
+	const recordType = createTypeProp<
+		CrudExampleResponse<{
+			relation: FeaturesResponse[];
+			relation_single: FeaturesResponse;
+			owner: UsersResponse;
+		}>
+	>();
 </script>
 
 <div class="max-w-xl mx-auto p-4">
 	<RecordForm
 		{recordType}
-		{expandType}
 		collection={Collections.CrudExample}
 		fieldsSettings={{
 			relations: {
 				relation: {
-					displayFields: ['name'],
+					displayFields: ['name', 'active'],
 					inputMode: 'select'
 				},
 				relation_single: { displayFields: ['name'], inputMode: 'search' },

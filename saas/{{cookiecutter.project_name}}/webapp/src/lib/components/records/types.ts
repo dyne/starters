@@ -1,9 +1,9 @@
-import type { PBRecord, PBResponse, PBResponseKeys } from '$lib/utils/types';
+import type { PBResponse, StringKeys } from '$lib/utils/types';
 
-export type RecordInputOptions<R extends PBRecord> = {
+export type RecordInputOptions<R extends PBResponse> = {
 	name: string | undefined;
 	placeholder: string | undefined;
-	displayFields: PBResponseKeys<PBResponse<R>>[];
+	displayFields: StringKeys<R>[];
 	excludeIds: string[];
 	required: boolean;
 	disabled: boolean;

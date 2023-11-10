@@ -8,7 +8,7 @@
 
 	export function createFieldComponent<C extends FieldComponent>(
 		component: ComponentType<C>,
-		props?: Omit<ComponentProps<C>, 'field'>,
+		props?: Omit<ComponentProps<C>, 'field' | 'superform'>,
 		events?: ComponentEvents<C>
 	) {
 		return { component, props, events };
@@ -32,10 +32,11 @@
 	import { getFormContext } from '$lib/forms/form.svelte';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
+	import type { PBResponse } from '$lib/utils/types';
 
 	//
 
-	type R = $$Generic<PBRecord>;
+	type R = $$Generic<PBResponse>;
 
 	export let fieldSchema: FieldSchema;
 	export let component: FieldComponentProp = undefined;

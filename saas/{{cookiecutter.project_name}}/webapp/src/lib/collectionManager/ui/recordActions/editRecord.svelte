@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createTypeProp } from '$lib/utils/typeProp';
 
-	import type { PBRecord, PBResponse } from '$lib/utils/types';
+	import type { PBResponse } from '$lib/utils/types';
 	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
@@ -11,16 +11,16 @@
 
 	//
 
-	type RecordGeneric = $$Generic<PBRecord>;
+	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
-	export let record: PBResponse<RecordGeneric>;
+	export let record: RecordGeneric;
 	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
 	//
 
-	const { dataManager, formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
+	const { formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
 	const { base, edit } = formFieldsSettings;
 
 	const fieldsSettings = {
