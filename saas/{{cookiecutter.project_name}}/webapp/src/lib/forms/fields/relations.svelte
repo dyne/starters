@@ -6,14 +6,13 @@
 	import RecordsManager, {
 		type RecordsManagerOptions
 	} from '$lib/components/records/recordsManager.svelte';
-
 	import type { Collections } from '$lib/pocketbase/types';
 	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { LabelOption } from './types';
 	import type { PBRecord } from '$lib/utils/types';
-
-	//
+  
+  //
 
 	type RecordGeneric = $$Generic<PBRecord>;
 	export let recordType = createTypeProp<RecordGeneric>();
