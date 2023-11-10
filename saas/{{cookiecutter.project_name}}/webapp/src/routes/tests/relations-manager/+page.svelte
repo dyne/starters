@@ -1,15 +1,14 @@
 <script lang="ts">
 	import RecordSelect from '$lib/components/records/recordSelect.svelte';
-	// import RelationsManager from '$lib/components/relationsManager.svelte';
 	import { Collections } from '$lib/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import type { CrudExampleRecord } from '$lib/pocketbase/types';
+	import type { CrudExampleResponse } from '$lib/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordsManager from '$lib/components/records/recordsManager.svelte';
 
 	let searchValue: string | undefined = undefined;
 	const collection = Collections.CrudExample;
-	const recordType = createTypeProp<CrudExampleRecord>();
+	const recordType = createTypeProp<CrudExampleResponse>();
 </script>
 
 <div class="p-8 space-y-4">
