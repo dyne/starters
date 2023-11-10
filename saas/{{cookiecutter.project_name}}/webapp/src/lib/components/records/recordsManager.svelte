@@ -92,6 +92,7 @@
 	function setupTempIds(v: typeof value) {
 		if (Array.isArray(v)) tempIds = v;
 		else if (v) tempIds = [v];
+		else tempIds = [];
 	}
 
 	//
