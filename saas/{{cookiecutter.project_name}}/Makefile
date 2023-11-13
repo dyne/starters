@@ -39,7 +39,7 @@ setup_submodules: setup_git ## 📦 Setup the submodules
 
 setup_zenroom: ## 📦 Setup zenroom
 	@echo "📦 Setup zenroom"
-	@if ! test -f /usr/local/bin/zenroom; then \
+	@if ! command -v zenroom &> /dev/null; then \
 		echo -n "Need zenroom executables, do you want to download them (works only on Osx not arm64 and Linux)? [y/N] " && read ans && [ $${ans:-N} = y ]; \
 		if [ $(OSFLAG) == "OSX" ]; then \
 				wget -O /usr/local/bin/zencode-exec.command https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
@@ -66,7 +66,7 @@ setup_backend: ## 📦 Setup the frontend
     	mkdir ./admin/pb_data; \
 	fi
 	@cd admin && ./setup
-	
+
 	@echo " "
 
 setup_frontend: ## 📦 Setup the frontend
