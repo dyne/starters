@@ -4,6 +4,7 @@
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils/strings';
 	import type { UsersRecord } from '$lib/pocketbase/types';
+	import LL from '$i18n/i18n-svelte';
 
 	type UserKeys = keyof UsersRecord;
 
@@ -39,6 +40,8 @@
 {:else}
 	<P>You have no keys yet.</P>
 	<div class="flex justify-end mt-4">
-		<Button color="primary" size="sm" href="/keypairoom/regenerate">Generate new keys</Button>
+		<Button color="primary" size="sm" href={$LL.LINK('/keypairoom/regenerate')}>
+			Generate new keys
+		</Button>
 	</div>
 {/if}

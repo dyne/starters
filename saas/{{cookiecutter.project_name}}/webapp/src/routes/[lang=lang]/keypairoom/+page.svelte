@@ -2,9 +2,7 @@
 	import {
 		userQuestions,
 		type UserAnswers,
-		userAnswersSchema,
-		userQuestionsKeys,
-		type UserQuestionsKey
+		userAnswersSchema
 	} from '$lib/keypairoom/userQuestions.js';
 	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
 	import {
@@ -20,6 +18,7 @@
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
 	import { InformationCircle } from 'svelte-heros-v2';
+	import LL from '$i18n/i18n-svelte.js';
 
 	//
 
@@ -124,5 +123,5 @@
 			</div>
 		</span>
 	</Alert>
-	<Button href="/my">Go to Dashboard</Button>
+	<Button href={$LL.LINK('/my')}>Go to Dashboard</Button>
 {/if}

@@ -8,14 +8,16 @@
 	import type { Link } from '$lib/utils/types';
 	import { A, Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
 	import { featureFlags } from '$lib/features';
+	import LL from '$i18n/i18n-svelte';
 
-	const modes: Link[] = [
+	let modes: Link[] = [];
+	$: modes = [
 		{
-			href: '/login',
+			href: $LL.LINK('/login'),
 			text: 'Email and password'
 		},
 		{
-			href: '/login/webauthn',
+			href: $LL.LINK('/login/webauthn'),
 			text: 'Webauthn'
 		}
 	];
@@ -42,6 +44,6 @@
 	<Hr />
 	<P color="text-gray-500 dark:text-gray-400" size="sm">
 		Don't have an account?
-		<A href="/register">Register here</A>
+		<A href={$LL.LINK('/register')}>Register here</A>
 	</P>
 </div>

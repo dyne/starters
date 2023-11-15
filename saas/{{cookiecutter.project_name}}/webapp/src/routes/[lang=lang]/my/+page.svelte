@@ -4,6 +4,6 @@
 </script>
 
 <div class="flex flex-col p-4">
-	<A href="/my/profile">{$LL.MY_PROFILE()}</A>
-	<A href="/my/organizations">{$LL.MY_ORGANIZATIONS()}</A>
+	<A href={$LL.LINK('/my/profile')}>{$LL.MY_PROFILE()}</A>
+	<A href={$LL.LINK('/my/organizations')}>{$LL.MY_ORGANIZATIONS()}</A>
 </div>

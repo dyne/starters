@@ -8,6 +8,7 @@
 // Otherwise (default) the URL relative to the base is returned.
 
 import { base } from '$app/paths';
+import { detectLocale } from './i18n-util';
 
 // e.g. https://mywebsite.com/en/blog/article-1 => /de/blog/article-1
 export const replaceLocaleInUrl = (url: URL, locale: string, full = false): string => {
@@ -26,3 +27,9 @@ export const replaceLocaleInUrl = (url: URL, locale: string, full = false): stri
 const REGEX_START_WITH_BASE = new RegExp(`^${base}`);
 
 export const getPathnameWithoutBase = (url: URL) => url.pathname.replace(REGEX_START_WITH_BASE, '');
+
+/* */
+
+export function detectBrowserLocale() {
+	return detectLocale(() => [navigator.language.split('-')[0] ?? '']);
+}

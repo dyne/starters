@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { A, Heading, P } from 'flowbite-svelte';
+	import LL from '$i18n/i18n-svelte';
+
 	type ErrorData = {
 		status: number;
 		image: string;
@@ -49,9 +50,9 @@
 			<div class="w-full pt-8 space-y-1">
 				<P class="text-gray-400">Here are some Helpful link:</P>
 				<ul class="flex gap-6">
-					<li><A href="/">Home</A></li>
-					<li><A href="/login">Login</A></li>
-					<li><A href="/register">Register</A></li>
+					<li><A href={$LL.LINK('/')}>Home</A></li>
+					<li><A href={$LL.LINK('/login')}>Login</A></li>
+					<li><A href={$LL.LINK('/register')}>Register</A></li>
 				</ul>
 			</div>
 		{/if}

@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { Register } from 'flowbite-svelte-blocks';
 	import { appTitle } from '$lib/strings';
+	import LL from '$i18n/i18n-svelte';
 </script>
 
 <div class="grid h-screen place-items-center">
 	<div class="w-2/5">
-		<Register href="/">
+		<Register href={$LL.LINK('/')}>
 			<svelte:fragment slot="top">
 				<img class="h-10 mr-2" src="/logo.svg" alt={`${appTitle} Logo`} />
 			</svelte:fragment>

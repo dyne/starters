@@ -4,6 +4,7 @@
 	import { ProtectedOrgUI } from '$lib/rbac';
 	import { Plus } from 'svelte-heros-v2';
 	import { c } from '$lib/utils/strings.js';
+	import LL from '$i18n/i18n-svelte.js';
 
 	export let data;
 	let { authorizations } = data;
@@ -13,7 +14,12 @@
 
 <div class="flex justify-between items-center mb-6">
 	<Heading tag="h5">Your organizations</Heading>
-	<Button size="sm" color="alternative" class="!px-4 shrink-0" href="/my/organizations/create">
+	<Button
+		size="sm"
+		color="alternative"
+		class="!px-4 shrink-0"
+		href={$LL.LINK('/my/organizations/create')}
+	>
 		<Plus size="20" />
 		<span class="ml-1"> Create a new organization </span>
 	</Button>
@@ -28,7 +34,7 @@
 			{@const role = a.expand.role}
 			<div class="px-4 py-3 flex justify-between items-center">
 				<div class="flex items-center space-x-4">
-					<P href={`/my/organizations/${org.id}`}>{org.name}</P>
+					<P href={$LL.LINK(`/my/organizations/${org.id}`)}>{org.name}</P>
 					{#if role.name == ADMIN || role.name == OWNER}
 						<Badge large color="dark">{c(role.name)}</Badge>
 					{/if}
@@ -38,7 +44,7 @@
 						data-testid={`${org.name} link`}
 						size="sm"
 						color="alternative"
-						href={`/my/organizations/${org.id}`}
+						href={$LL.LINK(`/my/organizations/${org.id}`)}
 					>
 						Settings
 					</Button>

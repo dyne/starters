@@ -54,9 +54,9 @@
 						{$currentUser?.email}
 					</span>
 				</DropdownHeader>
-				<DropdownItem href="/my/profile">My profile</DropdownItem>
+				<DropdownItem href={$LL.LINK('/my/profile')}>My profile</DropdownItem>
 				<DropdownDivider />
-				<DropdownItem href="/pro" class="flex items-center">
+				<DropdownItem href={$LL.LINK('/pro')} class="flex items-center">
 					<Fire class="text-red-500 mr-2 w-5" /> Go Pro</DropdownItem
 				>
 				<DropdownDivider />

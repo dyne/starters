@@ -5,6 +5,7 @@
 	import { z } from 'zod';
 	import { Form, createForm, FormError, SubmitButton, Textarea, Input } from '$lib/forms';
 	import { A, Heading, P } from 'flowbite-svelte';
+	import LL from '$i18n/i18n-svelte.js';
 
 	//
 
@@ -56,13 +57,13 @@
 			<SubmitButton>Regenerate keys</SubmitButton>
 		</div>
 	</Form>
-	<A href="/keypairoom">Forgot the seed? Regenerate it</A>
+	<A href={$LL.LINK('/keypairoom')}>Forgot the seed? Regenerate it</A>
 {:else}
 	<div class="space-y-4 p-6 flex flex-col">
 		<Heading tag="h4">Keys regenerated!</Heading>
 		<P>
 			Your keys have been regenerated. You can now go back to
-			<A href="/my">your profile</A>.
+			<A href={$LL.LINK('/my')}>your profile</A>.
 		</P>
 	</div>
 {/if}

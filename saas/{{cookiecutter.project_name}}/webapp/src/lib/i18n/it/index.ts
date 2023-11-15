@@ -1,6 +1,7 @@
 import type { Translation } from '../i18n-types';
 
 const it = {
+	LINK: '/it{0}',
 	PAGES: 'Pagine',
 	MESSAGES: 'Messaggi',
 	MY_PROFILE: 'Il mio profilo',

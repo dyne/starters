@@ -7,6 +7,7 @@
 
 	import { A, Heading, Hr, P } from 'flowbite-svelte';
 	import { Form, createForm, Input, Checkbox, FormError, SubmitButton } from '$lib/forms';
+	import LL from '$i18n/i18n-svelte';
 
 	//
 
@@ -27,9 +28,9 @@
 		await u.requestVerification(data.email);
 		// TODO - This should redirect to /my?welcome=true, and there we should check where to redirect
 		if ($featureFlags.KEYPAIROOM) {
-			await goto('/keypairoom');
+			await goto($LL.LINK('/keypairoom'));
 		} else {
-			await goto('/my');
+			await goto($LL.LINK('/my'));
 		}
 	});
 </script>
@@ -68,7 +69,7 @@
 	/>
 
 	<Checkbox {superform} field="acceptTerms">
-		I accept the<A class="ml-1" href="/">Terms and Conditions</A>
+		I accept the<A class="ml-1" href={$LL.LINK('/')}>Terms and Conditions</A>
 	</Checkbox>
 
 	<FormError />
@@ -82,6 +83,6 @@
 	<Hr />
 	<P color="text-gray-500 dark:text-gray-400" size="sm">
 		Already have an account?
-		<A href="/login">Login here</A>
+		<A href={$LL.LINK('/login')}>Login here</A>
 	</P>
 </div>

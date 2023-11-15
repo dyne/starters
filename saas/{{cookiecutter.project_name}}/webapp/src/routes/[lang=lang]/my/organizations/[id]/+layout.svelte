@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LL from '$i18n/i18n-svelte.js';
 	import { pb } from '$lib/pocketbase';
 	import { ProtectedOrgLayout, ProtectedOrgUI, OrgRoles } from '$lib/rbac';
 	import { A, Button, ButtonGroup, Heading, Hr, P } from 'flowbite-svelte';
@@ -7,7 +8,7 @@
 	$: organization = data.organization;
 	$: avatarPath = pb.files.getUrl(organization, organization.avatar);
 
-	const href = (path = '') => `/my/organizations/${organization.id}${path}`;
+	const href = (path = '') => $LL.LINK(`/my/organizations/${organization.id}${path}`);
 	const { OWNER, ADMIN } = OrgRoles;
 </script>
 

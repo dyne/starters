@@ -6,7 +6,7 @@ export function links(LL: TranslationFunctions): SidebarLink[] {
 	return [
 		{
 			label: 'Overview',
-			href: '/my',
+			href: LL.LINK('/my'),
 			icon: GlobeAlt
 		},
 		{
@@ -15,15 +15,15 @@ export function links(LL: TranslationFunctions): SidebarLink[] {
 			subLinks: [
 				{
 					label: 'Profile',
-					href: '/my/profile'
+					href: LL.LINK('/my/profile')
 				},
 				{
 					label: 'Kanban',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Calendar',
-					href: '/'
+					href: LL.LINK('/')
 				}
 			]
 		},
@@ -33,34 +33,34 @@ export function links(LL: TranslationFunctions): SidebarLink[] {
 			subLinks: [
 				{
 					label: 'Products',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Billing',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Invoice',
-					href: '/'
+					href: LL.LINK('/')
 				}
 			]
 		},
 		{
 			label: 'Messages',
-			href: '/',
+			href: LL.LINK('/'),
 			icon: Inbox,
 			subLinks: [
 				{
 					label: 'Inbox',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Sent',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Drafts',
-					href: '/'
+					href: LL.LINK('/')
 				}
 			]
 		},
@@ -70,15 +70,15 @@ export function links(LL: TranslationFunctions): SidebarLink[] {
 			subLinks: [
 				{
 					label: 'Sign In',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Sign Up',
-					href: '/'
+					href: LL.LINK('/')
 				},
 				{
 					label: 'Forgot Password',
-					href: '/'
+					href: LL.LINK('/')
 				}
 			]
 		}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { currentUser } from '$lib/pocketbase';
 	import {
 		Footer,
 		FooterBrand,
@@ -44,19 +43,19 @@
 	} from 'svelte-heros-v2';
 	import { appTitle } from '$lib/strings';
 	import { featureFlags } from '$lib/features';
-
+	import LL from '$i18n/i18n-svelte';
 </script>
 
 <div class="flex flex-col gap-20">
 	<header>
 		<Navbar let:hidden let:toggle fluid={false}>
-			<NavBrand href="/">
+			<NavBrand href={$LL.LINK('/')}>
 				<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 			</NavBrand>
 			<div class="flex items-center lg:order-2">
 				{#if $featureFlags.AUTH}
-					<Button id="btn-login" href="/login" color="dark">Log in</Button>
-					<Button href="/register" class="ml-2" color="red">Sign up</Button>
+					<Button id="btn-login" href={$LL.LINK('/login')} color="dark">Log in</Button>
+					<Button href={$LL.LINK('/register')} class="ml-2" color="red">Sign up</Button>
 				{/if}
 
 				<NavHamburger
@@ -69,12 +68,12 @@
 				divClass="justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
 				ulClass="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"
 			>
-				<NavLi href="/" active={true}>Home</NavLi>
-				<NavLi href="/">Company</NavLi>
-				<NavLi href="/">Marketplace</NavLi>
-				<NavLi href="/">Features</NavLi>
-				<NavLi href="/">Team</NavLi>
-				<NavLi href="/">Contact</NavLi>
+				<NavLi href={$LL.LINK('/')} active={true}>Home</NavLi>
+				<NavLi href={$LL.LINK('/')}>Company</NavLi>
+				<NavLi href={$LL.LINK('/')}>Marketplace</NavLi>
+				<NavLi href={$LL.LINK('/')}>Features</NavLi>
+				<NavLi href={$LL.LINK('/')}>Team</NavLi>
+				<NavLi href={$LL.LINK('/')}>Contact</NavLi>
 			</NavUl>
 		</Navbar>
 	</header>
@@ -349,7 +348,7 @@
 			<div class="grid gap-12 lg:grid-cols-6 lg:gap-24">
 				<div class="col-span-2">
 					<FooterBrand
-						href="/"
+						href={$LL.LINK('/')}
 						src="/logo.svg"
 						alt={`${appTitle} Logo`}
 						name=""
@@ -365,7 +364,7 @@
 						Resources
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink liClass="mb-4" href="/">{appTitle}</FooterLink>
+						<FooterLink liClass="mb-4" href={$LL.LINK('/')}>{appTitle}</FooterLink>
 						<FooterLink liClass="mb-4" href="https://tailwindcss.com/">Tailwind CSS</FooterLink>
 						<FooterLink liClass="mb-4" href="https://flowbite-svelte.com/"
 							>{appTitle}-Svelte</FooterLink
@@ -407,11 +406,23 @@
 			</div>
 			<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 			<div class="sm:flex sm:items-center sm:justify-between">
-				<FooterCopyright href="/" by={appTitle} />
+				<FooterCopyright href={$LL.LINK('/')} by={appTitle} />
 				<div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
-					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Facebook} />
-					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Twitter} />
-					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Github} />
+					<FooterIcon
+						href={$LL.LINK('/')}
+						class="text-gray-400 hover:text-gray-900"
+						icon={Facebook}
+					/>
+					<FooterIcon
+						href={$LL.LINK('/')}
+						class="text-gray-400 hover:text-gray-900"
+						icon={Twitter}
+					/>
+					<FooterIcon
+						href={$LL.LINK('/')}
+						class="text-gray-400 hover:text-gray-900"
+						icon={Github}
+					/>
 				</div>
 			</div>
 		</Footer>
