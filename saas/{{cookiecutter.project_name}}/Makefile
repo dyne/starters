@@ -77,7 +77,11 @@ setup_frontend: ## 📦 Setup the frontend
 	cd webapp && pnpm i
 	@echo " "
 
-setup: setup_submodules setup_backend setup_zenroom setup_frontend ## 📦 Setup the project
+setup_frontend_translations: ## 📦 Setup the frontend translations
+	@echo "📦 Setup the frontend translations"
+	cd webapp && pnpm typesafe-i18n --no-watch
+
+setup: setup_submodules setup_backend setup_zenroom setup_frontend setup_frontend_translations ## 📦 Setup the project
 
 # - Running - #
 
@@ -94,8 +98,11 @@ fe: ## ⚙️ Run the frontend
 fe_dev: ## ⚙️ Watch the frontend
 	sleep 2 && cd webapp && pnpm dev
 
+fe_translations: ## ⚙️ Watch the frontend translations
+	cd webapp && pnpm typesafe-i18n
+
 dev: ## ⚙️ Run the project in development mode
-	$(MAKE) be fe_dev -j2
+	$(MAKE) be fe_dev fe_translations -j3
 
 up: setup ## ⚙️ Run the project
 	$(MAKE) be fe -j2
