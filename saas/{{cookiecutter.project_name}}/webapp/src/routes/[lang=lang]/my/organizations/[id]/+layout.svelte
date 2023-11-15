@@ -14,7 +14,7 @@
 
 <!--  -->
 
-<A href="/my/organizations" class="mb-4">← My organizations</A>
+<A href={$LL.LINK('/my/organizations')} class="mb-4">← My organizations</A>
 
 <div class="flex justify-between items-center">
 	<Heading tag="h3"><A href={href()}>{organization.name}</A></Heading>

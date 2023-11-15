@@ -1,16 +1,16 @@
-// source: https://github.com/ivanhofer/typesafe-i18n-demo-sveltekit/blob/main/src/utils.ts
+import { base } from '$app/paths';
 
+/* */
+
+// source: https://github.com/ivanhofer/typesafe-i18n-demo-sveltekit/blob/main/src/utils.ts
 // Replaces the locale slug in a URL.
 //
 // If the `full` argument is set to `true`, the full URL is returned as a string.
 // e.g. https://mywebsite.com/en/blog/article-1 => https://mywebsite.com/de/blog/article-1
 //
 // Otherwise (default) the URL relative to the base is returned.
-
-import { base } from '$app/paths';
-import { detectLocale } from './i18n-util';
-
 // e.g. https://mywebsite.com/en/blog/article-1 => /de/blog/article-1
+
 export const replaceLocaleInUrl = (url: URL, locale: string, full = false): string => {
 	const [, , ...rest] = getPathnameWithoutBase(url).split('/');
 	const new_pathname = `/${[locale, ...rest].join('/')}`;
@@ -22,14 +22,6 @@ export const replaceLocaleInUrl = (url: URL, locale: string, full = false): stri
 	return newUrl.toString();
 };
 
-// ----------------------------------------------------------------------------
-
 const REGEX_START_WITH_BASE = new RegExp(`^${base}`);
 
 export const getPathnameWithoutBase = (url: URL) => url.pathname.replace(REGEX_START_WITH_BASE, '');
-
-/* */
-
-export function detectBrowserLocale() {
-	return detectLocale(() => [navigator.language.split('-')[0] ?? '']);
-}

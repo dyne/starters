@@ -1,6 +1,10 @@
-import { detectBrowserLocale } from '$i18n/utils.js';
+import { browser } from '$app/environment';
+import { detectLocale } from '$i18n/i18n-util';
 import { redirect } from '@sveltejs/kit';
 
 export const load = () => {
-	throw redirect(303, `/${detectBrowserLocale()}`);
+	if (browser) {
+		const locale = detectLocale(() => navigator.languages.map((l) => l.split('-')[0]));
+		throw redirect(303, `/${locale}`);
+	}
 };
