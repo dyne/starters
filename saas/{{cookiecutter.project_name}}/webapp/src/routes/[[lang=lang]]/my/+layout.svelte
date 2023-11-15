@@ -18,6 +18,8 @@
 	import { Fire } from 'svelte-heros-v2';
 
 	import { links } from './sidebarLinks';
+	import LocaleSwitcher from '$i18n/components/localeSwitcher.svelte';
+	import LL from '$i18n/i18n-svelte';
 
 	let sidebarLayoutBreakpoint = 1024;
 </script>
@@ -45,6 +47,7 @@
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="right">
+			<LocaleSwitcher></LocaleSwitcher>
 			<AvatarMenu>
 				<DropdownHeader>
 					<span class="block truncate text-xs font-medium text-gray-500">
@@ -72,7 +75,7 @@
 			</div>
 		</svelte:fragment>
 		<div class="p-3">
-			<SidebarLinks {links} />
+			<SidebarLinks links={links($LL)} />
 		</div>
 		<svelte:fragment slot="bottom">bottom</svelte:fragment>
 	</Sidebar>

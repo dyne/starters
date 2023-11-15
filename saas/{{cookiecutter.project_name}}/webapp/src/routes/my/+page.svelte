@@ -1,8 +1,0 @@
-<script>
-	import { A } from 'flowbite-svelte';
-</script>
-
-<div class="flex flex-col p-4">
-	<A href="/my/profile">My profile</A>
-	<A href="/my/organizations">My organizations</A>
-</div>
