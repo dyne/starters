@@ -30,7 +30,8 @@
 		"roles": "node ./src/lib/rbac/generateRolesList.mjs",
 		"schema": "node ./src/lib/pocketbase/schema/generateSchema.mjs",
 		"definitions": "pnpm types && pnpm schema && pnpm features && pnpm roles",
-		"serve": "pnpm build && pnpm preview --host"
+		"serve": "pnpm build && pnpm preview --host",
+		"typesafe-i18n": "typesafe-i18n"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.37.1",
@@ -72,6 +73,7 @@
 		"pocketbase": "^0.18.0",
 		"svelte-boring-avatars": "^1.2.4",
 		"svelte-heros": "^5.1.0",
+		"typesafe-i18n": "^5.26.2",
 		"zenroom": "^3.18.1"
 	}
 }

@@ -1,0 +1,88 @@
+<script lang="ts">
+	import { currentUser } from '$lib/pocketbase';
+	import { goto } from '$app/navigation';
+
+	import {
+		UIShell,
+		Sidebar,
+		Topbar,
+		HamburgerButton,
+		AvatarMenu,
+		Logo,
+		SidebarLinks,
+		MainContent,
+		SidebarCloseButton
+	} from '$lib/layout';
+	import { DropdownDivider, DropdownHeader, DropdownItem } from 'flowbite-svelte';
+	import DIDButton from '$lib/components/DIDButton.svelte';
+	import { Fire } from 'svelte-heros-v2';
+
+	import { links } from './sidebarLinks';
+	import LL from '$i18n/i18n-svelte';
+	import LocaleSelect from '$lib/components/localeSelect.svelte';
+
+	let sidebarLayoutBreakpoint = 1024;
+</script>
+
+<UIShell {sidebarLayoutBreakpoint}>
+	<Topbar slot="top" let:sidebarLayoutMode>
+		<svelte:fragment slot="left">
+			<div class="flex space-x-2">
+				<HamburgerButton />
+				{#if sidebarLayoutMode == 'default'}
+					<Logo />
+				{/if}
+			</div>
+		</svelte:fragment>
+		<svelte:fragment slot="center">
+			<div class="flex items-center">
+				<div>
+					<span class="whitespace-nowrap">
+						Hello, <span class="font-semibold text-primary-600">{$currentUser?.email}</span>
+					</span>
+				</div>
+				<div class="shrink-0">
+					<DIDButton />
+				</div>
+			</div>
+		</svelte:fragment>
+		<svelte:fragment slot="right">
+			<div class="pr-3">
+				<LocaleSelect />
+			</div>
+			<AvatarMenu>
+				<DropdownHeader>
+					<span class="block truncate text-xs font-medium text-gray-500">
+						{$currentUser?.email}
+					</span>
+				</DropdownHeader>
+				<DropdownItem href={$LL.LINK('/my/profile')}>My profile</DropdownItem>
+				<DropdownDivider />
+				<DropdownItem href={$LL.LINK('/pro')} class="flex items-center">
+					<Fire class="text-red-500 mr-2 w-5" /> Go Pro</DropdownItem
+				>
+				<DropdownDivider />
+				<DropdownItem on:click={() => goto('/my/logout')} class="text-primary-600">
+					Sign out
+				</DropdownItem>
+			</AvatarMenu>
+		</svelte:fragment>
+	</Topbar>
+
+	<Sidebar>
+		<svelte:fragment slot="top">
+			<div class="flex items-center p-3">
+				<Logo />
+				<SidebarCloseButton />
+			</div>
+		</svelte:fragment>
+		<div class="p-3">
+			<SidebarLinks links={links($LL)} />
+		</div>
+		<svelte:fragment slot="bottom">bottom</svelte:fragment>
+	</Sidebar>
+
+	<MainContent>
+		<slot />
+	</MainContent>
+</UIShell>

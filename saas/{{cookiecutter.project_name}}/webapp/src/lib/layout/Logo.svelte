@@ -1,11 +1,12 @@
 <script>
+	import LL from '$i18n/i18n-svelte';
 	import { appTitle } from '$lib/strings';
 	import { NavBrand } from 'flowbite-svelte';
 
 	/*
 	 * The url to navigate to when the logo is clicked.
 	 */
-	export let href = '/my';
+	export let href = $LL.LINK('/my');
 </script>
 
 <NavBrand {href}>

@@ -1,6 +1,10 @@
+import { browser } from '$app/environment';
+import { detectLocale } from '$i18n/i18n-util';
 import { redirect } from '@sveltejs/kit';
-import { verifyUser } from '$lib/auth/verifyUser';
 
-export const load = async () => {
-	if (await verifyUser()) throw redirect(303, '/my');
+export const load = () => {
+	if (browser) {
+		const locale = detectLocale(() => navigator.languages.map((l) => l.split('-')[0]));
+		throw redirect(303, `/${locale}`);
+	}
 };
