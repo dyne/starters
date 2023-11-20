@@ -18,7 +18,6 @@ export const load = async ({ url }) => {
 		const keyring = getKeyringFromLocalStorage();
 		if (!keyring) {
 			const isWelcome = url.searchParams.has(welcomeSearchParamKey);
-			console.log(isWelcome);
 			if (isWelcome) throw redirect(303, `/keypairoom?${url.searchParams.toString()}`);
 			else throw redirect(303, `/keypairoom/regenerate?${missingKeyringParam}`);
 		}
