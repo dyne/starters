@@ -5,6 +5,7 @@
 	import { z } from 'zod';
 	import { Form, createForm, FormError, SubmitButton, Textarea, Input } from '$lib/forms';
 	import { A, Heading, P } from 'flowbite-svelte';
+	import Card from '$lib/components/card.svelte';
 
 	//
 
@@ -31,38 +32,40 @@
 		'skin buyer sunset person run push elevator under debris soft surge man';
 </script>
 
-{#if !success}
-	<Form {superform}>
-		<Heading tag="h4">Regenerate keys</Heading>
-		<div>
-			<P>You've been redirected here because your private keys are missing.</P>
-			<P>Please type here your email and seed</P>
-		</div>
-
-		{#if !$currentUser}
-			<div class="space-y-1">
-				<Input {superform} field="email" options={{ label: 'User email' }} />
-				<P size="sm" color="text-gray-400">
-					Your email won't be stored anywhere, it will be used only to generate the keys.
-				</P>
+<Card class="p-6 space-y-6">
+	{#if !success}
+		<Form {superform}>
+			<Heading tag="h4">Regenerate keys</Heading>
+			<div>
+				<P>You've been redirected here because your private keys are missing.</P>
+				<P>Please type here your email and seed</P>
 			</div>
-		{/if}
 
-		<Textarea {superform} field="seed" options={{ placeholder: textAreaPlaceholder }} />
+			{#if !$currentUser}
+				<div class="space-y-1">
+					<Input {superform} field="email" options={{ label: 'User email' }} />
+					<P size="sm" color="text-gray-400">
+						Your email won't be stored anywhere, it will be used only to generate the keys.
+					</P>
+				</div>
+			{/if}
 
-		<FormError />
+			<Textarea {superform} field="seed" options={{ placeholder: textAreaPlaceholder }} />
 
-		<div class="flex justify-end">
-			<SubmitButton>Regenerate keys</SubmitButton>
+			<FormError />
+
+			<div class="flex justify-end">
+				<SubmitButton>Regenerate keys</SubmitButton>
+			</div>
+		</Form>
+		<A href="/keypairoom">Forgot the seed? Regenerate it</A>
+	{:else}
+		<div class="space-y-4 p-6 flex flex-col">
+			<Heading tag="h4">Keys regenerated!</Heading>
+			<P>
+				Your keys have been regenerated. You can now go back to
+				<A href="/my">your profile</A>.
+			</P>
 		</div>
-	</Form>
-	<A href="/keypairoom">Forgot the seed? Regenerate it</A>
-{:else}
-	<div class="space-y-4 p-6 flex flex-col">
-		<Heading tag="h4">Keys regenerated!</Heading>
-		<P>
-			Your keys have been regenerated. You can now go back to
-			<A href="/my">your profile</A>.
-		</P>
-	</div>
-{/if}
+	{/if}
+</Card>
