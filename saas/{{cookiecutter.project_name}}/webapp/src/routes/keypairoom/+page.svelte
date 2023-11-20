@@ -2,9 +2,7 @@
 	import {
 		userQuestions,
 		type UserAnswers,
-		userAnswersSchema,
-		userQuestionsKeys,
-		type UserQuestionsKey
+		userAnswersSchema
 	} from '$lib/keypairoom/userQuestions.js';
 	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
 	import {
@@ -14,12 +12,15 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { z } from 'zod';
 	import { featureFlags } from '$lib/features';
+	import { page } from '$app/stores';
 
 	// Components
 	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
 	import { InformationCircle } from 'svelte-heros-v2';
+	import { welcomeSearchParamKey } from '$lib/utils/constants.js';
+	import { appTitle } from '$lib/strings.js';
 
 	//
 
@@ -65,7 +66,26 @@
 	export const snapshot = { capture, restore };
 
 	if ($currentUser) $form.email = $currentUser.email;
+
+	//
+
+	$: isWelcome = $page.url.searchParams.has(welcomeSearchParamKey);
 </script>
+
+{#if isWelcome}
+	<div class="-rotate-1">
+		<Alert color="yellow" border>
+			<div class="text-ellipsis overflow-hidden space-y-3">
+				<Heading color="yellow" tag="h2" class="text-ellipsis">Welcome to {appTitle}! 🎉</Heading>
+				<P color="yellow" weight="bold">Thanks for joining us :)</P>
+				<P color="yellow">
+					One last thing before to using the app:<br /> we need you to answer these questions, as they
+					will be used to secure your data.
+				</P>
+			</div>
+		</Alert>
+	</div>
+{/if}
 
 {#if !seed}
 	<Heading tag="h4">Generate your keys</Heading>
@@ -78,10 +98,12 @@
 		<span class="font-bold">Important information</span>
 		<ul class="list-disc pl-4 space-y-1 pt-1">
 			<li>
-				By answering these questions, you will generate keys that will be used to encrypt your data.
+				By answering these questions, you will generate keys that will be used to encrypt your data
 			</li>
-			<li>Please remember the answers, as they will be the only way to restore the keys.</li>
-			<li>Please answer at least 3 of the following questions.</li>
+			<li>
+				Please remember the answers, as they will be the only way to restore the encryption keys
+			</li>
+			<li>Please answer at least 3 of the following questions</li>
 		</ul>
 	</Alert>
 
