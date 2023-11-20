@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
 	import { Collections } from '$lib/pocketbase/types';
-	import { goto } from '$app/navigation';
-	import { featureFlags } from '$lib/features';
 	import { z } from 'zod';
 
 	import { A, Heading, Hr, P } from 'flowbite-svelte';
 	import { Form, createForm, Input, Checkbox, FormError, SubmitButton } from '$lib/forms';
 	import LL from '$i18n/i18n-svelte';
+	import { welcomeSearchParam } from '$lib/utils/constants';
 
 	//
 
@@ -26,12 +25,8 @@
 		await u.create(data);
 		await u.authWithPassword(data.email, data.password);
 		await u.requestVerification(data.email);
-		// TODO - This should redirect to /my?welcome=true, and there we should check where to redirect
-		if ($featureFlags.KEYPAIROOM) {
-			await goto($LL.LINK('/keypairoom'));
-		} else {
-			await goto($LL.LINK('/my'));
-		}
+		window.location.assign($LL.LINK(`/my?${welcomeSearchParam}`));
+		// Somehow, using `goto` doesn't always keep the search parameters
 	});
 </script>
 
