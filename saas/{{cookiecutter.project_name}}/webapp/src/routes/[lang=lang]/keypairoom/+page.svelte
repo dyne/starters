@@ -142,7 +142,7 @@
 
 		<Hr />
 
-		<A class="text-sm" href="/keypairoom/regenerate">I have the seed passphrase</A>
+		<A class="text-sm" href={$LL.LINK('/keypairoom/regenerate')}>I have the seed passphrase</A>
 	{:else}
 		<Heading tag="h4">Keypair creation successful!</Heading>
 		<P size="sm" color="text-gray-400 dark:text-gray-600">
