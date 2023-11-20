@@ -18,7 +18,7 @@
 
 	// Components
 	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
-	import { Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
+	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { InformationCircle } from 'svelte-heros-v2';
@@ -94,11 +94,13 @@
 		<Heading tag="h4">Generate your keys</Heading>
 
 		<Alert color="blue">
-			<svelte:fragment slot="icon">
-				<InformationCircle />
-			</svelte:fragment>
 			<span class="sr-only">Info</span>
-			<span class="font-bold">Important information</span>
+			<span class="font-bold text flex items-center mb-2">
+				<div class="mr-1">
+					<InformationCircle size="20" />
+				</div>
+				Important information
+			</span>
 			<ul class="list-disc pl-4 space-y-1 pt-1">
 				<li>
 					By answering these questions, you will generate keys that will be used to encrypt your
@@ -110,6 +112,8 @@
 				<li>Please answer at least 3 of the following questions</li>
 			</ul>
 		</Alert>
+
+		<Hr />
 
 		<Form {superform} className="space-y-6">
 			{#if !$currentUser}
@@ -128,14 +132,16 @@
 				<Input {superform} field={`questions.${question.id}`} options={{ label: question.text }} />
 			{/each}
 
-			<Hr />
-
 			<FormError />
 
 			<div class="flex justify-end">
 				<SubmitButton>Generate keys</SubmitButton>
 			</div>
 		</Form>
+
+		<Hr />
+
+		<A class="text-sm" href="/keypairoom/regenerate">I have the seed passphrase</A>
 	{:else}
 		<Heading tag="h4">Keypair creation successful!</Heading>
 		<P size="sm" color="text-gray-400 dark:text-gray-600">

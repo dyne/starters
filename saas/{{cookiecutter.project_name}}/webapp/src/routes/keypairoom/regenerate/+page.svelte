@@ -4,8 +4,11 @@
 
 	import { z } from 'zod';
 	import { Form, createForm, FormError, SubmitButton, Textarea, Input } from '$lib/forms';
-	import { A, Heading, P } from 'flowbite-svelte';
+	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
+	import { page } from '$app/stores';
+	import { missingKeyringParam, missingKeyringParamKey } from '$lib/utils/constants.js';
+	import { ExclamationTriangle } from 'svelte-heros-v2';
 
 	//
 
@@ -30,17 +33,33 @@
 
 	const textAreaPlaceholder =
 		'skin buyer sunset person run push elevator under debris soft surge man';
+
+	$: isKeyringMissing = $page.url.searchParams.has(missingKeyringParamKey);
 </script>
 
 <Card class="p-6 space-y-6">
 	{#if !success}
-		<Form {superform}>
-			<Heading tag="h4">Regenerate keys</Heading>
-			<div>
-				<P>You've been redirected here because your private keys are missing.</P>
-				<P>Please type here your email and seed</P>
-			</div>
+		<Heading tag="h4">Regenerate keys</Heading>
 
+		{#if isKeyringMissing}
+			<Alert color="yellow" border>
+				<svelte:fragment slot="icon"><ExclamationTriangle /></svelte:fragment>
+				<div class="space-y-1">
+					<p>You have been redirected here because your private keys are missing.</p>
+					<p>Before using the app again, you need to restore them.</p>
+				</div>
+			</Alert>
+		{/if}
+
+		<Hr />
+
+		{#if $currentUser}
+			<P>Please type here your seed to restore your keyring.</P>
+		{:else}
+			<P>Please type here your email and your seed to restore your keyring.</P>
+		{/if}
+
+		<Form {superform}>
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Input {superform} field="email" options={{ label: 'User email' }} />
@@ -58,7 +77,10 @@
 				<SubmitButton>Regenerate keys</SubmitButton>
 			</div>
 		</Form>
-		<A href="/keypairoom">Forgot the seed? Regenerate it</A>
+
+		<Hr />
+
+		<A href="/keypairoom" class="text-sm">Forgot the seed? Regenerate it</A>
 	{:else}
 		<div class="space-y-4 p-6 flex flex-col">
 			<Heading tag="h4">Keys regenerated!</Heading>
