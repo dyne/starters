@@ -63,12 +63,12 @@ $(ZENCODE): | $(BIN)
 	@git branch -m main
 	@git add .
 
-$(AZC): | .git
-	@rm -rf $(AZC)
+$(AZC): .git
+	@rm -rf $@
 	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
 
-$(WZC): | .git
-	@rm -rf $(WZC)
+$(WZC): .git
+	@rm -rf $@
 	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 
 $(DATA):
@@ -85,7 +85,7 @@ setup_frontend: $(WEBAPP)/.env
 	@echo "📦 Setup the frontend"
 	cd $(WEBAPP) && pnpm i
 
-setup: $(AZC) $(WXC) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 Setup the project
+setup: $(AZC) $(WZC) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 Setup the project
 
 # - Running - #
 
