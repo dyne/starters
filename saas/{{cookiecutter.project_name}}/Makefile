@@ -37,9 +37,11 @@ help: ## 🛟  Show this help message
 	@git branch -m main
 
 $(AZC): .git
+	@rm -rf $(AZC)
 	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
 
 $(WZC): .git
+	@rm -rf $(WZC)
 	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 
 setup_submodules: $(AZC) $(WZC) ## 📦 Setup the submodules
@@ -105,7 +107,7 @@ fe_dev: ## ⚙️ Watch the frontend
 dev: ## ⚙️ Run the project in development mode
 	$(MAKE) be fe_dev -j2
 
-up: setup ## ⚙️ Run the project
+up: setup ## 💄 Run the project
 	$(MAKE) be fe -j2
 
 doc: ## 📚 Serve documentation on localhost
@@ -121,7 +123,7 @@ clean_submodules:
 	@rm -rf $(AZC)
 	@rm -rf $(WZC)
 
-clean_build: ## 🧹 Clean project build
+clean_build:
 	@echo "🧹 Clean project build"
 	rm -f admin/pb
 	rm -fr webapp/node_modules
