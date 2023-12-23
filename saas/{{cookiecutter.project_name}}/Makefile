@@ -6,7 +6,17 @@ ADMIN			= $(ROOT_DIR)/admin
 WEBAPP		= $(ROOT_DIR)/webapp
 AZC				= $(ADMIN)/zencode/zenflows-crypto
 WZC				= $(WEBAPP)/zenflows-crypto
+BIN				= $(ROOT_DIR)/.bin
+ZENROOM		= $(BIN)/zenroom
+ZENCODE		= $(BIN)/zencode-exec
+PB				= $(ADMIN)/pb
+DATA			= $(ADMIN)/pb_data
 
+export PATH := $(BIN):$(PATH)
+
+DEPS = pnpm git wget go npx
+K := $(foreach exec,$(DEPS),\
+        $(if $(shell which $(exec)),some string,$(error "🥶 `$(exec)` not found in PATH please install it")))
 
 # detect the operating system
 OSFLAG 				:=
@@ -15,79 +25,67 @@ ifneq ($(OS),Windows_NT)
 	UNAME_M := $(shell uname -m)
 	ifeq ($(UNAME_S),Linux)
 		OSFLAG += LINUX
+		ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom
+		ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec
 	endif
 	ifeq ($(UNAME_S),Darwin)
 		ifeq ($(UNAME_M),arm64)
 			OSFLAG += arm64
 		else
 			OSFLAG += OSX
+			ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom.command
+			ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command
 		endif
 	endif
 endif
 
-
 help: ## 🛟  Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m⦿ %-7s\033[0m %s\n\n", $$1, $$2}'
 
 # - Setup - #
 
+$(BIN):
+	@mkdir $(BIN)
+
+$(ZENROOM): | $(BIN)
+	@wget -q -O $@ $(ZENROOM_URL)
+	@chmod +x $@
+	@echo "zenroom 😎 installed"
+
+$(ZENCODE): | $(BIN)
+	@wget -q -O $@ $(ZENCODE_URL) 
+	@chmod +x $@
+	@echo "zencode-exec 🤭 installed"
+
 .git:
-	@echo "📦 Setup Git"
+	@echo "🌱 Setup Git"
 	@git init -q
 	@git branch -m main
+	@git add .
 
-$(AZC): .git
+$(AZC): | .git
 	@rm -rf $(AZC)
 	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
 
-$(WZC): .git
+$(WZC): | .git
 	@rm -rf $(WZC)
 	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
 
-setup_submodules: $(AZC) $(WZC) ## 📦 Setup the submodules
-	@echo "📦 Setup the submodules"
+$(DATA):
+	mkdir -p $(DATA)
 
-setup_zenroom: ## 📦 Setup zenroom
-	@echo "📦 Setup zenroom"
-	@if ! command -v zenroom &> /dev/null; then \
-		echo -n "Need zenroom executables, do you want to download them (works only on Osx not arm64 and Linux)? [y/N] " && read ans && [ $${ans:-N} = y ]; \
-		if [ $(OSFLAG) == "OSX" ]; then \
-				wget -O /usr/local/bin/zencode-exec.command https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command; \
-				wget -O /usr/local/bin/zenroom.command https://github.com/dyne/zenroom/releases/latest/download/zenroom.command; \
-				ln -s /usr/local/bin/zenroom.command /usr/local/bin/zenroom; \
-				ln -s /usr/local/bin/zencode-exec.command /usr/local/bin/zencode-exec; \
-				chmod +x /usr/local/bin/zencode-exec; \
-				chmod +x /usr/local/bin/zenroom; \
-		fi; \
-		if [ $(OSFLAG) == "LINUX" ]; then \
-			wget -O /usr/local/bin/zencode-exec https://github.com/dyne/zenroom/releases/latest/download/zencode-exec; \
-			wget -O /usr/local/bin/zenroom https://github.com/dyne/zenroom/releases/latest/download/zenroom; \
-			chmod +x /usr/local/bin/zencode-exec; \
-			chmod +x /usr/local/bin/zenroom; \
-		fi; \
-	else \
-		echo "Zenroom executables already exists"; \
-	fi
-	@echo " "
-
-setup_backend: ## 📦 Setup the frontend
+$(PB): $(DATA)
 	@echo "📦 Setup the backend"
-	@if [ ! -d ./admin/pb_data ]; then \
-    	mkdir ./admin/pb_data; \
-	fi
-	@cd admin && ./setup
+	@cd $(ADMIN) && go mod tidy && go build
 
-	@echo " "
+$(WEBAPP)/.env:
+	@cp $(WEBAPP)/.env.example $(WEBAPP)/.env
 
-setup_frontend: ## 📦 Setup the frontend
+setup_frontend: $(WEBAPP)/.env
 	@echo "📦 Setup the frontend"
-	if [ ! -f ./webapp/.env ]; then \
-		cp ./webapp/.env.example ./webapp/.env; \
-	fi
-	cd webapp && pnpm i
-	@echo " "
+	cd $(WEBAPP) && pnpm i
 
-setup: setup_submodules setup_backend setup_zenroom setup_frontend ## 📦 Setup the project
+setup: $(AZC) $(WXC) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 Setup the project
 
 # - Running - #
 
@@ -96,7 +94,7 @@ setup: setup_submodules setup_backend setup_zenroom setup_frontend ## 📦 Setup
 # check the webapp/package.json for the predev and prebuild scripts
 
 be: ## ⚙️ Run the backend
-	./admin/pb serve
+	$(PB) serve
 
 fe: ## ⚙️ Run the frontend
 	sleep 2 && cd webapp && pnpm serve
@@ -118,24 +116,15 @@ definitions: ## ⚙️ Generate type definitions and schema
 
 # - Cleaning - #
 
-clean_submodules:
-	@echo "🧹 Clean submodules"
-	@rm -rf $(AZC)
-	@rm -rf $(WZC)
-
-clean_build:
-	@echo "🧹 Clean project build"
-	rm -f admin/pb
+clean: ## 🧹 Clean the project
+	@rm -rf $(AZC) $(WZC) $(BIN) $(PB)
 	rm -fr webapp/node_modules
 	rm -f webapp/src/lib/pocketbase/types.ts
 	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
 	rm -f webapp/src/lib/rbac/roles.ts
 	rm -f webapp/src/lib/features/list.ts
-	@echo " "
-
-clean: clean_submodules clean_build ## 🧹 Clean the project
+	@echo "The project is ✨ cleaned"
 
 purge: ## ⛔ Purge the database
 	@echo "⛔ Purge the database"
-	rm -fr admin/pb_data/*
-	@echo " "
+	@rm -rf $(DATA)
