@@ -44,12 +44,12 @@ We do like to reinvent the wheel... But sometimes it's easier to start smarter w
 
 1. Choose a Starter from the following:
 
-| Starter Kit | Description | Documentation |
+| Starter Kit | Description | Docs |
 |-------------|-------------| ------------- |
-| **[cliroom](cliroom/)** | 🐗 Build CLI interfaces for executing Zenroom smart contracts. | [📚 Documentation](cliroom/README.md) |
-| **[saas](saas/)** | 🚀 Create full-featured SaaS web applications and PWAs, including Slangroom integration. | [📚 Documentation](saas/README.md) |
-| **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript. | [📚 Documentation](ts-sea/README.md) |
-| **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects. 🛠️ | [📚 Documentation](typescript/README.md) |
+| **[cliroom](cliroom/)** | 🐗 Build CLI interfaces for executing Zenroom smart contracts. | [📚 Docs](cliroom/{{cookiecutter.project_slug}}/README.md) |
+| **[saas](saas/)** | 🚀 Create full-featured SaaS web applications and PWAs, including Slangroom integration. | [📚 Docs](saas/{{cookiecutter.project_slug}}/README.md) |
+| **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript. | [📚 Docs](ts-sea/{{cookiecutter.project_slug}}/README.md) |
+| **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects. 🛠️ | [📚 Docs](typescript/{{cookiecutter.project_slug}}/README.md) |
 
 
 1. Create your instance by executing
