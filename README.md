@@ -42,22 +42,22 @@ We do like to reinvent the wheel... But sometimes it's easier to start smarter w
 ***
 ## 🎮 Quick start
 
-1. Choose a Starter from the following:
+#### 1. Choose a Starter from the following:
 
 | Starter Kit | Description | Documentation |
 |-------------|-------------| ------------- |
-| **[cliroom](cliroom/)** | 🐗 Build CLI interfaces for executing Zenroom smart contracts. | [📚 Documentation](cliroom/README.md) |
-| **[saas](saas/)** | 🚀 Create full-featured SaaS web applications and PWAs, including Slangroom integration. | [📚 Documentation](saas/README.md) |
-| **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript. | [📚 Documentation](ts-sea/README.md) |
-| **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects. 🛠️ | [📚 Documentation](typescript/README.md) |
+| **[cliroom](cliroom/)** | 🐗 Build CLI interfaces for executing Zenroom smart contracts | [📄 Documentation](cliroom/{{cookiecutter.project_slug}}/README.md) |
+| **[saas](saas/)** | 🚀 Full-featured PWA/SaaS webapp, including Slangroom integration | [📄 Documentation](saas/{{cookiecutter.project_name}}/README.md) |
+| **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript | [📄 Documentation](ts-sea/{{cookiecutter.project_name}}/README.md) |
+| **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects | [📄 Documentation](typescript/{{cookiecutter.project_slug}}/README.md) |
 
-
-1. Create your instance by executing
-```
+#### 2. Create your instance by executing
+```sh
 cruft create https://github.com/dyne/starters --directory {your_choosen_starter}
 ```
-1. Benefit from automatic updates by regularly checking for the latest releases and applying them to your project by running inside the rootfolder of your generated app
-```sh 
+ 
+#### 3. Benefit from automatic updates by regularly checking for the latest releases and applying them to your project by running inside the rootfolder of your generated app
+```sh
 cruft update
 ```
 
