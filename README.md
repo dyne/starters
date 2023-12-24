@@ -47,7 +47,7 @@ We do like to reinvent the wheel... But sometimes it's easier to start smarter w
 | Starter Kit | Description | Docs |
 |-------------|-------------| ------------- |
 | **[cliroom](cliroom/)** | 🐗 Build CLI interfaces for executing Zenroom smart contracts. | [📚 Docs](cliroom/{{cookiecutter.project_slug}}/README.md) |
-| **[saas](saas/)** | 🚀 Create full-featured SaaS web applications and PWAs, including Slangroom integration. | [📚 Docs](saas/{{cookiecutter.project_name}}/README.md) |
+| **[saas](saas/)** | 🚀 Create full-featured PWA/SaaS webapp, including Slangroom integration. | [📚 Docs](saas/{{cookiecutter.project_name}}/README.md) |
 | **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript. | [📚 Docs](ts-sea/{{cookiecutter.project_name}}/README.md) |
 | **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects. 🛠️ | [📚 Docs](typescript/{{cookiecutter.project_slug}}/README.md) |
 
