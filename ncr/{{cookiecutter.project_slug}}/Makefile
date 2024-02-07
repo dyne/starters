@@ -25,5 +25,5 @@ ncr:
 	@chmod +x ./ncr
 	@echo "📦 Setup is done!"
 
-up: ## 🚀 Up & run the project
+up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --public-directory public
