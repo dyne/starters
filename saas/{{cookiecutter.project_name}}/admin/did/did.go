@@ -37,6 +37,7 @@ type DidAgent struct {
 	EddsaPublicKey   string
 	EthereumAddress  string
 	ReflowPublicKey  string
+	Es256PublicKey   string
 }
 
 type DidResult struct {
@@ -133,6 +134,7 @@ func RequestNewDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) 
 		"eddsa_public_key":   agent.EddsaPublicKey,
 		"ethereum_address":   agent.EthereumAddress,
 		"reflow_public_key":  agent.ReflowPublicKey,
+		"es256_public_key":   agent.Es256PublicKey,
 		"timestamp":          strconv.FormatInt(time.Now().UnixMilli(), 10),
 		"user_id":            map[string]interface{}{"identifier": "43"},
 	}
