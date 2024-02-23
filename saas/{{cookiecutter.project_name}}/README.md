@@ -29,6 +29,7 @@ cd admin
 
 ```
 cd webapp
+cp .env.example .env
 pnpm dev
 ```
 
