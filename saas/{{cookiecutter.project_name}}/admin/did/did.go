@@ -134,7 +134,7 @@ func RequestNewDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) 
 		"ethereum_address":   agent.EthereumAddress,
 		"reflow_public_key":  agent.ReflowPublicKey,
 		"timestamp":          strconv.FormatInt(time.Now().UnixMilli(), 10),
-		"ifacer_id":          map[string]interface{}{"identifier": "43"},
+		"user_id":            map[string]interface{}{"identifier": "43"},
 	}
 	for k, v := range conf.Keyring {
 		didRequest[k] = v
