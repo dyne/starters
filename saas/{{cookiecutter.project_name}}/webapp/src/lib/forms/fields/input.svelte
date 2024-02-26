@@ -1,37 +1,26 @@
 <script lang="ts" context="module">
-	import { Input } from 'flowbite-svelte';
-	import type { LabelOption } from './types';
+	import type { InfoProps } from './types';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { BaseRecord } from '$lib/utils/types';
+	import { Input } from 'flowbite-svelte';
 
-	export type FormInputOptions = Partial<HTMLInputAttributes & ComponentProps<Input>> & LabelOption;
+	export type FormInputOptions = Partial<HTMLInputAttributes & ComponentProps<Input>> & InfoProps;
 </script>
 
-<script lang="ts">
-	import type { z } from 'zod';
-	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
-	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
-	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
+<script lang="ts" generics="R extends BaseRecord">
+	import { stringProxy, type FormPath } from 'sveltekit-superforms';
+	import type { SuperForm } from 'sveltekit-superforms/client';
+	import FieldWrapper from './fieldWrapper.svelte';
 
-	type T = $$Generic<AnyZodObject>;
-
-	export let superform: SuperForm<ZodValidation<T>, any>;
-	export let field: FormPathLeaves<z.infer<T>>;
+	export let form: SuperForm<R>;
+	export let field: FormPath<R>;
 	export let options: FormInputOptions = {};
 
 	let type = options.type ?? 'text';
-
-	const { value, errors, constraints } = formFieldProxy(superform, field as string);
+	const proxy = stringProxy(form, field, { empty: 'undefined' });
 </script>
 
-<FieldWrapper {field} label={options.label}>
-	<Input
-		{...options}
-		{type}
-		color={$errors ? 'red' : 'base'}
-		name={field}
-		data-invalid={$errors}
-		bind:value={$value}
-		{...$constraints}
-	/>
+<FieldWrapper {form} {field} label={options.label} description={options.description} let:attrs>
+	<Input bind:value={$proxy} {type} {...options} {...attrs} />
 </FieldWrapper>

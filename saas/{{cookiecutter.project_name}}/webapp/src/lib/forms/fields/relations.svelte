@@ -7,7 +7,7 @@
 		type RecordsManagerOptions
 	} from '$lib/components/records/recordsManager.svelte';
 	import type { Collections } from '$lib/pocketbase/types';
-	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
+	import FieldWrapper from './fieldWrapper.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { LabelOption } from './types';
 	import type { PBResponse } from '$lib/utils/types';

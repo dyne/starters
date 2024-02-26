@@ -1,60 +1,46 @@
 <script lang="ts" context="module">
-	import type { LabelOption } from './types';
+	import type { InfoProps } from './types';
+	import type { BaseRecord } from '$lib/utils/types';
 
-	import type { HTMLInputAttributes } from 'svelte/elements';
-
-	export type FormSelectOptions = {
-		[K in keyof HTMLInputAttributes]?: Exclude<HTMLInputAttributes[K], null>;
-	} & {
+	export type FormSelectOptions = InfoProps & {
 		options?: string[];
 		size?: 'sm' | 'lg' | 'md' | undefined;
-	} & LabelOption;
+		multiple?: boolean | undefined;
+	};
 </script>
 
-<script lang="ts">
-	import type { z } from 'zod';
-	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
-	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
-
+<script lang="ts" generics="R extends BaseRecord">
+	import { formFieldProxy, type FormPath, type SuperForm } from 'sveltekit-superforms/client';
 	import { Select, MultiSelect } from 'flowbite-svelte';
 	import type { SelectOptionType } from 'flowbite-svelte/dist/types';
-	import FieldWrapper from './fieldParts/fieldWrapper.svelte';
+	import FieldWrapper from './fieldWrapper.svelte';
 
-	type T = $$Generic<AnyZodObject>;
+	//
 
-	export let superform: SuperForm<ZodValidation<T>, any>;
-	export let field: FormPathLeaves<z.infer<T>>;
+	export let form: SuperForm<R>;
+	export let field: FormPath<R>;
 	export let options: FormSelectOptions = {};
 
 	let { options: items = [], multiple = false, label = '' } = options;
 
-	const { value, errors, constraints } = formFieldProxy(superform, field as string);
+	const { value, constraints } = formFieldProxy(form, field);
 
 	const selectOptions: Array<SelectOptionType<string>> = items.map((i) => {
 		return { value: i, name: i };
 	});
 </script>
 
-<FieldWrapper {field} {label}>
+<FieldWrapper {form} {field} {label} let:attrs>
 	{#if !multiple}
-		<Select
-			{...options}
-			name={field}
-			items={selectOptions}
-			bind:value={$value}
-			color={$errors ? 'red' : 'base'}
-			data-invalid={$errors}
-			{...$constraints}
-		/>
+		<Select items={selectOptions} bind:value={$value} {...options} {...$constraints} {...attrs} />
 	{:else}
 		<MultiSelect
-			{...options}
-			name={field}
 			items={selectOptions}
 			bind:value={$value}
-			data-invalid={$errors}
 			dropdownClass="bg-white dark:bg-gray-800"
+			{...options}
 			{...$constraints}
+			{...attrs}
 		/>
 	{/if}
 </FieldWrapper>

@@ -10,6 +10,8 @@ export type ArrayExtract<T> = T extends (infer U)[] ? U : T;
 
 export type StringKeys<T> = Extract<keyof T, string>;
 
+export type BaseRecord = Record<string, unknown>;
+
 /* Components */
 
 export type Link = {

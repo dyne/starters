@@ -1,47 +1,35 @@
 <script lang="ts" context="module">
-	import { Toggle } from 'flowbite-svelte';
+	import type { InfoProps } from './types';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { LabelOption } from './types';
+	import type { BaseRecord } from '$lib/utils/types';
+	import { Toggle } from 'flowbite-svelte';
 
-	export type FormToggleOptions = Partial<HTMLInputAttributes & ComponentProps<Toggle>> &
-		LabelOption;
+	export type FormToggleOptions = Partial<HTMLInputAttributes & ComponentProps<Toggle>> & InfoProps;
 </script>
 
-<script lang="ts">
-	import type { z } from 'zod';
-	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
+<script lang="ts" generics="R extends BaseRecord">
+	import type { FormPath } from 'sveltekit-superforms';
 	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
+	import { Label } from 'formsnap';
+	import RequiredIndicator from './requiredIndicator.svelte';
+	import FieldWrapper from './fieldWrapper.svelte';
 
-	import { Label } from 'flowbite-svelte';
-	import FieldError from './fieldParts/fieldError.svelte';
-	import FieldRequiredIndicator from './fieldParts/fieldRequiredIndicator.svelte';
-
-	type T = $$Generic<AnyZodObject>;
-
-	export let superform: SuperForm<ZodValidation<T>, any>;
-	export let field: FormPathLeaves<z.infer<T>>;
+	export let form: SuperForm<R>;
+	export let field: FormPath<R>;
 	export let options: FormToggleOptions = {};
 
-	const { value, errors, constraints } = formFieldProxy(superform, field as string);
+	const { value, errors } = formFieldProxy(form, field);
 </script>
 
-<div class="space-y-2">
-	<div class="flex items-center">
-		<Toggle
-			{...options}
-			bind:checked={$value}
-			name={field}
-			value="true"
-			data-invalid={$errors}
-			{...$constraints}
-		/>
-		<Label color={$errors ? 'red' : 'gray'}>
+<FieldWrapper {form} {field} let:attrs>
+	<Label>
+		<div class="flex items-center">
+			<Toggle bind:checked={$value} value="true" data-invalid={$errors} {...options} {...attrs} />
 			<div>
 				<span><slot>{options.label}</slot></span>
-				<FieldRequiredIndicator {field} />
+				<RequiredIndicator {attrs} />
 			</div>
-		</Label>
-	</div>
-	<FieldError {field} />
-</div>
+		</div>
+	</Label>
+</FieldWrapper>

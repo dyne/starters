@@ -1,66 +1,51 @@
 <script lang="ts" context="module">
-	import { getContext } from 'svelte';
-	import { normalizeError, type ClientResponseErrorData } from '$lib/errorHandling';
+	import { normalizeError } from '$lib/errorHandling';
 	import type { AnyZodObject, ZodEffects } from 'zod';
-	import type { UnwrapEffects, ZodValidation } from 'sveltekit-superforms';
 	import {
 		superForm,
 		setMessage,
 		setError,
 		type FormOptions,
 		type SuperForm,
-		superValidateSync
+		defaults
 	} from 'sveltekit-superforms/client';
-	import type z from 'zod';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import type { Infer } from 'sveltekit-superforms';
+	import type { BaseRecord } from '$lib/utils/types';
 
 	//
 
-	export const FORM_KEY = Symbol('form');
-
-	export type FormContext<T extends AnyZodObject> = {
-		superform: SuperForm<ZodValidation<T>, ClientResponseErrorData>;
-		showRequiredIndicator: boolean;
-	};
-
-	export function getFormContext<T extends AnyZodObject>(): FormContext<T> {
-		return getContext(FORM_KEY);
-	}
-
-	//
-
-	export type SubmitFunction<T extends AnyZodObject> = NonNullable<
-		FormOptions<ZodValidation<T>, unknown>['onUpdate']
+	export type SubmitFunction<R extends BaseRecord> = NonNullable<
+		FormOptions<R, unknown>['onUpdate']
 	>;
 
 	export function createForm<T extends AnyZodObject>(
 		schema: T | ZodEffects<T>,
-		submitFunction: SubmitFunction<T> = async () => {},
-		initialData: Partial<z.infer<T>> | undefined = undefined,
-		options: FormOptions<ZodValidation<T>, unknown> = {}
+		onSubmit: SubmitFunction<Infer<T>> = async () => {},
+		initialData: Partial<Infer<T>> | undefined = undefined,
+		options: FormOptions<Infer<T>, unknown> = {}
 	) {
-		const form = superValidateSync(initialData, schema, { errors: false });
-		return superForm<ZodValidation<T>, ClientResponseErrorData>(form, {
+		return superForm(defaults(initialData, zod(schema)), {
 			SPA: true,
 			applyAction: false,
 			scrollToError: 'smooth',
-			// @ts-ignore
-			validators: schema,
-			dataType: 'json',
+			validators: zod(schema),
 			onUpdate: async (input) => {
+				const { form } = input;
 				try {
-					await submitFunction(input);
+					if (form.valid) await onSubmit(input);
 				} catch (e) {
 					let error = normalizeError(e);
 					for (const [key, value] of Object.entries(error.data)) {
-						if (Boolean(input.form.data[key])) {
-							setError(input.form, key as any, value.message);
+						// @ts-ignore
+						if (Boolean(form.data[key])) {
+							setError(form, key as any, value.message);
 							delete error.data[key];
 						}
 					}
-					setMessage(input.form, error);
+					setMessage(form, error);
 				}
 			},
-			taintedMessage: null,
 			...options
 		});
 	}
@@ -108,27 +93,24 @@
 	}
 </script>
 
-<script lang="ts">
-	import { setContext } from 'svelte';
+<script lang="ts" generics="R extends BaseRecord">
 	import { Spinner, Modal } from 'flowbite-svelte';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 
-	type T = $$Generic<AnyZodObject>;
+	//
+
+	export let form: SuperForm<R>;
+
+	let className = 'space-y-8';
+	export { className as class };
 
 	//
 
-	export let superform: SuperForm<UnwrapEffects<T>, any>;
-
-	export let showRequiredIndicator = false;
-	export let className = 'space-y-8';
-
-	//
-
-	const { enhance, delayed } = superform;
-	setContext<FormContext<T>>(FORM_KEY, { superform, showRequiredIndicator });
+	const { enhance, delayed } = form;
+	const enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
 </script>
 
-<form class={className} method="post" use:enhance>
+<form class={className} method="post" {enctype} use:enhance>
 	<slot />
 </form>
 

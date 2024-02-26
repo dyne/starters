@@ -1,48 +1,38 @@
 <script lang="ts" context="module">
-	import { Checkbox } from 'flowbite-svelte';
+	import type { InfoProps } from './types';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { LabelOption } from './types';
+	import type { BaseRecord } from '$lib/utils/types';
+	import { Checkbox } from 'flowbite-svelte';
 
 	export type FormCheckboxOptions = Partial<HTMLInputAttributes & ComponentProps<Checkbox>> &
-		LabelOption;
+		InfoProps;
 </script>
 
-<script lang="ts">
-	import type { z } from 'zod';
-	import type { FormPathLeaves, ZodValidation } from 'sveltekit-superforms';
+<script lang="ts" generics="R extends BaseRecord">
+	import RequiredIndicator from './requiredIndicator.svelte';
+	import { Label } from 'formsnap';
+	import FieldWrapper from './fieldWrapper.svelte';
+	import type { FormPath } from 'sveltekit-superforms';
 	import { formFieldProxy, type SuperForm } from 'sveltekit-superforms/client';
 
-	import { Label } from 'flowbite-svelte';
-	import FieldError from './fieldParts/fieldError.svelte';
-	import FieldRequiredIndicator from './fieldParts/fieldRequiredIndicator.svelte';
+	//
 
-	type T = $$Generic<AnyZodObject>;
-
-	export let superform: SuperForm<ZodValidation<T>, any>;
-	export let field: FormPathLeaves<z.infer<T>>;
+	export let form: SuperForm<R>;
+	export let field: FormPath<R>;
 	export let options: FormCheckboxOptions = {};
 
-	const { value, errors, constraints } = formFieldProxy(superform, field as string);
+	const { value } = formFieldProxy(form, field);
 </script>
 
-<div class="space-y-2">
-	<Label color={$errors ? 'red' : 'gray'}>
-		<div class="flex items-center space-x-2">
-			<Checkbox
-				{...options}
-				color={$errors ? 'red' : 'secondary'}
-				bind:checked={$value}
-				name={field}
-				value="true"
-				data-invalid={$errors}
-				{...$constraints}
-			/>
+<FieldWrapper {form} {field} description={options.description} let:attrs>
+	<Label>
+		<div class="flex items-center space-x-1">
+			<Checkbox bind:checked={$value} value="true" {...options} {...attrs} />
 			<div>
-				<span><slot>{options.label}</slot></span>
-				<FieldRequiredIndicator {field} />
+				<span><slot>{options.label ?? field}</slot></span>
+				<RequiredIndicator {attrs} />
 			</div>
 		</div>
 	</Label>
-	<FieldError {field} />
-</div>
+</FieldWrapper>
