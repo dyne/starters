@@ -121,6 +121,7 @@ func RequestNewDid(conf *config.DidConfig, agent *DidAgent) (*DidResult, error) 
 			"https://w3id.org/security/suites/secp256k1-2019/v1",
 			"https://w3id.org/security/suites/secp256k1-2020/v1",
 			"https://dyne.github.io/W3C-DID/specs/ReflowBLS12381.json",
+			"https://dyne.github.io/W3C-DID/specs/EcdsaSecp256r1.json",
 			map[string]interface{}{
 				"description": "https://schema.org/description",
 				"identifier":  "https://schema.org/identifier",
