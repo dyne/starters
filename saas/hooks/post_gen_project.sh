@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-make setup
+# make setup
 
 echo
 echo 🎉 Everything done! 
