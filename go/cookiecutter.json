@@ -1,0 +1,9 @@
+{
+	"project_name": "Your shiny new go project name",
+	"project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+	"project_description": "oneline punchline for your project",
+	"full_name": "Luther Hacker",
+	"email": "luther@dyne.org",
+	"repo": "github.com/dyne/{{ cookiecutter.project_slug }}",
+  "go_version": "1.22"
+}
