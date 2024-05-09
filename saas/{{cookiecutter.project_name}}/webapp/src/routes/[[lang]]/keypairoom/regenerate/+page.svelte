@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { getHMAC, regenerateKeypair, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
+	import {
+		getHMAC,
+		matchPublicAndPrivateKeys,
+		regenerateKeypair,
+		saveKeyringToLocalStorage
+	} from '$lib/keypairoom/keypair';
 	import { currentUser } from '$lib/pocketbase';
 
 	import { z } from 'zod';
@@ -7,8 +12,10 @@
 	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
 	import { page } from '$app/stores';
-	import { missingKeyringParam, missingKeyringParamKey } from '$lib/utils/constants.js';
+	import { missingKeyringParamKey } from '$lib/utils/constants.js';
 	import { ExclamationTriangle } from 'svelte-heros-v2';
+	import { featureFlags } from '$lib/features';
+	import { getUserPublicKeys } from '$lib/keypairoom/utils';
 
 	//
 
@@ -21,13 +28,28 @@
 
 	const superform = createForm(schema, async ({ form }) => {
 		const hmac = await getHMAC(form.data.email);
-		const keypair = await regenerateKeypair(form.data.seed, hmac);
-		saveKeyringToLocalStorage(keypair.keyring);
+		const { keyring } = await regenerateKeypair(form.data.seed, hmac);
+
+		if ($featureFlags.AUTH && $currentUser) {
+			const publicKeys = await getUserPublicKeys();
+			if (!publicKeys) {
+				throw new Error(
+					'User public keys are missing. Please generate them using the security questions.'
+				);
+			} else {
+				try {
+					await matchPublicAndPrivateKeys(publicKeys, keyring);
+				} catch (e) {
+					throw new Error('Invalid seed');
+				}
+			}
+		}
+
+		saveKeyringToLocalStorage(keyring);
 		success = true;
 	});
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form } = superform;
 
 	if ($currentUser) $form.email = $currentUser.email;
 
