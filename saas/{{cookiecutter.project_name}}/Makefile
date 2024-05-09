@@ -1,25 +1,36 @@
 .DEFAULT_GOAL := help
 .PHONY: help
 
-ROOT_DIR	= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-ADMIN			= $(ROOT_DIR)/admin
-WEBAPP		= $(ROOT_DIR)/webapp
-AZC				= $(ADMIN)/zencode/zenflows-crypto
-WZC				= $(WEBAPP)/zenflows-crypto
-WZC				= $(WEBAPP)/client_zencode
-BIN				= $(ROOT_DIR)/.bin
+help: ## 🛟  Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m⦿ %-7s\033[0m %s\n\n", $$1, $$2}'
+
+# - Folder structure - #
+
+ROOT_DIR= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+ADMIN	= $(ROOT_DIR)/admin
+AZC			= $(ADMIN)/zencode/zenflows-crypto
+PB			= $(ADMIN)/pb
+DATA		= $(ADMIN)/pb_data
+
+WEBAPP	= $(ROOT_DIR)/webapp
+WZC			= $(WEBAPP)/zenflows-crypto
+WZC			= $(WEBAPP)/client_zencode
+
+BIN		= $(ROOT_DIR)/.bin
 ZENROOM		= $(BIN)/zenroom
 ZENCODE		= $(BIN)/zencode-exec
-PB				= $(ADMIN)/pb
-DATA			= $(ADMIN)/pb_data
 
 export PATH := $(BIN):$(PATH)
+
+# - Dependency check - #
 
 DEPS = pnpm git wget go npx
 K := $(foreach exec,$(DEPS),\
         $(if $(shell which $(exec)),some string,$(error "🥶 `$(exec)` not found in PATH please install it")))
 
-# detect the operating system
+# - Operating system detection - #
+
 OSFLAG 				:=
 ifneq ($(OS),Windows_NT)
 	UNAME_S := $(shell uname -s)
@@ -39,9 +50,6 @@ ifneq ($(OS),Windows_NT)
 		endif
 	endif
 endif
-
-help: ## 🛟  Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m⦿ %-7s\033[0m %s\n\n", $$1, $$2}'
 
 # - Setup - #
 
