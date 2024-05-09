@@ -124,6 +124,9 @@ setup: $(AZC) $(WZC) $(WCZ) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 S
 be: ## ⚙️ Run the backend
 	$(PB) serve
 
+be_remote:  ## ⚙️ Run the backend from remote
+	$(PB) serve --http=0.0.0.0:8090
+
 fe: ## ⚙️ Run the frontend
 	sleep 2 && cd webapp && pnpm serve
 
@@ -135,6 +138,9 @@ dev: ## ⚙️ Run the project in development mode
 
 up: setup ## 💄 Run the project
 	$(MAKE) be fe -j2
+
+up_remote: setup  ## 💄 Run the project from remote
+	$(MAKE) be_remote fe -j2
 
 doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
