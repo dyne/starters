@@ -50,10 +50,12 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
-# - Setup - #
+# - Setup: Zenroom - #
 
 $(BIN):
 	@mkdir $(BIN)
+
+ifneq ($(OSFLAG),arm64)
 
 $(ZENROOM): | $(BIN)
 	@wget -q -O $@ $(ZENROOM_URL)
@@ -64,6 +66,18 @@ $(ZENCODE): | $(BIN)
 	@wget -q -O $@ $(ZENCODE_URL) 
 	@chmod +x $@
 	@echo "zencode-exec 🤭 installed"
+
+else
+
+$(ZENROOM):
+	@echo "For usage on Apple ARM processors, please compile [zenroom] manually"
+
+$(ZENCODE):
+	@echo "For usage on Apple ARM processors, please compile [zencode-exec] manually"
+
+endif
+
+# - Setup: Submodules - #
 
 .git:
 	@echo "🌱 Setup Git"
@@ -82,6 +96,8 @@ $(WZC): .git
 $(WCZ): .git
 	@rm -rf $@
 	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/ForkbombEu/client_zencode client_zencode
+
+# - Setup: Project - #
 
 $(DATA):
 	mkdir -p $(DATA)
