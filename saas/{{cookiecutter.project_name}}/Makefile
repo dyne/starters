@@ -15,7 +15,7 @@ DATA		= $(ADMIN)/pb_data
 
 WEBAPP	= $(ROOT_DIR)/webapp
 WZC			= $(WEBAPP)/zenflows-crypto
-WZC			= $(WEBAPP)/client_zencode
+WCZ			= $(WEBAPP)/client_zencode
 
 BIN		= $(ROOT_DIR)/.bin
 ZENROOM		= $(BIN)/zenroom
