@@ -31,20 +31,19 @@ K := $(foreach exec,$(DEPS),\
 
 # - Operating system detection - #
 
-OSFLAG 				:=
 ifneq ($(OS),Windows_NT)
 	UNAME_S := $(shell uname -s)
 	UNAME_M := $(shell uname -m)
 	ifeq ($(UNAME_S),Linux)
-		OSFLAG += LINUX
+		OSFLAG := LINUX
 		ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom
 		ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec
 	endif
 	ifeq ($(UNAME_S),Darwin)
 		ifeq ($(UNAME_M),arm64)
-			OSFLAG += arm64
+			OSFLAG := arm64
 		else
-			OSFLAG += OSX
+			OSFLAG := OSX
 			ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom.command
 			ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command
 		endif
