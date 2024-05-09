@@ -1,52 +1,61 @@
 .DEFAULT_GOAL := help
 .PHONY: help
 
-ROOT_DIR	= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-ADMIN			= $(ROOT_DIR)/admin
-WEBAPP		= $(ROOT_DIR)/webapp
-AZC				= $(ADMIN)/zencode/zenflows-crypto
-WZC				= $(WEBAPP)/zenflows-crypto
-WZC				= $(WEBAPP)/client_zencode
-BIN				= $(ROOT_DIR)/.bin
+help: ## 🛟  Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m⦿ %-7s\033[0m %s\n\n", $$1, $$2}'
+
+# - Folder structure - #
+
+ROOT_DIR= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+ADMIN	= $(ROOT_DIR)/admin
+AZC			= $(ADMIN)/zencode/zenflows-crypto
+PB			= $(ADMIN)/pb
+DATA		= $(ADMIN)/pb_data
+
+WEBAPP	= $(ROOT_DIR)/webapp
+WZC			= $(WEBAPP)/zenflows-crypto
+WCZ			= $(WEBAPP)/client_zencode
+
+BIN		= $(ROOT_DIR)/.bin
 ZENROOM		= $(BIN)/zenroom
 ZENCODE		= $(BIN)/zencode-exec
-PB				= $(ADMIN)/pb
-DATA			= $(ADMIN)/pb_data
 
 export PATH := $(BIN):$(PATH)
+
+# - Dependency check - #
 
 DEPS = pnpm git wget go npx
 K := $(foreach exec,$(DEPS),\
         $(if $(shell which $(exec)),some string,$(error "🥶 `$(exec)` not found in PATH please install it")))
 
-# detect the operating system
-OSFLAG 				:=
+# - Operating system detection - #
+
 ifneq ($(OS),Windows_NT)
 	UNAME_S := $(shell uname -s)
 	UNAME_M := $(shell uname -m)
 	ifeq ($(UNAME_S),Linux)
-		OSFLAG += LINUX
+		OSFLAG := LINUX
 		ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom
 		ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec
 	endif
 	ifeq ($(UNAME_S),Darwin)
 		ifeq ($(UNAME_M),arm64)
-			OSFLAG += arm64
+			OSFLAG := arm64
 		else
-			OSFLAG += OSX
+			OSFLAG := OSX
 			ZENROOM_URL = https://github.com/dyne/zenroom/releases/latest/download/zenroom.command
 			ZENCODE_URL = https://github.com/dyne/zenroom/releases/latest/download/zencode-exec.command
 		endif
 	endif
 endif
 
-help: ## 🛟  Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m⦿ %-7s\033[0m %s\n\n", $$1, $$2}'
-
-# - Setup - #
+# - Setup: Zenroom - #
 
 $(BIN):
 	@mkdir $(BIN)
+
+ifneq ($(OSFLAG),arm64)
 
 $(ZENROOM): | $(BIN)
 	@wget -q -O $@ $(ZENROOM_URL)
@@ -58,6 +67,18 @@ $(ZENCODE): | $(BIN)
 	@chmod +x $@
 	@echo "zencode-exec 🤭 installed"
 
+else
+
+$(ZENROOM):
+	@echo "For usage on Apple ARM processors, please compile [zenroom] manually"
+
+$(ZENCODE):
+	@echo "For usage on Apple ARM processors, please compile [zencode-exec] manually"
+
+endif
+
+# - Setup: Submodules - #
+
 .git:
 	@echo "🌱 Setup Git"
 	@git init -q
@@ -66,15 +87,17 @@ $(ZENCODE): | $(BIN)
 
 $(AZC): .git
 	@rm -rf $@
-	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto
+	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto && git submodule update --remote --init
 
 $(WZC): .git
 	@rm -rf $@
-	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto
+	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto && git submodule update --remote --init
 
 $(WCZ): .git
 	@rm -rf $@
-	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/ForkbombEu/client_zencode client_zencode
+	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/ForkbombEu/client_zencode client_zencode && git submodule update --remote --init
+
+# - Setup: Project - #
 
 $(DATA):
 	mkdir -p $(DATA)
@@ -123,11 +146,11 @@ definitions: ## ⚙️ Generate type definitions and schema
 
 clean: ## 🧹 Clean the project
 	@rm -rf $(AZC) $(WZC) $(WCZ) $(BIN) $(PB)
-	rm -fr webapp/node_modules
-	rm -f webapp/src/lib/pocketbase/types.ts
-	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
-	rm -f webapp/src/lib/rbac/roles.ts
-	rm -f webapp/src/lib/features/list.ts
+	@rm -fr webapp/node_modules
+	@rm -f webapp/src/lib/pocketbase/types.ts
+	@rm -f webapp/src/lib/pocketbase/schema/db_schema.json
+	@rm -f webapp/src/lib/rbac/roles.ts
+	@rm -f webapp/src/lib/features/list.ts
 	@echo "The project is ✨ cleaned"
 
 purge: ## ⛔ Purge the database
