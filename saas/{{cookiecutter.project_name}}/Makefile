@@ -146,11 +146,11 @@ definitions: ## ⚙️ Generate type definitions and schema
 
 clean: ## 🧹 Clean the project
 	@rm -rf $(AZC) $(WZC) $(WCZ) $(BIN) $(PB)
-	rm -fr webapp/node_modules
-	rm -f webapp/src/lib/pocketbase/types.ts
-	rm -f webapp/src/lib/pocketbase/schema/db_schema.json
-	rm -f webapp/src/lib/rbac/roles.ts
-	rm -f webapp/src/lib/features/list.ts
+	@rm -fr webapp/node_modules
+	@rm -f webapp/src/lib/pocketbase/types.ts
+	@rm -f webapp/src/lib/pocketbase/schema/db_schema.json
+	@rm -f webapp/src/lib/rbac/roles.ts
+	@rm -f webapp/src/lib/features/list.ts
 	@echo "The project is ✨ cleaned"
 
 purge: ## ⛔ Purge the database
