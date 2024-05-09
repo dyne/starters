@@ -4,3 +4,6 @@
 [submodule "saas/{{cookiecutter.project_name}}/admin/zencode/zenflows-crypto"]
 	path = saas/{{cookiecutter.project_name}}/admin/zencode/zenflows-crypto
 	url = https://github.com/interfacerproject/zenflows-crypto
+[submodule "saas/{{cookiecutter.project_name}}/webapp/client_zencode"]
+	path = saas/{{cookiecutter.project_name}}/webapp/client_zencode
+	url = https://github.com/ForkbombEu/client_zencode
