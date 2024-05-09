@@ -28,7 +28,6 @@
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { InformationCircle } from 'svelte-heros-v2';
-	import { goto } from '$app/navigation';
 
 	//
 
@@ -87,8 +86,7 @@
 		};
 	}
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form } = superform;
 
 	if ($currentUser) $form.email = $currentUser.email;
 
