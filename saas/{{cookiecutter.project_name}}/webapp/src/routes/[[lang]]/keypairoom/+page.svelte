@@ -4,11 +4,17 @@
 		type UserAnswers,
 		userAnswersSchema
 	} from '$lib/keypairoom/userQuestions.js';
-	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
+	import {
+		generateKeypair,
+		getHMAC,
+		matchPublicAndPrivateKeys,
+		saveKeyringToLocalStorage
+	} from '$lib/keypairoom/keypair';
 	import {
 		getPublicKeysFromKeypair,
-		updateUserPublicKeys
-	} from '$lib/keypairoom/updateUserPublicKeys';
+		saveUserPublicKeys,
+		getUserPublicKeys
+	} from '$lib/keypairoom/utils.js';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { z } from 'zod';
 	import { featureFlags } from '$lib/features';
@@ -32,28 +38,45 @@
 		questions: userAnswersSchema
 	});
 
+	type FormData = z.infer<typeof schema>;
+
 	const superform = createForm(schema, async ({ form }) => {
-		let { data } = form;
-		let { email } = form.data;
+		const keypair = await createKeypairFromFormData(form.data);
 
-		const HMAC = await getHMAC(email);
-
-		const keypair = await generateKeypair(email, HMAC, formQuestionsToUserAnswers(data.questions));
-		saveKeyringToLocalStorage(keypair.keyring);
-		seed = keypair.seed;
+		const privateKeys = keypair.keyring;
+		const publicKeys = getPublicKeysFromKeypair(keypair);
 
 		if ($featureFlags.AUTH && $currentUser) {
-			const publicKeys = getPublicKeysFromKeypair(keypair);
-			await updateUserPublicKeys($currentUser?.id!, publicKeys);
+			const storedPublicKeys = await getUserPublicKeys();
+
+			if (!storedPublicKeys) {
+				await saveUserPublicKeys(publicKeys);
+				try {
+					if ($featureFlags.DID) await pb.send('/api/did', {});
+				} catch (e) {
+					console.log(e);
+				}
+			} else {
+				try {
+					await matchPublicAndPrivateKeys(storedPublicKeys, privateKeys);
+				} catch (e) {
+					throw new Error('Wrong answers');
+				}
+			}
 		}
 
-		if ($featureFlags.DID && $featureFlags.AUTH && $currentUser) {
-			await pb.send('/api/did', {});
-		}
+		saveKeyringToLocalStorage(privateKeys);
+		seed = keypair.seed;
 	});
 
+	async function createKeypairFromFormData(data: FormData) {
+		const email = data.email;
+		const HMAC = await getHMAC(email);
+		return await generateKeypair(email, HMAC, formQuestionsToUserAnswers(data.questions));
+	}
+
 	// non-answered questions *must* be set to 'null'
-	function formQuestionsToUserAnswers(questions: z.infer<typeof schema>['questions']): UserAnswers {
+	function formQuestionsToUserAnswers(questions: FormData['questions']): UserAnswers {
 		return {
 			question1: questions['question1'] ?? 'null',
 			question2: questions['question2'] ?? 'null',
@@ -63,8 +86,7 @@
 		};
 	}
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form } = superform;
 
 	if ($currentUser) $form.email = $currentUser.email;
 
