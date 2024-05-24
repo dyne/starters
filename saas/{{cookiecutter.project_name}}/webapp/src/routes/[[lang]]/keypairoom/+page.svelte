@@ -1,14 +1,20 @@
 <script lang="ts">
 	import {
-		userQuestions,
-		type UserAnswers,
-		userAnswersSchema
+		userChallengesSchema,
+		userChallenges,
+		type UserChallenges
 	} from '$lib/keypairoom/userQuestions.js';
-	import { generateKeypair, getHMAC, saveKeyringToLocalStorage } from '$lib/keypairoom/keypair';
+	import {
+		generateKeypair,
+		getHMAC,
+		matchPublicAndPrivateKeys,
+		saveKeyringToLocalStorage
+	} from '$lib/keypairoom/keypair';
 	import {
 		getPublicKeysFromKeypair,
-		updateUserPublicKeys
-	} from '$lib/keypairoom/updateUserPublicKeys';
+		saveUserPublicKeys,
+		getUserPublicKeys
+	} from '$lib/keypairoom/utils.js';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { z } from 'zod';
 	import { featureFlags } from '$lib/features';
@@ -29,42 +35,49 @@
 
 	const schema = z.object({
 		email: z.string().email(),
-		questions: userAnswersSchema
+		questions: userChallengesSchema
 	});
 
 	const superform = createForm(schema, async ({ form }) => {
-		let { data } = form;
-		let { email } = form.data;
+		const { email, questions } = form.data;
+		const challenges = userChallengesSchema.parse(questions);
+		const keypair = await createKeypairFromFormData(email, challenges);
 
-		const HMAC = await getHMAC(email);
-
-		const keypair = await generateKeypair(email, HMAC, formQuestionsToUserAnswers(data.questions));
-		saveKeyringToLocalStorage(keypair.keyring);
-		seed = keypair.seed;
+		const privateKeys = keypair.keyring;
+		const publicKeys = getPublicKeysFromKeypair(keypair);
 
 		if ($featureFlags.AUTH && $currentUser) {
-			const publicKeys = getPublicKeysFromKeypair(keypair);
-			await updateUserPublicKeys($currentUser?.id!, publicKeys);
+			const storedPublicKeys = await getUserPublicKeys();
+
+			if (!storedPublicKeys) {
+				await saveUserPublicKeys(publicKeys);
+			} else {
+				try {
+					await matchPublicAndPrivateKeys(storedPublicKeys, privateKeys);
+				} catch (e) {
+					throw new Error('Wrong answers');
+				}
+			}
+
+			if ($featureFlags.DID) {
+				try {
+					await pb.send('/api/did', {});
+				} catch (e) {
+					console.log(e);
+				}
+			}
 		}
 
-		if ($featureFlags.DID && $featureFlags.AUTH && $currentUser) {
-			await pb.send('/api/did', {});
-		}
+		saveKeyringToLocalStorage(privateKeys);
+		seed = keypair.seed;
 	});
 
-	// non-answered questions *must* be set to 'null'
-	function formQuestionsToUserAnswers(questions: z.infer<typeof schema>['questions']): UserAnswers {
-		return {
-			question1: questions['question1'] ?? 'null',
-			question2: questions['question2'] ?? 'null',
-			question3: questions['question3'] ?? 'null',
-			question4: questions['question4'] ?? 'null',
-			question5: questions['question5'] ?? 'null'
-		};
+	async function createKeypairFromFormData(email: string, challenges: UserChallenges) {
+		const HMAC = await getHMAC(email);
+		return await generateKeypair(email, HMAC, challenges);
 	}
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form } = superform;
 
 	if ($currentUser) $form.email = $currentUser.email;
 
@@ -128,7 +141,7 @@
 				<Hr />
 			{/if}
 
-			{#each userQuestions as question}
+			{#each userChallenges as question}
 				<Input {superform} field={`questions.${question.id}`} options={{ label: question.text }} />
 			{/each}
 
