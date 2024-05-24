@@ -11,28 +11,28 @@ import { error, redirect } from '@sveltejs/kit';
 export const load = async () => {
 	const features = await loadFeatureFlags();
 
-	if (!features.AUTH) throw error(404);
+	if (!features.AUTH) error(404);
 	else {
 		const isUserLogged = await verifyUser();
-		if (!isUserLogged) throw redirect(303, '/login');
+		if (!isUserLogged) redirect(303, '/login');
 	}
 
 	if (features.KEYPAIROOM) {
 		const publicKeys = await getUserPublicKeys();
 		if (!publicKeys) {
-			throw redirect(303, `/keypairoom?${welcomeSearchParamKey}`);
+			redirect(303, `/keypairoom?${welcomeSearchParamKey}`);
 		}
 
 		if (browser) {
 			const keyring = getKeyringFromLocalStorage();
 			if (!keyring) {
-				throw redirect(303, `/keypairoom/regenerate?${missingKeyringParam}`);
-			}
-
-			try {
-				await matchPublicAndPrivateKeys(publicKeys, keyring);
-			} catch (e) {
-				throw redirect(303, `/keypairoom/regenerate?${missingKeyringParam}`);
+				redirect(303, `/keypairoom/regenerate?${missingKeyringParam}`);
+			} else {
+				try {
+					await matchPublicAndPrivateKeys(publicKeys, keyring);
+				} catch (e) {
+					redirect(303, `/keypairoom/regenerate?${missingKeyringParam}`);
+				}
 			}
 		}
 	}
