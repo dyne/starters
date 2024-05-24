@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
 	import { Collections } from '$lib/pocketbase/types';
-	import { goto } from '$app/navigation';
 	import { z } from 'zod';
 
 	import { A, Heading, Hr, P } from 'flowbite-svelte';
