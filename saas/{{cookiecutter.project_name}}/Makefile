@@ -82,14 +82,18 @@ endif
 STARTERS_CHECK := $(shell pwd | grep -q "/starters/saas/{{cookiecutter.project_name}}" && echo true || echo false)
 
 ifeq ($(STARTERS_CHECK),false)
+
 .git:
 	@echo "🌱 Setup Git"
 	@git init -q
 	@git branch -m main
 	@git add .
+
 else
+
 .git:
 	@echo "Skipping git setup"
+
 endif
 
 # - Setup: Submodules - #
