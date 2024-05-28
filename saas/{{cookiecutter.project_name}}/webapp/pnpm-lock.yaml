@@ -33,8 +33,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       pocketbase:
-        specifier: ^0.21.1
-        version: 0.21.1
+        specifier: ^0.21.2
+        version: 0.21.2
       svelte-boring-avatars:
         specifier: ^1.2.5
         version: 1.2.5
@@ -163,8 +163,8 @@ packages:
     resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@7.24.5':
-    resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
+  '@babel/runtime@7.24.6':
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
     engines: {node: '>=6.9.0'}
 
   '@esbuild/aix-ppc64@0.19.12':
@@ -1785,8 +1785,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  pocketbase@0.21.1:
-    resolution: {integrity: sha512-0PvCP4pKtxsV9kwldEGyibEvhwOcx9jSCrz3WN5CgPILJfM0z76f1op9WE8/8UgikDsMdRsc5iBLfKintrJS1g==}
+  pocketbase@0.21.2:
+    resolution: {integrity: sha512-XZdgU9dEv3TPjexDRHy5feYrZrJhWqxTki8ClFGpsnC51G3Qkwoa/U7CVG72jYcLDP3p0HiEhRUUevnlryWkHA==}
 
   postcss-import@15.1.0:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
@@ -2461,7 +2461,7 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
-  '@babel/runtime@7.24.5':
+  '@babel/runtime@7.24.6':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -4192,7 +4192,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
-  pocketbase@0.21.1: {}
+  pocketbase@0.21.2: {}
 
   postcss-import@15.1.0(postcss@8.4.35):
     dependencies:
@@ -4585,7 +4585,7 @@ snapshots:
 
   tailwind-merge@2.3.0:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.24.6
 
   tailwindcss@3.4.1:
     dependencies:

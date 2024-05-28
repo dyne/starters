@@ -20,7 +20,7 @@
 
 	const superform = createForm(schema, async ({ form }) => {
 		const { data } = form;
-		const u = pb.collection(Collections.Users);
+		const u = pb.collection('users');
 		await u.create(data);
 		await u.authWithPassword(data.email, data.password);
 		await u.requestVerification(data.email);

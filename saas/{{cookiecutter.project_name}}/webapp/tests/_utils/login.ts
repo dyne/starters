@@ -17,20 +17,20 @@ export async function login(page: Page, email: string, password: string) {
 
 	await expect(page).toHaveURL(/keypairoom/);
 	if (/keypairoom\/regenerate/.test(page.url())) {
-		await page.getByRole('link', { name: 'Forgot the "seed"? Regenerate it' }).click();
+		await page.getByRole('link', { name: 'Forgot the seed? Regenerate it' }).click();
 	}
 
-	const o = page.locator('input[name="questions\\.question1"]');
+	const o = page.locator('input[name="questions\\.whereParentsMet"]');
 	await expect(o).toBeVisible();
 
-	await page.locator('input[name="questions\\.question1"]').fill('p');
-	await page.locator('input[name="questions\\.question2"]').fill('p');
-	await page.locator('input[name="questions\\.question3"]').fill('p');
-	await page.locator('input[name="questions\\.question4"]').fill('p');
-	await page.locator('input[name="questions\\.question5"]').fill('p');
+	await o.fill('p');
+	await page.locator('input[name="questions\\.nameFirstPet"]').fill('p');
+	await page.locator('input[name="questions\\.whereHomeTown"]').fill('p');
+	await page.locator('input[name="questions\\.nameFirstTeacher"]').fill('p');
+	await page.locator('input[name="questions\\.nameMotherMaid"]').fill('p');
 
 	await page.getByRole('button', { name: 'Generate keys' }).click();
-	await page.getByRole('link', { name: 'Go to Dashboard' }).click();
+	await page.getByRole('button', { name: 'Go to Dashboard' }).click();
 
 	await expect(page).toHaveURL(/my/);
 }
