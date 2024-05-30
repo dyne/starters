@@ -36,8 +36,8 @@ importers:
         specifier: ^0.21.2
         version: 0.21.2
       svelte-boring-avatars:
-        specifier: ^1.2.5
-        version: 1.2.5
+        specifier: ^1.2.6
+        version: 1.2.6
       svelte-heros:
         specifier: ^6.0.1
         version: 6.0.1(svelte@4.2.11)
@@ -2096,8 +2096,8 @@ packages:
   svelecte@3.17.3:
     resolution: {integrity: sha512-wnvoRxJIFFkm+CmXgjL4R3i/TcuYUIBkE+jDJSBD7AdSOzk1K6u3+nW4zwxaGT29zyZpiZkWeiy7lO62r5F+tg==}
 
-  svelte-boring-avatars@1.2.5:
-    resolution: {integrity: sha512-ZrqBNQMoXrLsnqs8iisqUAaYldT0NKnv+A7GKig9wvaze1kP6a+j38Kq71tfLmNAUtq6Q4CR9OIYo94RzaRsSg==}
+  svelte-boring-avatars@1.2.6:
+    resolution: {integrity: sha512-8+Z1DhsMUVI/V/5ik00Arw0PgbJcMdhTXq3YGqccBc5bYFeceCtMEMB0aWGhi8xFV+0aqZbWvS89Hcj16LlfHA==}
 
   svelte-check@3.6.4:
     resolution: {integrity: sha512-mY/dqucqm46p72M8yZmn81WPZx9mN6uuw8UVfR3ZKQeLxQg5HDGO3HHm5AZuWZPYNMLJ+TRMn+TeN53HfQ/vsw==}
@@ -4448,7 +4448,7 @@ snapshots:
     dependencies:
       svelte-tiny-virtual-list: 2.0.5
 
-  svelte-boring-avatars@1.2.5: {}
+  svelte-boring-avatars@1.2.6: {}
 
   svelte-check@3.6.4(postcss-load-config@4.0.1(postcss@8.4.35))(postcss@8.4.35)(svelte@4.2.11):
     dependencies:
