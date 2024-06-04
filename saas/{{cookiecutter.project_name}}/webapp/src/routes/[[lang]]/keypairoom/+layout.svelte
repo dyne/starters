@@ -3,6 +3,8 @@
 	import { currentUser } from '$lib/pocketbase';
 	import DIDButton from '$lib/components/DIDButton.svelte';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
+	import { Button } from 'flowbite-svelte';
+	import { m } from '$lib/i18n';
 </script>
 
 <Topbar>
@@ -17,7 +19,10 @@
 			<DIDButton />
 		</div>
 	</div>
-	<UserAvatar slot="right" />
+	<div slot="right" class="flex items-center gap-4">
+		<Button href="/logout" size="xs" color="alternative">{m.Sign_out()}</Button>
+		<UserAvatar />
+	</div>
 </Topbar>
 <div class="mx-auto max-w-md p-6">
 	<slot />
