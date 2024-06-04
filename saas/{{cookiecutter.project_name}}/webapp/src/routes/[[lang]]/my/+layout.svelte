@@ -57,7 +57,7 @@
 					<Fire class="mr-2 w-5 text-red-500" /> Go Pro</DropdownItem
 				>
 				<DropdownDivider />
-				<DropdownItem on:click={() => goto('/my/logout')} class="text-primary-600">
+				<DropdownItem on:click={() => goto('/logout')} class="text-primary-600">
 					Sign out
 				</DropdownItem>
 			</AvatarMenu>
