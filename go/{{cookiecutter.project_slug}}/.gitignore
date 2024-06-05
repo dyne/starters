@@ -7,6 +7,13 @@
 
 # But not these files...
 !/.gitignore
+!/.editorconfig
+!/.vroom/*
+!/.golangci.yml
+!/.env.sample
+!/.cruft.json
+
+!.github/workflows/*.yml
 
 !*.go
 !go.sum
