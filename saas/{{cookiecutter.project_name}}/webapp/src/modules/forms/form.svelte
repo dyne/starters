@@ -120,17 +120,19 @@
 
 	//
 
-	export let superform: SuperForm<UnwrapEffects<T>, any>;
+	export let form: SuperForm<UnwrapEffects<T>, any>;
 
 	export let showRequiredIndicator = false;
-	export let className = 'space-y-8';
 
-	let enctype = superform.options.dataType == 'form' ? 'multipart/form-data' : undefined;
+	let className = 'space-y-8';
+	export { className as class };
 
 	//
 
-	const { enhance, delayed } = superform;
-	setContext<FormContext<T>>(FORM_KEY, { superform, showRequiredIndicator });
+	$: enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
+
+	const { enhance, delayed } = form;
+	setContext<FormContext<T>>(FORM_KEY, { superform: form, showRequiredIndicator });
 </script>
 
 <form class={className} method="post" use:enhance {enctype}>
