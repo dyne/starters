@@ -4,7 +4,9 @@
 
 	import '../app.postcss';
 	import { version } from '$app/environment';
-	console.info(`SAAS version: 🔖 ${version}`);
+	import { appTitle } from '$lib/strings';
+
+	console.info(`${appTitle} version: 🔖 ${version}`);
 </script>
 
 <ParaglideJS {i18n}>
