@@ -1,6 +1,7 @@
+import { Option as O, pipe } from 'effect';
 import { Schema as S } from '@effect/schema';
 import { FieldType as FT } from '@/pocketbase/schema/types';
-import { UrlSchema } from '@/utils/schema';
+import { UrlSchema, FileSchema } from '@/utils/schema';
 
 // Base
 
@@ -9,7 +10,7 @@ const FieldIdToSchema = {
 	[FT.NUMBER]: S.Number,
 	[FT.EDITOR]: S.String,
 	[FT.BOOL]: S.Boolean,
-	[FT.FILE]: S.String,
+	[FT.FILE]: FileSchema,
 	[FT.SELECT]: S.String,
 	[FT.RELATION]: S.String,
 	[FT.JSON]: S.Record(S.String, S.Unknown),
@@ -21,54 +22,47 @@ type FieldId = keyof FieldIdToSchema;
 type FieldSchema<F extends FieldId> = FieldIdToSchema[F];
 type FieldType<F extends FieldId> = FieldSchema<F>['Type'];
 
-//
+// Filters
 
 type FilterCreator<A> = <T>(
-	value: T,
-	annotations?: S.Annotations.Filter<A>
+	value: T
 ) => <I, R>(self: S.Schema<A, I, R>) => S.filter<S.Schema<A, I, R>>;
 
+type FieldFilters<A> = Record<string, FilterCreator<A>>;
+
 type FieldIdToFilters = {
-	[key in FieldId]: Record<string, FilterCreator<FieldType<key>>>;
+	[key in FieldId]: FieldFilters<FieldType<key>>;
 };
 
+// TODO - Add annotations
+// TODO - Complete list
 const FieldIdToFilters: Partial<FieldIdToFilters> = {
 	text: {
-		min: (value, annotations) => S.minLength(S.validateSync(S.Number)(value), annotations),
-		max: (value, annotations) => S.maxLength(S.validateSync(S.Number)(value), annotations),
-		pattern: (value, annotations) => {
-			const pattern = S.validateSync(S.String)(value);
+		min: (v) => S.minLength(S.validateSync(S.Number)(v)),
+		max: (v) => S.maxLength(S.validateSync(S.Number)(v)),
+		pattern: (v) => {
+			const pattern = S.validateSync(S.String)(v);
 			const regex = new RegExp(`|${pattern}`); // Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
-			return S.pattern(regex, annotations);
+			return S.pattern(regex);
 		}
 	},
 	number: {
-		min: (value, annotations) => S.greaterThan(S.validateSync(S.Number)(value), annotations)
+		min: (v) => S.greaterThan(S.validateSync(S.Number)(v)),
+		max: (v) => S.lessThan(S.validateSync(S.Number)(v))
 	}
 };
 
-// function textFilters(schema: typeof S.String, options: FieldOptions) {
-//     const filters: StringFilter[] = []
-//     if (options.min) filters.push(S.minLength(options.min))
-//     if (options.max) filters.push(S.maxLength(options.max))
-//     return filt
-// }
+const ArrayFilters: Record<string, FilterCreator<readonly unknown[]>> = {
+	maxSelect: (v) => S.maxItems(S.validateSync(S.Number)(v)),
+	minSelect: (v) => S.minItems(S.validateSync(S.Number)(v))
+};
 
-// // Filters
+// Convert
 
-// type FieldFilter<F extends FieldId> = (
-// 	value: unknown
-// ) => <I, R>(self: S.Schema<FieldType<F>, I, R>) => S.filter<S.Schema<FieldType<F>, I, R>>;
+function getFieldSchema(fieldId: FieldId) {
+	return O.fromNullable(FieldIdToSchema[fieldId]);
+}
 
-// type A = FieldFilter<"text">
-
-// export const FieldTypeFilters: Partial<FieldIdToFilters> = {
-// 	text: ,
-// 	editor: {},
-// 	bool: {},
-// 	select: {},
-// 	file: {},
-// 	relation: {},
-// 	json: {},
-// 	url: {}
-// };
+function getFieldFilters(fieldId: FieldId) {
+	return pipe(FieldIdToFilters[fieldId]);
+}
