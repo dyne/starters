@@ -18,7 +18,7 @@ export type FieldType = ValueOf<typeof FieldType>;
 
 // Generated using json-to-ts
 
-export interface CollectionConfig {
+export type CollectionConfig = {
 	id: string;
 	created: string;
 	updated: string;
@@ -33,9 +33,9 @@ export interface CollectionConfig {
 	updateRule?: string;
 	deleteRule?: string;
 	options: CollectionOptions;
-}
+};
 
-export interface CollectionOptions {
+export type CollectionOptions = {
 	allowEmailAuth?: boolean;
 	allowOAuth2Auth?: boolean;
 	allowUsernameAuth?: boolean;
@@ -45,9 +45,9 @@ export interface CollectionOptions {
 	onlyEmailDomains?: unknown;
 	onlyVerified?: boolean;
 	requireEmail?: boolean;
-}
+};
 
-export interface FieldConfig {
+export type FieldConfig = {
 	system: boolean;
 	id: string;
 	name: string;
@@ -56,9 +56,9 @@ export interface FieldConfig {
 	presentable: boolean;
 	unique: boolean;
 	options: FieldOptions;
-}
+};
 
-export interface FieldOptions {
+export type FieldOptions = {
 	min?: number;
 	max?: number;
 	pattern?: string;
@@ -76,4 +76,4 @@ export interface FieldOptions {
 	exceptDomains?: string[];
 	onlyDomains?: string[];
 	noDecimal?: boolean;
-}
+};

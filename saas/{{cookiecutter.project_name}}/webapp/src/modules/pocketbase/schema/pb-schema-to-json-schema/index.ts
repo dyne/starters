@@ -1,7 +1,8 @@
-import { Option as O, pipe } from 'effect';
+import { Option as O, pipe, Record as R, Array as A, Record, Tuple as T } from 'effect';
 import { Schema as S } from '@effect/schema';
-import { FieldType as FT } from '@/pocketbase/schema/types';
+import { FieldType as FT, type FieldConfig } from '@/pocketbase/schema/types';
 import { UrlSchema, FileSchema } from '@/utils/schema';
+import type { ReadonlyRecord } from 'effect/Record';
 
 // Base
 
@@ -52,10 +53,16 @@ const FieldIdToFilters: Partial<FieldIdToFilters> = {
 	}
 };
 
-const ArrayFilters: Record<string, FilterCreator<readonly unknown[]>> = {
+type ArrayFilter = FilterCreator<readonly unknown[]>;
+
+const ArrayFilters: Record<string, ArrayFilter> = {
 	maxSelect: (v) => S.maxItems(S.validateSync(S.Number)(v)),
 	minSelect: (v) => S.minItems(S.validateSync(S.Number)(v))
 };
+
+function OptionalFilter<T extends S.Schema.Any>(schema: T): S.optional<T> {
+	return S.optional(schema);
+}
 
 // Convert
 
@@ -64,5 +71,20 @@ function getFieldSchema(fieldId: FieldId) {
 }
 
 function getFieldFilters(fieldId: FieldId) {
-	return pipe(FieldIdToFilters[fieldId]);
+	return O.fromNullable(FieldIdToFilters[fieldId]);
+}
+
+function getArrayFilters(fieldConfig: FieldConfig) {
+	return pipe(
+		ArrayFilters,
+		R.mapEntries((filter, filterName) => pipe(fieldConfig.options, R.get(filterName), O.map()))
+		// A.map(O.getOrElse(()=>""))
+	);
+}
+
+export function isArrayField(fieldConfig: FieldConfig): boolean {
+	const type = fieldConfig.type;
+	if (type !== FT.SELECT && type !== FT.RELATION && type !== FT.FILE) return false;
+	if (fieldConfig.options.maxSelect === 1) return false;
+	else return true;
 }
