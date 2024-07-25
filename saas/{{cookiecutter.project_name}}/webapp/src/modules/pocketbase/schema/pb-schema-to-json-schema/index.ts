@@ -53,9 +53,9 @@ const FieldIdToFilters: Partial<FieldIdToFilters> = {
 	}
 };
 
-type ArrayFilter = FilterCreator<readonly unknown[]>;
+type ArrayFilterCreator = FilterCreator<readonly unknown[]>;
 
-const ArrayFilters: Record<string, ArrayFilter> = {
+const ArrayFilters: Record<string, ArrayFilterCreator> = {
 	maxSelect: (v) => S.maxItems(S.validateSync(S.Number)(v)),
 	minSelect: (v) => S.minItems(S.validateSync(S.Number)(v))
 };
@@ -66,25 +66,61 @@ function OptionalFilter<T extends S.Schema.Any>(schema: T): S.optional<T> {
 
 // Convert
 
-function getFieldSchema(fieldId: FieldId) {
-	return O.fromNullable(FieldIdToSchema[fieldId]);
+function getFieldConfigSchema<T extends FieldId>(fieldConfig: FieldConfig) {
+	return pipe(
+		fieldConfig.type as T,
+		(fieldType) => getFieldSchema(fieldType),
+		(fieldSchema) => pipe(getFieldFilters(fieldConfig), (filters) => filters[0](fieldSchema))
+	);
 }
 
-function getFieldFilters(fieldId: FieldId) {
-	return O.fromNullable(FieldIdToFilters[fieldId]);
+function getFieldSchema(fieldId: FieldId) {
+	return pipe(O.fromNullable(FieldIdToSchema[fieldId]), O.getOrThrow);
+}
+
+function getFieldFilters<F extends FieldId>(fieldConfig: FieldConfig) {
+	return pipe(
+		fieldConfig.type as F,
+		(fieldType) => FieldIdToFilters[fieldType],
+		O.fromNullable,
+		O.map((fieldFilters) =>
+			pipe(
+				Object.entries(fieldConfig.options),
+				A.filter(([optionName]) => optionName in fieldFilters),
+				A.map(([optionName, optionValue]) =>
+					pipe(
+						fieldFilters,
+						R.get(optionName),
+						O.map((filterCreator) => filterCreator(optionValue)),
+						O.getOrThrow
+					)
+				)
+			)
+		),
+		O.getOrThrow
+	);
 }
 
 function getArrayFilters(fieldConfig: FieldConfig) {
 	return pipe(
-		ArrayFilters,
-		R.mapEntries((filter, filterName) => pipe(fieldConfig.options, R.get(filterName), O.map()))
-		// A.map(O.getOrElse(()=>""))
+		Object.entries(fieldConfig.options),
+		A.filter(([optionName]) => optionName in ArrayFilters),
+		A.map(([optionName, optionValue]) =>
+			pipe(
+				ArrayFilters,
+				R.get(optionName),
+				O.map((filterCreator) => filterCreator(optionValue)),
+				O.getOrThrow
+			)
+		)
 	);
 }
 
 export function isArrayField(fieldConfig: FieldConfig): boolean {
-	const type = fieldConfig.type;
+	const type = fieldConfig.type as FT;
 	if (type !== FT.SELECT && type !== FT.RELATION && type !== FT.FILE) return false;
-	if (fieldConfig.options.maxSelect === 1) return false;
-	else return true;
+
+	const maxSelect = fieldConfig.options.maxSelect ?? 0;
+	if (maxSelect > 1) return true;
+	else return false;
 }
