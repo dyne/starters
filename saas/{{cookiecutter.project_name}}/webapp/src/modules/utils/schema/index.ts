@@ -1,9 +1,20 @@
-import { Schema } from '@effect/schema';
+import { JSONSchema, Schema as S } from '@effect/schema';
 
-export const FileSchema = Schema.declare((input: unknown): input is File => input instanceof File);
+export const FileSchema = S.declare((input: unknown): input is File => input instanceof File).pipe(
+	S.annotations({
+		jsonSchema: JSONSchema.make(
+			S.Struct({
+				name: S.String,
+				lastModified: S.Number,
+				size: S.Number,
+				type: S.String
+			})
+		)
+	})
+);
 
-export const UrlSchema = Schema.String.pipe(
-	Schema.filter((value) => {
+export const UrlSchema = S.String.pipe(
+	S.filter((value) => {
 		try {
 			new URL(value);
 			return true;
@@ -11,5 +22,5 @@ export const UrlSchema = Schema.String.pipe(
 			return false;
 		}
 	}),
-	Schema.pattern(/^(http:\/\/|https:\/\/).+$/, { message: () => 'Must be an HTTP or HTTPS URL' })
+	S.pattern(/^(http:\/\/|https:\/\/).+$/, { message: () => 'Must be an HTTP or HTTPS URL' })
 );
