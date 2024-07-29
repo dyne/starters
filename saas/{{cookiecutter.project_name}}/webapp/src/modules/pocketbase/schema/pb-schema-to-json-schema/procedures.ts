@@ -1,20 +1,17 @@
 import { Option as O, pipe, Record as R, Array as A, Effect, Tuple } from 'effect';
 import { Schema as S } from '@effect/schema';
-import {
-	FieldType as FT,
-	type CollectionConfig,
-	type FieldConfig
-} from '@/pocketbase/schema/types';
-import DbConfig from '../export-pb-schema/pb-schema.generated.json'; // TODO - Pass from config
-import type { SchemaFilter, FieldSchemaFiltersConfig } from './types';
+
+import { FieldType as FT, type FieldConfig } from '@/pocketbase/schema/types';
 import { isArrayField } from '@/pocketbase/schema/utils';
-import { fieldTypeToSchemaConfig, arrayFieldSchemaFiltersConfig } from './config';
+
+import { type SchemaFilter, type FieldSchemaFiltersConfig } from './types';
+import { config } from './config';
 
 // -- Converters
 
 export function convertDbConfigToSchemas() {
 	return pipe(
-		DbConfig as CollectionConfig[],
+		config.pocketbaseConfig,
 		A.map((collectionConfig) => convertFieldConfigsToObjectSchema(collectionConfig.schema)),
 		Effect.all
 	);
@@ -41,10 +38,14 @@ export function convertFieldConfigToSchema(fieldConfig: FieldConfig) {
 		// -- base schema
 		getBaseSchema(fieldConfig),
 		// -- base filters
-		(schema) =>
-			pipe(getBaseSchemaFilters(fieldConfig), (filters) => applyFiltersToSchema(schema, filters)),
+		Effect.flatMap((schema) =>
+			pipe(
+				getBaseSchemaFilters(fieldConfig),
+				Effect.map((filters) => applyFiltersToSchema(schema, filters))
+			)
+		),
 		// -- array schema
-		(schema) =>
+		Effect.flatMap((schema) =>
 			Effect.if(isArrayField(fieldConfig), {
 				onFalse: () => Effect.succeed(schema),
 				onTrue: () =>
@@ -55,9 +56,10 @@ export function convertFieldConfigToSchema(fieldConfig: FieldConfig) {
 							Effect.succeed
 						)
 					)
-			}),
-		// -- required
-		(schema) => schema
+			})
+		)
+		// // -- required
+		// (schema) => schema
 	);
 }
 
@@ -65,47 +67,50 @@ export function convertFieldConfigToSchema(fieldConfig: FieldConfig) {
 
 function getBaseSchema(fieldConfig: FieldConfig) {
 	return pipe(
-		fieldConfig.type as FT,
-		(fieldType) => fieldTypeToSchemaConfig[fieldType],
-		O.fromNullable,
-		O.getOrThrow,
-		(fieldSchemaConfig) => fieldSchemaConfig.schema
+		getBaseSchemaConfig(fieldConfig),
+		Effect.map((baseSchemaConfig) => baseSchemaConfig.schema)
 	);
 }
 
 function getBaseSchemaFilters(fieldConfig: FieldConfig) {
 	return pipe(
-		fieldConfig.type as FT,
-		(fieldType) => fieldTypeToSchemaConfig[fieldType],
-		O.fromNullable,
-		O.getOrThrow,
-		(fieldSchemaConfig) => fieldSchemaConfig.filters,
-		O.fromNullable,
-		O.getOrElse(() => ({}) as FieldSchemaFiltersConfig<S.Schema.Any>),
-		(fieldFiltersConfig) =>
+		getBaseSchemaConfig(fieldConfig),
+		Effect.map((baseSchemaConfig) =>
+			pipe(
+				baseSchemaConfig.filters,
+				O.fromNullable,
+				O.getOrElse(() => ({}) as FieldSchemaFiltersConfig<S.Schema.Any>)
+			)
+		),
+		Effect.map((filtersConfig) =>
 			pipe(
 				Object.entries(fieldConfig.options),
-				A.filter(([optionName]) => optionName in fieldFiltersConfig),
+				A.filter(([optionName]) => optionName in filtersConfig),
 				A.filter(([, optionValue]) => Boolean(optionValue)),
 				A.map(([optionName, optionValue]) =>
-					pipe(fieldFiltersConfig, R.get(optionName), O.getOrThrow, (filterCreator) =>
+					pipe(filtersConfig, R.get(optionName), O.getOrThrow, (filterCreator) =>
 						filterCreator(optionValue)
 					)
 				)
 			)
+		)
 	);
 }
 
 function getArraySchemaFilters(fieldConfig: FieldConfig) {
 	return pipe(
 		Object.entries(fieldConfig.options),
-		A.filter(([optionName]) => optionName in arrayFieldSchemaFiltersConfig),
+		A.filter(([optionName]) => optionName in config.arrayFieldSchemaFilters),
 		A.map(([optionName, optionValue]) =>
-			pipe(arrayFieldSchemaFiltersConfig, R.get(optionName), O.getOrThrow, (filterCreator) =>
+			pipe(config.arrayFieldSchemaFilters, R.get(optionName), O.getOrThrow, (filterCreator) =>
 				filterCreator(optionValue)
 			)
 		)
 	);
+}
+
+function getBaseSchemaConfig(fieldConfig: FieldConfig) {
+	return R.get(config.fieldTypeToBaseSchema, fieldConfig.type as FT);
 }
 
 // -- Utils

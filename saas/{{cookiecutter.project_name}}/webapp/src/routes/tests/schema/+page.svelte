@@ -1,16 +1,11 @@
 <script lang="ts">
-	import { dbConfigToSchemas } from '@/pocketbase/schema/pb-schema-to-json-schema';
+	import { convertDbConfigToSchemas } from '@/pocketbase/schema/pb-schema-to-json-schema';
 	import { Effect, Array as A, pipe } from 'effect';
 	import { JSONSchema } from '@effect/schema';
 
 	const res = pipe(
-		dbConfigToSchemas(),
-		Effect.map((schemas) =>
-			pipe(
-				schemas,
-				A.map((schema) => pipe(schema, JSONSchema.make))
-			)
-		),
+		convertDbConfigToSchemas(),
+		Effect.map((schemas) => A.map(schemas, JSONSchema.make)),
 		Effect.runSync
 	);
 </script>
