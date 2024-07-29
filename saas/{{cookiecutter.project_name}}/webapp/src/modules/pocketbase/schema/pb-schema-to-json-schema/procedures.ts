@@ -2,7 +2,7 @@ import { Option as O, pipe, Record as R, Array as A, Effect, Tuple } from 'effec
 import { Schema as S } from '@effect/schema';
 
 import { FieldType as FT, type FieldConfig } from '@/pocketbase/schema/types';
-import { isArrayField } from '@/pocketbase/schema/utils';
+import { isArrayField, isRequiredField } from '@/pocketbase/schema/utils';
 
 import { type SchemaFilter, type FieldSchemaFiltersConfig } from './types';
 import { config } from './config';
@@ -57,9 +57,14 @@ export function convertFieldConfigToSchema(fieldConfig: FieldConfig) {
 						)
 					)
 			})
+		),
+		// -- required
+		Effect.flatMap((schema) =>
+			Effect.if(isRequiredField(fieldConfig), {
+				onFalse: () => Effect.succeed(schema),
+				onTrue: () => Effect.succeed(S.optional(schema))
+			})
 		)
-		// // -- required
-		// (schema) => schema
 	);
 }
 

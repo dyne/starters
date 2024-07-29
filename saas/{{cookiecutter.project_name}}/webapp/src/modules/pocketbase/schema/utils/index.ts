@@ -11,3 +11,7 @@ export function isArrayField(fieldConfig: FieldConfig): boolean {
 	if (maxSelect > 1) return true;
 	else return false;
 }
+
+export function isRequiredField(fieldConfig: FieldConfig): boolean {
+	return fieldConfig.required;
+}
