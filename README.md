@@ -50,6 +50,7 @@ We do like to reinvent the wheel... But sometimes it's easier to start smarter w
 | **[saas](saas/)** | 🚀 Full-featured PWA/SaaS webapp, including Slangroom integration | [📄 Documentation](saas/{{cookiecutter.project_name}}/README.md) |
 | **[ts-sea](starters/ts-sea/)** | 🪑 Template to create single executable applications using TypeScript | [📄 Documentation](ts-sea/{{cookiecutter.project_name}}/README.md) |
 | **[typescript](typescript/)** | 🛕 Monorepo generic template for TypeScript projects | [📄 Documentation](typescript/{{cookiecutter.project_slug}}/README.md) |
+| **[go](go/)** | 🐹 Generic template for Golang projects | [📄 Documentation](go/{{cookiecutter.project_slug}}/README.md) |
 
 #### 2. Create your instance by executing
 ```sh
