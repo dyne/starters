@@ -38,6 +38,9 @@ importers:
       flowbite-svelte-icons:
         specifier: ^1.6.1
         version: 1.6.1(svelte@4.2.18)(tailwind-merge@2.4.0)(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.3)))
+      formsnap:
+        specifier: ^1.0.1
+        version: 1.0.1(svelte@4.2.18)(sveltekit-superforms@2.17.0(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18))
       json-schema-to-zod:
         specifier: ^2.4.1
         version: 2.4.1
@@ -1721,6 +1724,12 @@ packages:
   form-data@4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
+
+  formsnap@1.0.1:
+    resolution: {integrity: sha512-TvU9CoLSiacW1c7wXhLiyVpyy/LBfG0CEFDbs3M3jrsxBSrkTpsuhbQ8JYKY3CNCmIhZlgxCH+Vqr7RBF9G53w==}
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0-next.1
+      sveltekit-superforms: ^2.3.0
 
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
@@ -4966,6 +4975,12 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
+
+  formsnap@1.0.1(svelte@4.2.18)(sveltekit-superforms@2.17.0(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18)):
+    dependencies:
+      nanoid: 5.0.7
+      svelte: 4.2.18
+      sveltekit-superforms: 2.17.0(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18)(vite@5.3.4(@types/node@20.14.11)))(svelte@4.2.18)
 
   fraction.js@4.3.7: {}
 

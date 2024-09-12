@@ -82,6 +82,7 @@
 		"flowbite-svelte": "^0.44.24",
 		"flowbite-svelte-blocks": "^1.1.3",
 		"flowbite-svelte-icons": "^1.6.1",
+		"formsnap": "^1.0.1",
 		"json-schema-to-zod": "^2.4.1",
 		"lodash": "^4.17.21",
 		"nanoid": "^5.0.7",

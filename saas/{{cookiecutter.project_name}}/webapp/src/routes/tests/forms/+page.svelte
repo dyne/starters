@@ -1,22 +1,33 @@
 <script lang="ts">
 	import { SubmitButton, createForm, Form } from '@/forms';
+	import { Field, Control, Label, Description, FieldErrors } from 'formsnap';
 	import { z } from 'zod';
 
 	const schema = z.object({
-		name: z.string().url(),
-		surname: z.string().emoji()
+		email: z.string().email(),
+		emoji: z.string().emoji()
 	});
 
-	const superform = createForm({ schema });
-	const { form, allErrors } = superform;
+	const form = createForm({ schema });
+	const { form: formData, allErrors } = form;
 </script>
 
-<Form form={superform}>
-	<label for="role">Role</label>
-	<input type="text" name="role" bind:value={$form.name} />
+<Form {form}>
+	<Field {form} name="email">
+		<Control let:attrs>
+			<Label>Email</Label>
+			<input {...attrs} type="email" bind:value={$formData.email} />
+		</Control>
+		<FieldErrors />
+	</Field>
 
-	<label for="organization">Organization</label>
-	<input type="text" name="organization" bind:value={$form.surname} />
+	<Field {form} name="emoji">
+		<Control let:attrs>
+			<Label>Email</Label>
+			<input {...attrs} type="text" bind:value={$formData.emoji} />
+		</Control>
+		<FieldErrors />
+	</Field>
 
 	<SubmitButton>submit</SubmitButton>
 </Form>
