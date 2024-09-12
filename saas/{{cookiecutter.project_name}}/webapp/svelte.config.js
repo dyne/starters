@@ -10,7 +10,8 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$paraglide: './src/paraglide'
+			$paraglide: './src/paraglide',
+			'@': './src/modules'
 		},
 		version: {
 			name: process.env.npm_package_version

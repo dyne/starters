@@ -1,4 +1,29 @@
 <script lang="ts">
+	import { SubmitButton, createForm, Form } from '@/forms';
+	import { z } from 'zod';
+
+	const schema = z.object({
+		name: z.string().url(),
+		surname: z.string().emoji()
+	});
+
+	const superform = createForm({ schema });
+	const { form, allErrors } = superform;
+</script>
+
+<Form form={superform}>
+	<label for="role">Role</label>
+	<input type="text" name="role" bind:value={$form.name} />
+
+	<label for="organization">Organization</label>
+	<input type="text" name="organization" bind:value={$form.surname} />
+
+	<SubmitButton>submit</SubmitButton>
+</Form>
+
+<pre>{JSON.stringify($allErrors, null, 4)}</pre>
+
+<!-- <script lang="ts">
 	import { Form, Input, createForm } from '$lib/forms';
 	import Checkbox from '$lib/forms/fields/checkbox.svelte';
 	import FieldController from '$lib/forms/fields/fieldController.svelte';
@@ -57,4 +82,4 @@
 	<FileInput {superform} field="file" />
 </Form>
 
-<pre>{JSON.stringify($form)}</pre>
+<pre>{JSON.stringify($form)}</pre> -->
