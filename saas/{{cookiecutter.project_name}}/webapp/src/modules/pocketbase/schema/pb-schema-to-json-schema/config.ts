@@ -2,7 +2,7 @@ import { FieldType as FT, type CollectionConfig } from '@/pocketbase/schema/type
 import { Schema as S } from '@effect/schema';
 import { FileSchema, UrlSchema } from '@/utils/schema';
 import type { ConverterConfig } from './types';
-import pocketbaseConfig from '../export-pb-schema/pb-schema.generated.json'; // TODO - Pass from config
+import pocketbaseConfig from '@/pocketbase/schema/export-pb-schema/pb-schema.generated.json'; // TODO - Pass from config
 
 //
 

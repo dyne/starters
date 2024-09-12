@@ -4,21 +4,19 @@ import 'dotenv/config';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-// Config
+// -- Instructions -- //
 
 const OUTPUT_FILE_PATH = getCurrentWorkingDirectory() + '/pb-schema.generated.json';
-
-// Instructions
 
 const pb = initPocketbase();
 await pocketbaseAdminLogin();
 
-const schema = await getSchema();
+const schema = await getDatabaseSchema();
 writeFile(OUTPUT_FILE_PATH, formatSchema(schema));
 
 console.log(`📦 Created pocketbase definitions at ${OUTPUT_FILE_PATH}`);
 
-// Functions
+// -- Functions -- //
 
 function initPocketbase() {
 	const { PUBLIC_POCKETBASE_URL } = process.env;
@@ -30,7 +28,7 @@ async function pocketbaseAdminLogin() {
 	await pb.admins.authWithPassword(PB_ADMIN_USER, PB_ADMIN_PASS);
 }
 
-function getSchema() {
+function getDatabaseSchema() {
 	return pb.collections.getFullList();
 }
 

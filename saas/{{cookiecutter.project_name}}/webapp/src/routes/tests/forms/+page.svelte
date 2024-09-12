@@ -1,4 +1,26 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
+
+	export let data;
+
+	// Client API:
+	const { form } = superForm(data.form);
+</script>
+
+<form method="POST">
+	<label for="role">Role</label>
+	<input type="text" name="role" bind:value={$form.role} />
+
+	<label for="organization">Organization</label>
+	<input type="text" name="organization" bind:value={$form.organization} />
+
+	<label for="user">User</label>
+	<input type="text" name="user" bind:value={$form.user} />
+
+	<div><button>Submit</button></div>
+</form>
+
+<!-- <script lang="ts">
 	import { Form, Input, createForm } from '$lib/forms';
 	import Checkbox from '$lib/forms/fields/checkbox.svelte';
 	import FieldController from '$lib/forms/fields/fieldController.svelte';
@@ -57,4 +79,4 @@
 	<FileInput {superform} field="file" />
 </Form>
 
-<pre>{JSON.stringify($form)}</pre>
+<pre>{JSON.stringify($form)}</pre> -->

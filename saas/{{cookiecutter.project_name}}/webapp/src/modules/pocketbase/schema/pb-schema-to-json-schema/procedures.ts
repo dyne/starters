@@ -12,7 +12,12 @@ import { config } from './config';
 export function convertDbConfigToSchemas() {
 	return pipe(
 		config.pocketbaseConfig,
-		A.map((collectionConfig) => convertFieldConfigsToObjectSchema(collectionConfig.schema)),
+		A.map((collectionConfig) =>
+			pipe(
+				convertFieldConfigsToObjectSchema(collectionConfig.schema),
+				Effect.map((schema) => Tuple.make(collectionConfig.name, schema))
+			)
+		),
 		Effect.all
 	);
 }
@@ -60,9 +65,9 @@ export function convertFieldConfigToSchema(fieldConfig: FieldConfig) {
 		),
 		// -- required
 		Effect.flatMap((schema) =>
-			Effect.if(isRequiredField(fieldConfig), {
-				onFalse: () => Effect.succeed(schema),
-				onTrue: () => Effect.succeed(S.optional(schema))
+			Effect.if(fieldConfig.required, {
+				onTrue: () => Effect.succeed(schema),
+				onFalse: () => Effect.succeed(S.optional(schema))
 			})
 		)
 	);
