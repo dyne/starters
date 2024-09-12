@@ -1,24 +1,27 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
+	import { SubmitButton, createForm, Form } from '@/forms';
+	import { z } from 'zod';
 
-	export let data;
+	const schema = z.object({
+		name: z.string().url(),
+		surname: z.string().emoji()
+	});
 
-	// Client API:
-	const { form } = superForm(data.form);
+	const superform = createForm({ schema });
+	const { form, allErrors } = superform;
 </script>
 
-<form method="POST">
+<Form form={superform}>
 	<label for="role">Role</label>
-	<input type="text" name="role" bind:value={$form.role} />
+	<input type="text" name="role" bind:value={$form.name} />
 
 	<label for="organization">Organization</label>
-	<input type="text" name="organization" bind:value={$form.organization} />
+	<input type="text" name="organization" bind:value={$form.surname} />
 
-	<label for="user">User</label>
-	<input type="text" name="user" bind:value={$form.user} />
+	<SubmitButton>submit</SubmitButton>
+</Form>
 
-	<div><button>Submit</button></div>
-</form>
+<pre>{JSON.stringify($allErrors, null, 4)}</pre>
 
 <!-- <script lang="ts">
 	import { Form, Input, createForm } from '$lib/forms';

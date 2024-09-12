@@ -84,6 +84,7 @@
 		"flowbite-svelte-icons": "^1.6.1",
 		"json-schema-to-zod": "^2.4.1",
 		"lodash": "^4.17.21",
+		"nanoid": "^5.0.7",
 		"pocketbase": "^0.21.3",
 		"svelte-boring-avatars": "^1.2.6",
 		"svelte-heros": "^6.0.3",
