@@ -12,6 +12,7 @@
 !/.golangci.yml
 !/.env.sample
 !/.cruft.json
+!/.goreleaser.yaml
 
 !.github/workflows/*.yml
 
