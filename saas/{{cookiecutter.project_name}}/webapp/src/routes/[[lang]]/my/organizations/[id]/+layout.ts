@@ -5,7 +5,9 @@ export const load = async ({ params }) => {
 	const organizationId = params.id;
 	const organization = await pb
 		.collection(Collections.Organizations)
-		.getOne<OrganizationsResponse>(organizationId);
+		.getOne<OrganizationsResponse>(organizationId, { requestKey: null });
+
+	console.log(organization);
 
 	return { organization };
 };

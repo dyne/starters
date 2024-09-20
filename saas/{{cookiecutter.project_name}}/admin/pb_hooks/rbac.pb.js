@@ -15,7 +15,7 @@ onRecordAfterCreateRequest((e) => {
     const userId = utils.getUserFromContext(e.httpContext).id;
     const organizationId = e.record.id;
 
-    const ownerRole = utils.getOwnerRole();
+    const ownerRole = utils.getRoleByName("owner");
     const ownerRoleId = ownerRole.id;
 
     const collection = $app.dao().findCollectionByNameOrId("orgAuthorizations");
@@ -35,7 +35,7 @@ onRecordBeforeDeleteRequest((e) => {
 
     const organizationId = e.record.get("organization");
     const roleId = e.record.get("role");
-    const ownerRoleId = utils.getOwnerRole().id;
+    const ownerRoleId = utils.getRoleByName("owner").id;
 
     if (roleId !== ownerRoleId) return;
 

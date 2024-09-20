@@ -15,23 +15,23 @@
 
 <A href="/my/organizations" class="mb-4">← My organizations</A>
 
-<div class="flex justify-between items-center">
+<div class="flex items-center justify-between">
 	<Heading tag="h3"><A href={href()}>{organization.name}</A></Heading>
-	<ProtectedOrgUI orgId={organization.id} roles={[OWNER, ADMIN]}>
-		<div class="flex justify-end items-center space-x-4">
-			<P color="text-gray-600" size="sm">Settings</P>
-			<ButtonGroup>
-				<ProtectedOrgUI orgId={organization.id} roles={[OWNER]}>
-					<Button href={href('/general')}>General</Button>
-				</ProtectedOrgUI>
-				<Button href={href('/members')}>Members</Button>
-			</ButtonGroup>
-		</div>
-	</ProtectedOrgUI>
+	<!-- <ProtectedOrgUI orgId={organization.id} roles={[OWNER, ADMIN]}> -->
+	<div class="flex items-center justify-end space-x-4">
+		<P color="text-gray-600" size="sm">Settings</P>
+		<ButtonGroup>
+			<ProtectedOrgUI orgId={organization.id} roles={[OWNER]}>
+				<Button href={href('/general')}>General</Button>
+			</ProtectedOrgUI>
+			<Button href={href('/members')}>Members</Button>
+		</ButtonGroup>
+	</div>
+	<!-- </ProtectedOrgUI> -->
 </div>
 
 <Hr />
 
-<ProtectedOrgLayout orgId={organization.id}>
-	<slot />
-</ProtectedOrgLayout>
+<!-- <ProtectedOrgLayout orgId={organization.id}> -->
+<slot />
+<!-- </ProtectedOrgLayout> -->
