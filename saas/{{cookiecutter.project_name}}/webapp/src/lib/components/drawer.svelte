@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
 	import { Drawer, Heading } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
@@ -11,6 +17,7 @@
 	export let closeOnClickOutside = true;
 	export let hideTopbar = false;
 	export let title: string | undefined = undefined;
+	export let darkMode = false;
 
 	$: transitionDirection = placement == 'right' ? 1 : -1;
 	$: transitionParams = {
@@ -28,11 +35,11 @@
 		{transitionParams}
 		activateClickOutside={closeOnClickOutside}
 		{placement}
-		class="flex flex-col !p-0"
+		class={`${darkMode ? 'dark' : ''} flex flex-col !p-0`}
 		{width}
 	>
 		{#if !hideTopbar}
-			<div class="flex justify-between items-center p-2 pl-4 border-b">
+			<div class="flex items-center justify-between border-b p-2 pl-4">
 				<Heading tag="h6">
 					{#if title}
 						{title}

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { pb } from '$lib/pocketbase';
 import {
 	Collections,
@@ -18,11 +22,12 @@ export function getPublicKeysFromKeypair(keypair: Keypair): PublicKeys {
 	return publicKeys;
 }
 
-export async function getUserPublicKeys() {
+export async function getUserPublicKeys(userId: string | undefined = undefined) {
+	const id = userId ?? pb.authStore.model?.id ?? '';
 	try {
 		return await pb
 			.collection(Collections.UsersPublicKeys)
-			.getFirstListItem<UsersPublicKeysResponse>(`owner.id = '${pb.authStore.model?.id}'`);
+			.getFirstListItem<UsersPublicKeysResponse>(`owner.id = '${id}'`);
 	} catch (e) {
 		return undefined;
 	}

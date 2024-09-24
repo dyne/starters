@@ -1,24 +1,31 @@
-import { browser } from '$app/environment';
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { verifyUser } from '$lib/auth/verifyUser';
 import { loadFeatureFlags } from '$lib/features';
-import { getUserPublicKeys } from '$lib/keypairoom/utils.js';
-import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '$lib/keypairoom/keypair';
-import { missingKeyringParam, welcomeSearchParamKey } from '$lib/utils/constants.js';
 import { error } from '@sveltejs/kit';
+
+import { browser } from '$app/environment';
 import { redirect } from '$lib/i18n';
+import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '$lib/keypairoom/keypair';
+import { getUserPublicKeys } from '$lib/keypairoom/utils';
+import { pb } from '$lib/pocketbase';
+import {
+	Collections,
+	type OrgAuthorizationsResponse,
+	type OrgRolesResponse,
+	type OrganizationsResponse
+} from '$lib/pocketbase/types';
+import { missingKeyringParam, welcomeSearchParamKey } from '$lib/utils/constants';
 
-//
+export const load = async ({ url, fetch }) => {
+	const featureFlags = await loadFeatureFlags();
 
-export const load = async ({ url }) => {
-	const features = await loadFeatureFlags();
+	if (!featureFlags.AUTH) error(404);
+	if (!(await verifyUser(fetch))) redirect('/login', url);
 
-	if (!features.AUTH) error(404);
-	else {
-		const isUserLogged = await verifyUser();
-		if (!isUserLogged) redirect('/login', url);
-	}
-
-	if (features.KEYPAIROOM) {
+	if (featureFlags.KEYPAIROOM) {
 		const publicKeys = await getUserPublicKeys();
 		if (!publicKeys) {
 			redirect(`/keypairoom?${welcomeSearchParamKey}`, url);
@@ -27,7 +34,6 @@ export const load = async ({ url }) => {
 
 		if (browser) {
 			const keyring = getKeyringFromLocalStorage();
-
 			if (!keyring) {
 				redirect(`/keypairoom/regenerate?${missingKeyringParam}`, url);
 				return;
@@ -39,5 +45,25 @@ export const load = async ({ url }) => {
 				redirect(`/keypairoom/regenerate?${missingKeyringParam}`, url);
 			}
 		}
+	}
+
+	if (featureFlags.ORGANIZATIONS) {
+		type Authorizations = Required<
+			OrgAuthorizationsResponse<{
+				organization: OrganizationsResponse;
+				role: OrgRolesResponse;
+			}>
+		>;
+
+		const authorizations = await pb
+			.collection(Collections.OrgAuthorizations)
+			.getFullList<Authorizations>({
+				filter: `user = "${pb.authStore.model!.id}"`,
+				expand: 'organization,role',
+				fetch,
+				requestKey: null
+			});
+
+		return { authorizations };
 	}
 };

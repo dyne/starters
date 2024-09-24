@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
@@ -54,35 +60,46 @@
 </script>
 
 <form class="flex gap-2">
-	<ButtonGroup class="w-full z-20">
-		<Button
-			color="none"
-			class="flex-shrink-0 text-gray-900 bg-gray-100 border border-gray-300 dark:border-gray-700 dark:text-white hover:bg-gray-200 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-		>
-			<ChevronDown class="w-4 h-4 mr-2" />
+	{#if searchableFields.length !== 1}
+		<ButtonGroup class="z-20 w-full">
+			<Button
+				color="none"
+				class="flex-shrink-0 border border-gray-300 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+			>
+				<ChevronDown class="mr-2 h-4 w-4" />
 
-			{selected.includes(allFieldsCaption) ? allFieldsCaption : filtersActiveCaption}
-		</Button>
-		<Dropdown class="p-3 space-y-1">
-			{#each fields as field}
-				<li class="!w-fit font-semibold px-2">
-					<Checkbox
-						checked={selected.includes(field.value)}
-						on:change={() => {
-							if (selected.includes(field.value)) {
-								console.log('deselected', selected, field);
-								selected = selected.filter((item) => item !== field.value);
-							} else {
-								console.log('selected', selected, field);
-								selected = selected.concat(field.value);
-							}
-						}}
-					>
-						{field.name}
-					</Checkbox>
-				</li>
-			{/each}
-		</Dropdown>
+				{selected.includes(allFieldsCaption) ? allFieldsCaption : filtersActiveCaption}
+			</Button>
+			<Dropdown class="space-y-1 p-3">
+				{#each fields as field}
+					<li class="!w-fit px-2 font-semibold">
+						<Checkbox
+							checked={selected.includes(field.value)}
+							on:change={() => {
+								if (selected.includes(field.value)) {
+									console.log('deselected', selected, field);
+									selected = selected.filter((item) => item !== field.value);
+								} else {
+									console.log('selected', selected, field);
+									selected = selected.concat(field.value);
+								}
+							}}
+						>
+							{field.name}
+						</Checkbox>
+					</li>
+				{/each}
+			</Dropdown>
+			<Search
+				size="lg"
+				bind:value={queryString}
+				on:input={() => {
+					handleSearch();
+				}}
+				{placeholder}
+			/>
+		</ButtonGroup>
+	{:else}
 		<Search
 			size="lg"
 			bind:value={queryString}
@@ -91,5 +108,5 @@
 			}}
 			{placeholder}
 		/>
-	</ButtonGroup>
+	{/if}
 </form>

@@ -1,7 +1,18 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
+	import PortalWrapper from '$lib/components/portalWrapper.svelte';
+
 	import type { PBResponse } from '$lib/utils/types';
+
 	import { createTypeProp } from '$lib/utils/typeProp';
+
 	import { Collections, type AuthorizationsResponse } from '$lib/pocketbase/types';
+
 	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';
 	import { currentUser, pb } from '$lib/pocketbase';
@@ -76,7 +87,7 @@
 {#await authorizationRequest}
 	<Spinner />
 {:then response}
-	<div class="fixed z-50">
+	<PortalWrapper>
 		<Modal bind:open size="md" title="Share signature">
 			<div class="relative w-full">
 				{#if !removeAccess}
@@ -125,5 +136,5 @@
 				{/if}
 			</div>
 		</Modal>
-	</div>
+	</PortalWrapper>
 {/await}

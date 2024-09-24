@@ -17,7 +17,7 @@
 		<Heading tag="h3" class="text-primary-600">{status} {title}</Heading>
 		<Heading tag="h2">{message}</Heading>
 		<div class="w-full pt-8">
-			<P class="text-gray-400">Here are some Helpful link:</P>
+			<P class="text-gray-400">Here are some Helpful links:</P>
 			<ul class="flex gap-2">
 				<li><A href="/">Home</A></li>
 				<li><A href="/login">Login</A></li>

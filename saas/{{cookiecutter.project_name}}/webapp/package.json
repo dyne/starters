@@ -77,7 +77,6 @@
 		"@inlang/paraglide-sveltekit": "0.8.1",
 		"@popperjs/core": "^2.11.8",
 		"classnames": "^2.5.1",
-		"effect": "^3.5.6",
 		"flowbite": "^2.4.1",
 		"flowbite-svelte": "^0.44.24",
 		"flowbite-svelte-blocks": "^1.1.3",
@@ -88,6 +87,12 @@
 		"pocketbase": "^0.21.3",
 		"svelte-boring-avatars": "^1.2.6",
 		"svelte-heros": "^6.0.3",
-		"zenroom": "^4.32.6"
+		"zenroom": "^4.32.6",
+		"clsx": "^2.1.1",
+		"codejar": "^4.2.0",
+		"dayjs": "^1.11.13",
+		"effect": "^3.8.3",
+		"highlight.js": "^11.10.0",
+		"tailwind-merge": "^2.5.2"
 	}
 }
