@@ -72,6 +72,7 @@
 		"@inlang/paraglide-sveltekit": "0.8.1",
 		"@popperjs/core": "^2.11.8",
 		"classnames": "^2.5.1",
+		"clsx": "^2.1.1",
 		"flowbite": "^2.3.0",
 		"flowbite-svelte": "^0.44.23",
 		"flowbite-svelte-blocks": "^1.1.0",

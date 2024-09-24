@@ -1,12 +1,21 @@
-import { pb } from '$lib/pocketbase';
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import { pb } from '$lib/pocketbase/index.js';
 import {
 	Collections,
+	OrgJoinRequestsStatusOptions,
+	type OrgJoinRequestsResponse,
+	type UsersResponse,
+	type OrganizationsResponse,
 	type OrgAuthorizationsResponse,
-	type OrgRolesResponse,
-	type OrganizationsResponse
-} from '$lib/pocketbase/types';
+	type OrgRolesResponse
+} from '$lib/pocketbase/types.js';
 
-export const load = async () => {
+export const load = async ({ fetch }) => {
+	const user = pb.authStore.model as UsersResponse;
+
 	type Authorizations = Required<
 		OrgAuthorizationsResponse<{
 			organization: OrganizationsResponse;
@@ -18,8 +27,19 @@ export const load = async () => {
 		.collection(Collections.OrgAuthorizations)
 		.getFullList<Authorizations>({
 			filter: `user = "${pb.authStore.model!.id}"`,
-			expand: 'organization,role'
+			expand: 'organization,role',
+			fetch,
+			requestKey: null
 		});
 
-	return { authorizations };
+	const orgJoinRequests = await pb
+		.collection(Collections.OrgJoinRequests)
+		.getFullList<OrgJoinRequestsResponse<{ organization: OrganizationsResponse }>>({
+			fetch,
+			filter: `user.id = "${user.id}" && status = "${OrgJoinRequestsStatusOptions.pending}"`,
+			expand: 'organization',
+			requestKey: null
+		});
+
+	return { orgJoinRequests, authorizations };
 };
