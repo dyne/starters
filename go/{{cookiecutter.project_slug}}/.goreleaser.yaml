@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=jcroql
+version: 2
+
+env:
+  - GO111MODULE=on
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+      - ppc64
+    goarm:
+      - "7"
+    main: ./
+
+{% raw -%}
+archives:
+  - format: binary
+    name_template: '{{ .Binary }}'
+
+checksum:
+  name_template: '{{ .ProjectName }}_v{{ .Version }}_checksums.txt'
+{%- endraw %}
+
+announce:
+  mattermost:
+    enabled: true

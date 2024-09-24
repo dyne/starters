@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
 	import { createTypeProp } from '$lib/utils/typeProp';
 
@@ -17,6 +23,7 @@
 
 	export let record: RecordGeneric;
 	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let modalTitle = 'Edit record';
 
 	//
 
@@ -48,8 +55,9 @@
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open title="Edit record" size="md">
+	<Modal bind:open title={modalTitle} size="md">
 		<div class="w-full">
+			<slot name="beforeForm"></slot>
 			<RecordForm
 				collection={record.collectionId}
 				recordId={record.id}
@@ -57,6 +65,7 @@
 				{fieldsSettings}
 				on:success={closeModal}
 			/>
+			<slot name="afterForm"></slot>
 		</div>
 	</Modal>
 </PortalWrapper>

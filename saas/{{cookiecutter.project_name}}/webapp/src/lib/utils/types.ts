@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { BaseSystemFields } from '$lib/pocketbase/types';
 import type { XCircle } from 'svelte-heros-v2';
 
@@ -10,19 +14,29 @@ export type ArrayExtract<T> = T extends (infer U)[] ? U : T;
 
 export type StringKeys<T> = Extract<keyof T, string>;
 
-/* Components */
-
-export type Link = {
-	href: string;
-	text: string;
+export type ReplaceType<T, K extends keyof T, NewType> = {
+	[P in keyof T]: P extends K ? NewType : T[P];
 };
 
+/* Components */
+
 export type IconComponent = typeof XCircle;
+
+export interface Link {
+	href: string;
+	text: string;
+}
+
+export interface LinkWithIcon extends Link {
+	icon?: IconComponent;
+}
 
 /* Pocketbase generics */
 
 export type PBRecord = Record<string, unknown>;
-export type PBResponse = PBRecord & BaseSystemFields<any>;
+
+// eslint-ignore
+export type PBResponse = PBRecord & BaseSystemFields<any>; // eslint-disable-line
 
 export type ExtractPBRecord<T> = T extends infer R & BaseSystemFields<unknown> ? R : never;
 export type ExtractPBExpand<T> = T extends unknown & BaseSystemFields<infer E> ? E : never;

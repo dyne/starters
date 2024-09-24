@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
 	import Drawer from '$lib/components/drawer.svelte';
 	import { getUIShellContext } from './UiShell.svelte';
@@ -8,6 +14,7 @@
 	export let width = 'w-40';
 	export let backdrop = true;
 	export let closeOnClickOutside = true;
+	export let darkMode = false;
 </script>
 
 <Drawer
@@ -16,6 +23,7 @@
 	{width}
 	{backdrop}
 	{closeOnClickOutside}
+	{darkMode}
 	hideTopbar
 >
 	<slot />

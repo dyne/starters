@@ -1,4 +1,12 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts" context="module">
+	import Error from '../../routes/+error.svelte';
+
 	import { getContext } from 'svelte';
 	import { normalizeError, type ClientResponseErrorData } from '$lib/errorHandling';
 	import type { AnyZodObject, ZodEffects } from 'zod';
@@ -140,7 +148,9 @@
 {#if $delayed}
 	<PortalWrapper>
 		<Modal open={$delayed} dismissable={false}>
-			<Spinner />
+			<slot name="loadingModalContent" {Spinner}>
+				<Spinner />
+			</slot>
 		</Modal>
 	</PortalWrapper>
 {/if}
