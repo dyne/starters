@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts" context="module">
 	import { getContext } from 'svelte';
 	import type { RecordService } from 'pocketbase';
@@ -69,10 +75,12 @@
 	export let createFormSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 	export let editFormSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 
+	export let hideEmptyState = false;
+
 	export let initialQueryParams: RecordFullListOptions = {};
 	export let subscribe: string[] = [];
 
-	export let perPage = 5;
+	export let perPage = 25;
 	export let disablePagination = false;
 
 	/* Data load */
@@ -190,11 +198,19 @@
 </script>
 
 {#await promise}
-	<div class="flex items-center justify-center min-h-screen justify-items-center">
+	<div class="flex min-h-screen items-center justify-center justify-items-center">
 		<GridSpinner />
 	</div>
 {:then}
 	<slot {records} {loadRecords} />
+
+	{#if records.length === 0}
+		<slot name="emptyState">
+			{#if !hideEmptyState}
+				<CollectionEmptyState />
+			{/if}
+		</slot>
+	{/if}
 {:catch}
 	<CollectionEmptyState
 		icon={ExclamationTriangle}

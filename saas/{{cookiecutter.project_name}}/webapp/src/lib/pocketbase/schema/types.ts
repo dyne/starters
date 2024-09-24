@@ -1,7 +1,12 @@
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { ValueOf } from '$lib/utils/types';
 
 export const FieldType = {
 	TEXT: 'text',
+	NUMBER: 'number',
 	EDITOR: 'editor',
 	BOOL: 'bool',
 	FILE: 'file',

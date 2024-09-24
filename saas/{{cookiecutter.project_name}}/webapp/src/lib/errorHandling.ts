@@ -1,4 +1,16 @@
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { ClientResponseError } from 'pocketbase';
+
+export function getErrorMessage(e: unknown): string {
+	if (e instanceof Error) {
+		return e.message;
+	} else {
+		return JSON.stringify(e);
+	}
+}
 
 export function normalizeError(
 	e: unknown,

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
 	import type { FieldsComponents, ViewAction } from './types';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
@@ -18,6 +24,7 @@
 		Checkbox
 	} from 'flowbite-svelte';
 	import RecordsTableHead from './collectionTableHeader.svelte';
+	import Pagination from './pagination.svelte';
 
 	//
 
@@ -28,6 +35,7 @@
 	export let fieldsComponents: FieldsComponents<RecordGeneric> = {};
 	export let fieldsLabels: Partial<Record<(typeof fields)[number], string>> = {};
 	export let hideActions: Array<ViewAction> = [];
+	export let hideEmptyState = false;
 
 	const { selectionManager } = getRecordsManagerContext();
 	const { allRecordsSelected, toggleSelectAllRecords, selectedRecords } = selectionManager;
@@ -43,7 +51,9 @@
 
 {#if records.length === 0}
 	<slot name="emptyState">
-		<EmptyState />
+		{#if !hideEmptyState}
+			<EmptyState />
+		{/if}
 	</slot>
 {:else}
 	<Table>
@@ -57,9 +67,15 @@
 				{@const label = fieldsLabels[field] ?? field}
 				<RecordsTableHead field={label} />
 			{/each}
+
 			{#if $$slots.default}
-				<TableHeadCell />
+				<slot name="header">
+					<TableHeadCell />
+				</slot>
 			{/if}
+
+			<slot name="header" />
+
 			{#if !hasNoActionColumn}
 				<TableHeadCell>Actions</TableHeadCell>
 			{/if}
@@ -78,11 +94,15 @@
 							<FieldComponent {record} {field} {component} />
 						</TableBodyCell>
 					{/each}
+
 					{#if $$slots.default}
 						<TableBodyCell>
 							<slot {record} />
 						</TableBodyCell>
 					{/if}
+
+					<slot name="row" {record} />
+
 					{#if !hasNoActionColumn}
 						<TableBodyCell>
 							<div class="flex items-center space-x-2">
@@ -103,4 +123,7 @@
 			{/each}
 		</TableBody>
 	</Table>
+	<div class="pt-6">
+		<Pagination />
+	</div>
 {/if}

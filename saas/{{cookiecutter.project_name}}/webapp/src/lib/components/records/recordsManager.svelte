@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts" context="module">
 	import type { RecordInputOptions } from './types';
 	import type { PBResponse } from '$lib/utils/types';
@@ -151,7 +157,13 @@
 	{/if}
 </div>
 
-<Drawer bind:hidden={$hideCreateDrawer} placement="right" width="w-3/6" title="Create new record">
+<Drawer
+	bind:hidden={$hideCreateDrawer}
+	closeOnClickOutside={false}
+	placement="right"
+	width="w-3/6"
+	title="Create new record"
+>
 	<div class="p-6">
 		<RecordForm
 			{collection}

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts" context="module">
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
@@ -14,9 +20,11 @@
 	export type FieldsSettings<R extends PBResponse = PBResponse> = {
 		labels: { [K in Keys<R>]?: string };
 		descriptions: { [K in Keys<R>]?: string };
+		placeholders: { [K in Keys<R>]?: string };
 		order: Array<Keys<R>>;
 		exclude: Array<Keys<R>>;
 		hide: { [K in Keys<R>]?: R[K] };
+		defaults: { [K in Keys<R>]?: R[K] };
 		relations: {
 			[K in Keys<R>]?: K extends keyof ExtractPBExpand<R>
 				? RecordsManagerOptions<ArrayExtract<ExtractPBExpand<R>[K]>>
@@ -27,6 +35,8 @@
 </script>
 
 <script lang="ts">
+	import { m } from '$lib/i18n';
+
 	import { c } from '$lib/utils/strings';
 
 	import type { FormSettings } from '$lib/forms/form.svelte';
@@ -49,6 +59,7 @@
 	import { getCollectionSchema } from '$lib/pocketbase/schema';
 	import { fieldsSchemaToZod } from '$lib/pocketbaseToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
+	import { Button } from 'flowbite-svelte';
 
 	//
 
@@ -70,12 +81,15 @@
 		labels,
 		components,
 		relations,
-		descriptions
+		placeholders,
+		descriptions,
+		defaults = {}
 	} = fieldsSettings;
 
 	export let formSettings: Partial<FormSettings> = {};
 
 	export let submitButtonText = '';
+	export let showCancelButton = false;
 
 	//
 
@@ -89,6 +103,7 @@
 		create: {
 			record: RecordGeneric;
 		};
+		cancel: {};
 	}>();
 
 	/* Schema generation */
@@ -102,12 +117,8 @@
 	let superform: SuperForm<AnyZodObject, ClientResponseErrorData>;
 
 	$: {
-		const seededData = { ...initialData };
-		if (hide) {
-			for (const [field, value] of Object.entries(hide)) {
-				seededData[field as keyof RecordGeneric] = value;
-			}
-		}
+		let seededData = { ...defaults, ...initialData }; // "defaults" must be overwritten by "initialData"
+		if (hide) seededData = { ...seededData, ...hide };
 
 		const mockedData = mockFileFieldsInitialData(collectionSchema, seededData);
 		const fileFieldsInitialData = getFileFieldsInitialData(collectionSchema, initialData);
@@ -173,6 +184,7 @@
 		{@const component = components?.[name]}
 		{@const relationInputOptions = relations?.[name] ?? {}}
 		{@const description = descriptions?.[name]}
+		{@const placeholder = placeholders?.[name]}
 		<FieldSchemaToInput
 			{description}
 			{label}
@@ -180,12 +192,16 @@
 			{hidden}
 			{component}
 			{relationInputOptions}
+			{placeholder}
 		/>
 	{/each}
 
 	<FormError />
 
-	<div class="flex justify-end">
+	<div class="flex justify-end gap-2">
+		{#if showCancelButton}
+			<Button color="alternative" on:click={() => dispatch('cancel', {})}>{m.Cancel()}</Button>
+		{/if}
 		<SubmitButton>{submitButtonText}</SubmitButton>
 	</div>
 </Form>
