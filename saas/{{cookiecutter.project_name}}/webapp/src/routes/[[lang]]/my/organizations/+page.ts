@@ -4,7 +4,6 @@
 
 import { pb } from '$lib/pocketbase/index.js';
 import {
-	Collections,
 	OrgJoinRequestsStatusOptions,
 	type OrgJoinRequestsResponse,
 	type UsersResponse,
@@ -23,17 +22,15 @@ export const load = async ({ fetch }) => {
 		}>
 	>;
 
-	const authorizations = await pb
-		.collection(Collections.OrgAuthorizations)
-		.getFullList<Authorizations>({
-			filter: `user = "${pb.authStore.model!.id}"`,
-			expand: 'organization,role',
-			fetch,
-			requestKey: null
-		});
+	const authorizations = await pb.collection('orgAuthorizations').getFullList<Authorizations>({
+		filter: `user = "${pb.authStore.model!.id}"`,
+		expand: 'organization,role',
+		fetch,
+		requestKey: null
+	});
 
 	const orgJoinRequests = await pb
-		.collection(Collections.OrgJoinRequests)
+		.collection('orgJoinRequests')
 		.getFullList<OrgJoinRequestsResponse<{ organization: OrganizationsResponse }>>({
 			fetch,
 			filter: `user.id = "${user.id}" && status = "${OrgJoinRequestsStatusOptions.pending}"`,
