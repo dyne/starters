@@ -107,6 +107,7 @@ func main() {
 				apis.ActivityLogger(app),
 			},
 		})
+
 		return nil
 	})
 

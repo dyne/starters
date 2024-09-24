@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 The Forkbomb Company
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { UserChallenges } from './userQuestions';
 import { zencode_exec } from 'zenroom';
 import keypairoomClient from '../../../zenflows-crypto/src/keypairoomClient-8-9-10-11-12.zen?raw';
@@ -36,13 +40,16 @@ export interface Keypair {
 type ZenroomProps = {
 	data?: Record<string, unknown>;
 	keys?: Record<string, unknown>;
-	conf?: Record<string, unknown>;
+	conf?: string;
 };
 
-async function zencodeExec<T>(contract: string, props: ZenroomProps): Promise<T> {
+export async function zencodeExec<T>(contract: string, props: ZenroomProps = {}): Promise<T> {
 	const { result } = await zencode_exec(
 		contract,
-		_.mapValues(props, (rec) => JSON.stringify(rec))
+		_.mapValues(props, (v) => {
+			if (typeof v == 'string') return v; // for conf
+			return JSON.stringify(v);
+		})
 	);
 	return JSON.parse(result);
 }

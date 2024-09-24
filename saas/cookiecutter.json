@@ -5,5 +5,5 @@
   "email": "luther@dyne.org",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
   "repo": "https://github.com/dyne/{{ cookiecutter.project_slug }}",
-  "_copy_without_render": ["*.svelte"]
+  "_copy_without_render": ["*.svelte", "admin/pb_hooks/rbac.pb.js"]
 }

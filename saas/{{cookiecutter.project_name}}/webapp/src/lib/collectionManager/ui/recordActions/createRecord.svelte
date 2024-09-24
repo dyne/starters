@@ -1,10 +1,18 @@
+<!--
+SPDX-FileCopyrightText: 2024 The Forkbomb Company
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 <script lang="ts">
+	import { createToggleStore } from '$lib/components/utils/toggleStore';
+
 	import { createEventDispatcher } from 'svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 	import type { PBResponse } from '$lib/utils/types';
 
-	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
+	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal } from 'flowbite-svelte';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import { Plus } from 'svelte-heros-v2';
@@ -16,7 +24,7 @@
 	recordType;
 
 	export let initialData: Partial<RecordGeneric> = {};
-	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let modalTitle = 'Create record';
 
 	//
 
@@ -28,38 +36,38 @@
 
 	let { collection, dataManager, formFieldsSettings } = getRecordsManagerContext<RecordGeneric>();
 	let { base, create } = formFieldsSettings;
-	let fieldsSettings = { ...base, ...create, ...formSettings };
+	let fieldsSettings = { ...base, ...create };
 	let { loadRecords } = dataManager;
 
 	//
 
-	let open = false;
-
-	function openModal() {
-		open = true;
-	}
+	const show = createToggleStore(false);
 </script>
 
-<slot {openModal}>
-	<Button color="alternative" on:click={openModal}>
+<slot name="button" openModal={show.on}>
+	<Button class="shrink-0" color="alternative" on:click={show.on}>
 		<Plus size="20" />
-		<span class="ml-1">Add entry</span>
+		<span class="ml-1">
+			<slot>Add entry</slot>
+		</span>
 	</Button>
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open title="Create record" size="md">
+	<Modal bind:open={$show} title={modalTitle} size="md" placement="center">
 		<div class="w-full">
-			<RecordForm
-				{collection}
-				{fieldsSettings}
-				{initialData}
-				on:success={async (e) => {
-					await loadRecords();
-					dispatch('success', { record: e.detail.record });
-					open = false;
-				}}
-			/>
+			<slot name="form" closeModal={show.off}>
+				<RecordForm
+					{collection}
+					{fieldsSettings}
+					{initialData}
+					on:success={async (e) => {
+						await loadRecords();
+						dispatch('success', { record: e.detail.record });
+						show.off();
+					}}
+				/>
+			</slot>
 		</div>
 	</Modal>
 </PortalWrapper>

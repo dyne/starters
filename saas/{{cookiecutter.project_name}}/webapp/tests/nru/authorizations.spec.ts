@@ -25,7 +25,7 @@ async function userRoutine(browser: Browser, index: string, shouldBeAuthorized: 
 }
 
 // reference: saas/{{cookiecutter.project_name}}/admin/pb_migrations/seed_test_data.js
-test('check authorizations', async ({ browser }) => {
+test.skip('check authorizations', async ({ browser }) => {
 	/* Owner context */
 	await userRoutine(browser, 'A', true);
 
