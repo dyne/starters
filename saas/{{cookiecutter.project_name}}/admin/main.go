@@ -22,7 +22,6 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/plugins/jsvm"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-	"github.com/pocketbase/pocketbase/tools/search"
 
 	"pb/webauthn"
 )
@@ -106,34 +105,6 @@ func main() {
 			},
 			Middlewares: []echo.MiddlewareFunc{
 				apis.ActivityLogger(app),
-			},
-		})
-
-		e.Router.AddRoute(echo.Route{
-			Method: http.MethodGet,
-			Path:   "/api/audit-logs",
-			Handler: func(c echo.Context) error {
-				var logFilterFields = []string{
-					"rowid", "id", "created", "updated",
-					"level", "message", "data",
-					`^data\.[\w\.\:]*\w+$`,
-				}
-
-				fieldResolver := search.NewSimpleFieldResolver(logFilterFields...)
-
-				result, err := search.NewProvider(fieldResolver).
-					Query(app.LogsDao().LogQuery()).
-					ParseAndExec(c.QueryParams().Encode(), &[]*models.Log{})
-
-				if err != nil {
-					return apis.NewBadRequestError("", err)
-				}
-
-				return c.JSON(http.StatusOK, result)
-
-			},
-			Middlewares: []echo.MiddlewareFunc{
-				// apis.ActivityLogger(app),
 			},
 		})
 
