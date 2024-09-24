@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		OrgJoinRequestsStatusOptions,
 		type OrgJoinRequestsRecord,
 		type OrganizationsResponse
-	} from '$lib/pocketbase/types.js';
+	} from '@/pocketbase/types';
 	import { m } from '$lib/i18n';
 	import { Avatar, Button, Modal, P } from 'flowbite-svelte';
 	import PageTop from '$lib/components/pageTop.svelte';

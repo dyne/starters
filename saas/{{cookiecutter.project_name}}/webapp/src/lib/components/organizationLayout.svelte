@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import OrganizationBreadcrumbs from './organizationBreadcrumbs.svelte';
 	import PageTop from './pageTop.svelte';
 	import OrganizationTabs from './organizationTabs.svelte';
-	import type { OrganizationsResponse } from '$lib/pocketbase/types';
+	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import PageContent from './pageContent.svelte';
 
 	export let org: OrganizationsResponse;

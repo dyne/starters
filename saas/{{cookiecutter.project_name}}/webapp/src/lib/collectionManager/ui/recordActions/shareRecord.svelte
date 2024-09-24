@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { createTypeProp } from '$lib/utils/typeProp';
 
-	import { Collections, type AuthorizationsResponse } from '$lib/pocketbase/types';
+	import { Collections, type AuthorizationsResponse } from '@/pocketbase/types';
 
 	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';

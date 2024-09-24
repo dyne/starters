@@ -16,7 +16,7 @@ import {
 	type OrgAuthorizationsResponse,
 	type OrgRolesResponse,
 	type OrganizationsResponse
-} from '$lib/pocketbase/types';
+} from '@/pocketbase/types';
 import { missingKeyringParam, welcomeSearchParamKey } from '$lib/utils/constants';
 
 export const load = async ({ url, fetch }) => {

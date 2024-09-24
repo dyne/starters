@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$lib/i18n';
 	import { pb } from '$lib/pocketbase';
-	import { Collections } from '$lib/pocketbase/types';
+	import { Collections } from '@/pocketbase/types';
 	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
 	import { z } from 'zod';
 	import { currentEmail } from './+layout.svelte';

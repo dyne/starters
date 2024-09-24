@@ -4,7 +4,7 @@
 
 import { Features } from './list';
 import { pb } from '$lib/pocketbase';
-import { Collections, type FeaturesResponse } from '$lib/pocketbase/types';
+import { Collections, type FeaturesResponse } from '@/pocketbase/types';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 

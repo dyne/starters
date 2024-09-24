@@ -6,7 +6,7 @@
 	} from '$lib/webauthn';
 	import { currentUser } from '$lib/pocketbase';
 
-	import { Collections, type WebauthnCredentialsResponse } from '$lib/pocketbase/types';
+	import { Collections, type WebauthnCredentialsResponse } from '@/pocketbase/types';
 	import { CollectionManager, DeleteRecord, EditRecord } from '$lib/collectionManager';
 
 	import { InformationCircle, Plus } from 'svelte-heros-v2';

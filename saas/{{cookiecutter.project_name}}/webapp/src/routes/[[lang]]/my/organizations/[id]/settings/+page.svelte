@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { Collections, type OrganizationsResponse } from '$lib/pocketbase/types';
+	import { Collections, type OrganizationsResponse } from '@/pocketbase/types';
 	import { RecordForm } from '$lib/recordForm';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { Heading } from 'flowbite-svelte';

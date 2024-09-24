@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type CrudExampleResponse,
 		type FeaturesResponse,
 		type UsersResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 	import { RecordForm } from '$lib/recordForm';
 	import { createFieldComponent } from '$lib/recordForm/fieldSchemaToInput.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';

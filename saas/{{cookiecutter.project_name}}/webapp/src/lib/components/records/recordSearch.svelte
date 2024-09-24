@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { pb } from '$lib/pocketbase';
 	import type { PBResponse } from '$lib/utils/types';
-	import type { Collections } from '$lib/pocketbase/types';
+	import type { Collections } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { createRecordLabel, searchTextFilter, excludeIdsFilter, mergeFilters } from './utils';
 	// @ts-ignore

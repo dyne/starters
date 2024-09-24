@@ -17,7 +17,7 @@ import {
 	Collections,
 	type OrgAuthorizationsResponse,
 	type OrgRolesResponse
-} from '$lib/pocketbase/types';
+} from '@/pocketbase/types';
 
 export async function verifyAuthorizations(organizationId: string, fetchFn = fetch) {
 	if (!browser) return;

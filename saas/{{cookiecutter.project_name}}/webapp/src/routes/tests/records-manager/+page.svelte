@@ -7,14 +7,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import RecordSelect from '$lib/components/records/recordSelect.svelte';
 	// import RelationsManager from '$lib/components/relationsManager.svelte';
-	import { Collections } from '$lib/pocketbase/types';
+	import { Collections } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type {
 		CrudExampleRecord,
 		CrudExampleResponse,
 		FeaturesResponse,
 		UsersResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordsManager from '$lib/components/records/recordsManager.svelte';
 	import { boolean } from 'zod';

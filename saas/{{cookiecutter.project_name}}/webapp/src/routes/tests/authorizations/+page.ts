@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { pb } from '$lib/pocketbase';
-import { Collections, type AuthorizationsExamplesRecord } from '$lib/pocketbase/types';
+import { Collections, type AuthorizationsExamplesRecord } from '@/pocketbase/types';
 
 export const load = async ({ fetch }) => {
 	try {

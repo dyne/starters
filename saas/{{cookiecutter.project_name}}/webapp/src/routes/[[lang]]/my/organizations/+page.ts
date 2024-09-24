@@ -9,7 +9,7 @@ import {
 	type OrgJoinRequestsResponse,
 	type UsersResponse,
 	type OrganizationsResponse
-} from '$lib/pocketbase/types.js';
+} from '@/pocketbase/types';
 
 export const load = async ({ fetch }) => {
 	const user = pb.authStore.model as UsersResponse;

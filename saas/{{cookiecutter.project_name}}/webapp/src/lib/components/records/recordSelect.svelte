@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { RecordFullListOptions } from 'pocketbase';
 
 	import type { RecordInputOptions } from './types';
-	import type { Collections } from '$lib/pocketbase/types';
+	import type { Collections } from '@/pocketbase/types';
 	import { onMount } from 'svelte';
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';

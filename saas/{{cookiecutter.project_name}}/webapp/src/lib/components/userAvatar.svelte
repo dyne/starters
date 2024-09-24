@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { Avatar } from 'flowbite-svelte';
 	import BoringAvatar from 'svelte-boring-avatars';
-	import type { UsersResponse } from '$lib/pocketbase/types';
+	import type { UsersResponse } from '@/pocketbase/types';
 
 	//
 

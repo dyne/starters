@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import jsonSchema from './db_schema.json';
-import { Collections } from '../types';
+import jsonSchema from '@/pocketbase/schema/export-pb-schema/pb-schema.generated.json';
+import { Collections } from '@/pocketbase/types';
 import { FieldType, type CollectionSchema, type FieldSchema } from './types';
 
 export * from './types';

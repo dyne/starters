@@ -52,7 +52,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { page } from '$app/stores';
 
 	import { pb } from '$lib/pocketbase';
-	import type { Collections } from '$lib/pocketbase/types';
+	import type { Collections } from '@/pocketbase/types';
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 

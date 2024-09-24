@@ -7,7 +7,7 @@ import {
 	Collections,
 	type UsersPublicKeysRecord,
 	type UsersPublicKeysResponse
-} from '$lib/pocketbase/types';
+} from '@/pocketbase/types';
 import _ from 'lodash';
 import type { Keypair } from './keypair';
 

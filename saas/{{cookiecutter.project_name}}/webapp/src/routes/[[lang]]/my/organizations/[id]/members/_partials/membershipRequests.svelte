@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrgAuthorizationsRecord,
 		type OrgJoinRequestsResponse,
 		type OrganizationsResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 	import { OrgRoles } from '$lib/rbac/roles.js';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';

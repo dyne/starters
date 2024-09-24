@@ -6,9 +6,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import RecordSelect from '$lib/components/records/recordSelect.svelte';
-	import { Collections } from '$lib/pocketbase/types';
+	import { Collections } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import type { CrudExampleResponse } from '$lib/pocketbase/types';
+	import type { CrudExampleResponse } from '@/pocketbase/types';
 	import RecordSearch from '$lib/components/records/recordSearch.svelte';
 	import RecordsManager from '$lib/components/records/recordsManager.svelte';
 

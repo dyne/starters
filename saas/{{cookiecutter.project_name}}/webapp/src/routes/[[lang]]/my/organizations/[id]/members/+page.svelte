@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrgAuthorizationsResponse,
 		type OrgRolesResponse,
 		type UsersResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { m } from '$lib/i18n';
 	import { OrgRoles, ProtectedOrgUI } from '$lib/rbac';

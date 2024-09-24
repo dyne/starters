@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { A, Button, Heading } from 'flowbite-svelte';
 	import { RecordForm } from '$lib/recordForm';
-	import { Collections, type OrganizationsResponse } from '$lib/pocketbase/types';
+	import { Collections, type OrganizationsResponse } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { m } from '$lib/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
