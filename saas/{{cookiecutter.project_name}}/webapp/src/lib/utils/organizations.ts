@@ -5,7 +5,7 @@
 import type { OrganizationsResponse } from '$lib/pocketbase/types';
 import type { m as messages } from '$lib/i18n';
 import type { NavigationTab } from '$lib/components/navigationTabs.svelte';
-import { Cog, Document, Fire, GlobeAlt, HandRaised, Home, Users } from 'svelte-heros-v2';
+import { Cog, Home, Users } from 'svelte-heros-v2';
 import type { SidebarItemProps } from '$lib/layout/SidebarLinks.svelte';
 import { pb } from '$lib/pocketbase';
 import type { OrgRole } from '$lib/rbac';
@@ -24,16 +24,6 @@ export function createOrganizationLinks(
 			icon: Home,
 			activeForSubpages: false
 		},
-		{
-			text: m.Issuance_flows(),
-			href: base('/credential-issuances'),
-			icon: Fire
-		},
-		{
-			text: m.Verification_flows(),
-			href: base('/verification-flows'),
-			icon: HandRaised
-		},
 
 		{
 			text: m.Members(),
@@ -41,20 +31,6 @@ export function createOrganizationLinks(
 			icon: Users
 		}
 	];
-
-	if (userRole != 'member') {
-		links.splice(3, 0, {
-			text: m.Templates(),
-			href: base('/templates'),
-			icon: Document
-		});
-
-		links.splice(4, 0, {
-			text: m.Microservices(),
-			href: base('/microservices'),
-			icon: GlobeAlt
-		});
-	}
 
 	if (userRole == 'owner') {
 		links.push({

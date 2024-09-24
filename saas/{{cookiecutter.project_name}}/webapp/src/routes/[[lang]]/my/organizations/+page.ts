@@ -18,7 +18,8 @@ export const load = async ({ fetch }) => {
 		.getFullList<OrgJoinRequestsResponse<{ organization: OrganizationsResponse }>>({
 			fetch,
 			filter: `user.id = "${user.id}" && status = "${OrgJoinRequestsStatusOptions.pending}"`,
-			expand: 'organization'
+			expand: 'organization',
+			requestKey: null
 		});
 	return { orgJoinRequests };
 };
