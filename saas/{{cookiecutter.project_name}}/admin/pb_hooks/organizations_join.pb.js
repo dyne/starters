@@ -53,7 +53,7 @@ onRecordAfterCreateRequest((e) => {
                 "orgAuthorizations",
                 `organization.id = "${organizationId}" && ( role.name = "admin" || role.name = "owner" )`
             );
-        $app.dao().expandRecords(recipients, ["user"]);
+        $app.dao().expandRecords(recipients, ["user"], undefined);
 
         /**
          * @type {mail.Address[]}
