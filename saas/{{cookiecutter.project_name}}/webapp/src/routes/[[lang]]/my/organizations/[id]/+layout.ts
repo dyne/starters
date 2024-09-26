@@ -1,18 +1,17 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import { pb } from '$lib/pocketbase';
-import { Collections, type OrganizationsResponse } from '$lib/pocketbase/types';
+import { verifyUserMembership } from '$lib/organizations';
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, fetch }) => {
 	const organizationId = params.id;
-	const organization = await pb
-		.collection(Collections.Organizations)
-		.getOne<OrganizationsResponse>(organizationId, {
-			fetch,
-			requestKey: null
-		});
+
+	const { isMember } = await verifyUserMembership(organizationId, fetch);
+	if (!isMember) error(404);
+
+	const organization = await pb.collection('organizations').getOne(organizationId, {
+		fetch,
+		requestKey: null
+	});
 
 	return { organization };
 };
