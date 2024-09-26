@@ -6,12 +6,20 @@
 
 /// <reference path="../pb_data/types.d.ts" />
 /** @typedef {import('./utils.js')} Utils */
-/** @typedef {import("../../webapp/src/lib/pocketbase/types").OrgAuthorizationsRecord} OrgAuthorization */
-/** @typedef {import("../../webapp/src/lib/pocketbase/types").OrgRolesResponse} OrgRole */
+/** @typedef {import('./audit-logs.utils.js')} AuditLogUtils */
+/** @typedef {import("../../webapp/src/lib/pocketbase/types.js").OrgAuthorizationsRecord} OrgAuthorization */
+/** @typedef {import("../../webapp/src/lib/pocketbase/types.js").OrgRolesResponse} OrgRole */
 
-//
+/**
+ * INDEX
+ * - base hooks
+ * - guard hooks (protecting orgAuthorizations from invalid CRUD operations)
+ * - audit hooks
+ */
 
-/* On Organization Create – Creating owner authorization */
+/* Base hooks */
+
+// On Organization Create – Creating owner authorization
 
 onRecordAfterCreateRequest((e) => {
     /** @type {Utils} */
@@ -35,7 +43,9 @@ onRecordAfterCreateRequest((e) => {
     $app.dao().saveRecord(record);
 }, "organizations");
 
-/* on OrgAuthorization Create - Cannot create an authorization with a level higher than or equal to your permissions */
+/* Guard hooks */
+
+// on OrgAuthorization Create - Cannot create an authorization with a level higher than or equal to your permissions
 
 onRecordBeforeCreateRequest((e) => {
     /** @type {Utils} */
@@ -67,7 +77,7 @@ onRecordBeforeCreateRequest((e) => {
     }
 }, "orgAuthorizations");
 
-/* on OrgAuthorization Update */
+// on OrgAuthorization Update
 
 onRecordBeforeUpdateRequest((e) => {
     /** @type {Utils} */
@@ -114,7 +124,7 @@ onRecordBeforeUpdateRequest((e) => {
         );
 }, "orgAuthorizations");
 
-/* on OrgAuthorization Delete - Cannot delete an authorization with a level higher than or equal to yours */
+// on OrgAuthorization Delete - Cannot delete an authorization with a level higher than or equal to yours
 
 onRecordBeforeDeleteRequest((e) => {
     /** @type {Utils} */
@@ -145,7 +155,7 @@ onRecordBeforeDeleteRequest((e) => {
         );
 }, "orgAuthorizations");
 
-/* On OrgAuthorization Delete – Cannot delete last owner role */
+// On OrgAuthorization Delete – Cannot delete last owner role
 
 onRecordBeforeDeleteRequest((e) => {
     /** @type {Utils} */
@@ -158,7 +168,7 @@ onRecordBeforeDeleteRequest((e) => {
     }
 }, "orgAuthorizations");
 
-/* On OrgAuthorization Update – Cannot edit last owner role */
+// On OrgAuthorization Update – Cannot edit last owner role
 
 onRecordBeforeUpdateRequest((e) => {
     /** @type {Utils} */
@@ -173,4 +183,107 @@ onRecordBeforeUpdateRequest((e) => {
     if (originalRecord && utils.isLastOwnerAuthorization(originalRecord)) {
         throw new BadRequestError(utils.errors.cant_delete_last_owner_role);
     }
+}, "orgAuthorizations");
+
+/* Audit hooks */
+
+onRecordAfterCreateRequest((e) => {
+    /** @type {AuditLogUtils} */
+    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
+    const { auditLogger } = auditLogUtils;
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    if (!e.record) return;
+
+    const organization = utils.getExpanded(e.record, "organization");
+    const user = utils.getExpanded(e.record, "user");
+    const role = utils.getExpanded(e.record, "role");
+
+    auditLogger(e.httpContext).info(
+        "Created organization authorization",
+        "organizationId",
+        organization?.getId(),
+        "organizationName",
+        organization?.get("name"),
+        "userId",
+        user?.getId(),
+        "userName",
+        user?.get("name"),
+        "roleId",
+        role?.getId(),
+        "roleName",
+        role?.get("name")
+    );
+}, "orgAuthorizations");
+
+onRecordAfterUpdateRequest((e) => {
+    /** @type {AuditLogUtils} */
+    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
+    const { auditLogger } = auditLogUtils;
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    if (!e.record) return;
+
+    const organization = utils.getExpanded(e.record, "organization");
+    const user = utils.getExpanded(e.record, "user");
+
+    const previousRole = utils.getExpanded(e.record.originalCopy(), "role");
+    const role = utils.getExpanded(e.record, "role");
+
+    auditLogger(e.httpContext).info(
+        "Updated organization authorization",
+        "organizationId",
+        organization?.getId(),
+        "organizationName",
+        organization?.get("name"),
+        "userId",
+        user?.getId(),
+        "userName",
+        user?.get("name"),
+        "previousRoleId",
+        previousRole?.getId(),
+        "previousRoleName",
+        previousRole?.get("name"),
+        "newRoleId",
+        role?.getId(),
+        "newRoleName",
+        role?.get("name")
+    );
+}, "orgAuthorizations");
+
+onRecordAfterDeleteRequest((e) => {
+    /** @type {AuditLogUtils} */
+    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
+    const { auditLogger } = auditLogUtils;
+
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    if (!e.record) return;
+
+    const record = e.record.originalCopy();
+
+    const organization = utils.getExpanded(record, "organization");
+    const user = utils.getExpanded(record, "user");
+    const role = utils.getExpanded(record, "role");
+
+    auditLogger(e.httpContext).info(
+        "Deleted organization authorization",
+        "organizationId",
+        organization?.getId(),
+        "organizationName",
+        organization?.get("name"),
+        "userId",
+        user?.getId(),
+        "userName",
+        user?.get("name"),
+        "roleId",
+        role?.getId(),
+        "roleName",
+        role?.get("name")
+    );
 }, "orgAuthorizations");

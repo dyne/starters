@@ -2,23 +2,47 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// @ts-check
+
 /// <reference path="../pb_data/types.d.ts" />
+/** @typedef {import('./utils.js')} Utils */
+/** @typedef {import('./audit-logs.utils.js')} AuditLogUtils */
+
+/**
+ * INDEX
+ * - Base hooks
+ * - Email hooks
+ */
+
+/* Base hooks */
 
 onRecordBeforeCreateRequest((e) => {
-    console.log("Hook - orgJoinRequests - Setting pending status");
-    e.record.set("status", "pending");
-    e.record.set("reminders", 0);
+    e.record?.set("status", "pending");
+    e.record?.set("reminders", 0);
 }, "orgJoinRequests");
 
-onRecordAfterCreateRequest((e) => {
-    try {
-        console.log("Hook - orgJoinRequests - Sending email to admins");
+/* Email hooks */
 
-        $app.dao().expandRecord(e.record, ["organization"]);
+onRecordAfterCreateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogUtils} */
+    const { auditLogger } = require(`${__hooks}/audit-logs.utils.js`);
+
+    if (!e.record) throw utils.createMissingDataError("orgJoinRequest");
+
+    try {
+        const organization = utils.getExpanded(e.record, "organization");
+        if (!organization)
+            throw utils.createMissingDataError(
+                "organization of orgJoinRequest"
+            );
+        $app.settings().meta.appUrl;
+
         const basePath = $app.isDebug()
             ? "http://localhost:5173/"
             : "https://beta.signroom.io/";
-        const organization = e.record.expandedOne("organization");
+
         const organizationId = organization.getId();
         const organizationName = organization.get("name");
         const acceptanceLink = `<a href="${basePath}my/organizations/${organizationId}/members">Manage organization pending requestes</a>`;

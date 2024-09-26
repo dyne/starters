@@ -1,11 +1,19 @@
 /// <reference path="../pb_data/types.d.ts" />
 /** @typedef {import('./utils.js')} Utils */
-/** @typedef {import('./audit-logs.utils.js')} AuditLogsUtils */
+/** @typedef {import('./audit-logs.utils.js')} AuditLogUtils */
+
+/**
+ * INDEX
+ * - Routes
+ * - Audit Hooks
+ */
+
+/* Routes */
 
 routerAdd("POST", "/organizations/verify-user-membership", (c) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
-    /** @type {AuditLogsUtils} */
+    /** @type {AuditLogUtils} */
     const { auditLogger } = require(`${__hooks}/audit-logs.utils.js`);
 
     const userId = utils.getUserFromContext(c)?.getId();
@@ -57,3 +65,19 @@ routerAdd("POST", "/organizations/verify-user-role", (c) => {
         return c.json(200, { hasRole: false });
     }
 });
+
+/* Audit hooks */
+
+onRecordAfterCreateRequest((e) => {
+    /** @type {AuditLogUtils} */
+    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
+    const { auditLogger } = auditLogUtils;
+
+    auditLogger(e.httpContext).info(
+        "Created organization",
+        "organizationId",
+        e.record?.getId(),
+        "organizationName",
+        e.record?.get("name")
+    );
+}, "organizations");
