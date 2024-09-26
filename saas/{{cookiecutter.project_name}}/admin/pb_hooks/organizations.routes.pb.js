@@ -1,10 +1,12 @@
 /// <reference path="../pb_data/types.d.ts" />
+/** @typedef {import('./utils.js')} Utils */
+/** @typedef {import('./audit-logs.utils.js')} AuditLogsUtils */
 
 routerAdd("POST", "/organizations/verify-user-membership", (c) => {
-    console.log("Route - Checking if user is member of the organization");
-
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogsUtils} */
+    const { auditLogger } = require(`${__hooks}/audit-logs.utils.js`);
 
     const userId = utils.getUserFromContext(c)?.getId();
 
@@ -20,13 +22,16 @@ routerAdd("POST", "/organizations/verify-user-membership", (c) => {
         );
         return c.json(200, { isMember: true });
     } catch {
+        auditLogger(c).info(
+            "request_from_user_not_member",
+            "organizationId",
+            organizationId
+        );
         return c.json(200, { isMember: false });
     }
 });
 
 routerAdd("POST", "/organizations/verify-user-role", (c) => {
-    console.log("Route - Checking if user has the required role");
-
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
 
