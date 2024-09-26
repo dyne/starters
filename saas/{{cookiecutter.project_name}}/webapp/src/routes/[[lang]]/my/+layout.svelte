@@ -37,8 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		EllipsisHorizontal,
 		Document
 	} from 'svelte-heros-v2';
-	import { createOrganizationSidebarLinks } from '$lib/organizations';
-	import { getUserRole } from '$lib/organizations/index.js';
+	import { createOrganizationSidebarLinks, getUserRole } from '$lib/organizations';
 	import { m } from '$lib/i18n';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';

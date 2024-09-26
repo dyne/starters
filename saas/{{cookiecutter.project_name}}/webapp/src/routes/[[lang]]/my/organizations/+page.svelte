@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { OrgRoles } from '$lib/organizations/index.js';
+	import { OrgRoles } from '$lib/organizations';
 	import { Button, A, P, Badge, Avatar } from 'flowbite-svelte';
 	import { Plus, UserPlus, Cog, PuzzlePiece, ArrowUturnLeft } from 'svelte-heros-v2';
 	import { c } from '$lib/utils/strings.js';
