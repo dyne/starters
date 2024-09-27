@@ -6,7 +6,7 @@
 
 /// <reference path="../pb_data/types.d.ts" />
 /** @typedef {import('./utils.js')} Utils */
-/** @typedef {import('./audit-logs.utils.js')} AuditLogUtils */
+/** @typedef {import('./auditLogger.js')} AuditLogger */
 /** @typedef {import("../../webapp/src/lib/pocketbase/types.js").OrgAuthorizationsRecord} OrgAuthorization */
 /** @typedef {import("../../webapp/src/lib/pocketbase/types.js").OrgRolesResponse} OrgRole */
 
@@ -188,9 +188,8 @@ onRecordBeforeUpdateRequest((e) => {
 /* Audit hooks */
 
 onRecordAfterCreateRequest((e) => {
-    /** @type {AuditLogUtils} */
-    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
-    const { auditLogger } = auditLogUtils;
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
@@ -219,9 +218,8 @@ onRecordAfterCreateRequest((e) => {
 }, "orgAuthorizations");
 
 onRecordAfterUpdateRequest((e) => {
-    /** @type {AuditLogUtils} */
-    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
-    const { auditLogger } = auditLogUtils;
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
@@ -256,9 +254,8 @@ onRecordAfterUpdateRequest((e) => {
 }, "orgAuthorizations");
 
 onRecordAfterDeleteRequest((e) => {
-    /** @type {AuditLogUtils} */
-    const auditLogUtils = require(`${__hooks}/audit-logs.utils.js`);
-    const { auditLogger } = auditLogUtils;
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);

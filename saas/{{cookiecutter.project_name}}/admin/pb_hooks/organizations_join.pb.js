@@ -6,7 +6,7 @@
 
 /// <reference path="../pb_data/types.d.ts" />
 /** @typedef {import('./utils.js')} Utils */
-/** @typedef {import('./audit-logs.utils.js')} AuditLogUtils */
+/** @typedef {import('./auditLogger.js')} AuditLogger */
 
 /**
  * INDEX
@@ -187,7 +187,16 @@ onRecordAfterUpdateRequest((e) => {
     utils.sendEmail({ to: [userAddress], ...emailContent });
 }, "orgJoinRequests");
 
-// IMPORTANT: This hook must be registered last
+/* Audit logs */
+
+onRecordAfterUpdateRequest((e) => {
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    auditLogger(e.httpContext).info("");
+});
+
+/* IMPORTANT: This hook must be registered last */
 
 onRecordAfterUpdateRequest((e) => {
     /** @type {Utils} */
