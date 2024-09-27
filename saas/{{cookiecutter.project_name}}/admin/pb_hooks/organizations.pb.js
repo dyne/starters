@@ -18,7 +18,7 @@ routerAdd("POST", "/organizations/verify-user-membership", (c) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
     /** @type {AuditLogger} */
-    const auditLogger = require(`${__hooks}/audit-logs.utils.js`);
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     const userId = utils.getUserFromContext(c)?.getId();
 
@@ -78,7 +78,7 @@ onRecordAfterCreateRequest((e) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
     /** @type {AuditLogger} */
-    const auditLogger = require(`${__hooks}/audit-logs.utils.js`);
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     // Don't create orgAuthorization if organization is created from admin panel
     if (utils.isAdminContext(e.httpContext)) return;
@@ -116,7 +116,7 @@ onRecordAfterCreateRequest((e) => {
 
 onRecordAfterCreateRequest((e) => {
     /** @type {AuditLogger} */
-    const auditLogger = require(`${__hooks}/audit-logs.utils.js`);
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
 
     auditLogger(e.httpContext).info(
         "Created organization",
