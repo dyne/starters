@@ -195,7 +195,7 @@ function getUserEmailAddressData(user) {
 }
 
 /**
- * @param {{from?: Address, to: Address[], subject: string, html: string}} data
+ * @param {{from?: Address, to: Address[] | Address, subject: string, html: string}} data
  * @return {Error | undefined}
  */
 function sendEmail(data) {
@@ -208,7 +208,7 @@ function sendEmail(data) {
                 name: data.from?.name ?? $app.settings().meta.senderName,
             },
             // @ts-expect-error Missing string() object
-            to: data.to,
+            to: Array.isArray(data.to) ? data.to : [data.to],
             subject: data.subject,
             html: data.html,
         });
