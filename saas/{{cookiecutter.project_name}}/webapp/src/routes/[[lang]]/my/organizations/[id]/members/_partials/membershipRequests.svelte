@@ -19,7 +19,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { OrgRoles } from '$lib/organizations';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
-	import { Button } from 'flowbite-svelte';
+	import { Button, Modal } from 'flowbite-svelte';
 	import { UserPlus, NoSymbol, UserGroup } from 'svelte-heros-v2';
 	import DeleteRecord from '$lib/collectionManager/ui/recordActions/deleteRecord.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -28,6 +28,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import Icon from '$lib/components/icon.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import SectionTitle from '$lib/components/sectionTitle.svelte';
+	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 
 	//
 
@@ -48,19 +50,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		} satisfies Partial<OrgJoinRequestsRecord>);
 	}
 
-	async function acceptRequest(request: OrgJoinRequestsResponse) {
-		await updateRequestStatus(request, accepted);
+	//
 
-		const memberRole = await pb
-			.collection('orgRoles')
-			.getFirstListItem(`name = "${OrgRoles.MEMBER}"`);
-
-		await pb.collection('orgAuthorizations').create({
-			organization: organization.id,
-			user: request.user,
-			role: memberRole.id
-		} satisfies OrgAuthorizationsRecord);
-	}
+	const isDeclineModalOpen = createToggleStore(false);
 </script>
 
 <CollectionManager
@@ -94,22 +86,37 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						<Button
 							outline
 							on:click={() => {
-								acceptRequest(request);
+								updateRequestStatus(request, accepted);
 							}}
 						>
 							{m.Accept()}
 							<Icon src={UserPlus} ml></Icon>
 						</Button>
 
-						<DeleteRecord record={request} let:openModal>
-							<Button outline on:click={openModal}>
-								{m.Decline()}
-								<Icon src={NoSymbol} ml></Icon>
-							</Button>
-						</DeleteRecord>
+						<Button outline on:click={isDeclineModalOpen.on}>
+							{m.Decline()}
+							<Icon src={NoSymbol} ml></Icon>
+						</Button>
 					</div>
 				</svelte:fragment>
 			</PlainCard>
+
+			<PortalWrapper>
+				<Modal bind:open={$isDeclineModalOpen} title={m.Warning()} size="xs">
+					<p>{m.decline_membership_request_warning()}</p>
+					<div class="flex items-center justify-center gap-2">
+						<Button color="alternative" on:click={isDeclineModalOpen.off}>
+							{m.Cancel()}
+						</Button>
+						<Button
+							color="red"
+							on:click={() => updateRequestStatus(request, rejected).then(isDeclineModalOpen.off)}
+						>
+							{m.decline_membership_request()}
+						</Button>
+					</div>
+				</Modal>
+			</PortalWrapper>
 		{/if}
 	{/each}
 </CollectionManager>

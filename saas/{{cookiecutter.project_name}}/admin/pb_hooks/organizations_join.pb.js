@@ -21,6 +21,8 @@ onRecordBeforeCreateRequest((e) => {
     e.record?.set("reminders", 0);
 }, "orgJoinRequests");
 
+// Cannot create join request if user is already member
+
 onRecordBeforeCreateRequest((e) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
@@ -39,9 +41,37 @@ onRecordBeforeCreateRequest((e) => {
         throw new BadRequestError(utils.errors.user_is_already_member);
 }, "orgJoinRequests");
 
-// onRecordAfterUpdateRequest(e => {
-//     const organizationId = e.record?.get("organization")
-// }, "orgAuthorizations")
+// Create orgAuthorization after accepting membership request
+
+onRecordAfterUpdateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    if (!e.record) throw utils.createMissingDataError("orgJoinRequest");
+
+    const status = e.record.get("status");
+    if (status != "accepted") return;
+
+    const orgAuthorizationsCollection = $app
+        .dao()
+        .findCollectionByNameOrId("orgAuthorizations");
+    if (!orgAuthorizationsCollection)
+        throw utils.createMissingDataError("orgAuthorizationsCollection");
+
+    const organizationId = e.record.get("organization");
+    const userId = e.record.get("user");
+
+    const memberRole = utils.getRoleByName("member");
+    const roleId = memberRole?.getId();
+
+    const record = new Record(orgAuthorizationsCollection, {
+        user: userId,
+        organization: organizationId,
+        role: roleId,
+    });
+
+    $app.dao().saveRecord(record);
+}, "orgJoinRequests");
 
 /* Email hooks - Notifications to Admins */
 
@@ -155,6 +185,21 @@ onRecordAfterUpdateRequest((e) => {
 
     const emailContent = status == "accepted" ? successEmail : rejectEmail;
     utils.sendEmail({ to: [userAddress], ...emailContent });
+}, "orgJoinRequests");
+
+// IMPORTANT: This hook must be registered last
+
+onRecordAfterUpdateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    if (!e.record) throw utils.createMissingDataError("orgJoinRequest");
+
+    /** @type {string} */
+    const status = e.record.get("status");
+
+    const isRelevantChange = status == "accepted" || status == "rejected";
+    if (!isRelevantChange) return;
 
     $app.dao().deleteRecord(e.record);
 }, "orgJoinRequests");
