@@ -24,6 +24,4 @@ function auditLogger(c) {
     return $app.logger().with("audit", true, ...args);
 }
 
-module.exports = {
-    auditLogger,
-};
+module.exports = auditLogger;
