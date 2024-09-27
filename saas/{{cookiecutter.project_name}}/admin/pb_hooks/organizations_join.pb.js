@@ -189,12 +189,33 @@ onRecordAfterUpdateRequest((e) => {
 
 /* Audit logs */
 
+onRecordAfterCreateRequest((e) => {
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    auditLogger(e.httpContext).info(
+        "Created membership request",
+        "organizationId",
+        e.record?.get("organization"),
+        "requestId",
+        e.record?.getId()
+    );
+}, "orgJoinRequests");
+
 onRecordAfterUpdateRequest((e) => {
     /** @type {AuditLogger} */
     const auditLogger = require(`${__hooks}/auditLogger.js`);
 
-    auditLogger(e.httpContext).info("");
-});
+    auditLogger(e.httpContext).info(
+        "Updated membership request",
+        "organizationId",
+        e.record?.get("organization"),
+        "status",
+        e.record?.get("status"),
+        "requestId",
+        e.record?.getId()
+    );
+}, "orgJoinRequests");
 
 /* IMPORTANT: This hook must be registered last */
 
