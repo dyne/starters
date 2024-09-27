@@ -7,8 +7,9 @@
 /**
  * INDEX
  * - Routes
- * - Audit Hooks
- * - Email
+ * - Business logic hooks
+ * - Audit hooks
+ * - Email hooks
  */
 
 /* Routes */
@@ -69,7 +70,49 @@ routerAdd("POST", "/organizations/verify-user-role", (c) => {
     }
 });
 
+/* Business logic hooks */
+
+// On Organization Create – Creating owner authorization
+
+onRecordAfterCreateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/audit-logs.utils.js`);
+
+    // Don't create orgAuthorization if organization is created from admin panel
+    if (utils.isAdminContext(e.httpContext)) return;
+
+    const userId = utils.getUserFromContext(e.httpContext)?.getId();
+    const organizationId = e.record?.getId();
+
+    const ownerRole = utils.getRoleByName("owner");
+    const ownerRoleId = ownerRole?.getId();
+
+    const collection = $app.dao().findCollectionByNameOrId("orgAuthorizations");
+    const record = new Record(collection, {
+        organization: organizationId,
+        role: ownerRoleId,
+        user: userId,
+    });
+    $app.dao().saveRecord(record);
+
+    //
+
+    auditLogger(e.httpContext).info(
+        "Created owner role for organization",
+        "organizationId",
+        e.record?.getId(),
+        "organizationName",
+        e.record?.get("name"),
+        "userId",
+        userId
+    );
+}, "organizations");
+
 /* Audit hooks */
+
+//  Log organization creation
 
 onRecordAfterCreateRequest((e) => {
     /** @type {AuditLogger} */
@@ -83,6 +126,10 @@ onRecordAfterCreateRequest((e) => {
         e.record?.get("name")
     );
 }, "organizations");
+
+/* Email hooks */
+
+// Send email after organization creation
 
 onRecordAfterCreateRequest((e) => {
     /** @type {Utils} */
