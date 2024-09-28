@@ -8,6 +8,6 @@
   "_copy_without_render": [
     "*.svelte",
     "admin/pb_hooks/rbac.pb.js",
-    "admin/pb_hooks/organizations.routes.pb.js"
+    "admin/pb_hooks/organizations.pb.js"
   ]
 }
