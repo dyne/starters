@@ -31,6 +31,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import MembershipRequests from './_partials/membershipRequests.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
+	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
 
 	//
 
@@ -72,14 +74,27 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		>
 			<SectionTitle tag="h5" title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
-					<CreateRecord {recordType}>
-						<svelte:fragment slot="button" let:openModal>
-							<Button on:click={openModal} class="shrink-0">
+					<div class="flex items-center gap-2">
+						<ModalWrapper title={m.invite_members()} let:openModal>
+							<Button color="alternative" on:click={openModal}>
 								<Plus size="20" class="mr-2" />
-								{m.Add_new_member()}
+								{m.invite_members()}
 							</Button>
-						</svelte:fragment>
-					</CreateRecord>
+
+							<svelte:fragment slot="modal" let:closeModal>
+								<InviteMembersForm onSuccess={closeModal} />
+							</svelte:fragment>
+						</ModalWrapper>
+
+						<CreateRecord {recordType}>
+							<svelte:fragment slot="button" let:openModal>
+								<Button on:click={openModal} class="shrink-0">
+									<Plus size="20" class="mr-2" />
+									{m.Add_new_member()}
+								</Button>
+							</svelte:fragment>
+						</CreateRecord>
+					</div>
 				</ProtectedOrgUI>
 			</SectionTitle>
 

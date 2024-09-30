@@ -450,5 +450,12 @@
 	"cant_delete_role_higher_than_or_equal_to_yours": "Cannot delete a role higher than or equal to yours",
 	"start": "Start",
 	"decline_membership_request": "decline_membership_request",
-	"decline_membership_request_warning": "decline_membership_request_warning"
+	"decline_membership_request_warning": "decline_membership_request_warning",
+	"invite_members": "invite_members",
+	"Upload_a_file_containing_emails": "Upload a file containing emails",
+	"Paste_email_addresses_here": "Paste email addresses here",
+	"or": "or",
+	"accepted_files": "accepted_files",
+	"Next": "Next",
+	"Emails_found_You_can_proceed_to_the_next_step": "Emails found! You can proceed to the next step"
 }
