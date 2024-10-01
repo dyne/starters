@@ -468,5 +468,8 @@
 	"Pending_invites": "Pending invites",
 	"pending_invites_description": "pending_invites_description",
 	"no_pending_invites": "no_pending_invites",
-	"failed_email_send": "failed_email_send"
+	"failed_email_send": "failed_email_send",
+	"organization_invites": "organization_invites",
+	"accept_invite": "accept_invite",
+	"decline_invite": "decline_invite"
 }

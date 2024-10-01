@@ -8,6 +8,52 @@
 /** @typedef {import('./utils.js')} Utils */
 /** @typedef {import('./auditLogger.js')} AuditLogger */
 
+routerAdd("POST", "/organizations/invites/accept", (c) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    /* -- Guards -- */
+
+    /** @type {{inviteId: string | undefined}} */
+    // @ts-ignore
+    const data = $apis.requestInfo(c).data;
+    const { inviteId } = data;
+    if (!inviteId) throw utils.createMissingDataError("inviteId");
+
+    const userId = utils.getUserFromContext(c)?.getId();
+    if (!userId) throw utils.createMissingDataError("userId");
+
+    const invite = utils.findFirstRecordByFilter(
+        "org_invites",
+        `id = "${inviteId}"`
+    );
+    if (!invite) throw utils.createMissingDataError("organization invite");
+
+    const isOwner = invite.get("user") == userId;
+    if (!isOwner) throw new ForbiddenError();
+
+    /* -- Logic -- */
+
+    const orgAuthorizationsCollection = $app
+        .dao()
+        .findCollectionByNameOrId("orgAuthorizations");
+    const record = new Record(orgAuthorizationsCollection);
+    record.set("user", userId);
+    record.set("role", utils.getRoleByName("member")?.getId());
+    const organizationId = invite.get("organization");
+    record.set("organization", organizationId);
+
+    $app.dao().deleteRecord(invite);
+
+    auditLogger(c).info(
+        "user_accepted_invite",
+        "organizationId",
+        organizationId
+    );
+});
+
 routerAdd("POST", "/organizations/invite", (c) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);

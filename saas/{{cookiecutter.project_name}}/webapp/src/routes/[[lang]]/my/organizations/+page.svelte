@@ -7,9 +7,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { OrgRoles } from '$lib/organizations';
 	import { Button, A, P, Badge, Avatar } from 'flowbite-svelte';
-	import { Plus, UserPlus, Cog, PuzzlePiece, ArrowUturnLeft } from 'svelte-heros-v2';
+	import { Plus, UserPlus, Cog, PuzzlePiece, ArrowUturnLeft, XMark, Check } from 'svelte-heros-v2';
 	import { c } from '$lib/utils/strings.js';
-	import { pb } from '$lib/pocketbase/index.js';
+	import { currentUser, pb } from '$lib/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '$lib/i18n';
 	import SectionTitle from '$lib/components/sectionTitle.svelte';
@@ -19,6 +19,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
+	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
+	import { createTypeProp } from '$lib/utils/typeProp';
+	import type {
+		OrganizationsResponse,
+		OrgAuthorizationsResponse,
+		OrgInvitesResponse
+	} from '$lib/pocketbase/types';
 
 	export let data;
 	$: authorizations = data.authorizations;
@@ -30,6 +37,24 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		await pb.collection('orgJoinRequests').delete(requestId);
 		invalidateAll();
 	}
+
+	//
+
+	const invitesType = createTypeProp<OrgInvitesResponse<{ organization: OrganizationsResponse }>>();
+
+	function acceptInvite(inviteId: string) {
+		pb.send('/organizations/invites/accept', {
+			method: 'POST',
+			body: {
+				inviteId
+			}
+		});
+	}
+
+	//
+
+	const authorizationsType =
+		createTypeProp<OrgAuthorizationsResponse<{ organization: OrganizationsResponse }>>();
 </script>
 
 <PageTop>
@@ -37,6 +62,31 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </PageTop>
 
 <PageContent>
+	<CollectionManager
+		collection="org_invites"
+		initialQueryParams={{ filter: `user.id = "${$currentUser?.id ?? ''}"`, expand: 'organization' }}
+		let:records
+		recordType={invitesType}
+		hideEmptyState
+	>
+		{#if records.length > 0}
+			<PageCard>
+				<SectionTitle tag="h5" title={m.organization_invites()} />
+				{#each records as record}
+					<PlainCard>
+						{record.expand?.organization.name}
+						<svelte:fragment slot="right">
+							<Button outline on:click={() => acceptInvite(record.id)}>
+								{m.accept_invite()}<Icon src={Check} ml />
+							</Button>
+							<Button outline>{m.decline_invite()}<Icon src={XMark} ml /></Button>
+						</svelte:fragment>
+					</PlainCard>
+				{/each}
+			</PageCard>
+		{/if}
+	</CollectionManager>
+
 	{#if orgJoinRequests.length}
 		<PageCard>
 			<SectionTitle tag="h5" title={m.Your_membership_requests()}></SectionTitle>
@@ -85,6 +135,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				</Button>
 			</div>
 		</SectionTitle>
+
+		<CollectionManager collection="orgAuthorizations"></CollectionManager>
 
 		<div class="space-y-4">
 			{#if authorizations}
