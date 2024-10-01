@@ -457,5 +457,16 @@
 	"or": "or",
 	"accepted_files": "accepted_files",
 	"Next": "Next",
-	"Emails_found_You_can_proceed_to_the_next_step": "Emails found! You can proceed to the next step"
+	"Emails_found_You_can_proceed_to_the_next_step": "Emails found! You can proceed to the next step",
+	"We_havent_found_any_emails_in_the_provided_documents_please_upload_a_new_file_or_paste_new_content_": "We haven't found any emails in the provided documents, please upload a new file or paste new content.",
+	"Emails_found": "Emails found!",
+	"Review_and_confirm": "Review and confirm",
+	"Back": "Back",
+	"Send_invites": "Send invites",
+	"Search_emails": "Search emails",
+	"Review_the_email_list_before_sending": "Review the email list before sending",
+	"Pending_invites": "Pending invites",
+	"pending_invites_description": "pending_invites_description",
+	"no_pending_invites": "no_pending_invites",
+	"failed_email_send": "failed_email_send"
 }

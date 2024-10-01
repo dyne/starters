@@ -244,13 +244,17 @@ function getOrganizationAdminsAddresses(organizationId) {
         .map((u) => getUserEmailAddressData(u));
 }
 
+/** @returns {string} */
+function getAppUrl() {
+    return removeTrailingSlash($app.settings().meta.appUrl);
+}
+
 /**
  * @param {string} organizationId
  * @returns {string}
  */
 function getOrganizationMembersPageUrl(organizationId) {
-    const basePath = removeTrailingSlash($app.settings().meta.appUrl);
-    return `${basePath}/my/organizations/${organizationId}/members`;
+    return `${getAppUrl()}/my/organizations/${organizationId}/members`;
 }
 
 //
@@ -272,5 +276,6 @@ module.exports = {
     removeTrailingSlash,
     getOrganizationAdminsAddresses,
     getOrganizationMembersPageUrl,
+    getAppUrl,
     errors,
 };

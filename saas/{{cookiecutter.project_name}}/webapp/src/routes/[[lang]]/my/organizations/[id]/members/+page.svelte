@@ -33,6 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
+	import PendingInvites from './_partials/pendingInvites.svelte';
 
 	//
 
@@ -50,9 +51,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <OrganizationLayout org={organization}>
 	<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
-		<PageCard>
-			<MembershipRequests {organization} />
-		</PageCard>
+		<MembershipRequests {organization} />
+		<PendingInvites {organization} />
 	</ProtectedOrgUI>
 
 	<PageCard>
@@ -75,14 +75,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			<SectionTitle tag="h5" title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
 					<div class="flex items-center gap-2">
-						<ModalWrapper title={m.invite_members()} let:openModal>
+						<ModalWrapper
+							title={m.invite_members()}
+							let:openModal
+							modalProps={{ class: 'overflow-hidden' }}
+						>
 							<Button color="alternative" on:click={openModal}>
 								<Plus size="20" class="mr-2" />
 								{m.invite_members()}
 							</Button>
 
 							<svelte:fragment slot="modal" let:closeModal>
-								<InviteMembersForm onSuccess={closeModal} />
+								<InviteMembersForm
+									organizationId={organization.id}
+									onSuccess={closeModal}
+									onCancel={closeModal}
+								/>
 							</svelte:fragment>
 						</ModalWrapper>
 
