@@ -43,13 +43,13 @@
 	$: handleFormChange($form);
 
 	function handleFormChange(data: typeof $form) {
-		emails.push(...extractEmailsFromText(data.file_source + ' ' + data.text_source));
-		emails = A.dedupe(emails);
+		emails = A.dedupe(extractEmailsFromText(data.file_source + ' ' + data.text_source));
 	}
 
 	function extractEmailsFromText(text: string): string[] {
-		const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+		const emailRegex = /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g;
 		const emails = text.match(emailRegex);
+		console.log(emails);
 		return emails || [];
 	}
 
