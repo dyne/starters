@@ -13,10 +13,11 @@
 	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
 	import { page } from '$app/stores';
-	import { missingKeyringParamKey } from '$lib/utils/constants.js';
 	import { ExclamationTriangle } from 'svelte-heros-v2';
 	import { featureFlags } from '$lib/features';
-	import { getUserPublicKeys } from '$lib/keypairoom/utils';
+	import { getUserPublicKeys, RegenerateKeyringSession } from '$lib/keypairoom/utils';
+	import { m } from '$lib/i18n';
+	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
 
 	//
 
@@ -29,25 +30,26 @@
 
 	const superform = createForm(schema, async ({ form }) => {
 		const hmac = await getHMAC(form.data.email);
+
 		let keyring: Keyring;
 		try {
 			const keypair = await regenerateKeypair(form.data.seed, hmac);
 			keyring = keypair.keyring;
 		} catch (e) {
-			throw new Error('Invalid seed');
+			throw new Error(m.Invalid_seed());
 		}
 
 		if ($featureFlags.AUTH && $currentUser) {
 			const publicKeys = await getUserPublicKeys();
 			if (!publicKeys) {
 				throw new Error(
-					'User public keys are missing. Please generate them using the security questions.'
+					m.User_public_keys_are_missing_Please_generate_them_using_the_security_questions_()
 				);
 			} else {
 				try {
 					await matchPublicAndPrivateKeys(publicKeys, keyring);
 				} catch (e) {
-					throw new Error('Invalid seed');
+					throw new Error(m.Invalid_seed());
 				}
 			}
 
@@ -62,46 +64,37 @@
 
 		saveKeyringToLocalStorage(keyring);
 		success = true;
+
+		if (RegenerateKeyringSession.isActive()) RegenerateKeyringSession.end();
 	});
 
 	const { form } = superform;
-
 	if ($currentUser) $form.email = $currentUser.email;
 
 	const textAreaPlaceholder =
 		'skin buyer sunset person run push elevator under debris soft surge man';
-
-	$: isKeyringMissing = $page.url.searchParams.has(missingKeyringParamKey);
 </script>
 
-<Card class="p-6 space-y-6">
+<Card class="space-y-6 p-6">
 	{#if !success}
-		<Heading tag="h4">Regenerate keys</Heading>
+		<Heading tag="h4">{m.Regenerate_keys()}</Heading>
 
-		{#if isKeyringMissing}
-			<Alert color="yellow" border>
-				<svelte:fragment slot="icon"><ExclamationTriangle /></svelte:fragment>
-				<div class="space-y-1">
-					<p>You have been redirected here because your private keys are missing.</p>
-					<p>Before using the app again, you need to restore them.</p>
-				</div>
-			</Alert>
+		{#if RegenerateKeyringSession.isActive()}
+			<RegenerateBanner />
 		{/if}
 
-		<Hr />
-
 		{#if $currentUser}
-			<P>Please type here your seed to restore your keyring.</P>
+			<P>{m.Please_type_here_your_seed_to_restore_your_keyring_()}</P>
 		{:else}
-			<P>Please type here your email and your seed to restore your keyring.</P>
+			<P>{m.Please_type_here_your_email_and_your_seed_to_restore_your_keyring_()}</P>
 		{/if}
 
 		<Form {superform}>
 			{#if !$currentUser}
 				<div class="space-y-1">
-					<Input {superform} field="email" options={{ label: 'User email' }} />
+					<Input {superform} field="email" options={{ label: m.User_email() }} />
 					<P size="sm" color="text-gray-400">
-						Your email won't be stored anywhere, it will be used only to generate the keys.
+						{m.Your_email_wont_be_stored_anywhere_it_will_be_used_only_to_generate_the_keys_()}
 					</P>
 				</div>
 			{/if}
@@ -111,19 +104,19 @@
 			<FormError />
 
 			<div class="flex justify-end">
-				<SubmitButton>Regenerate keys</SubmitButton>
+				<SubmitButton>{m.Regenerate_keys()}</SubmitButton>
 			</div>
 		</Form>
 
 		<Hr />
 
-		<A href="/keypairoom" class="text-sm">Forgot the seed? Regenerate it</A>
+		<A href="/keypairoom" class="text-sm">{m.Forgot_the_seed_Regenerate_it()}</A>
 	{:else}
-		<div class="space-y-4 p-6 flex flex-col">
-			<Heading tag="h4">Keys regenerated!</Heading>
+		<div class="flex flex-col space-y-4 p-6">
+			<Heading tag="h4">{m.Keys_regenerated()}</Heading>
 			<P>
-				Your keys have been regenerated. You can now go back to
-				<A href="/my">your profile</A>.
+				{m.Your_keys_have_been_regenerated_You_can_now_go_back_to()}
+				<A href="/my">{m.your_profile()}</A>.
 			</P>
 		</div>
 	{/if}

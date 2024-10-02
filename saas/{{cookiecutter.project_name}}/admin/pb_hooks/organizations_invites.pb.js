@@ -110,25 +110,33 @@ routerAdd("POST", "/organizations/invite", (c) => {
 
         // Checking if invite already exists
 
-        const invite = utils.findFirstRecordByFilter(
+        const existingInvite = utils.findFirstRecordByFilter(
             "org_invites",
             `user_email = "${email}"`
         );
-        if (invite) continue;
+        if (existingInvite) continue;
 
         // Otherwise, create invite
 
-        const record = new Record(orgInvitesCollection);
-        record.set("organization", organizationId);
-        record.set("user_email", email);
-        if (user) record.set("user", user.getId());
+        const invite = new Record(orgInvitesCollection);
+        invite.set("organization", organizationId);
+        invite.set("user_email", email);
+        if (user) invite.set("user", user.getId());
+        $app.dao().saveRecord(invite);
 
-        $app.dao().saveRecord(record);
+        // Send email
 
-        const organizationsUrl = `${utils.getAppUrl()}/organization-invite-${organizationId}-${record.getId()}-${
-            user?.getId() ?? ""
-        }`;
-        const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
+        /** @type {string[]} */
+        // Reference: webapp/src/routes/[[lang]]/(nru)/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]
+        const routeParams = [
+            organizationId,
+            invite.getId(),
+            encodeURIComponent(email),
+            user?.getId() ?? "",
+        ];
+        const paramsString = routeParams.join("-");
+        const emailCtaUrl = `${utils.getAppUrl()}/organization-invite-${paramsString}`;
+        const a = `<a href="${emailCtaUrl}">Manage your invitation</a>`;
 
         const err = utils.sendEmail({
             to: { address: email, name: "" },
@@ -147,9 +155,9 @@ routerAdd("POST", "/organizations/invite", (c) => {
                 user?.getId()
             );
         } else {
-            record.markAsNotNew();
-            record.set("failed_email_send", true);
-            $app.dao().saveRecord(record);
+            invite.markAsNotNew();
+            invite.set("failed_email_send", true);
+            $app.dao().saveRecord(invite);
 
             auditLogger(c).info(
                 "failed_to_send_organization_invite",
