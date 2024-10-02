@@ -8,6 +8,31 @@
 /** @typedef {import('./utils.js')} Utils */
 /** @typedef {import('./auditLogger.js')} AuditLogger */
 
+/**
+ * INDEX
+ * - hooks
+ * - routes
+ */
+
+/* Hooks */
+
+onRecordAfterCreateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const invites = utils.findRecordsByFilter(
+        "org_invites",
+        `user_email = "${e.record?.email()}"`
+    );
+    invites.forEach((invite) => {
+        invite.markAsNotNew();
+        invite.set("user", e.record?.getId());
+        $app.dao().saveRecord(invite);
+    });
+}, "users");
+
+/* Routes */
+
 routerAdd("POST", "/organizations/invites/accept", (c) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
