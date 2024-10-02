@@ -57,12 +57,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			<div class="max-h-[400px] divide-y overflow-auto rounded-lg border">
 				{#each records as invite}
 					<div class="flex items-center justify-between px-2 py-1 pl-4">
-						<div>
-							<span class="text-sm">
+						<div class="flex items-center gap-2">
+							<p class="text-sm">
 								{invite.user_email}
-							</span>
+							</p>
 							{#if invite.failed_email_send}
 								<Badge color="red">{m.failed_email_send()}</Badge>
+							{/if}
+							{#if invite.declined}
+								<Badge color="red">{m.invite_declined()}</Badge>
 							{/if}
 						</div>
 

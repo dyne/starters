@@ -35,8 +35,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	/* Org invites */
 
-	function acceptInvite(inviteId: string) {
-		pb.send('/organizations/invites/accept', {
+	function updateInvite(inviteId: string, action: 'accept' | 'decline') {
+		pb.send(`/organizations/invites/${action}`, {
 			method: 'POST',
 			body: {
 				inviteId
@@ -72,7 +72,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<CollectionManager
 		collection="org_invites"
 		recordType={invitesType}
-		initialQueryParams={{ filter: `user.id = "${$currentUser?.id ?? ''}"`, expand: 'organization' }}
+		initialQueryParams={{
+			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`,
+			expand: 'organization'
+		}}
 		hideEmptyState
 		let:records
 	>
@@ -83,10 +86,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					<PlainCard>
 						{record.expand?.organization.name}
 						<svelte:fragment slot="right">
-							<Button outline on:click={() => acceptInvite(record.id)}>
+							<Button outline on:click={() => updateInvite(record.id, 'accept')}>
 								{m.accept_invite()}<Icon src={Check} ml />
 							</Button>
-							<Button outline>{m.decline_invite()}<Icon src={XMark} ml /></Button>
+							<Button outline on:click={() => updateInvite(record.id, 'decline')}>
+								{m.decline_invite()}<Icon src={XMark} ml />
+							</Button>
 						</svelte:fragment>
 					</PlainCard>
 				{/each}

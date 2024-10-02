@@ -257,6 +257,29 @@ function getOrganizationMembersPageUrl(organizationId) {
     return `${getAppUrl()}/my/organizations/${organizationId}/members`;
 }
 
+/**
+ * @param {echo.Context} c
+ */
+function runOrganizationInviteEndpointChecks(c) {
+    /** @type {{inviteId: string | undefined}} */
+    // @ts-ignore
+    const data = $apis.requestInfo(c).data;
+    const { inviteId } = data;
+    if (!inviteId || typeof inviteId != "string")
+        throw createMissingDataError("inviteId");
+
+    const userId = getUserFromContext(c)?.getId();
+    if (!userId) throw createMissingDataError("userId");
+
+    const invite = findFirstRecordByFilter("org_invites", `id = "${inviteId}"`);
+    if (!invite) throw createMissingDataError("organization invite");
+
+    const isOwner = invite.get("user") == userId;
+    if (!isOwner) throw new ForbiddenError();
+
+    return { userId, invite, isOwner };
+}
+
 //
 
 module.exports = {
@@ -277,5 +300,6 @@ module.exports = {
     getOrganizationAdminsAddresses,
     getOrganizationMembersPageUrl,
     getAppUrl,
+    runOrganizationInviteEndpointChecks,
     errors,
 };

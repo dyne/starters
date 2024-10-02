@@ -16,35 +16,22 @@ routerAdd("POST", "/organizations/invites/accept", (c) => {
 
     /* -- Guards -- */
 
-    /** @type {{inviteId: string | undefined}} */
-    // @ts-ignore
-    const data = $apis.requestInfo(c).data;
-    const { inviteId } = data;
-    if (!inviteId) throw utils.createMissingDataError("inviteId");
-
-    const userId = utils.getUserFromContext(c)?.getId();
-    if (!userId) throw utils.createMissingDataError("userId");
-
-    const invite = utils.findFirstRecordByFilter(
-        "org_invites",
-        `id = "${inviteId}"`
-    );
-    if (!invite) throw utils.createMissingDataError("organization invite");
-
-    const isOwner = invite.get("user") == userId;
-    if (!isOwner) throw new ForbiddenError();
+    const { invite, userId } = utils.runOrganizationInviteEndpointChecks(c);
 
     /* -- Logic -- */
 
     const orgAuthorizationsCollection = $app
         .dao()
         .findCollectionByNameOrId("orgAuthorizations");
-    const record = new Record(orgAuthorizationsCollection);
-    record.set("user", userId);
-    record.set("role", utils.getRoleByName("member")?.getId());
-    const organizationId = invite.get("organization");
-    record.set("organization", organizationId);
 
+    const organizationId = invite.get("organization");
+
+    const authorization = new Record(orgAuthorizationsCollection);
+    authorization.set("user", userId);
+    authorization.set("role", utils.getRoleByName("member")?.getId());
+    authorization.set("organization", organizationId);
+
+    $app.dao().saveRecord(authorization);
     $app.dao().deleteRecord(invite);
 
     auditLogger(c).info(
@@ -53,6 +40,27 @@ routerAdd("POST", "/organizations/invites/accept", (c) => {
         organizationId
     );
 });
+
+routerAdd("POST", "/organizations/invites/decline", (c) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    const { invite } = utils.runOrganizationInviteEndpointChecks(c);
+
+    invite.markAsNotNew();
+    invite.set("declined", true);
+    $app.dao().saveRecord(invite);
+
+    auditLogger(c).info(
+        "user_accepted_invite",
+        "organizationId",
+        invite.get("organization")
+    );
+});
+
+//
 
 routerAdd("POST", "/organizations/invite", (c) => {
     /** @type {Utils} */
@@ -117,16 +125,16 @@ routerAdd("POST", "/organizations/invite", (c) => {
 
         $app.dao().saveRecord(record);
 
-        try {
-            const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
-            const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
+        const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
+        const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
 
-            utils.sendEmail({
-                to: { address: email, name: "" },
-                subject: `You have been invited to join ${organizationName}`,
-                html: a,
-            });
+        const err = utils.sendEmail({
+            to: { address: email, name: "" },
+            subject: `You have been invited to join ${organizationName}`,
+            html: a,
+        });
 
+        if (!err) {
             auditLogger(c).info(
                 "invited_person_to_organization",
                 "organizationId",
@@ -136,7 +144,7 @@ routerAdd("POST", "/organizations/invite", (c) => {
                 "userId",
                 user?.getId()
             );
-        } catch (e) {
+        } else {
             record.markAsNotNew();
             record.set("failed_email_send", true);
             $app.dao().saveRecord(record);
@@ -148,7 +156,9 @@ routerAdd("POST", "/organizations/invite", (c) => {
                 "email",
                 email,
                 "userId",
-                user?.getId()
+                user?.getId(),
+                "errorMessage",
+                err.message
             );
         }
     }
