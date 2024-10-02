@@ -77,12 +77,12 @@ routerAdd("POST", "/organizations/invite", (c) => {
     if (!organizationId || !emails)
         throw utils.createMissingDataError("organizationId", "emails");
 
-    const userId = utils.getUserFromContext(c)?.getId();
-    if (!userId) throw utils.createMissingDataError("userId");
+    const actorId = utils.getUserFromContext(c)?.getId();
+    if (!actorId) throw utils.createMissingDataError("userId");
 
-    const role = utils.getUserRole(userId, organizationId);
-    const roleName = role?.get("name");
-    if (roleName != "admin" && roleName != "owner")
+    const actorRole = utils.getUserRole(actorId, organizationId);
+    const actorRoleName = actorRole?.get("name");
+    if (actorRoleName != "admin" && actorRoleName != "owner")
         throw new UnauthorizedError();
 
     /* -- Logic -- */
@@ -125,7 +125,9 @@ routerAdd("POST", "/organizations/invite", (c) => {
 
         $app.dao().saveRecord(record);
 
-        const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
+        const organizationsUrl = `${utils.getAppUrl()}/organization-invite-${organizationId}-${record.getId()}-${
+            user?.getId() ?? ""
+        }`;
         const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
 
         const err = utils.sendEmail({
