@@ -24,23 +24,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type {
 		OrganizationsResponse,
 		OrgAuthorizationsResponse,
-		OrgInvitesResponse
+		OrgInvitesResponse,
+		OrgJoinRequestsResponse,
+		OrgRolesResponse
 	} from '$lib/pocketbase/types';
-
-	export let data;
-	$: authorizations = data.authorizations;
-	$: orgJoinRequests = data.orgJoinRequests;
-
-	const { ADMIN, OWNER } = OrgRoles;
-
-	async function deleteJoinRequest(requestId: string) {
-		await pb.collection('orgJoinRequests').delete(requestId);
-		invalidateAll();
-	}
 
 	//
 
-	const invitesType = createTypeProp<OrgInvitesResponse<{ organization: OrganizationsResponse }>>();
+	const { ADMIN, OWNER } = OrgRoles;
+
+	/* Org invites */
 
 	function acceptInvite(inviteId: string) {
 		pb.send('/organizations/invites/accept', {
@@ -51,10 +44,24 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		});
 	}
 
-	//
+	const invitesType = createTypeProp<OrgInvitesResponse<{ organization: OrganizationsResponse }>>();
+
+	/* Org membership requests */
+
+	async function deleteJoinRequest(requestId: string) {
+		await pb.collection('orgJoinRequests').delete(requestId);
+		invalidateAll();
+	}
+
+	const joinRequestsType =
+		createTypeProp<OrgJoinRequestsResponse<{ organization: OrganizationsResponse }>>();
+
+	/* Org list */
 
 	const authorizationsType =
-		createTypeProp<OrgAuthorizationsResponse<{ organization: OrganizationsResponse }>>();
+		createTypeProp<
+			OrgAuthorizationsResponse<{ organization: OrganizationsResponse; role: OrgRolesResponse }>
+		>();
 </script>
 
 <PageTop>
@@ -64,10 +71,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <PageContent>
 	<CollectionManager
 		collection="org_invites"
-		initialQueryParams={{ filter: `user.id = "${$currentUser?.id ?? ''}"`, expand: 'organization' }}
-		let:records
 		recordType={invitesType}
+		initialQueryParams={{ filter: `user.id = "${$currentUser?.id ?? ''}"`, expand: 'organization' }}
 		hideEmptyState
+		let:records
 	>
 		{#if records.length > 0}
 			<PageCard>
@@ -87,40 +94,48 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{/if}
 	</CollectionManager>
 
-	{#if orgJoinRequests.length}
-		<PageCard>
-			<SectionTitle tag="h5" title={m.Your_membership_requests()}></SectionTitle>
+	<CollectionManager
+		collection="orgJoinRequests"
+		recordType={joinRequestsType}
+		initialQueryParams={{ expand: 'organization', filter: `user.id = "${$currentUser?.id}"` }}
+		hideEmptyState
+		let:records
+	>
+		{#if records.length}
+			<PageCard>
+				<SectionTitle tag="h5" title={m.Your_membership_requests()}></SectionTitle>
 
-			<div class="space-y-4">
-				{#each orgJoinRequests as request}
-					{@const organization = request.expand?.organization}
-					{#if organization}
-						{@const avatarUrl = pb.files.getUrl(organization, organization.avatar)}
-						<PlainCard>
-							<Avatar slot="left" src={avatarUrl}></Avatar>
+				<div class="space-y-4">
+					{#each records as request}
+						{@const organization = request.expand?.organization}
+						{#if organization}
+							{@const avatarUrl = pb.files.getUrl(organization, organization.avatar)}
+							<PlainCard>
+								<Avatar slot="left" src={avatarUrl}></Avatar>
 
-							<div class="flex items-center space-x-2">
-								<P>{request.expand?.organization.name}</P>
-								<Badge color="yellow">{m.Pending()}</Badge>
-							</div>
+								<div class="flex items-center space-x-2">
+									<P>{request.expand?.organization.name}</P>
+									<Badge color="yellow">{m.Pending()}</Badge>
+								</div>
 
-							<Button
-								slot="right"
-								outline
-								size="sm"
-								on:click={() => {
-									deleteJoinRequest(request.id);
-								}}
-							>
-								{m.Undo_request()}
-								<Icon src={ArrowUturnLeft} ml></Icon>
-							</Button>
-						</PlainCard>
-					{/if}
-				{/each}
-			</div>
-		</PageCard>
-	{/if}
+								<Button
+									slot="right"
+									outline
+									size="sm"
+									on:click={() => {
+										deleteJoinRequest(request.id);
+									}}
+								>
+									{m.Undo_request()}
+									<Icon src={ArrowUturnLeft} ml></Icon>
+								</Button>
+							</PlainCard>
+						{/if}
+					{/each}
+				</div>
+			</PageCard>
+		{/if}
+	</CollectionManager>
 
 	<PageCard>
 		<SectionTitle tag="h5" title={m.Your_organizations()}>
@@ -136,47 +151,56 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			</div>
 		</SectionTitle>
 
-		<CollectionManager collection="orgAuthorizations"></CollectionManager>
+		<CollectionManager
+			collection="orgAuthorizations"
+			recordType={authorizationsType}
+			initialQueryParams={{
+				expand: 'organization,role',
+				filter: `user.id = "${$currentUser?.id}"`
+			}}
+			let:records
+		>
+			<svelte:fragment slot="emptyState">
+				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={PuzzlePiece} />
+			</svelte:fragment>
 
-		<div class="space-y-4">
-			{#if authorizations}
-				{#if authorizations.length == 0}
-					<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={PuzzlePiece} />
-				{:else}
-					{#each authorizations as a}
-						{@const org = a.expand.organization}
-						{@const role = a.expand.role}
-
-						<PlainCard let:Title let:Description>
-							<div class="flex items-center gap-2">
-								<Title>
-									<A href={`/my/organizations/${org.id}`}>{org.name}</A>
-								</Title>
-								{#if role.name == ADMIN || role.name == OWNER}
-									<Badge color="dark">{c(role.name)}</Badge>
+			{#if records.length > 0}
+				<div class="space-y-2">
+					{#each records as a}
+						{@const org = a.expand?.organization}
+						{@const role = a.expand?.role}
+						{#if org && role}
+							<PlainCard let:Title let:Description>
+								<div class="flex items-center gap-2">
+									<Title>
+										<A href={`/my/organizations/${org.id}`}>{org.name}</A>
+									</Title>
+									{#if role.name == ADMIN || role.name == OWNER}
+										<Badge color="dark">{c(role.name)}</Badge>
+									{/if}
+								</div>
+								{#if org.description}
+									<Description>{org.description}</Description>
 								{/if}
-							</div>
-							{#if org.description}
-								<Description>{org.description}</Description>
-							{/if}
 
-							<svelte:fragment slot="right">
-								{#if role.name == OWNER}
-									<Button
-										data-testid={`${org.name} link`}
-										size="sm"
-										outline
-										href={`/my/organizations/${org.id}/settings`}
-									>
-										{m.Settings()}
-										<Icon src={Cog} ml></Icon>
-									</Button>
-								{/if}
-							</svelte:fragment>
-						</PlainCard>
+								<svelte:fragment slot="right">
+									{#if role.name == OWNER}
+										<Button
+											data-testid={`${org.name} link`}
+											size="sm"
+											outline
+											href={`/my/organizations/${org.id}/settings`}
+										>
+											{m.Settings()}
+											<Icon src={Cog} ml></Icon>
+										</Button>
+									{/if}
+								</svelte:fragment>
+							</PlainCard>
+						{/if}
 					{/each}
-				{/if}
+				</div>
 			{/if}
-		</div>
+		</CollectionManager>
 	</PageCard>
 </PageContent>
