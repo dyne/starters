@@ -96,72 +96,78 @@ routerAdd("POST", "/organizations/invite", (c) => {
         .findRecordById("organizations", organizationId);
     const organizationName = organization.get("name");
 
-    for (const email of emails) {
-        // Checking if user is already member
+    $app.dao().runInTransaction((txDao) => {
+        for (const email of emails) {
+            // Checking if user is already member
 
-        const user = utils.findFirstRecordByFilter(
-            "users",
-            `email = "${email}"`
-        );
-        if (user) {
-            const userRole = utils.getUserRole(user.getId(), organizationId);
-            if (userRole) continue;
-        }
-
-        // Checking if invite already exists
-
-        const invite = utils.findFirstRecordByFilter(
-            "org_invites",
-            `user_email = "${email}"`
-        );
-        if (invite) continue;
-
-        // Otherwise, create invite
-
-        const record = new Record(orgInvitesCollection);
-        record.set("organization", organizationId);
-        record.set("user_email", email);
-        if (user) record.set("user", user.getId());
-
-        $app.dao().saveRecord(record);
-
-        const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
-        const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
-
-        const err = utils.sendEmail({
-            to: { address: email, name: "" },
-            subject: `You have been invited to join ${organizationName}`,
-            html: a,
-        });
-
-        if (!err) {
-            auditLogger(c).info(
-                "invited_person_to_organization",
-                "organizationId",
-                organizationId,
-                "personEmail",
-                email,
-                "userId",
-                user?.getId()
+            const user = utils.findFirstRecordByFilter(
+                "users",
+                `email = "${email}"`,
+                txDao
             );
-        } else {
-            record.markAsNotNew();
-            record.set("failed_email_send", true);
-            $app.dao().saveRecord(record);
+            if (user) {
+                const userRole = utils.getUserRole(
+                    user.getId(),
+                    organizationId
+                );
+                if (userRole) continue;
+            }
 
-            auditLogger(c).info(
-                "failed_to_send_organization_invite",
-                "organizationId",
-                organizationId,
-                "email",
-                email,
-                "userId",
-                user?.getId(),
-                "errorMessage",
-                err.message
+            // Checking if invite already exists
+
+            const invite = utils.findFirstRecordByFilter(
+                "org_invites",
+                `user_email = "${email}"`
             );
+            if (invite) continue;
+
+            // Otherwise, create invite
+
+            const record = new Record(orgInvitesCollection);
+            record.set("organization", organizationId);
+            record.set("user_email", email);
+            if (user) record.set("user", user.getId());
+
+            txDao.saveRecord(record);
+
+            const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
+            const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
+
+            const err = utils.sendEmail({
+                to: { address: email, name: "" },
+                subject: `You have been invited to join ${organizationName}`,
+                html: a,
+            });
+
+            if (!err) {
+                auditLogger(c).info(
+                    "invited_person_to_organization",
+                    "organizationId",
+                    organizationId,
+                    "personEmail",
+                    email,
+                    "userId",
+                    user?.getId()
+                );
+            } else {
+                record.markAsNotNew();
+                record.set("failed_email_send", true);
+                txDao.saveRecord(record);
+
+                auditLogger(c).info(
+                    "failed_to_send_organization_invite",
+                    "organizationId",
+                    organizationId,
+                    "email",
+                    email,
+                    "userId",
+                    user?.getId(),
+                    "errorMessage",
+                    err.message
+                );
+            }
         }
-    }
+    });
 });
 
 /* */
