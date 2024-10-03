@@ -8,7 +8,7 @@
 	class="space-y-2"
 	action="post"
 	on:submit|preventDefault={(e) => {
-		console.log(e);
+		log(e);
 	}}
 >
 	<Input name="name" placeholder="name" required />
