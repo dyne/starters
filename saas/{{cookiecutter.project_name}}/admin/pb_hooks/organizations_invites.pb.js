@@ -121,80 +121,105 @@ routerAdd("POST", "/organizations/invite", (c) => {
         .findRecordById("organizations", organizationId);
     const organizationName = organization.get("name");
 
-    for (const email of emails) {
-        // Checking if user is already member
+    $app.dao().runInTransaction((txDao) => {
+        for (const email of emails) {
+            // Checking if user is already member
 
-        const user = utils.findFirstRecordByFilter(
-            "users",
-            `email = "${email}"`
-        );
-        if (user) {
-            const userRole = utils.getUserRole(user.getId(), organizationId);
-            if (userRole) continue;
-        }
-
-        // Checking if invite already exists
-
-        const existingInvite = utils.findFirstRecordByFilter(
-            "org_invites",
-            `user_email = "${email}"`
-        );
-        if (existingInvite) continue;
-
-        // Otherwise, create invite
-
-        const invite = new Record(orgInvitesCollection);
-        invite.set("organization", organizationId);
-        invite.set("user_email", email);
-        if (user) invite.set("user", user.getId());
-        $app.dao().saveRecord(invite);
-
-        // Send email
-
-        /** @type {string[]} */
-        // Reference: webapp/src/routes/[[lang]]/(nru)/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]
-        const routeParams = [
-            organizationId,
-            invite.getId(),
-            encodeURIComponent(email),
-            user?.getId() ?? "",
-        ];
-        const paramsString = routeParams.join("-");
-        const emailCtaUrl = `${utils.getAppUrl()}/organization-invite-${paramsString}`;
-        const a = `<a href="${emailCtaUrl}">Manage your invitation</a>`;
-
-        const err = utils.sendEmail({
-            to: { address: email, name: "" },
-            subject: `You have been invited to join ${organizationName}`,
-            html: a,
-        });
-
-        if (!err) {
-            auditLogger(c).info(
-                "invited_person_to_organization",
-                "organizationId",
-                organizationId,
-                "personEmail",
-                email,
-                "userId",
-                user?.getId()
+            const user = utils.findFirstRecordByFilter(
+                "users",
+                `email = "${email}"`,
+                txDao
             );
-        } else {
-            invite.markAsNotNew();
-            invite.set("failed_email_send", true);
-            $app.dao().saveRecord(invite);
+            if (user) {
+                const userRole = utils.getUserRole(
+                    user.getId(),
+                    organizationId,
+                    txDao
+                );
+                if (userRole) continue;
+            }
 
-            auditLogger(c).info(
-                "failed_to_send_organization_invite",
-                "organizationId",
-                organizationId,
-                "email",
-                email,
-                "userId",
-                user?.getId(),
-                "errorMessage",
-                err.message
+            // Checking if invite already exists
+
+            const existingInvite = utils.findFirstRecordByFilter(
+                "org_invites",
+                `user_email = "${email}"`,
+                txDao
             );
+            if (existingInvite) continue;
+
+            // Otherwise, create invite
+
+            const invite = new Record(orgInvitesCollection);
+            invite.set("organization", organizationId);
+            invite.set("user_email", email);
+            if (user) invite.set("user", user.getId());
+            txDao.saveRecord(invite);
+
+            // Send email
+
+            /** @type {string[]} */
+            // Reference: webapp/src/routes/[[lang]]/(nru)/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]
+            const routeParams = [
+                organizationId,
+                invite.getId(),
+                encodeURIComponent(email),
+                user?.getId() ?? "",
+            ];
+            const paramsString = routeParams.join("-");
+            const emailCtaUrl = `${utils.getAppUrl()}/organization-invite-${paramsString}`;
+            const a = `<a href="${emailCtaUrl}">Manage your invitation</a>`;
+
+            const err = utils.sendEmail({
+                to: { address: email, name: "" },
+                subject: `You have been invited to join ${organizationName}`,
+                html: a,
+            });
+
+            if (!err) {
+                auditLogger(c).info(
+                    "invited_person_to_organization",
+                    "organizationId",
+                    organizationId,
+                    "personEmail",
+                    email,
+                    "userId",
+                    user?.getId()
+                );
+            } else {
+                invite.markAsNotNew();
+                invite.set("failed_email_send", true);
+                txDao.saveRecord(invite);
+
+                auditLogger(c).info(
+                    "failed_to_send_organization_invite",
+                    "organizationId",
+                    organizationId,
+                    "email",
+                    email,
+                    "userId",
+                    user?.getId(),
+                    "errorMessage",
+                    err.message
+                );
+            }
         }
-    }
+    });
+});
+
+/* */
+
+onRecordAfterDeleteRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    auditLogger(e.httpContext).info(
+        "Deleted organization invite",
+        "inviteId",
+        e.record?.getId(),
+        "organizationId",
+        e.record?.get("organization")
+    );
 });

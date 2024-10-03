@@ -49,7 +49,6 @@
 	function extractEmailsFromText(text: string): string[] {
 		const emailRegex = /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g;
 		const emails = text.match(emailRegex);
-		console.log(emails);
 		return emails || [];
 	}
 
@@ -134,7 +133,7 @@
 			{#if emails.length}
 				<Alert color="green" border>
 					<div class="flex items-center justify-between gap-2">
-						<p>✅ {m.Emails_found()}</p>
+						<p>✅ {emails.length} {m.Emails_found()}</p>
 						<Button color="primary" on:click={() => (state = 'review')}>
 							<Icon src={ArrowRight} mr></Icon>
 							{m.Review_and_confirm()}

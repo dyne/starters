@@ -78,7 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let hideEmptyState = false;
 
 	export let initialQueryParams: RecordFullListOptions = {};
-	export let subscribe: string[] = [];
+	export let subscribe: (keyof CollectionRecords)[] = [];
 
 	export let perPage = 25;
 	export let disablePagination = false;

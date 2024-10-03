@@ -10,14 +10,13 @@
 
 	import { z } from 'zod';
 	import { Form, createForm, FormError, SubmitButton, Textarea, Input } from '$lib/forms';
-	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
+	import { A, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
-	import { page } from '$app/stores';
-	import { ExclamationTriangle } from 'svelte-heros-v2';
 	import { featureFlags } from '$lib/features';
 	import { getUserPublicKeys, RegenerateKeyringSession } from '$lib/keypairoom/utils';
 	import { m } from '$lib/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
+	import { log } from '$lib/utils/devLog';
 
 	//
 
@@ -57,7 +56,7 @@
 				try {
 					await pb.send('/api/did', {});
 				} catch (e) {
-					console.log(e);
+					log(e);
 				}
 			}
 		}

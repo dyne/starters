@@ -30,6 +30,7 @@
 	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
 	import { m } from '$lib/i18n';
 	import RegenerateBanner from './_partials/RegenerateBanner.svelte';
+	import { log } from '$lib/utils/devLog';
 
 	//
 
@@ -65,7 +66,7 @@
 				try {
 					await pb.send('/api/did', {});
 				} catch (e) {
-					console.log(e);
+					log(e);
 				}
 			}
 		}
