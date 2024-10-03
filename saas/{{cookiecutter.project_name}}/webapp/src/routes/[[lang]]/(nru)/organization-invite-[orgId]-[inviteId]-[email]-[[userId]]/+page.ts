@@ -8,13 +8,15 @@ export const load = async ({ params, url }) => {
 	const featureFlags = await loadFeatureFlags();
 	if (!featureFlags.ORGANIZATIONS) error(404);
 
+	OrganizationInviteSession.start({
+		organizationId: params.orgId,
+		inviteId: params.inviteId,
+		email: decodeURIComponent(params.email),
+		userId: params.userId
+	});
+
 	if (pb.authStore.token) redirect('/my/organizations', url);
 	else {
-		OrganizationInviteSession.start({
-			organizationId: params.orgId,
-			inviteId: params.inviteId,
-			email: decodeURIComponent(params.email)
-		});
 		if (params.userId) redirect('/login', url);
 		else redirect('/register', url);
 	}

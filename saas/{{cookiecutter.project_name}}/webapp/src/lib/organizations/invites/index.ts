@@ -4,6 +4,7 @@ type OrganizationInviteSession = {
 	organizationId: string;
 	inviteId: string;
 	email: string;
+	userId?: string | undefined;
 };
 
 export const OrganizationInviteSession =
