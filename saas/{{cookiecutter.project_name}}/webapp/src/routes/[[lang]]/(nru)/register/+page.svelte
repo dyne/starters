@@ -49,6 +49,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	function getOrganization(id: string) {
 		return pb.collection('organizations').getOne(id, { requestKey: null });
 	}
+
+	$: disableEmail = $featureFlags.ORGANIZATIONS && OrganizationInviteSession.isActive();
 </script>
 
 {#if $featureFlags.ORGANIZATIONS}
@@ -78,7 +80,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		options={{
 			type: 'email',
 			label: m.Your_email(),
-			placeholder: m.namefoundation_org()
+			placeholder: m.namefoundation_org(),
+			disabled: disableEmail
 		}}
 	/>
 
