@@ -13,8 +13,8 @@ export enum Collections {
 	Hooks = "hooks",
 	OrgAuthorizations = "orgAuthorizations",
 	OrgJoinRequests = "orgJoinRequests",
-	OrgProtectedPaths = "orgProtectedPaths",
 	OrgRoles = "orgRoles",
+	OrgInvites = "org_invites",
 	Organizations = "organizations",
 	SessionDataWebauthn = "sessionDataWebauthn",
 	Users = "users",
@@ -125,6 +125,7 @@ export enum OrgJoinRequestsStatusOptions {
 	"pending" = "pending",
 	"accepted" = "accepted",
 	"rejected" = "rejected",
+	"blocked" = "blocked",
 }
 export type OrgJoinRequestsRecord = {
 	organization: RecordIdString
@@ -133,14 +134,17 @@ export type OrgJoinRequestsRecord = {
 	user: RecordIdString
 }
 
-export type OrgProtectedPathsRecord = {
-	pathRegex: string
-	roles: RecordIdString[]
-}
-
 export type OrgRolesRecord = {
 	level?: number
 	name: string
+}
+
+export type OrgInvitesRecord = {
+	declined?: boolean
+	failed_email_send?: boolean
+	organization: RecordIdString
+	user?: RecordIdString
+	user_email?: string
 }
 
 export type OrganizationsRecord = {
@@ -151,7 +155,7 @@ export type OrganizationsRecord = {
 
 export type SessionDataWebauthnRecord<Tsession = unknown> = {
 	session?: null | Tsession
-	user?: RecordIdString
+	user: RecordIdString
 }
 
 export type UsersRecord = {
@@ -172,7 +176,7 @@ export type UsersPublicKeysRecord = {
 export type WebauthnCredentialsRecord<Tcredential = unknown> = {
 	credential?: null | Tcredential
 	description?: string
-	user?: RecordIdString
+	user: RecordIdString
 }
 
 export enum ZTestCollectionSelectFieldOptions {
@@ -211,8 +215,8 @@ export type FeaturesResponse<TenvVariables = unknown, Texpand = unknown> = Requi
 export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSystemFields<Texpand>
 export type OrgAuthorizationsResponse<Texpand = unknown> = Required<OrgAuthorizationsRecord> & BaseSystemFields<Texpand>
 export type OrgJoinRequestsResponse<Texpand = unknown> = Required<OrgJoinRequestsRecord> & BaseSystemFields<Texpand>
-export type OrgProtectedPathsResponse<Texpand = unknown> = Required<OrgProtectedPathsRecord> & BaseSystemFields<Texpand>
 export type OrgRolesResponse<Texpand = unknown> = Required<OrgRolesRecord> & BaseSystemFields<Texpand>
+export type OrgInvitesResponse<Texpand = unknown> = Required<OrgInvitesRecord> & BaseSystemFields<Texpand>
 export type OrganizationsResponse<Texpand = unknown> = Required<OrganizationsRecord> & BaseSystemFields<Texpand>
 export type SessionDataWebauthnResponse<Tsession = unknown, Texpand = unknown> = Required<SessionDataWebauthnRecord<Tsession>> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
@@ -230,8 +234,8 @@ export type CollectionRecords = {
 	hooks: HooksRecord
 	orgAuthorizations: OrgAuthorizationsRecord
 	orgJoinRequests: OrgJoinRequestsRecord
-	orgProtectedPaths: OrgProtectedPathsRecord
 	orgRoles: OrgRolesRecord
+	org_invites: OrgInvitesRecord
 	organizations: OrganizationsRecord
 	sessionDataWebauthn: SessionDataWebauthnRecord
 	users: UsersRecord
@@ -248,8 +252,8 @@ export type CollectionResponses = {
 	hooks: HooksResponse
 	orgAuthorizations: OrgAuthorizationsResponse
 	orgJoinRequests: OrgJoinRequestsResponse
-	orgProtectedPaths: OrgProtectedPathsResponse
 	orgRoles: OrgRolesResponse
+	org_invites: OrgInvitesResponse
 	organizations: OrganizationsResponse
 	sessionDataWebauthn: SessionDataWebauthnResponse
 	users: UsersResponse
@@ -269,8 +273,8 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'hooks'): RecordService<HooksResponse>
 	collection(idOrName: 'orgAuthorizations'): RecordService<OrgAuthorizationsResponse>
 	collection(idOrName: 'orgJoinRequests'): RecordService<OrgJoinRequestsResponse>
-	collection(idOrName: 'orgProtectedPaths'): RecordService<OrgProtectedPathsResponse>
 	collection(idOrName: 'orgRoles'): RecordService<OrgRolesResponse>
+	collection(idOrName: 'org_invites'): RecordService<OrgInvitesResponse>
 	collection(idOrName: 'organizations'): RecordService<OrganizationsResponse>
 	collection(idOrName: 'sessionDataWebauthn'): RecordService<SessionDataWebauthnResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
