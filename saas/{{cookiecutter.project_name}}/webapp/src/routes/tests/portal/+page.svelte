@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { portal } from '$lib/components/utils/portal';
+	import { log } from '$lib/utils/devLog';
 	import { Input, Button } from 'flowbite-svelte';
 </script>
 
@@ -17,7 +18,7 @@
 		use:portal
 		class="space-y-2"
 		on:submit|preventDefault={(e) => {
-			console.log(e);
+			log(e);
 		}}
 	>
 		<Input name="name2" placeholder="name2" required />

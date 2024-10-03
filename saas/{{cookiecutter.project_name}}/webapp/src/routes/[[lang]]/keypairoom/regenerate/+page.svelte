@@ -17,6 +17,7 @@
 	import { ExclamationTriangle } from 'svelte-heros-v2';
 	import { featureFlags } from '$lib/features';
 	import { getUserPublicKeys } from '$lib/keypairoom/utils';
+	import { log } from '$lib/utils/devLog';
 
 	//
 
@@ -55,7 +56,7 @@
 				try {
 					await pb.send('/api/did', {});
 				} catch (e) {
-					console.log(e);
+					log(e);
 				}
 			}
 		}
@@ -74,7 +75,7 @@
 	$: isKeyringMissing = $page.url.searchParams.has(missingKeyringParamKey);
 </script>
 
-<Card class="p-6 space-y-6">
+<Card class="space-y-6 p-6">
 	{#if !success}
 		<Heading tag="h4">Regenerate keys</Heading>
 
@@ -119,7 +120,7 @@
 
 		<A href="/keypairoom" class="text-sm">Forgot the seed? Regenerate it</A>
 	{:else}
-		<div class="space-y-4 p-6 flex flex-col">
+		<div class="flex flex-col space-y-4 p-6">
 			<Heading tag="h4">Keys regenerated!</Heading>
 			<P>
 				Your keys have been regenerated. You can now go back to

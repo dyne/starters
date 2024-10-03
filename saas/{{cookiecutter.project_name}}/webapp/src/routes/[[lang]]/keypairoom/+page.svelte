@@ -28,6 +28,7 @@
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { InformationCircle } from 'svelte-heros-v2';
+	import { log } from '$lib/utils/devLog';
 
 	//
 
@@ -63,7 +64,7 @@
 				try {
 					await pb.send('/api/did', {});
 				} catch (e) {
-					console.log(e);
+					log(e);
 				}
 			}
 		}
