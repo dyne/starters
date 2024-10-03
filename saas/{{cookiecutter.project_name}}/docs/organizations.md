@@ -74,9 +74,11 @@ This docs page explain the information flows relative to:
     - `redirect` to `<ui>/register`
     - `🟢 user` completes registration
 
+- `🖥️ ui` ends the `OrganizationInviteSession`
+
 - `🖥️ ui` makes a `redirect` to `<ui>/my/organizations`
 
-- `🖥️ ui` ends the `OrganizationInviteSession`
+  - Invite is displayed on screen
 
 - `🟢 user` can now:
 
@@ -86,3 +88,11 @@ This docs page explain the information flows relative to:
   - decline the invitation
     - `POST` to `/organizations/invite/decline`
     - `body`: `{inviteId:string}`
+
+### Relevant files
+
+- `admin/pb_hooks/organizations_invites.pb.js`
+- `webapp/src/routes/[[lang]]/(nru)/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]/+page.ts`
+- `webapp/src/routes/[[lang]]/my/+layout.ts`
+- `webapp/src/routes/[[lang]]/my/organizations/+page.svelte`
+- `webapp/src/routes/[[lang]]/my/organizations/[id]/members/+page.svelte`
