@@ -63,7 +63,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<CollectionManager
 			{recordType}
 			collection="organizations"
-			initialQueryParams={{ expand }}
+			initialQueryParams={{
+				expand,
+				filter: `(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`
+			}}
 			subscribe={['orgJoinRequests']}
 			let:records
 		>
