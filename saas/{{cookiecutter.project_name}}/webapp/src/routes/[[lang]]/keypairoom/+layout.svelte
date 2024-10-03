@@ -26,7 +26,9 @@
 	</div>
 	<div slot="right" class="flex items-center gap-4">
 		{#if $featureFlags.AUTH}
-			<Button href="/logout" size="xs" color="alternative">{m.Sign_out()}</Button>
+			<Button data-sveltekit-preload-data="false" href="/logout" size="xs" color="alternative">
+				{m.Sign_out()}
+			</Button>
 			<UserAvatar />
 		{/if}
 	</div>
