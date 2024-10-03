@@ -6,7 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { CollectionManager } from '$lib/collectionManager';
-	import CreateRecord from '$lib/collectionManager/ui/recordActions/createRecord.svelte';
 	import {
 		Collections,
 		type OrgAuthorizationsResponse,
@@ -80,7 +79,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							let:openModal
 							modalProps={{ class: 'overflow-hidden' }}
 						>
-							<Button color="alternative" on:click={openModal}>
+							<Button on:click={openModal}>
 								<Plus size="20" class="mr-2" />
 								{m.invite_members()}
 							</Button>
@@ -93,15 +92,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								/>
 							</svelte:fragment>
 						</ModalWrapper>
-
-						<CreateRecord {recordType}>
-							<svelte:fragment slot="button" let:openModal>
-								<Button on:click={openModal} class="shrink-0">
-									<Plus size="20" class="mr-2" />
-									{m.Add_new_member()}
-								</Button>
-							</svelte:fragment>
-						</CreateRecord>
 					</div>
 				</ProtectedOrgUI>
 			</SectionTitle>
