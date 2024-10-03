@@ -211,6 +211,9 @@ function sendEmail(data) {
             to: Array.isArray(data.to) ? data.to : [data.to],
             subject: data.subject,
             html: data.html,
+            headers: {
+                ["Content-Type"]: `text/plain; charset="UTF-8"`,
+            },
         });
 
         $app.newMailClient().send(message);
