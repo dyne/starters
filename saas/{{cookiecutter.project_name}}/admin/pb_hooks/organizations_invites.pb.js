@@ -163,3 +163,20 @@ routerAdd("POST", "/organizations/invite", (c) => {
         }
     }
 });
+
+/* */
+
+onRecordAfterDeleteRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+    /** @type {AuditLogger} */
+    const auditLogger = require(`${__hooks}/auditLogger.js`);
+
+    auditLogger(e.httpContext).info(
+        "Deleted organization invite",
+        "inviteId",
+        e.record?.getId(),
+        "organizationId",
+        e.record?.get("organization")
+    );
+});
