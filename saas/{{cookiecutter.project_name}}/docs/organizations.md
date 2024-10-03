@@ -1,26 +1,88 @@
 # Organizations
 
+This docs page explain the information flows relative to:
+
+- `organization membership request`
+- `organization invite`
+
 ## User requests membership
 
-- `UI` - User sends membership request
-- `POST` to `api/collections/orgJoinRequests` `CREATE`
-- `hook` `onRecordAfterCreateRequest` on `orgJoinRequests` sends an email to the admins.
+### Business logic
 
-- Admins, from the email, are redirected to `/my/organizations/[id]/members`
-- Here, in the UI, two options are possible
+- `🟢 user` sends membership request to `💾 pb`
 
-  - Accept invite: send `POST` to `api/collections/orgJoinRequests` `UPDATE` with body `{status: "accepted"}`
-  - Decline invite: send `POST` to `api/collections/orgJoinRequests` `UPDATE` with body `{status: "declined"}`
+  - `🖥️ ui` makes a `POST` to `api/collections/orgJoinRequests`
+  - `body`: `{organizationId: string, userId: string}`
 
-- `hook` `onRecordAfterUpdateRequest` on `orgJoinRequests` sends an email to the user, to be notified.
+- This triggers a `hook` on `💾 pb` that sends an `✉️ email` to the `🧑‍💼 admins`
 
-## Admin invites user
+  - `hook`: `onRecordAfterCreateRequest` on `orgJoinRequests` collection.
 
-- `UI` - `🧑‍💼 admin` sends `POST` to `organizations/invite` with body `{organizationId: string, emails: string[]}`
-- Route handler sends email to user with an url with params:
-  - organizationId
-  - inviteId
-  - user_email
-  - userId? (in case the user exists)
-- The user, clicks on the link
-  - Case A, the user is already logged on the pl
+- `🧑‍💼 admins` from the `✉️ email`, are redirected to `🖥️ ui`: `/my/organizations/[id]/members`
+
+- `🧑‍💼 admins` in the `🖥️ ui` have two options:
+
+  - accept invite
+    - send `POST` to `<pb>/api/collections/orgJoinRequests`
+    - `body`: `{status: "accepted"}`
+  - decline invite
+    - send `POST` to `<pb>/api/collections/orgJoinRequests`
+    - `body`: `{status: "declined"}`
+
+- `hook` on `💾 pb` sends a notification `✉️ email` to the `🟢 user` about the status change
+
+  - `hook`: `onRecordAfterUpdateRequest` on `orgJoinRequests` collection
+
+### Relevant files
+
+- `admin/pb_hooks/organizations_request_membership.pb.js`
+- `webapp/src/routes/[[lang]]/my/organizations/join/+page.svelte`
+- `webapp/src/routes/[[lang]]/my/organizations/[id]/members/**/*`
+
+## Admin invites users
+
+### Business logic
+
+- `🧑‍💼 admins` invite `🟢 users`
+
+  - `🖥️ ui` sends `POST` to `<pb>/organizations/invite`
+  - `body`: `{organizationId: string, emails: string[]}`
+
+- `💾 pb` handles the route:
+
+  - `org_invite` `records` are created
+  - `✉️ email` is sent to `🟢 users` with `url` `<ui>/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]`
+
+    - `[[userId]]` is optional as `🟢 user` may be not registered on the platform
+
+- `🟢 user` clicks on the link in the `✉️ email` and is redirected to the `🖥️ ui`
+
+- `🖥️ ui` starts an `OrganizationInviteSession` (saved in sessionStorage)
+
+- Two things can happen now:
+
+  - `Case A`: the `🟢 user` has already an `account`
+
+    - `A.1`: is signed in
+      - (pass)
+    - `A.2`: is `not` signed in
+      - `redirect` to `<ui>/login`
+      - `🟢 user` completes login
+
+  - `Case B`, the `🟢 user` is `not registered`
+
+    - `redirect` to `<ui>/register`
+    - `🟢 user` completes registration
+
+- `🖥️ ui` makes a `redirect` to `<ui>/my/organizations`
+
+- `🖥️ ui` ends the `OrganizationInviteSession`
+
+- `🟢 user` can now:
+
+  - accept the invitation
+    - `POST` to `/organizations/invite/accept`
+    - `body`: `{inviteId:string}`
+  - decline the invitation
+    - `POST` to `/organizations/invite/decline`
+    - `body`: `{inviteId:string}`
