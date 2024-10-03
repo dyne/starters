@@ -8,6 +8,31 @@
 /** @typedef {import('./utils.js')} Utils */
 /** @typedef {import('./auditLogger.js')} AuditLogger */
 
+/**
+ * INDEX
+ * - hooks
+ * - routes
+ */
+
+/* Hooks */
+
+onRecordAfterCreateRequest((e) => {
+    /** @type {Utils} */
+    const utils = require(`${__hooks}/utils.js`);
+
+    const invites = utils.findRecordsByFilter(
+        "org_invites",
+        `user_email = "${e.record?.email()}"`
+    );
+    invites.forEach((invite) => {
+        invite.markAsNotNew();
+        invite.set("user", e.record?.getId());
+        $app.dao().saveRecord(invite);
+    });
+}, "users");
+
+/* Routes */
+
 routerAdd("POST", "/organizations/invites/accept", (c) => {
     /** @type {Utils} */
     const utils = require(`${__hooks}/utils.js`);
@@ -77,12 +102,12 @@ routerAdd("POST", "/organizations/invite", (c) => {
     if (!organizationId || !emails)
         throw utils.createMissingDataError("organizationId", "emails");
 
-    const userId = utils.getUserFromContext(c)?.getId();
-    if (!userId) throw utils.createMissingDataError("userId");
+    const actorId = utils.getUserFromContext(c)?.getId();
+    if (!actorId) throw utils.createMissingDataError("userId");
 
-    const role = utils.getUserRole(userId, organizationId);
-    const roleName = role?.get("name");
-    if (roleName != "admin" && roleName != "owner")
+    const actorRole = utils.getUserRole(actorId, organizationId);
+    const actorRoleName = actorRole?.get("name");
+    if (actorRoleName != "admin" && actorRoleName != "owner")
         throw new UnauthorizedError();
 
     /* -- Logic -- */
@@ -108,30 +133,42 @@ routerAdd("POST", "/organizations/invite", (c) => {
             if (user) {
                 const userRole = utils.getUserRole(
                     user.getId(),
-                    organizationId
+                    organizationId,
+                    txDao
                 );
                 if (userRole) continue;
             }
 
             // Checking if invite already exists
 
-            const invite = utils.findFirstRecordByFilter(
+            const existingInvite = utils.findFirstRecordByFilter(
                 "org_invites",
-                `user_email = "${email}"`
+                `user_email = "${email}"`,
+                txDao
             );
-            if (invite) continue;
+            if (existingInvite) continue;
 
             // Otherwise, create invite
 
-            const record = new Record(orgInvitesCollection);
-            record.set("organization", organizationId);
-            record.set("user_email", email);
-            if (user) record.set("user", user.getId());
+            const invite = new Record(orgInvitesCollection);
+            invite.set("organization", organizationId);
+            invite.set("user_email", email);
+            if (user) invite.set("user", user.getId());
+            txDao.saveRecord(invite);
 
-            txDao.saveRecord(record);
+            // Send email
 
-            const organizationsUrl = `${utils.getAppUrl()}/my/organizations`;
-            const a = `<a href="${organizationsUrl}">Manage your invitation</a>`;
+            /** @type {string[]} */
+            // Reference: webapp/src/routes/[[lang]]/(nru)/organization-invite-[orgId]-[inviteId]-[email]-[[userId]]
+            const routeParams = [
+                organizationId,
+                invite.getId(),
+                encodeURIComponent(email),
+                user?.getId() ?? "",
+            ];
+            const paramsString = routeParams.join("-");
+            const emailCtaUrl = `${utils.getAppUrl()}/organization-invite-${paramsString}`;
+            const a = `<a href="${emailCtaUrl}">Manage your invitation</a>`;
 
             const err = utils.sendEmail({
                 to: { address: email, name: "" },
@@ -150,9 +187,9 @@ routerAdd("POST", "/organizations/invite", (c) => {
                     user?.getId()
                 );
             } else {
-                record.markAsNotNew();
-                record.set("failed_email_send", true);
-                txDao.saveRecord(record);
+                invite.markAsNotNew();
+                invite.set("failed_email_send", true);
+                txDao.saveRecord(invite);
 
                 auditLogger(c).info(
                     "failed_to_send_organization_invite",

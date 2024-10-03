@@ -1,6 +1,9 @@
 <script>
 	import { A } from 'flowbite-svelte';
 	import { featureFlags } from '$lib/features';
+	import { WelcomeSession } from '$lib/utils/welcome';
+
+	if (WelcomeSession.isActive()) WelcomeSession.end();
 </script>
 
 <div class="flex flex-col p-4">
