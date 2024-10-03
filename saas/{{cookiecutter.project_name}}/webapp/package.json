@@ -27,7 +27,7 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "npx -y pocketbase-typegen --db ../admin/pb_data/data.db --out src/modules/pocketbase/types/index.ts",
 		"features": "node ./src/lib/features/generateFeaturesList.mjs",
-		"roles": "node ./src/lib/rbac/generateRolesList.mjs",
+		"roles": "node ./src/lib/organizations/generateRolesList.mjs",
 		"definitions": "pnpm types && pnpm export-pocketbase-schema && pnpm features && pnpm roles",
 		"serve": "pnpm build && pnpm preview --host",
 		"export-pocketbase-schema": "node ./src/modules/pocketbase/schema/export-pb-schema/index.mjs",
