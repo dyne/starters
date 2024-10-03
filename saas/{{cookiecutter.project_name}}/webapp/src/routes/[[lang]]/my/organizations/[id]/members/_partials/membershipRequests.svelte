@@ -59,13 +59,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	hideEmptyState
 >
 	{#if records.length}
-		<SectionTitle
-			tag="h5"
-			title={m.Pending_membership_requests()}
-			description={m.pending_membership_requests_description()}
-		/>
-
 		<PageCard>
+			<SectionTitle
+				tag="h5"
+				title={m.Pending_membership_requests()}
+				description={m.pending_membership_requests_description()}
+			/>
+
 			{#each records as request}
 				{@const user = request.expand?.user}
 				{#if user}
