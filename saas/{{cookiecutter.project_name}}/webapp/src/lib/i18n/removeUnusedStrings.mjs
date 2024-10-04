@@ -10,16 +10,18 @@ import path from 'node:path';
 /**
  * Helper function to recursively find all files in a directory
  * @param {string} dirPath
+ * @param {string[]} [exclude=[]]
  * @param {string[]} arrayOfFiles
  * @returns
  */
-function getAllFilesInFolder(dirPath, arrayOfFiles = []) {
+function getAllFilesInFolder(dirPath, exclude = [], arrayOfFiles = []) {
 	const files = fs.readdirSync(dirPath);
 
 	files.forEach(function (file) {
 		const fullPath = path.join(dirPath, file);
+		if (exclude.includes(fullPath)) return;
 		if (fs.statSync(fullPath).isDirectory()) {
-			arrayOfFiles = getAllFilesInFolder(fullPath, arrayOfFiles);
+			arrayOfFiles = getAllFilesInFolder(fullPath, exclude, arrayOfFiles);
 		} else {
 			arrayOfFiles.push(fullPath);
 		}
@@ -29,7 +31,7 @@ function getAllFilesInFolder(dirPath, arrayOfFiles = []) {
 }
 
 /**
- * Extract valid keys from the files based on the "m." pattern
+ * Extract used keys from the files based on the "m." pattern
  * @param {string[]} files
  * @param {string[]} keys
  * @returns {string[]}
@@ -72,10 +74,11 @@ function filterJsonByKeys(json, validKeys) {
 /**
  * Main function to extract keys and filter the JSON
  * @param {string} searchFolder
+ * @param {string[]} exclude
  * @param {string} jsonFilePath
  */
-function main(searchFolder, jsonFilePath) {
-	const allFiles = getAllFilesInFolder(searchFolder);
+function main(searchFolder, exclude, jsonFilePath) {
+	const allFiles = getAllFilesInFolder(searchFolder, exclude);
 	const json = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
 	const keys = Object.keys(json);
 	const validKeys = getKeysInFiles(allFiles, keys);
@@ -93,4 +96,4 @@ function main(searchFolder, jsonFilePath) {
 //   process.exit(1);
 // }
 
-main('./src/', './messages/en.json');
+main('./src/', ['src/paraglide'], './messages/en.json');
