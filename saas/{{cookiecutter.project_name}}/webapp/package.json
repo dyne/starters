@@ -30,7 +30,10 @@
 		"roles": "node ./src/lib/organizations/generateRolesList.mjs",
 		"schema": "node ./src/lib/pocketbase/schema/generateSchema.mjs",
 		"definitions": "pnpm types && pnpm schema && pnpm features && pnpm roles",
-		"serve": "pnpm build && pnpm preview --host"
+		"serve": "pnpm build && pnpm preview --host",
+		"remove-unused-strings": "node ./src/lib/i18n/removeUnusedStrings.mjs",
+		"i18n:lint": "pnpm inlang lint --project ./project.inlang",
+		"i18n:lint:en": "pnpm inlang lint --project ./project.inlang --languageTags en"
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "1.9.1",
@@ -69,6 +72,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@inlang/cli": "^2.18.1",
 		"@inlang/paraglide-sveltekit": "0.8.1",
 		"@popperjs/core": "^2.11.8",
 		"classnames": "^2.5.1",
