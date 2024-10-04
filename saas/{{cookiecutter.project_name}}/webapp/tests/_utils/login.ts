@@ -17,7 +17,7 @@ export async function login(page: Page, email: string, password: string) {
 
 	await expect(page).toHaveURL(/keypairoom/);
 	if (/keypairoom\/regenerate/.test(page.url())) {
-		await page.getByRole('link', { name: 'Forgot the seed? Regenerate it' }).click();
+		await page.getByRole('link', { name: 'Forgot the "seed"? Regenerate it' }).click();
 	}
 
 	const o = page.locator('input[name="questions\\.whereParentsMet"]');
@@ -29,7 +29,7 @@ export async function login(page: Page, email: string, password: string) {
 	await page.locator('input[name="questions\\.nameFirstTeacher"]').fill('p');
 	await page.locator('input[name="questions\\.nameMotherMaid"]').fill('p');
 
-	await page.getByRole('button', { name: 'Generate keys' }).click();
+	await page.getByRole('button', { name: 'Generate private keys' }).click();
 	await page.getByRole('button', { name: 'Go to Dashboard' }).click();
 
 	await expect(page).toHaveURL(/my/);
