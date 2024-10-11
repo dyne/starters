@@ -1,18 +1,69 @@
 import { z } from 'zod';
 
-import type { fieldConfigToZodTypeMap } from './config';
+import { fieldConfigToZodTypeMap } from './config';
 import type {
-	AnyFieldConfig,
-	CollectionConfig,
-	CollectionName
+	CollectionName,
+	CollectionRequest,
+	AnyFieldConfig
 } from '@/pocketbase/collections-config/types';
+// import type {
+// 	CollectionSchemaObject,
+// 	CollectionConfig,
+// 	CollectionName,
+// 	FieldType,
+// 	CollectionRequest,
+// 	AnyFieldConfig
+// } from '@/pocketbase/collections-config/types';
 
-import type { CollectionRecords } from '@/pocketbase/types';
+// import type { CollectionRecords } from '@/pocketbase/types';
+import { getCollectionConfig } from '../collections-config';
+import { isArrayField } from '../collections-config/utils';
+import { pipe } from 'effect';
+// import { Option, pipe, Record, Tuple } from 'effect';
 
-// import * as TF from 'type-fest';
+import * as TF from 'type-fest';
 // import type { Not, If } from '@/utils/types';
 
 //
+
+export function createCollectionZodSchema<C extends CollectionName>(
+	collection: C
+): z.ZodType<TF.Simplify<CollectionRequest<C>>> {
+	const { schema } = getCollectionConfig(collection);
+	const entries = schema.map((fieldConfig) => {
+		const zodTypeConstructor = fieldConfigToZodTypeMap[fieldConfig.type] as (
+			c: AnyFieldConfig
+		) => z.ZodTypeAny;
+		const zodType = pipe(
+			zodTypeConstructor(fieldConfig),
+			(zodType) => {
+				if (isArrayField(fieldConfig)) {
+					const s = z.array(zodType);
+					if (fieldConfig.required) return s.nonempty();
+					return s.nullish();
+				} else {
+					return zodType;
+				}
+			},
+			(zodType) => {
+				if (fieldConfig.required) {
+					if (isArrayField(fieldConfig) && zodType instanceof z.ZodArray) return zodType.nonempty();
+					else return zodType;
+				} else {
+					// Extra check for url: https://github.com/colinhacks/zod/discussions/1254
+					if (fieldConfig.type == 'url') return zodType.or(z.literal('')).nullish();
+					return zodType.nullish();
+				}
+			}
+		);
+		return [fieldConfig.name, zodType];
+	});
+	const rawObject = Object.fromEntries(entries);
+	return z.object(rawObject) as z.ZodType<CollectionRequest<C>>;
+}
+
+const s = createCollectionZodSchema('z_test_collection');
+const y = s.parse({});
 
 /* Field Config -> Zod Array */
 
@@ -25,17 +76,18 @@ import type { CollectionRecords } from '@/pocketbase/types';
 // type IsArrayField<F extends AnyFieldConfig> = TF.And<CanBeArrayField<F>, Not<HasMaxSelectOne<F>>>;
 
 // type FieldConfigToZodTypeMap = typeof fieldConfigToZodTypeMap;
+// type FieldSchema<Type extends FieldType> = ReturnType<FieldConfigToZodTypeMap[Type]>;
 
-// type N = CollectionRecords["z_test_collection"]
+// // type N = CollectionRecords["z_test_collection"]
 
-// type FieldSchema<F extends AnyFieldConfig> = ReturnType<FieldConfigToZodTypeMap[F['type']]>;
+// type CollectionFieldConfig<C extends CollectionName> = CollectionConfig<C>['schema'][number];
 
-export type CollectionZodSchema<C extends CollectionName> = {
-	[K in keyof CollectionRecords[C]]: CollectionConfig<C>;
-};
-// [K in keyof CollectionRecords[C]]: FieldSchema<Extract<CollectionRecords[C][""], [K]>>;
+// export type CollectionZodSchema<C extends CollectionName, Schema = CollectionSchemaObject<C>> = {
+// 	[K in keyof Schema]: FieldSchema<Schema[K]['type']>;
+// };
+// // [K in keyof CollectionRecords[C]]: FieldSchema<Extract<CollectionRecords[C][""], [K]>>;
 
-type O = CollectionConfig<'z_test_collection'>;
+// type O = CollectionZodSchema<'z_test_collection'>;
 // type N = CollectionZodSchema<"z_test_collection">
 // type FieldConfigToSchema<C extends AnyFieldConfig> = If<
 // 	IsArrayField<C>,
@@ -64,38 +116,6 @@ type O = CollectionConfig<'z_test_collection'>;
 
 // let U: N
 // U.extend({}).pick({}).omit({})
-
-// export function createCollectionZodSchema<C extends CollectionName>(
-// 	collection: C
-// ): CollectionZodSchema<C> {
-// 	const entries = pocketbaseConfig
-// 		.find((collectionConfig) => collectionConfig.name == collection)
-// 		?.schema.map((fieldConfig) =>
-// 			Tuple.make(
-// 				fieldConfig.name as keyof CollectionTypeWithFile<C>,
-// 				pipe(
-// 					fieldConfigToSchema(fieldConfig),
-// 					(schema) => {
-// 						if (!fieldConfig.required) {
-// 							// Extra check for url: https://github.com/colinhacks/zod/discussions/1254
-// 							if (fieldConfig.type == 'url') return schema.or(z.literal('')).nullish();
-// 							else return schema.nullish();
-// 						} else return schema;
-// 					},
-// 					(schema) => {
-// 						if (isArrayField(fieldConfig)) {
-// 							const s = z.array(schema);
-// 							if (fieldConfig.required) return s.nonempty();
-// 							return s.nullish();
-// 						} else return schema;
-// 					}
-// 				)
-// 			)
-// 		);
-// 	if (!entries) throw new CollectionSchemaNotFoundError();
-// 	const rawObject = Object.fromEntries(entries);
-// 	return z.object(rawObject) as CollectionZodSchema<C>;
-// }
 
 // class UnhandledFieldTypeError extends Error {}
 // // class UnhandlefFieldOptionsError extends Error {}
