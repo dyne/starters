@@ -1,4 +1,4 @@
-import { FieldType as FT, type CollectionConfig } from '@/pocketbase/schema/types';
+import { FieldType as FT, type CollectionConfig } from '@/pocketbase/collections-config/types';
 import { Schema as S } from '@effect/schema';
 import { FileSchema, UrlSchema } from '@/utils/schema';
 import type { ConverterConfig } from './types';

@@ -18,19 +18,29 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { RecordForm } from '$lib/recordForm';
 	import { createFieldComponent } from '$lib/recordForm/fieldSchemaToInput.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { createCollectionZodSchema } from '@/pocketbase/zod-schema/index.js';
 
 	export let data;
 	console.log(data.item);
 
-	const recordType = createTypeProp<
-		CrudExampleResponse<{
-			relation: FeaturesResponse[];
-			relation_single: FeaturesResponse;
-			owner: UsersResponse;
-		}>
-	>();
+	const schema = createCollectionZodSchema('authorizations');
+	const adapter = zod(schema);
+	const s = superForm(defaults(adapter));
+
+	const { form } = s;
+
+	// const recordType = createTypeProp<
+	// 	CrudExampleResponse<{
+	// 		relation: FeaturesResponse[];
+	// 		relation_single: FeaturesResponse;
+	// 		owner: UsersResponse;
+	// 	}>
+	// >();
 </script>
 
+<!-- 
 <div class="mx-auto max-w-xl p-4">
 	<RecordForm
 		{recordType}
@@ -57,4 +67,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		}}
 		on:success={invalidateAll}
 	/>
-</div>
+</div> -->

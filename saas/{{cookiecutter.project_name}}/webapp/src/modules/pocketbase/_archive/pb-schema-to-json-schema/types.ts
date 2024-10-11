@@ -1,5 +1,5 @@
 import type { Schema as S } from '@effect/schema'; // eslint-disable-line @typescript-eslint/no-unused-vars
-import { FieldType, type CollectionConfig } from '@/pocketbase/schema/types';
+import { FieldType, type CollectionConfig } from '@/pocketbase/collections-config/types';
 
 /* Filters */
 

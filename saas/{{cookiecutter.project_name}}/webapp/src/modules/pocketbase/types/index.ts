@@ -14,7 +14,6 @@ export enum Collections {
 	OrgAuthorizations = "orgAuthorizations",
 	OrgJoinRequests = "orgJoinRequests",
 	OrgRoles = "orgRoles",
-	OrgInvites = "org_invites",
 	Organizations = "organizations",
 	SessionDataWebauthn = "sessionDataWebauthn",
 	Users = "users",
@@ -139,14 +138,6 @@ export type OrgRolesRecord = {
 	name: string
 }
 
-export type OrgInvitesRecord = {
-	declined?: boolean
-	failed_email_send?: boolean
-	organization: RecordIdString
-	user?: RecordIdString
-	user_email?: string
-}
-
 export type OrganizationsRecord = {
 	avatar?: string
 	description?: HTMLString
@@ -155,7 +146,7 @@ export type OrganizationsRecord = {
 
 export type SessionDataWebauthnRecord<Tsession = unknown> = {
 	session?: null | Tsession
-	user: RecordIdString
+	user?: RecordIdString
 }
 
 export type UsersRecord = {
@@ -176,7 +167,7 @@ export type UsersPublicKeysRecord = {
 export type WebauthnCredentialsRecord<Tcredential = unknown> = {
 	credential?: null | Tcredential
 	description?: string
-	user: RecordIdString
+	user?: RecordIdString
 }
 
 export enum ZTestCollectionSelectFieldOptions {
@@ -216,7 +207,6 @@ export type HooksResponse<Texpand = unknown> = Required<HooksRecord> & BaseSyste
 export type OrgAuthorizationsResponse<Texpand = unknown> = Required<OrgAuthorizationsRecord> & BaseSystemFields<Texpand>
 export type OrgJoinRequestsResponse<Texpand = unknown> = Required<OrgJoinRequestsRecord> & BaseSystemFields<Texpand>
 export type OrgRolesResponse<Texpand = unknown> = Required<OrgRolesRecord> & BaseSystemFields<Texpand>
-export type OrgInvitesResponse<Texpand = unknown> = Required<OrgInvitesRecord> & BaseSystemFields<Texpand>
 export type OrganizationsResponse<Texpand = unknown> = Required<OrganizationsRecord> & BaseSystemFields<Texpand>
 export type SessionDataWebauthnResponse<Tsession = unknown, Texpand = unknown> = Required<SessionDataWebauthnRecord<Tsession>> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
@@ -235,7 +225,6 @@ export type CollectionRecords = {
 	orgAuthorizations: OrgAuthorizationsRecord
 	orgJoinRequests: OrgJoinRequestsRecord
 	orgRoles: OrgRolesRecord
-	org_invites: OrgInvitesRecord
 	organizations: OrganizationsRecord
 	sessionDataWebauthn: SessionDataWebauthnRecord
 	users: UsersRecord
@@ -253,7 +242,6 @@ export type CollectionResponses = {
 	orgAuthorizations: OrgAuthorizationsResponse
 	orgJoinRequests: OrgJoinRequestsResponse
 	orgRoles: OrgRolesResponse
-	org_invites: OrgInvitesResponse
 	organizations: OrganizationsResponse
 	sessionDataWebauthn: SessionDataWebauthnResponse
 	users: UsersResponse
@@ -274,7 +262,6 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'orgAuthorizations'): RecordService<OrgAuthorizationsResponse>
 	collection(idOrName: 'orgJoinRequests'): RecordService<OrgJoinRequestsResponse>
 	collection(idOrName: 'orgRoles'): RecordService<OrgRolesResponse>
-	collection(idOrName: 'org_invites'): RecordService<OrgInvitesResponse>
 	collection(idOrName: 'organizations'): RecordService<OrganizationsResponse>
 	collection(idOrName: 'sessionDataWebauthn'): RecordService<SessionDataWebauthnResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>

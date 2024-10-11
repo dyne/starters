@@ -1,8 +1,8 @@
 import { Option as O, pipe, Record as R, Array as A, Effect, Tuple } from 'effect';
 import { Schema as S } from '@effect/schema';
 
-import { FieldType as FT, type FieldConfig } from '@/pocketbase/schema/types';
-import { isArrayField } from '@/pocketbase/schema/utils';
+import { FieldType as FT, type FieldConfig } from '@/pocketbase/collections-config/types';
+import { isArrayField } from '@/pocketbase/collections-config/utils';
 
 import { type SchemaFilter, type FieldSchemaFiltersConfig } from './types';
 import { config } from './config';
