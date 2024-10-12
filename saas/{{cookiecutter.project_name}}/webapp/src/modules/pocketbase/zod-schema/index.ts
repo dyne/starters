@@ -26,15 +26,24 @@ import * as TF from 'type-fest';
 
 //
 
+type ZodExtend = Record<string, z.ZodTypeAny>;
+type InferZodExtend<E extends ZodExtend> = {
+	[K in keyof E]: z.infer<E[K]>;
+};
+
 export function createCollectionZodSchema<
 	C extends CollectionName,
 	Exclude extends (keyof CollectionRequest<C>)[],
+	Extend extends ZodExtend,
 	Req = CollectionRequest<C>,
-	Res = z.ZodType<TF.Simplify<Omit<Req, Exclude[number]>>>
+	Res = z.ZodType<
+		TF.Simplify<TF.OmitIndexSignature<Omit<Req, Exclude[number]> & InferZodExtend<Extend>>>
+	>
 >(
 	collection: C,
 	options: {
 		exclude?: Exclude;
+		extend?: Extend;
 	} = {}
 ): Res {
 	options;
@@ -65,7 +74,10 @@ export function createCollectionZodSchema<
 }
 
 const s = createCollectionZodSchema('z_test_collection', {
-	exclude: ['boolean_field', 'text_field', 'file_multi_field', 'relation_field']
+	exclude: ['boolean_field', 'text_field', 'file_multi_field', 'relation_field'],
+	extend: {
+		gino: z.string()
+	}
 });
 const y = s.parse({});
 
