@@ -1,7 +1,7 @@
 import { pipe } from 'effect';
 import { z } from 'zod';
 
-import type { FieldType, FieldConfig } from '@/pocketbase/collections-config/types';
+import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-config/types';
 
 /* Field Config -> Zod Type */
 
@@ -89,8 +89,12 @@ export const fieldConfigToZodTypeMap = {
 } as const satisfies FieldConfigToZodTypeMapRequirement;
 
 type FieldConfigToZodTypeMapRequirement = {
-	[Type in FieldType]: <Config extends FieldConfig<Type>>(config: Config) => z.ZodTypeAny;
+	[Type in FieldType]: FieldConfigToZodType<FieldConfig<Type>>;
 };
+
+export type FieldConfigToZodType<Config extends AnyFieldConfig = AnyFieldConfig> = (
+	config: Config
+) => z.ZodTypeAny;
 
 //
 

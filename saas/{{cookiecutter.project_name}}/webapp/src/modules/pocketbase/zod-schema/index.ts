@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { fieldConfigToZodTypeMap } from './config';
+import { fieldConfigToZodTypeMap, type FieldConfigToZodType } from './config';
 import type {
 	CollectionName,
 	CollectionRequest,
@@ -31,28 +31,21 @@ export function createCollectionZodSchema<C extends CollectionName>(
 ): z.ZodType<TF.Simplify<CollectionRequest<C>>> {
 	const { schema } = getCollectionConfig(collection);
 	const entries = schema.map((fieldConfig) => {
-		const zodTypeConstructor = fieldConfigToZodTypeMap[fieldConfig.type] as (
-			c: AnyFieldConfig
-		) => z.ZodTypeAny;
+		const zodTypeConstructor = fieldConfigToZodTypeMap[fieldConfig.type] as FieldConfigToZodType;
 		const zodType = pipe(
 			zodTypeConstructor(fieldConfig),
 			(zodType) => {
-				if (isArrayField(fieldConfig)) {
-					const s = z.array(zodType);
-					if (fieldConfig.required) return s.nonempty();
-					return s.nullish();
-				} else {
-					return zodType;
-				}
+				if (isArrayField(fieldConfig)) return z.array(zodType);
+				else return zodType;
 			},
 			(zodType) => {
 				if (fieldConfig.required) {
-					if (isArrayField(fieldConfig) && zodType instanceof z.ZodArray) return zodType.nonempty();
+					if (zodType instanceof z.ZodArray) return zodType.nonempty();
 					else return zodType;
 				} else {
 					// Extra check for url: https://github.com/colinhacks/zod/discussions/1254
 					if (fieldConfig.type == 'url') return zodType.or(z.literal('')).nullish();
-					return zodType.nullish();
+					else return zodType.nullish();
 				}
 			}
 		);
