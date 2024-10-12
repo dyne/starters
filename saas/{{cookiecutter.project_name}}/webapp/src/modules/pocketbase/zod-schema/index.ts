@@ -26,9 +26,18 @@ import * as TF from 'type-fest';
 
 //
 
-export function createCollectionZodSchema<C extends CollectionName>(
-	collection: C
-): z.ZodType<TF.Simplify<CollectionRequest<C>>> {
+export function createCollectionZodSchema<
+	C extends CollectionName,
+	Exclude extends (keyof CollectionRequest<C>)[],
+	Req = CollectionRequest<C>,
+	Res = z.ZodType<TF.Simplify<Omit<Req, Exclude[number]>>>
+>(
+	collection: C,
+	options: {
+		exclude?: Exclude;
+	} = {}
+): Res {
+	options;
 	const { schema } = getCollectionConfig(collection);
 	const entries = schema.map((fieldConfig) => {
 		const zodTypeConstructor = fieldConfigToZodTypeMap[fieldConfig.type] as FieldConfigToZodType;
@@ -52,10 +61,12 @@ export function createCollectionZodSchema<C extends CollectionName>(
 		return [fieldConfig.name, zodType];
 	});
 	const rawObject = Object.fromEntries(entries);
-	return z.object(rawObject) as z.ZodType<CollectionRequest<C>>;
+	return z.object(rawObject) as Res;
 }
 
-const s = createCollectionZodSchema('z_test_collection');
+const s = createCollectionZodSchema('z_test_collection', {
+	exclude: ['boolean_field', 'text_field', 'file_multi_field', 'relation_field']
+});
 const y = s.parse({});
 
 /* Field Config -> Zod Array */
