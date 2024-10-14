@@ -3,13 +3,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { isFile, isFileArray } from '$lib/forms/fields';
-import { isArrayField } from '$lib/pocketbase/schema';
-import {
-	FieldType,
-	type FieldSchema,
-	type CollectionSchema,
-	type FieldOptions
-} from '$lib/pocketbase/schema/types';
+import { isArrayField } from '@/pocketbase/collections-models/utils';
+import type {
+	AnyFieldConfig,
+	AnyCollectionModel,
+	FieldConfig
+} from '@/pocketbase/collections-models/types';
 
 //
 
@@ -31,8 +30,8 @@ type InitialData = Record<string, unknown>;
 
 // 1. Store original data
 
-export function getFileFieldInitialData(field: FieldSchema, initialData: InitialData) {
-	if (field.type == FieldType.FILE && field.name in initialData) {
+export function getFileFieldInitialData(field: AnyFieldConfig, initialData: InitialData) {
+	if (field.type == 'file' && field.name in initialData) {
 		const data = initialData[field.name] as string | string[];
 		if (!isArrayField(field) && typeof data == 'string') {
 			if (data) return [data];
@@ -43,9 +42,12 @@ export function getFileFieldInitialData(field: FieldSchema, initialData: Initial
 	}
 }
 
-export function getFileFieldsInitialData(collection: CollectionSchema, initialData: InitialData) {
+export function getFileFieldsInitialData(
+	collectionModel: AnyCollectionModel,
+	initialData: InitialData
+) {
 	const fileFieldsInitialData: Record<string, string[]> = {};
-	for (const field of collection.schema) {
+	for (const field of collectionModel.schema) {
 		const data = getFileFieldInitialData(field, initialData);
 		if (data) fileFieldsInitialData[field.name] = data;
 	}
@@ -54,9 +56,9 @@ export function getFileFieldsInitialData(collection: CollectionSchema, initialDa
 
 // 2. Convert strings to "placeholder" files
 
-function mockFile(filename: string, fieldOptions: FieldOptions = {}) {
+function mockFile(filename: string, fileFieldConfig: FieldConfig<'file'>) {
 	let fileOptions = undefined;
-	const mimeTypes = fieldOptions.mimeTypes;
+	const mimeTypes = fileFieldConfig.options.mimeTypes;
 	if (Array.isArray(mimeTypes) && mimeTypes.length > 0) {
 		fileOptions = { type: mimeTypes[0] };
 	}
@@ -64,22 +66,25 @@ function mockFile(filename: string, fieldOptions: FieldOptions = {}) {
 	return mockFile;
 }
 
-export function mockFileFieldInitialData(field: FieldSchema, initialData: InitialData) {
-	if (field.type == FieldType.FILE && field.name in initialData) {
+export function mockFileFieldInitialData(field: AnyFieldConfig, initialData: InitialData) {
+	if (field.type == 'file' && field.name in initialData) {
 		const data = initialData[field.name] as string | string[];
 		if (!isArrayField(field) && typeof data == 'string') {
-			if (data) return mockFile(data, field.options);
+			if (data) return mockFile(data, field);
 			else return undefined;
 		} else if (isArrayField(field) && Array.isArray(data)) {
-			return data.map((item) => mockFile(item, field.options));
+			return data.map((item) => mockFile(item, field));
 		}
 	}
 }
 
-export function mockFileFieldsInitialData(collection: CollectionSchema, initialData: InitialData) {
+export function mockFileFieldsInitialData(
+	collection: AnyCollectionModel,
+	initialData: InitialData
+) {
 	const data = { ...initialData };
 	for (const field of collection.schema) {
-		if (field.type == FieldType.FILE && field.name in initialData) {
+		if (field.type == 'file' && field.name in initialData) {
 			data[field.name] = mockFileFieldInitialData(field, initialData);
 		}
 	}

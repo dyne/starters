@@ -5,8 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
-	import { OrgJoinRequestsStatusOptions } from '$lib/pocketbase/types';
+	import { pb } from '@/pocketbase';
+	import { OrgJoinRequestsStatusOptions } from '@/pocketbase/types';
 	import { goto, m } from '$lib/i18n';
 	import { z } from 'zod';
 

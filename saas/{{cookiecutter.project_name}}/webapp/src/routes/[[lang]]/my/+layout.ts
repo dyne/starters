@@ -10,7 +10,7 @@ import { browser } from '$app/environment';
 import { redirect } from '$lib/i18n';
 import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '$lib/keypairoom/keypair';
 import { getUserPublicKeys } from '$lib/keypairoom/utils';
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import {
 	Collections,
 	type OrgAuthorizationsResponse,

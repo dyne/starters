@@ -1,6 +1,6 @@
 import { getKeyringFromLocalStorage } from '$lib/keypairoom/keypair';
 import { loadFeatureFlags } from '$lib/features';
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
 import { redirect } from '$lib/i18n';
 

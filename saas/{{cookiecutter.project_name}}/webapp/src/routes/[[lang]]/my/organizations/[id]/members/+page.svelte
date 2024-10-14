@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import SectionTitle from '$lib/components/sectionTitle.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import { currentUser } from '$lib/pocketbase/index.js';
+	import { currentUser } from '@/pocketbase/index.js';
 	import { c } from '$lib/utils/strings.js';
 	import EditRecord from '$lib/collectionManager/ui/recordActions/editRecord.svelte';
 	import DeleteRecord from '$lib/collectionManager/ui/recordActions/deleteRecord.svelte';

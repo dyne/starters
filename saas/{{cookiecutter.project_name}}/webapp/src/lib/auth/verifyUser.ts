@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { browser } from '$app/environment';
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 
 // Reference: https://github.com/pocketbase/js-sdk/issues/85
 

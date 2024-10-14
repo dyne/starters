@@ -53,6 +53,7 @@ export const fieldConfigToZodTypeMap = {
 	json: ({ options }) => {
 		// eslint-disable-next-line
 		const { maxSize } = options; // TODO - Implement
+		console.log(maxSize);
 		return z.unknown();
 		// return z.record(z.unknown()).refine((json) => {
 		// 	if (maxSize) new Blob([JSON.stringify(json)]).size < maxSize;

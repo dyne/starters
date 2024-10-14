@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getCollectionSchema } from '$lib/pocketbase/schema';
-import { Collections } from '@/pocketbase/types';
+import { getCollectionModel } from '@/pocketbase/collections-models';
+import type { CollectionName } from '@/pocketbase/collections-models/types';
 import type { PBResponse } from '$lib/utils/types';
 
 //
@@ -12,7 +12,7 @@ export function excludeIdsFilter(ids: string[]) {
 	return ids.map((id) => `id != '${id}'`).join(' && ');
 }
 
-export function searchTextFilter(collection: string, text: string) {
+export function searchTextFilter(collection: CollectionName, text: string) {
 	return getCollectionFieldNames(collection)
 		.map((f) => `${f} ~ "${text}"`)
 		.join(' || ');
@@ -33,14 +33,14 @@ function isNonEmptyString(s: string | undefined): s is string {
 
 //
 
-function getCollectionFieldNames(collection: string | Collections): string[] {
+function getCollectionFieldNames(collection: CollectionName): string[] {
 	const fieldNames: string[] = [];
 
-	if (collection == '_pb_users_auth_' || collection == Collections.Users) {
+	if (collection == 'users') {
 		fieldNames.push('email');
 	}
 
-	const collectionSchema = getCollectionSchema(collection);
+	const collectionSchema = getCollectionModel(collection);
 	if (collectionSchema) {
 		collectionSchema.schema.forEach((field) => {
 			fieldNames.push(field.name);

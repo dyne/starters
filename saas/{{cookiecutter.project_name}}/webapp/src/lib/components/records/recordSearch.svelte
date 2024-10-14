@@ -5,11 +5,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+
 	import type { RecordFullListOptions } from 'pocketbase';
 
 	import type { RecordInputOptions } from './types';
 
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import type { PBResponse } from '$lib/utils/types';
 	import type { Collections } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
@@ -25,7 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	//
 
-	export let collection: string | Collections;
+	export let collection: CollectionName;
 	export let recordId: string | undefined = undefined;
 	export let options: Partial<RecordInputOptions<RecordGeneric>> = {};
 

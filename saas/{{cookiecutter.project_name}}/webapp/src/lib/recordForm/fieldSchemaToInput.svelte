@@ -30,8 +30,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { Checkbox, File, Hidden, Input, Relations, Select, Textarea } from '$lib/forms/fields';
-	import { isArrayField } from '$lib/pocketbase/schema';
-	import { type FieldSchema, FieldType } from '$lib/pocketbase/schema/types';
+	import { isArrayField } from '@/pocketbase/collections-models/utils';
+	import type { AnyFieldConfig, FieldType } from '@/pocketbase/collections-models/types';
 	import type { ZodValidation } from 'sveltekit-superforms';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
@@ -44,7 +44,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	type R = $$Generic<PBResponse>;
 
-	export let fieldSchema: FieldSchema;
+	export let fieldSchema: AnyFieldConfig;
 	export let component: FieldComponentProp = undefined;
 	export let hidden = false;
 	export let relationInputOptions: Partial<RecordsManagerOptions<R>> = {};
@@ -61,22 +61,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	/* Select */
 
 	let options: string[] = [];
-	if (fieldSchema.type == FieldType.SELECT) {
-		options = fieldSchema.options.values as string[];
+	if (fieldSchema.type == 'select') {
+		options = [...fieldSchema.options.values];
 	}
 
 	/* File */
 
 	let accept: string;
-	if (fieldSchema.type == FieldType.FILE) {
-		accept = (fieldSchema.options.mimeTypes as string[]).join(',');
+	if (fieldSchema.type == 'file') {
+		accept = fieldSchema.options.mimeTypes.join(',');
 	}
 
 	/* Relation */
 
 	let collectionId: string;
 	let max: number;
-	if (fieldSchema.type == FieldType.RELATION) {
+	if (fieldSchema.type == 'relation') {
 		collectionId = fieldSchema.options.collectionId as string;
 		max = fieldSchema.options.maxSelect as number;
 	}
@@ -93,29 +93,29 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{...component.events}
 		{label}
 	/>
-{:else if fieldSchema.type == FieldType.TEXT || fieldSchema.type == FieldType.URL}
+{:else if fieldSchema.type == 'text' || fieldSchema.type == 'url'}
 	<Input {superform} {field} options={{ label, helpText: description, placeholder }} />
-{:else if fieldSchema.type == FieldType.NUMBER}
+{:else if fieldSchema.type == 'number'}
 	<Input
 		{superform}
 		{field}
 		options={{ label, helpText: description, type: 'number', placeholder }}
 	/>
-{:else if fieldSchema.type == FieldType.JSON}
+{:else if fieldSchema.type == 'json'}
 	<Textarea {superform} {field} options={{ label, helpText: description, placeholder }} />
-{:else if fieldSchema.type == FieldType.BOOL}
+{:else if fieldSchema.type == 'bool'}
 	<Checkbox {superform} {field}>{label}</Checkbox>
-{:else if fieldSchema.type == FieldType.FILE}
+{:else if fieldSchema.type == 'file'}
 	<File {superform} {field} options={{ label, multiple, accept, placeholder }} />
-{:else if fieldSchema.type == FieldType.SELECT}
+{:else if fieldSchema.type == 'select'}
 	<Select
 		{superform}
 		{field}
 		options={{ label, options, multiple, helpText: description, placeholder }}
 	/>
-{:else if fieldSchema.type == FieldType.EDITOR}
+{:else if fieldSchema.type == 'editor'}
 	<Textarea {superform} {field} options={{ label, helpText: description, placeholder }} />
-{:else if fieldSchema.type == FieldType.RELATION}
+{:else if fieldSchema.type == 'relation'}
 	<Relations
 		{superform}
 		{field}

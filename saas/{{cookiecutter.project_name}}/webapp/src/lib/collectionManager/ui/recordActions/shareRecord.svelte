@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal, Spinner, P } from 'flowbite-svelte';
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '@/pocketbase';
 	import { ArrowLeft, Share, Trash } from 'svelte-heros-v2';
 	import { createEventDispatcher } from 'svelte';
 

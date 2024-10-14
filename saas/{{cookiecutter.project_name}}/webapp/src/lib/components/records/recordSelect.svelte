@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { onMount } from 'svelte';
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import { Select } from 'flowbite-svelte';
 	import { createRecordLabel, excludeIdsFilter, mergeFilters } from './utils';
 

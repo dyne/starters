@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser } from '@/pocketbase';
 
 	import {
 		UIShell,

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser } from '@/pocketbase';
 	import {
 		Footer,
 		FooterBrand,
@@ -44,7 +44,6 @@
 	} from 'svelte-heros-v2';
 	import { appTitle } from '$lib/strings';
 	import { featureFlags } from '$lib/features';
-
 </script>
 
 <div class="flex flex-col gap-20">
@@ -100,7 +99,7 @@
 					alt="office content 1"
 				/>
 				<img
-					class="mt-4 w-full lg:mt-10 rounded-lg"
+					class="mt-4 w-full rounded-lg lg:mt-10"
 					src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/office-long-1.png"
 					alt="office content 2"
 				/>
@@ -116,7 +115,7 @@
 				long-term value and drive economic growth.</svelte:fragment
 			>
 		</PricingHead>
-		<div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+		<div class="space-y-8 sm:gap-6 lg:grid lg:grid-cols-3 lg:space-y-0 xl:gap-10">
 			<PricingCard>
 				<PricingBodyHead>
 					<svelte:fragment slot="h3">Starter</svelte:fragment>
@@ -223,7 +222,7 @@
 
 	<Section name="feature">
 		<HeroHeader
-			class="max-w-screen-md mb-8 lg:mb-16"
+			class="mb-8 max-w-screen-md lg:mb-16"
 			h2Class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
 			pClass="text-gray-500 sm:text-xl dark:text-gray-400"
 		>
@@ -237,7 +236,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><PresentationChartLine
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Marketing</svelte:fragment>
@@ -249,7 +248,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><AcademicCap
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Legal</svelte:fragment>
@@ -261,7 +260,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><Briefcase
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Business Automation</svelte:fragment>
@@ -273,7 +272,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><CurrencyDollar
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Finance</svelte:fragment>
@@ -285,7 +284,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><Bolt
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Enterprise Design</svelte:fragment>
@@ -297,7 +296,7 @@
 			<FeatureItem>
 				<svelte:fragment slot="icon"
 					><Cog
-						class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
+						class="text-primary-600 dark:text-primary-300 h-5 w-5 lg:h-6 lg:w-6"
 					/></svelte:fragment
 				>
 				<svelte:fragment slot="h3">Operations</svelte:fragment>
@@ -318,11 +317,11 @@
 			</svelte:fragment>
 			<form class="space-y-8">
 				<div>
-					<Label for="email" class="block mb-2">Your email</Label>
+					<Label for="email" class="mb-2 block">Your email</Label>
 					<Input id="email" name="email" placeholder={`name@${appTitle}.com`} required />
 				</div>
 				<div>
-					<Label for="subject" class="block mb-2">Subject</Label>
+					<Label for="subject" class="mb-2 block">Subject</Label>
 					<Input
 						id="subject"
 						name="subject"
@@ -361,7 +360,7 @@
 					</p>
 				</div>
 				<div>
-					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
+					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-400 dark:text-white">
 						Resources
 					</h2>
 					<FooterLinkGroup>
@@ -373,7 +372,7 @@
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
+					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-400 dark:text-white">
 						HELP & SUPPORT
 					</h2>
 					<FooterLinkGroup>
@@ -385,7 +384,7 @@
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">
+					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-400 dark:text-white">
 						Follow us
 					</h2>
 					<FooterLinkGroup>
@@ -396,7 +395,7 @@
 					</FooterLinkGroup>
 				</div>
 				<div>
-					<h2 class="mb-6 text-sm font-semibold text-gray-400 uppercase dark:text-white">Legal</h2>
+					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-400 dark:text-white">Legal</h2>
 					<FooterLinkGroup>
 						<FooterLink
 							liClass="mb-4"
@@ -405,10 +404,10 @@
 					</FooterLinkGroup>
 				</div>
 			</div>
-			<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+			<hr class="my-6 border-gray-200 sm:mx-auto lg:my-8 dark:border-gray-700" />
 			<div class="sm:flex sm:items-center sm:justify-between">
 				<FooterCopyright href="/" by={appTitle} />
-				<div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
+				<div class="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Facebook} />
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Twitter} />
 					<FooterIcon href="/" class="text-gray-400 hover:text-gray-900" icon={Github} />

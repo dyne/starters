@@ -42,9 +42,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { FormSettings } from '$lib/forms/form.svelte';
 
 	import { createEventDispatcher } from 'svelte';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import type { Collections } from '@/pocketbase/types';
-	import type { FieldSchema } from '$lib/pocketbase/schema/types';
+
+	import { getCollectionModel } from '@/pocketbase/collections-models';
+	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
+	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
+
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
@@ -56,8 +60,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		mockFileFieldsInitialData
 	} from './recordFormSetup';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { getCollectionSchema } from '$lib/pocketbase/schema';
-	import { fieldsSchemaToZod } from '$lib/pocketbaseToZod';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 	import { Button } from 'flowbite-svelte';
 
@@ -69,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	//
 
-	export let collection: Collections | string;
+	export let collection: CollectionName;
 	export let initialData: Partial<RecordGeneric> = {};
 	export let recordId = '';
 
@@ -108,9 +110,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	/* Schema generation */
 
-	const collectionSchema = getCollectionSchema(collection)!;
-	const fieldsSchema = collectionSchema.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
-	const zodSchema = fieldsSchemaToZod(fieldsSchema);
+	const collectionModel = getCollectionModel(collection);
+	const fieldsSchema = collectionModel.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
+	const zodSchema = createCollectionZodSchema(collection);
 
 	/* Superform creation */
 
@@ -120,8 +122,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		let seededData = { ...defaults, ...initialData }; // "defaults" must be overwritten by "initialData"
 		if (hide) seededData = { ...seededData, ...hide };
 
-		const mockedData = mockFileFieldsInitialData(collectionSchema, seededData);
-		const fileFieldsInitialData = getFileFieldsInitialData(collectionSchema, initialData);
+		const mockedData = mockFileFieldsInitialData(collectionModel, seededData);
+		const fileFieldsInitialData = getFileFieldsInitialData(collectionModel, initialData);
 
 		superform = createForm(
 			zodSchema,

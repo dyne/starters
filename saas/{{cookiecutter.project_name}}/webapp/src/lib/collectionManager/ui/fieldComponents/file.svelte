@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import { Button, Tooltip } from 'flowbite-svelte';
 	import type { PBResponse } from '$lib/utils/types';
 	import { ArrowDownTray } from 'svelte-heros-v2';

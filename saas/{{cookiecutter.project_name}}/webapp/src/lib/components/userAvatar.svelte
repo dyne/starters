@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '@/pocketbase';
 	import { Avatar } from 'flowbite-svelte';
 	import BoringAvatar from 'svelte-boring-avatars';
 	import type { UsersResponse } from '@/pocketbase/types';

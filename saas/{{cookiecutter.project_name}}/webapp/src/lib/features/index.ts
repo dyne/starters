@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { Features } from './list';
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import { Collections, type FeaturesResponse } from '@/pocketbase/types';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';

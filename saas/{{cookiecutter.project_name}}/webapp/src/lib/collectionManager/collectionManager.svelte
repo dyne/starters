@@ -5,6 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts" context="module">
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+
 	import { getContext } from 'svelte';
 	import type { RecordService } from 'pocketbase';
 	import type { Writable } from 'svelte/store';
@@ -14,7 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export const RECORDS_MANAGER_KEY = Symbol('rmk');
 
 	export type RecordsManagerContext<R extends PBResponse = PBResponse> = {
-		collection: string;
+		collection: CollectionName;
 		dataManager: {
 			recordService: RecordService;
 			loadRecords: () => Promise<void>;
@@ -51,7 +53,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import type { Collections } from '@/pocketbase/types';
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
@@ -69,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	//
 
-	export let collection: Collections | string;
+	export let collection: CollectionName;
 
 	export let formSettings: Partial<FieldsSettings<RecordGeneric>> = {};
 	export let createFormSettings: Partial<FieldsSettings<RecordGeneric>> = {};

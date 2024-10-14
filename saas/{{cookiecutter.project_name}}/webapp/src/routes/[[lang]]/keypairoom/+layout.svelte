@@ -1,6 +1,6 @@
 <script>
 	import { Logo, Topbar } from '$lib/layout';
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser } from '@/pocketbase';
 	import DIDButton from '$lib/components/DIDButton.svelte';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
 	import { Button } from 'flowbite-svelte';

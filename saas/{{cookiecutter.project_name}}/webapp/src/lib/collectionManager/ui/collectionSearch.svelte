@@ -10,7 +10,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
-	import { getCollectionSchema } from '$lib/pocketbase/schema';
+	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import { ChevronDown } from 'svelte-heros-v2';
 
 	type RecordGeneric = $$Generic<PBResponse>;
@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	const { dataManager, collection } = getRecordsManagerContext();
 	const { queryParams } = dataManager;
-	const allFields = getCollectionSchema(collection)?.schema?.map((field) => field.name) ?? [];
+	const allFields = getCollectionModel(collection).schema.map((field) => field.name) ?? [];
 	let selected: string[] = [allFieldsCaption];
 	let fields: { value: string; name: string }[] = [allFieldsCaption]
 		.concat(searchableFields || allFields)

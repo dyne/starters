@@ -7,7 +7,7 @@ import type { m as messages } from '$lib/i18n';
 import type { NavigationTab } from '$lib/components/navigationTabs.svelte';
 import { Cog, Home, Users } from 'svelte-heros-v2';
 import type { SidebarItemProps } from '$lib/layout/SidebarLinks.svelte';
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import type { OrgRole } from './roles';
 
 export function createOrganizationLinks(

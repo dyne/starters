@@ -11,7 +11,7 @@
 		zodFile
 	} from '$lib/forms';
 
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '@/pocketbase';
 	import { createEventDispatcher } from 'svelte';
 	import { z } from 'zod';
 

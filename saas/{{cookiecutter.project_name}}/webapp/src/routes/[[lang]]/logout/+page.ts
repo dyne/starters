@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { currentUser, pb } from '$lib/pocketbase';
+import { currentUser, pb } from '@/pocketbase';
 import { redirect } from '$lib/i18n';
 
 export const load = async ({ url }) => {

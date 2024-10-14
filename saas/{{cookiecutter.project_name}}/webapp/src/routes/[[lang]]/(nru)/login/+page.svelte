@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$lib/i18n';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import { Collections } from '@/pocketbase/types';
 	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
 	import { z } from 'zod';

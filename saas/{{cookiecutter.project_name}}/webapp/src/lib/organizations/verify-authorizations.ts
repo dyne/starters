@@ -1,4 +1,4 @@
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import type { OrgRole } from './roles';
 
 /* Reference: admin/pb_hooks/organizations.routes.pb.js */

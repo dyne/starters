@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { invalidateAll } from '$app/navigation';
 	import Input from '$lib/forms/fields/input.svelte';
 	import Toggle from '$lib/forms/fields/toggle.svelte';
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser } from '@/pocketbase';
 	import {
 		Collections,
 		type CrudExampleResponse,

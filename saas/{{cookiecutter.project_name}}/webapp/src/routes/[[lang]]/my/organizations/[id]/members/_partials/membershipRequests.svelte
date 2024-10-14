@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
-	import { pb } from '$lib/pocketbase/index.js';
+	import { pb } from '@/pocketbase/index.js';
 	import {
 		Collections,
 		OrgJoinRequestsStatusOptions,
@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type UsersResponse,
 		type OrgJoinRequestsResponse,
 		type OrganizationsResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
 	import { Button } from 'flowbite-svelte';

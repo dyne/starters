@@ -23,7 +23,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 
 	import RecordSelect from './recordSelect.svelte';
 	import RecordSearch from './recordSearch.svelte';

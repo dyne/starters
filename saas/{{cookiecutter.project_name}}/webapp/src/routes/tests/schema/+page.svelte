@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import type { ZTestCollectionRecord } from '@/pocketbase/types';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
-	import type { CollectionTypeWithFile } from '@/pocketbase/collections-config/pb-schema-to-zod/types';
+	import type { CollectionFormData } from '@/pocketbase/types';
 	import { z } from 'zod';
 
 	const x = z
@@ -21,7 +21,7 @@
 	const res = pb.collection('z_test_collection').getFullList();
 
 	async function routine() {
-		const data: CollectionTypeWithFile<'z_test_collection'> = {
+		const data: CollectionFormData<'z_test_collection'> = {
 			file_field: dummyFile(),
 			richtext_field: 'AO',
 			text_field: 'Miao',

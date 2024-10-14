@@ -1,4 +1,4 @@
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import { blockNonMembers } from '$lib/organizations';
 
 export const load = async ({ params, fetch }) => {

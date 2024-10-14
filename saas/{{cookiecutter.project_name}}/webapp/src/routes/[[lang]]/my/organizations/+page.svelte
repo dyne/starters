@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { Button, A, P, Badge, Avatar } from 'flowbite-svelte';
 	import { Plus, UserPlus, Cog, PuzzlePiece, ArrowUturnLeft } from 'svelte-heros-v2';
 	import { c } from '$lib/utils/strings.js';
-	import { pb } from '$lib/pocketbase/index.js';
+	import { pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '$lib/i18n';
 	import SectionTitle from '$lib/components/sectionTitle.svelte';

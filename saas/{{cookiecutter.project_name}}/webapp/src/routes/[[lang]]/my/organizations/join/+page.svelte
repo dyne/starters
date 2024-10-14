@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { currentUser, pb } from '$lib/pocketbase/index.js';
+	import { currentUser, pb } from '@/pocketbase/index.js';
 	import {
 		OrgJoinRequestsStatusOptions,
 		type OrgJoinRequestsRecord,

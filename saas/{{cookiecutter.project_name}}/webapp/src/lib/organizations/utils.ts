@@ -1,6 +1,6 @@
-import { pb } from '$lib/pocketbase';
+import { pb } from '@/pocketbase';
 import type { OrgRole } from './roles';
-import { type OrgAuthorizationsResponse, type OrgRolesResponse } from '$lib/pocketbase/types';
+import { type OrgAuthorizationsResponse, type OrgRolesResponse } from '@/pocketbase/types';
 import { Option as O } from 'effect';
 
 export async function getUserRole(organizationId: string, userId: string): Promise<OrgRole> {

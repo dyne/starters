@@ -2,16 +2,14 @@ import { z } from 'zod';
 
 import { fieldConfigToZodTypeMap, type FieldConfigToZodType } from './config';
 
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionFormData } from '@/pocketbase/types/collectionFormData';
 import { getCollectionModel } from '@/pocketbase/collections-models';
+import type { CollectionName } from '@/pocketbase/collections-models/types';
 import { isArrayField } from '@/pocketbase/collections-models/utils';
 
 import { pipe } from 'effect';
-
-import type { Simplify } from 'type-fest';
+// import type { Simplify } from 'type-fest';
 import type { If } from '@/utils/types';
-
-import type { CollectionFormData } from '@/pocketbase/types/collectionFormData';
 
 // Runtime conversion
 
@@ -46,9 +44,7 @@ export function createCollectionZodSchema<C extends CollectionName>(
 
 // Type conversion
 
-type CollectionZodSchema<C extends CollectionName> = z.ZodObject<
-	Simplify<CollectionZodRawShape<C>>
->;
+type CollectionZodSchema<C extends CollectionName> = z.ZodObject<CollectionZodRawShape<C>>;
 
 type CollectionZodRawShape<C extends CollectionName, Data = CollectionFormData<C>> = {
 	[K in keyof Data]-?: If<

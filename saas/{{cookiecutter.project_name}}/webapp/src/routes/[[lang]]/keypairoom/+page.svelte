@@ -15,7 +15,7 @@
 		saveUserPublicKeys,
 		getUserPublicKeys
 	} from '$lib/keypairoom/utils.js';
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '@/pocketbase';
 	import { z } from 'zod';
 	import { featureFlags } from '$lib/features';
 	import { page } from '$app/stores';
