@@ -1,53 +1,52 @@
+import { normalizeError } from '@/utils/other';
+import type { GenericRecord } from '@/utils/types';
 import type { FormOptions as SuperformOptions } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
-import type { ZodObjectTypes, ZodValidation } from './types.temp';
-import { defaults, superForm } from 'sveltekit-superforms/client';
-import { z } from 'zod';
+import { type ValidationAdapter } from 'sveltekit-superforms/adapters';
+import { defaults, setError, superForm } from 'sveltekit-superforms/client';
 
 //
 
-export type FormOptions<T extends ZodValidation<ZodObjectTypes>> = SuperformOptions<z.TypeOf<T>>;
-
-export type SubmitFunction<T extends ZodValidation<ZodObjectTypes>> = NonNullable<
-	FormOptions<T>['onUpdate']
+export type SubmitFunction<Data extends GenericRecord> = NonNullable<
+	SuperformOptions<Data>['onUpdate']
 >;
 
-export type CreateFormProps<T extends ZodValidation<ZodObjectTypes>> = {
-	schema: T;
-	onSubmit?: SubmitFunction<T>;
-	initialData?: Partial<z.TypeOf<T>>;
-	options?: FormOptions<T>;
+export type CreateFormProps<Data extends GenericRecord> = {
+	adapter: ValidationAdapter<Data>;
+	options?: Omit<SuperformOptions<NoInfer<Data>>, 'onUpdate'>;
+	onSubmit?: SubmitFunction<NoInfer<Data>>;
+	initialData?: Partial<NoInfer<Data>>;
 };
 
-export function createForm<T extends ZodValidation<ZodObjectTypes>>(props: CreateFormProps<T>) {
-	const { schema, initialData = {}, options = {}, onSubmit = () => {} } = props;
-	const adapter = zod(schema);
-	return superForm(defaults(initialData, adapter), {
+export function createForm<Data extends GenericRecord>(props: CreateFormProps<Data>) {
+	const { adapter, initialData = {} as Partial<Data>, options = {}, onSubmit = () => {} } = props;
+	const form = defaults(initialData, adapter);
+	return superForm(form, {
 		SPA: true,
 		applyAction: false,
 		scrollToError: 'smooth',
 		validators: adapter,
 		dataType: 'json',
 		taintedMessage: null,
-		onUpdate: (e) => {
+		onUpdate: async (event) => {
 			try {
-				if (e.form.valid) onSubmit(e);
+				if (event.form.valid) await onSubmit(event);
 			} catch (e) {
-				console.log(e);
-				// TODO - check if it's needed
-				//  let error = normalizeError(e);
-				//  for (const [key, value] of Object.entries(error.data)) {
-				//      if (Boolean(input.form.data[key])) {
-				//          setError(input.form, key as any, value.message);
-				//          delete error.data[key];
-				//      }
-				//  }
-				//  setMessage(input.form, error);
+				setError(event.form, normalizeError(e));
 			}
 		},
 		...options
 	});
 }
+
+// TODO - This is old code that should not be needed anymore
+//  let error = normalizeError(e);
+//  for (const [key, value] of Object.entries(error.data)) {
+//      if (Boolean(input.form.data[key])) {
+//          setError(input.form, key as any, value.message);
+//          delete error.data[key];
+//      }
+//  }
+//  setMessage(input.form, error);
 
 // TODO - CreateFormData should be replaced by https://www.npmjs.com/package/@octetstream/object-to-form-data
 

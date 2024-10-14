@@ -1,5 +1,7 @@
-import SubmitButton from './submitButton.svelte';
-import Form from './form.svelte';
+import Form, { getFormContext } from './form.svelte';
 import { createForm } from './form';
 
-export { SubmitButton, Form, createForm };
+import SubmitButton from './components/submitButton.svelte';
+import FormError from './components/formError.svelte';
+
+export { createForm, getFormContext, Form, SubmitButton, FormError };

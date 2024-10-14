@@ -7,27 +7,30 @@
 
 	export const FORM_KEY = Symbol('form');
 
-	export type FormContext<T extends GenericRecord> = {
-		superform: SuperForm<T>;
+	export type FormContext<Data extends GenericRecord> = {
+		superform: SuperForm<Data>;
 		showRequiredIndicator: boolean;
 	};
 
-	export function getFormContext<T extends GenericRecord>(): FormContext<T> {
+	export function getFormContext<Data extends GenericRecord>(): FormContext<Data> {
 		return getContext(FORM_KEY);
 	}
 </script>
 
 <script lang="ts" generics="T extends GenericRecord">
 	import { setContext } from 'svelte';
-	import { Spinner, Modal } from 'flowbite-svelte';
-	import PortalWrapper from '$lib/components/portalWrapper.svelte';
+	import FormError from './components/formError.svelte';
+	import SubmitButton from './components/submitButton.svelte';
+	import LoadingDialog from '@/components/ui/dialog-loading/loadingDialog.svelte';
 
 	//
 
 	export let form: SuperForm<T, any>;
 	export let showRequiredIndicator = false;
+	export let loadingText: string | undefined = undefined;
+	export let hide: ('error' | 'submitButton')[] = [];
 
-	let className = 'space-y-8';
+	let className = 'space-y-6';
 	export { className as class };
 
 	//
@@ -40,12 +43,20 @@
 
 <form class={className} method="post" use:enhance {enctype}>
 	<slot />
+
+	{#if !hide.includes('error')}
+		<FormError></FormError>
+	{/if}
+
+	{#if !hide.includes('submitButton')}
+		<div class="flex justify-end">
+			<SubmitButton></SubmitButton>
+		</div>
+	{/if}
 </form>
 
-{#if $delayed}
-	<PortalWrapper>
-		<Modal open={$delayed} dismissable={false}>
-			<Spinner />
-		</Modal>
-	</PortalWrapper>
-{/if}
+<LoadingDialog loading={$delayed}>
+	{#if loadingText}
+		{loadingText}
+	{/if}
+</LoadingDialog>
