@@ -112,7 +112,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	const collectionModel = getCollectionModel(collection);
 	const fieldsSchema = collectionModel.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
-	const zodSchema = createCollectionZodSchema(collection);
+	const zodSchema = createCollectionZodSchema(collection).omit(
+		Object.fromEntries(exclude.map((key) => [key, true]))
+	);
 
 	/* Superform creation */
 

@@ -2,6 +2,9 @@ import { pipe } from 'effect';
 import { z } from 'zod';
 
 import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-models/types';
+import { getJsonDataSize } from '@/utils/other';
+
+import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
 
 /* Field Config -> Zod Type */
 
@@ -44,20 +47,29 @@ export const fieldConfigToZodTypeMap = {
 	},
 
 	date: ({ options }) => {
-		// eslint-disable-next-line
-		const { min, max } = options; // TODO - Implement
-		const s = z.string();
-		return s;
+		const { min, max } = options;
+		return z
+			.string()
+			.refine(
+				(string) => isValid(parseISO(string)),
+				(value) => ({ message: `${value} is not a ISO date string` })
+			)
+			.refine(
+				(date) => (min ? isAfter(date, min) : true),
+				(value) => ({ message: `${value} is before ${min}` })
+			)
+			.refine(
+				(date) => (max ? isBefore(date, max) : true),
+				(value) => ({ message: `${value} is after ${max}` })
+			);
 	},
 
 	json: ({ options }) => {
-		// eslint-disable-next-line
-		const { maxSize } = options; // TODO - Implement
-		console.log(maxSize);
-		return z.unknown();
-		// return z.record(z.unknown()).refine((json) => {
-		// 	if (maxSize) new Blob([JSON.stringify(json)]).size < maxSize;
-		// 	else return true;
+		const { maxSize } = options;
+		return z.unknown().refine((json) => {
+			if (maxSize) return getJsonDataSize(json) < maxSize;
+			else return true;
+		}, `Json size is bigger than ${maxSize} bytes`);
 	},
 
 	relation: () => {

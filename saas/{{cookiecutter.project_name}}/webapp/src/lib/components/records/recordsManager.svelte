@@ -23,6 +23,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+
 	import { pb } from '@/pocketbase';
 
 	import RecordSelect from './recordSelect.svelte';
@@ -44,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let recordType = createTypeProp<RecordGeneric>();
 	recordType;
 
-	export let collection: string;
+	export let collection: CollectionName;
 	export let value: string[] | string | undefined = undefined;
 	export let options: Partial<RecordsManagerOptions<RecordGeneric>> = {};
 
