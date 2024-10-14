@@ -7,7 +7,11 @@ import { getCollectionModel } from '@/pocketbase/collections-models';
 import { isArrayField } from '@/pocketbase/collections-models/utils';
 
 import { pipe } from 'effect';
-import type { CollectionFormData } from '@/pocketbase/types';
+
+import type { Simplify } from 'type-fest';
+import type { If } from '@/utils/types';
+
+import type { CollectionFormData } from '@/pocketbase/types/collectionFormData';
 
 //
 
@@ -31,8 +35,8 @@ export function createCollectionZodSchema<C extends CollectionName>(
 					else return zodType;
 				} else {
 					// Extra check for url: https://github.com/colinhacks/zod/discussions/1254
-					if (fieldConfig.type == 'url') return zodType.or(z.literal('')).nullish();
-					else return zodType.nullish();
+					if (fieldConfig.type == 'url') return zodType.or(z.literal('')).optional();
+					else return zodType.optional();
 				}
 			}
 		);
@@ -42,32 +46,41 @@ export function createCollectionZodSchema<C extends CollectionName>(
 	return z.object(rawObject) as CollectionZodSchema<C>;
 }
 
-const s = createCollectionZodSchema('z_test_collection');
+const s = createCollectionZodSchema('z_test_collection').extend({
+	json_field: z.string()
+});
 
 // eslint-disable-next-line
 const y = s.parse({});
 
-type CollectionZodSchema<C extends keyof CollectionFormData> = z.ZodObject<{
-	[K in keyof CollectionFormData[C]]-?: TypeToZodOptionalType<CollectionFormData[C][K]>;
-}>;
+type CollectionZodSchema<C extends CollectionName> = z.ZodObject<
+	Simplify<CollectionZodRawShape<C>>
+>;
 
-type TypeToZodOptionalType<T> =
-	T extends NonNullable<T> ? TypetoZodType<T> : z.ZodOptional<TypetoZodType<T>>;
+type CollectionZodRawShape<C extends CollectionName, Data = CollectionFormData<C>> = {
+	[K in keyof Data]-?: If<
+		IsPropertyRequired<Data, K>,
+		TypetoZodType<Data[K]>,
+		z.ZodOptional<TypetoZodType<Data[K]>>
+	>;
+};
 
-type TypetoZodType<T> = T extends File
-	? z.ZodType<File>
-	: T extends File[]
-		? z.ZodArray<z.ZodType<File>>
-		: T extends number
-			? z.ZodNumber
-			: T extends boolean
-				? z.ZodBoolean
-				: T extends string
-					? z.ZodString
-					: T extends string[]
-						? z.ZodArray<z.ZodString>
-						: T extends unknown
-							? unknown extends T // ChatGPT: How to match exactly unknown
-								? z.ZodUnknown
-								: never
-							: never;
+type TypetoZodType<T> =
+	IsExactlyUnknown<T> extends true
+		? z.ZodUnknown
+		: T extends File
+			? z.ZodType<File>
+			: T extends File[]
+				? z.ZodArray<z.ZodType<File>>
+				: T extends number
+					? z.ZodNumber
+					: T extends boolean
+						? z.ZodBoolean
+						: T extends string
+							? z.ZodString
+							: T extends string[]
+								? z.ZodArray<z.ZodString>
+								: never;
+
+type IsExactlyUnknown<T> = [T] extends [unknown] ? ([unknown] extends [T] ? true : false) : false; // Solution provided by ChatGPT
+type IsPropertyRequired<T, K extends keyof T> = T extends { [P in K]-?: T[K] } ? true : false;
