@@ -38,6 +38,8 @@ export function createForm<Data extends GenericRecord>(props: CreateFormProps<Da
 	});
 }
 
+export const FORM_ERROR_PATH = '_errors';
+
 // TODO - This is old code that should not be needed anymore
 //  let error = normalizeError(e);
 //  for (const [key, value] of Object.entries(error.data)) {
