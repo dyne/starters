@@ -5,6 +5,7 @@ import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collec
 import { getJsonDataSize } from '@/utils/other';
 
 import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
+import type { SetFieldType } from 'type-fest';
 
 /* Field Config -> Zod Type */
 
@@ -105,7 +106,7 @@ type FieldConfigToZodTypeMapRequirement = {
 };
 
 export type FieldConfigToZodType<Config extends AnyFieldConfig = AnyFieldConfig> = (
-	config: Config
+	config: SetFieldType<Config, 'options', Partial<Config['options']>> // We are not sure that those options exist
 ) => z.ZodTypeAny;
 
 //
