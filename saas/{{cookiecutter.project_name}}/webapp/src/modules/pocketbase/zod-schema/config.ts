@@ -6,12 +6,16 @@ import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collec
 /* Field Config -> Zod Type */
 
 export const fieldConfigToZodTypeMap = {
-	text: ({ options }) => {
-		const { max, min, pattern } = options;
+	text: (config) => {
+		const { max, min, pattern } = config.options;
 		let s = z.string();
 		if (max) s = s.max(max);
 		if (min) s = s.min(min);
-		if (pattern) s = s.regex(new RegExp(`|${pattern}`)); // Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
+		if (pattern) {
+			// Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
+			const maybeOptionalPattern = config.required ? pattern : `|${pattern}`;
+			s = s.regex(new RegExp(maybeOptionalPattern));
+		}
 		return s;
 	},
 
@@ -55,10 +59,8 @@ export const fieldConfigToZodTypeMap = {
 		// 	else return true;
 	},
 
-	relation: ({ options }) => {
-		const s = z.string();
-		if (options.maxSelect != 1) return z.array(s);
-		return s;
+	relation: () => {
+		return z.string();
 	},
 
 	number: ({ options }) => {
@@ -72,9 +74,7 @@ export const fieldConfigToZodTypeMap = {
 
 	select: ({ options }) => {
 		const { values } = options;
-		const s = z.string().refine((s) => (values as readonly string[]).includes(s));
-		if (options.maxSelect != 1) return z.array(s);
-		return s;
+		return z.string().refine((s) => (values as readonly string[]).includes(s));
 	},
 
 	editor: () => {

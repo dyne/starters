@@ -5,6 +5,7 @@ import type {
 	AnyFieldConfig
 } from '@/pocketbase/collections-models/types';
 import type { CollectionRecords } from './index.generated';
+import type { Simplify } from 'type-fest';
 
 /* Issue:
  *
@@ -15,13 +16,16 @@ import type { CollectionRecords } from './index.generated';
  * The custom type below takes Pocketbase types and replace [string] with [File] where needed
  */
 
-export type CollectionFormData<C extends CollectionName, Collection = CollectionRecords[C]> = {
+export type CollectionFormData<
+	C extends CollectionName,
+	Collection = CollectionRecords[C]
+> = Simplify<{
 	[K in keyof Collection]: ConvertFileFieldConfig<
 		// @ts-expect-error - Slight type mismatch on [K]
 		GetFieldConfigByName<CollectionModel<C>, K>,
 		Collection[K]
 	>;
-};
+}>;
 
 //
 

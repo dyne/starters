@@ -13,9 +13,7 @@ import type { If } from '@/utils/types';
 
 import type { CollectionFormData } from '@/pocketbase/types/collectionFormData';
 
-//
-
-// Note: a bit of a type hack
+// Runtime conversion
 
 export function createCollectionZodSchema<C extends CollectionName>(
 	collection: C
@@ -46,12 +44,7 @@ export function createCollectionZodSchema<C extends CollectionName>(
 	return z.object(rawObject) as CollectionZodSchema<C>;
 }
 
-const s = createCollectionZodSchema('z_test_collection').extend({
-	json_field: z.string()
-});
-
-// eslint-disable-next-line
-const y = s.parse({});
+// Type conversion
 
 type CollectionZodSchema<C extends CollectionName> = z.ZodObject<
 	Simplify<CollectionZodRawShape<C>>
