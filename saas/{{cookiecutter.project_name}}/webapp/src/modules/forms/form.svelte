@@ -18,6 +18,8 @@
 </script>
 
 <script lang="ts" generics="T extends GenericRecord">
+	import { m } from '$lib/i18n';
+
 	import { setContext } from 'svelte';
 	import FormError from './components/formError.svelte';
 	import SubmitButton from './components/submitButton.svelte';
@@ -27,8 +29,9 @@
 
 	export let form: SuperForm<T, any>;
 	export let showRequiredIndicator = false;
-	export let loadingText: string | undefined = undefined;
-	export let hide: ('error' | 'submitButton')[] = [];
+	export let loadingText: string | undefined = m.Please_wait();
+	export let submitButtonText: string | undefined = m.Submit();
+	export let hide: ('error' | 'submitButton' | 'loading')[] = [];
 
 	let className = 'space-y-6';
 	export { className as class };
@@ -50,13 +53,15 @@
 
 	{#if !hide.includes('submitButton')}
 		<div class="flex justify-end">
-			<SubmitButton></SubmitButton>
+			<SubmitButton>
+				{submitButtonText}
+			</SubmitButton>
 		</div>
 	{/if}
 </form>
 
-<LoadingDialog loading={$delayed}>
-	{#if loadingText}
+{#if !hide.includes('loading')}
+	<LoadingDialog loading={$delayed}>
 		{loadingText}
-	{/if}
-</LoadingDialog>
+	</LoadingDialog>
+{/if}
