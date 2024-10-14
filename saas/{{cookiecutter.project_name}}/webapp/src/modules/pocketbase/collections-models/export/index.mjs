@@ -7,7 +7,7 @@ import prettier from 'prettier';
 
 // -- Instructions -- //
 
-const OUTPUT_FILE_PATH = getCurrentWorkingDirectory() + '/collections-config.generated.ts';
+const OUTPUT_FILE_PATH = getCurrentWorkingDirectory() + '/collections-models.generated.ts';
 
 const pb = initPocketbase();
 pocketbaseAdminLogin()

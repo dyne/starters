@@ -1,7 +1,7 @@
 import { pipe } from 'effect';
 import { z } from 'zod';
 
-import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-config/types';
+import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-models/types';
 
 /* Field Config -> Zod Type */
 
@@ -50,7 +50,7 @@ export const fieldConfigToZodTypeMap = {
 	json: ({ options }) => {
 		// eslint-disable-next-line
 		const { maxSize } = options; // TODO - Implement
-		return z.record(z.unknown());
+		return z.unknown();
 		// return z.record(z.unknown()).refine((json) => {
 		// 	if (maxSize) new Blob([JSON.stringify(json)]).size < maxSize;
 		// 	else return true;

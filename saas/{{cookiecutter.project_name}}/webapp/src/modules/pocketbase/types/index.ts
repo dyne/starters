@@ -189,7 +189,116 @@ export type ZTestCollectionRecord<Tjson_field = unknown> = {
 	file_multi_field?: string[]
 	json_field?: null | Tjson_field
 	number_field: number
-	relation_field?: RecordIdString
+	relation_field: RecordIdString
+	relation_multi_field: RecordIdString[]
+	richtext_field: HTMLString
+	select_field?: ZTestCollectionSelectFieldOptions
+	select_multi_field?: ZTestCollectionSelectMultiFieldOptions[]
+	text_field: string
+	url_field?: string
+}
+
+export type AuthorizationsFormData = {
+	collection_id: string
+	owner: RecordIdString
+	record_id: string
+	users: RecordIdString[]
+}
+
+export type AuthorizationsExamplesFormData = {
+	name: string
+	owner?: RecordIdString
+}
+
+export type CrudExampleFormData = {
+	boolean?: boolean
+	file_only_pdf_json: File[]
+	image?: File
+	multiselect?: CrudExampleMultiselectOptions[]
+	owner?: RecordIdString
+	relation?: RecordIdString[]
+	relation_single: RecordIdString
+	select: CrudExampleSelectOptions
+	text: string
+	text_with_regex?: string
+	textarea?: HTMLString
+}
+
+export type FeaturesFormData<TenvVariables = unknown> = {
+	active?: boolean
+	envVariables?: null | TenvVariables
+	name: string
+}
+
+export type HooksFormData = {
+	action: string
+	action_params?: string
+	action_type: HooksActionTypeOptions
+	collection: string
+	disabled?: boolean
+	event: HooksEventOptions
+	expands?: string
+}
+
+export type OrgAuthorizationsFormData = {
+	organization: RecordIdString
+	role: RecordIdString
+	user: RecordIdString
+}
+
+export type OrgJoinRequestsFormData = {
+	organization: RecordIdString
+	reminders?: number
+	status: OrgJoinRequestsStatusOptions
+	user: RecordIdString
+}
+
+export type OrgRolesFormData = {
+	level?: number
+	name: string
+}
+
+export type OrganizationsFormData = {
+	avatar?: File
+	description?: HTMLString
+	name: string
+}
+
+export type SessionDataWebauthnFormData<Tsession = unknown> = {
+	session?: null | Tsession
+	user?: RecordIdString
+}
+
+export type UsersFormData = {
+	avatar?: File
+	name: string
+}
+
+export type UsersPublicKeysFormData = {
+	bitcoin_public_key: string
+	ecdh_public_key: string
+	eddsa_public_key: string
+	es256_public_key: string
+	ethereum_address: string
+	owner: RecordIdString
+	reflow_public_key: string
+}
+
+export type WebauthnCredentialsFormData<Tcredential = unknown> = {
+	credential?: null | Tcredential
+	description?: string
+	user?: RecordIdString
+}
+
+export type ZTestCollectionFormData<Tjson_field = unknown> = {
+	boolean_field?: boolean
+	date_field?: IsoDateString
+	email_field?: string
+	file_field: File
+	file_multi_field?: File[]
+	json_field?: null | Tjson_field
+	number_field: number
+	relation_field: RecordIdString
 	relation_multi_field: RecordIdString[]
 	richtext_field: HTMLString
 	select_field?: ZTestCollectionSelectFieldOptions
@@ -231,6 +340,23 @@ export type CollectionRecords = {
 	users_public_keys: UsersPublicKeysRecord
 	webauthnCredentials: WebauthnCredentialsRecord
 	z_test_collection: ZTestCollectionRecord
+}
+
+export type CollectionFormData = {
+	authorizations: AuthorizationsFormData
+	authorizationsExamples: AuthorizationsExamplesFormData
+	crudExample: CrudExampleFormData
+	features: FeaturesFormData
+	hooks: HooksFormData
+	orgAuthorizations: OrgAuthorizationsFormData
+	orgJoinRequests: OrgJoinRequestsFormData
+	orgRoles: OrgRolesFormData
+	organizations: OrganizationsFormData
+	sessionDataWebauthn: SessionDataWebauthnFormData
+	users: UsersFormData
+	users_public_keys: UsersPublicKeysFormData
+	webauthnCredentials: WebauthnCredentialsFormData
+	z_test_collection: ZTestCollectionFormData
 }
 
 export type CollectionResponses = {
