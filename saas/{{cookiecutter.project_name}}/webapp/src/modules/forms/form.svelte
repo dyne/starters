@@ -23,7 +23,7 @@
 	import { setContext } from 'svelte';
 	import FormError from './components/formError.svelte';
 	import SubmitButton from './components/submitButton.svelte';
-	import LoadingDialog from '@/components/ui/dialog-loading/loadingDialog.svelte';
+	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
 
 	//
 

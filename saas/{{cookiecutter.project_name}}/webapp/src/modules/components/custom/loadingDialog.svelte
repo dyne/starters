@@ -6,7 +6,9 @@
 </script>
 
 <AlertDialog.Root bind:open={loading} closeOnEscape={false} closeOnOutsideClick={false}>
-	<AlertDialog.Content class="flex flex-col items-center justify-center gap-2">
+	<AlertDialog.Content
+		class="flex !w-1/5 !min-w-[150px] flex-col items-center justify-center gap-2"
+	>
 		<Moon size={40} color="black"></Moon>
 		<AlertDialog.Description>
 			<slot></slot>
