@@ -36,7 +36,6 @@ export const fieldConfigToZodTypeMap = {
 		if (maxSize) {
 			s.refine((file) => file.size < maxSize, `File size bigger than ${maxSize} bytes`);
 		}
-		if (options.maxSelect != 1) return z.array(s);
 		return s;
 	},
 
