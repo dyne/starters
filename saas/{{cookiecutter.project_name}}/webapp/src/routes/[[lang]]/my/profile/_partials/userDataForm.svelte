@@ -1,62 +1,50 @@
 <script lang="ts">
-	import {
-		Form,
-		createForm,
-		createFormData,
-		FormError,
-		SubmitButton,
-		Input,
-		Checkbox,
-		File as FileInput,
-		zodFile
-	} from '$lib/forms';
+	import { m } from '$lib/i18n';
+	import { Form, createForm } from '@/forms';
+	import { Field, FileField, CheckboxField } from '@/forms/fields';
 
 	import { currentUser, pb } from '@/pocketbase';
+	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { createEventDispatcher } from 'svelte';
+	import { zod } from 'sveltekit-superforms/adapters';
 	import { z } from 'zod';
+
+	//
 
 	const dispatch = createEventDispatcher<{ success: undefined }>();
 
-	const schema = z.object({
-		name: z.string().min(3).optional(),
+	const schema = createCollectionZodSchema('users').extend({
 		email: z.string().email(),
-		emailVisibility: z.boolean().optional(),
-		avatar: zodFile({ types: ['image/png', 'image/jpeg'], size: 1024 * 1024 * 2 }).optional()
+		emailVisibility: z.boolean()
 	});
 
-	const initialData: Partial<z.infer<typeof schema>> = {
-		name: $currentUser!.name,
-		email: $currentUser!.email,
-		emailVisibility: $currentUser!.emailVisibility
-	};
-
-	const superform = createForm(
-		schema,
-		async ({ form }) => {
-			const formData = createFormData(form.data);
-			$currentUser = await pb.collection('users').update($currentUser!.id, formData);
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
+			$currentUser = await pb.collection('users').update($currentUser!.id, form.data);
 			dispatch('success');
 		},
-		initialData
-	);
+		initialData: {
+			name: $currentUser!.name,
+			email: $currentUser!.email,
+			emailVisibility: $currentUser!.emailVisibility
+		},
+		options: {
+			dataType: 'form'
+		}
+	});
 </script>
 
-<Form {superform}>
-	<Input {superform} field="name" options={{ label: 'Username' }} />
+<Form {form} submitButtonText={m.Update_profile()}>
+	<Field {form} name="name" options={{ label: 'Username' }} />
 
 	<div class="space-y-2">
-		<Input {superform} field="email" options={{ type: 'email' }} />
+		<Field {form} name="email" options={{ type: 'email' }} />
 
-		<Checkbox {superform} field="emailVisibility">
+		<CheckboxField {form} name="emailVisibility">
 			<span>Show email to other users</span>
-		</Checkbox>
+		</CheckboxField>
 	</div>
 
-	<FileInput {superform} field="avatar" />
-
-	<FormError />
-
-	<div class="flex justify-end">
-		<SubmitButton>Update profile</SubmitButton>
-	</div>
+	<FileField {form} name="avatar" />
 </Form>

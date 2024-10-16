@@ -26,7 +26,7 @@
 	//
 
 	export let form: SuperForm<Data>;
-	export let name: FormPath<Data, T | T[]>;
+	export let name: FormPath<Data>;
 	export let options: Partial<FieldOptions> & ComponentProps<SelectInput<T, Multiple>>;
 
 	//

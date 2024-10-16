@@ -15,6 +15,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		ArrayExtract
 	} from '$lib/utils/types';
 
+	import { Form, type FormOptions } from '@/forms';
+	import type { ComponentProps } from 'svelte';
+	import type { GenericRecord } from '@/utils/types';
+
 	type Keys<R extends PBResponse> = StringKeys<ExtractPBRecord<R>>;
 
 	export type FieldsSettings<R extends PBResponse = PBResponse> = {
@@ -32,18 +36,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		};
 		components: { [K in Keys<R>]?: FieldComponentProp };
 	};
+
+	type FormSettings<Data extends GenericRecord> = FormOptions<Data> & ComponentProps<Form<Data>>;
 </script>
 
 <script lang="ts">
+	import { zod } from 'sveltekit-superforms/adapters';
+
 	import { m } from '$lib/i18n';
 
 	import { c } from '$lib/utils/strings';
 
-	import type { FormSettings } from '$lib/forms/form.svelte';
-
 	import { createEventDispatcher } from 'svelte';
 	import { pb } from '@/pocketbase';
-	import type { Collections } from '@/pocketbase/types';
 
 	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
@@ -53,7 +58,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
-	import { Form, createForm, createFormData, FormError, SubmitButton } from '$lib/forms';
+	import { createForm, FormError, SubmitButton } from '@/forms';
+
 	import {
 		cleanFormDataFiles,
 		getFileFieldsInitialData,
@@ -88,7 +94,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		defaults = {}
 	} = fieldsSettings;
 
-	export let formSettings: Partial<FormSettings> = {};
+	// TODO - Fix type
+	// Check what is the correct type to pass here
+	export let formSettings: Partial<FormSettings<RecordGeneric>> = {};
 
 	export let submitButtonText = '';
 	export let showCancelButton = false;
@@ -113,12 +121,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	const collectionModel = getCollectionModel(collection);
 	const fieldsSchema = collectionModel.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
 	const zodSchema = createCollectionZodSchema(collection).omit(
+		// @ts-ignore
+		// TODO - Improve type handling here
 		Object.fromEntries(exclude.map((key) => [key, true]))
 	);
 
 	/* Superform creation */
 
-	let superform: SuperForm<AnyZodObject, ClientResponseErrorData>;
+	let form: SuperForm<GenericRecord>;
 
 	$: {
 		let seededData = { ...defaults, ...initialData }; // "defaults" must be overwritten by "initialData"
@@ -126,28 +136,33 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 		const mockedData = mockFileFieldsInitialData(collectionModel, seededData);
 		const fileFieldsInitialData = getFileFieldsInitialData(collectionModel, initialData);
+		// TODO Fix- types
+		// @ts-ignore
+		form = createForm({
+			// @ts-ignore
+			adapter: zod(zodSchema),
 
-		superform = createForm(
-			zodSchema,
-			async ({ form }) => {
+			onSubmit: async ({ form }) => {
 				const data = cleanFormDataFiles(form.data, fileFieldsInitialData);
-				const formData = createFormData(data);
+				// @ts-ignore
+				// const formData = createFormData(data);
 				let record: RecordGeneric;
 				if (Boolean(recordId)) {
-					record = await pb.collection(collection).update(recordId, formData);
+					record = await pb.collection(collection).update(recordId, form.data);
 					dispatch('edit', { record });
 				} else {
-					record = await pb.collection(collection).create(formData);
+					record = await pb.collection(collection).create(form.data);
 					dispatch('create', { record });
 				}
 				dispatch('success', { record });
 			},
-			mockedData,
-			{
+			// @ts-ignore
+			initialData: mockedData, // TODO : improve typings
+			options: {
 				dataType: 'form',
 				...formSettings
 			}
-		);
+		});
 	}
 
 	/* Schema filters */
@@ -167,7 +182,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		return aIndex - bIndex;
 	}
 
-	function filterFieldsSchema(schema: FieldSchema) {
+	function filterFieldsSchema(schema: AnyFieldConfig) {
 		return !exclude.includes(schema.name as Keys<RecordGeneric>);
 	}
 
@@ -180,7 +195,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			: 'Create record';
 </script>
 
-<Form {superform} showRequiredIndicator>
+<Form {form} showRequiredIndicator>
 	{#each fieldsSchema as fieldSchema}
 		{@const name = fieldSchema.name}
 		{@const hidden = hide ? Object.keys(hide).includes(name) : false}

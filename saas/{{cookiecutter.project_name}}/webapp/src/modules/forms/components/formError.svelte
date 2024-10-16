@@ -4,8 +4,8 @@
 	import { m } from '$lib/i18n';
 	import { FORM_ERROR_PATH } from '../form';
 
-	const { superform } = getFormContext();
-	const { allErrors } = superform;
+	const { form } = getFormContext();
+	const { allErrors } = form;
 
 	$: error = $allErrors.find((e) => e.path == FORM_ERROR_PATH);
 </script>

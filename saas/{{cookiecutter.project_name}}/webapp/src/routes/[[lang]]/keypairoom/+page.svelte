@@ -23,11 +23,13 @@
 	import { appTitle } from '$lib/strings.js';
 
 	// Components
-	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
+	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Field } from '@/forms/fields';
 	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { InformationCircle } from 'svelte-heros-v2';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	//
 
@@ -38,38 +40,41 @@
 		questions: userChallengesSchema
 	});
 
-	const superform = createForm(schema, async ({ form }) => {
-		const { email, questions } = form.data;
-		const challenges = userChallengesSchema.parse(questions);
-		const keypair = await createKeypairFromFormData(email, challenges);
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
+			const { email, questions } = form.data;
+			const challenges = userChallengesSchema.parse(questions);
+			const keypair = await createKeypairFromFormData(email, challenges);
 
-		const privateKeys = keypair.keyring;
-		const publicKeys = getPublicKeysFromKeypair(keypair);
+			const privateKeys = keypair.keyring;
+			const publicKeys = getPublicKeysFromKeypair(keypair);
 
-		if ($featureFlags.AUTH && $currentUser) {
-			const storedPublicKeys = await getUserPublicKeys();
+			if ($featureFlags.AUTH && $currentUser) {
+				const storedPublicKeys = await getUserPublicKeys();
 
-			if (!storedPublicKeys) {
-				await saveUserPublicKeys(publicKeys);
-			} else {
-				try {
-					await matchPublicAndPrivateKeys(storedPublicKeys, privateKeys);
-				} catch (e) {
-					throw new Error('Wrong answers');
+				if (!storedPublicKeys) {
+					await saveUserPublicKeys(publicKeys);
+				} else {
+					try {
+						await matchPublicAndPrivateKeys(storedPublicKeys, privateKeys);
+					} catch (e) {
+						throw new Error('Wrong answers');
+					}
+				}
+
+				if ($featureFlags.DID) {
+					try {
+						await pb.send('/api/did', {});
+					} catch (e) {
+						console.log(e);
+					}
 				}
 			}
 
-			if ($featureFlags.DID) {
-				try {
-					await pb.send('/api/did', {});
-				} catch (e) {
-					console.log(e);
-				}
-			}
+			saveKeyringToLocalStorage(privateKeys);
+			seed = keypair.seed;
 		}
-
-		saveKeyringToLocalStorage(privateKeys);
-		seed = keypair.seed;
 	});
 
 	async function createKeypairFromFormData(email: string, challenges: UserChallenges) {
@@ -77,9 +82,9 @@
 		return await generateKeypair(email, HMAC, challenges);
 	}
 
-	const { form } = superform;
+	const { form: formData } = form;
 
-	if ($currentUser) $form.email = $currentUser.email;
+	if ($currentUser) $formData.email = $currentUser.email;
 
 	//
 
@@ -128,10 +133,10 @@
 
 		<Hr />
 
-		<Form {superform} className="space-y-6">
+		<Form {form} class="space-y-6" submitButtonText="Generate keys">
 			{#if !$currentUser}
 				<div class="space-y-1">
-					<Input {superform} field="email" options={{ label: 'User email' }} />
+					<Field {form} name="email" options={{ label: 'User email' }} />
 
 					<P size="sm" color="text-gray-400">
 						Your email won't be stored anywhere, it will be used only to generate the keys.
@@ -142,14 +147,8 @@
 			{/if}
 
 			{#each userChallenges as question}
-				<Input {superform} field={`questions.${question.id}`} options={{ label: question.text }} />
+				<Field {form} name={`questions.${question.id}`} options={{ label: question.text }} />
 			{/each}
-
-			<FormError />
-
-			<div class="flex justify-end">
-				<SubmitButton>Generate keys</SubmitButton>
-			</div>
 		</Form>
 
 		<Hr />

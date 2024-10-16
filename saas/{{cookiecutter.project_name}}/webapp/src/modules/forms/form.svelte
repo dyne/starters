@@ -8,7 +8,7 @@
 	export const FORM_KEY = Symbol('form');
 
 	export type FormContext<Data extends GenericRecord> = {
-		superform: SuperForm<Data>;
+		form: SuperForm<Data>;
 		showRequiredIndicator: boolean;
 	};
 
@@ -41,7 +41,7 @@
 	$: enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
 
 	const { enhance, delayed } = form;
-	setContext<FormContext<T>>(FORM_KEY, { superform: form, showRequiredIndicator });
+	setContext<FormContext<T>>(FORM_KEY, { form, showRequiredIndicator });
 </script>
 
 <form class={className} method="post" use:enhance {enctype}>

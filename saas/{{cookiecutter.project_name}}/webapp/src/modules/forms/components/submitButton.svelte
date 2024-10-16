@@ -3,8 +3,8 @@
 	import { getFormContext } from '@/forms';
 	import { FORM_ERROR_PATH } from '../form';
 
-	const { superform } = getFormContext();
-	const { allErrors } = superform;
+	const { form } = getFormContext();
+	const { allErrors } = form;
 
 	$: formHasErrors = $allErrors.filter((e) => e.path != FORM_ERROR_PATH).length > 0;
 </script>

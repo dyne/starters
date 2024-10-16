@@ -5,11 +5,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts" context="module">
+	import type { GenericRecord } from '@/utils/types';
 	import type { SvelteComponent, ComponentEvents, ComponentProps, ComponentType } from 'svelte';
 
 	type FieldComponent = SvelteComponent<{
 		field: string;
-		superform: SuperForm<ZodValidation<AnyZodObject>, ClientResponseErrorData>;
+		superform: SuperForm<GenericRecord, ClientResponseErrorData>;
 	}>;
 
 	export function createFieldComponent<C extends FieldComponent>(
@@ -29,13 +30,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
-	import { Checkbox, File, Hidden, Input, Relations, Select, Textarea } from '$lib/forms/fields';
+	import type { Selected } from 'bits-ui';
+
+	import { getFormContext } from '@/forms';
+	import {
+		CheckboxField,
+		FileField,
+		Field,
+		RelationsField,
+		SelectField,
+		TextareaField
+	} from '@/forms/fields';
+
 	import { isArrayField } from '@/pocketbase/collections-models/utils';
-	import type { AnyFieldConfig, FieldType } from '@/pocketbase/collections-models/types';
-	import type { ZodValidation } from 'sveltekit-superforms';
+	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
-	import { getFormContext } from '$lib/forms/form.svelte';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
 	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
 	import type { PBResponse } from '$lib/utils/types';
@@ -48,21 +58,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let component: FieldComponentProp = undefined;
 	export let hidden = false;
 	export let relationInputOptions: Partial<RecordsManagerOptions<R>> = {};
-	export let label = fieldSchema.name;
+	export let label = fieldSchema.name as string;
 	export let description: string | undefined = undefined;
 	export let placeholder: string | undefined = undefined;
 
-	const field = fieldSchema.name;
+	const name = fieldSchema.name;
 	const multiple = isArrayField(fieldSchema);
-	const { superform } = getFormContext();
+	const { form } = getFormContext();
 
 	//
 
 	/* Select */
 
-	let options: string[] = [];
+	let items: Selected<string>[] = [];
 	if (fieldSchema.type == 'select') {
-		options = [...fieldSchema.options.values];
+		items = fieldSchema.options.values.map((v) => ({ label: v, value: v }));
 	}
 
 	/* File */
@@ -83,42 +93,41 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 {#if hidden}
-	<Hidden {field} {superform} />
+	<!-- Nothing -->
 {:else if component}
 	<svelte:component
 		this={component.component}
-		{field}
-		{superform}
+		{name}
+		{form}
 		{...component.props}
 		{...component.events}
 		{label}
 	/>
 {:else if fieldSchema.type == 'text' || fieldSchema.type == 'url'}
-	<Input {superform} {field} options={{ label, helpText: description, placeholder }} />
+	<Field {form} {name} options={{ label, description, placeholder }} />
 {:else if fieldSchema.type == 'number'}
-	<Input
-		{superform}
-		{field}
-		options={{ label, helpText: description, type: 'number', placeholder }}
-	/>
+	<Field {form} {name} options={{ label, description, type: 'number', placeholder }} />
 {:else if fieldSchema.type == 'json'}
-	<Textarea {superform} {field} options={{ label, helpText: description, placeholder }} />
+	<TextareaField {form} {name} options={{ label, description, placeholder }} />
 {:else if fieldSchema.type == 'bool'}
-	<Checkbox {superform} {field}>{label}</Checkbox>
+	<CheckboxField {form} {name}>{label}</CheckboxField>
 {:else if fieldSchema.type == 'file'}
-	<File {superform} {field} options={{ label, multiple, accept, placeholder }} />
+	<FileField {form} {name} options={{ label, multiple, accept, placeholder }} />
 {:else if fieldSchema.type == 'select'}
-	<Select
-		{superform}
-		{field}
-		options={{ label, options, multiple, helpText: description, placeholder }}
-	/>
+	<SelectField {form} {name} options={{ label, items, multiple, description, placeholder }} />
 {:else if fieldSchema.type == 'editor'}
-	<Textarea {superform} {field} options={{ label, helpText: description, placeholder }} />
+	<TextareaField {form} {name} options={{ label, description, placeholder }} />
 {:else if fieldSchema.type == 'relation'}
-	<Relations
-		{superform}
-		{field}
+	<RelationsField
+		{form}
+		{name}
+		options={{
+			collection: collectionId
+		}}
+	/>
+	<!-- <RelationsField
+		{form}
+		{name}
 		collection={collectionId}
 		options={{
 			...relationInputOptions,
@@ -128,5 +137,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			helpText: description,
 			placeholder
 		}}
-	/>
+	/> -->
 {/if}

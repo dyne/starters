@@ -9,7 +9,8 @@
 	import { currentUser, pb } from '@/pocketbase';
 
 	import { z } from 'zod';
-	import { Form, createForm, FormError, SubmitButton, Textarea, Input } from '$lib/forms';
+	import { Form, createForm } from '@/forms';
+	import { Field, TextareaField } from '@/forms/fields';
 	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
 	import { page } from '$app/stores';
@@ -17,6 +18,8 @@
 	import { ExclamationTriangle } from 'svelte-heros-v2';
 	import { featureFlags } from '$lib/features';
 	import { getUserPublicKeys } from '$lib/keypairoom/utils';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { m } from '$lib/i18n';
 
 	//
 
@@ -27,46 +30,49 @@
 		seed: z.string()
 	});
 
-	const superform = createForm(schema, async ({ form }) => {
-		const hmac = await getHMAC(form.data.email);
-		let keyring: Keyring;
-		try {
-			const keypair = await regenerateKeypair(form.data.seed, hmac);
-			keyring = keypair.keyring;
-		} catch (e) {
-			throw new Error('Invalid seed');
-		}
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
+			const hmac = await getHMAC(form.data.email);
+			let keyring: Keyring;
+			try {
+				const keypair = await regenerateKeypair(form.data.seed, hmac);
+				keyring = keypair.keyring;
+			} catch (e) {
+				throw new Error('Invalid seed');
+			}
 
-		if ($featureFlags.AUTH && $currentUser) {
-			const publicKeys = await getUserPublicKeys();
-			if (!publicKeys) {
-				throw new Error(
-					'User public keys are missing. Please generate them using the security questions.'
-				);
-			} else {
-				try {
-					await matchPublicAndPrivateKeys(publicKeys, keyring);
-				} catch (e) {
-					throw new Error('Invalid seed');
+			if ($featureFlags.AUTH && $currentUser) {
+				const publicKeys = await getUserPublicKeys();
+				if (!publicKeys) {
+					throw new Error(
+						'User public keys are missing. Please generate them using the security questions.'
+					);
+				} else {
+					try {
+						await matchPublicAndPrivateKeys(publicKeys, keyring);
+					} catch (e) {
+						throw new Error('Invalid seed');
+					}
+				}
+
+				if ($featureFlags.DID) {
+					try {
+						await pb.send('/api/did', {});
+					} catch (e) {
+						console.log(e);
+					}
 				}
 			}
 
-			if ($featureFlags.DID) {
-				try {
-					await pb.send('/api/did', {});
-				} catch (e) {
-					console.log(e);
-				}
-			}
+			saveKeyringToLocalStorage(keyring);
+			success = true;
 		}
-
-		saveKeyringToLocalStorage(keyring);
-		success = true;
 	});
 
-	const { form } = superform;
+	const { form: formData } = form;
 
-	if ($currentUser) $form.email = $currentUser.email;
+	if ($currentUser) $formData.email = $currentUser.email;
 
 	const textAreaPlaceholder =
 		'skin buyer sunset person run push elevator under debris soft surge man';
@@ -96,23 +102,17 @@
 			<P>Please type here your email and your seed to restore your keyring.</P>
 		{/if}
 
-		<Form {superform}>
+		<Form {form} submitButtonText={m.Regenerate_keys()}>
 			{#if !$currentUser}
 				<div class="space-y-1">
-					<Input {superform} field="email" options={{ label: 'User email' }} />
+					<Field {form} name="email" options={{ label: 'User email' }} />
 					<P size="sm" color="text-gray-400">
 						Your email won't be stored anywhere, it will be used only to generate the keys.
 					</P>
 				</div>
 			{/if}
 
-			<Textarea {superform} field="seed" options={{ placeholder: textAreaPlaceholder }} />
-
-			<FormError />
-
-			<div class="flex justify-end">
-				<SubmitButton>Regenerate keys</SubmitButton>
-			</div>
+			<TextareaField {form} name="seed" options={{ placeholder: textAreaPlaceholder }} />
 		</Form>
 
 		<Hr />

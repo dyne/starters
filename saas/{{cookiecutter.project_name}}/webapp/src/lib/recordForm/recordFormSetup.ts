@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { isFile, isFileArray } from '$lib/forms/fields';
 import { isArrayField } from '@/pocketbase/collections-models/utils';
 import type {
 	AnyFieldConfig,
@@ -106,12 +105,12 @@ export function cleanFormDataFiles(
 			continue;
 		}
 		//
-		else if (isFile(fieldValue)) {
+		else if (fieldValue instanceof File) {
 			const isFileOld = initialFilenames.includes(fieldValue.name);
 			if (isFileOld) delete data[field];
 		}
 		//
-		else if (isFileArray(fieldValue)) {
+		else if (Array.isArray(fieldValue)) {
 			const allFilenames = fieldValue.map((file) => file.name);
 			const newFiles = fieldValue.filter((file) => !initialFilenames.includes(file.name));
 			const filesToRemove = initialFilenames.filter((filename) => !allFilenames.includes(filename));

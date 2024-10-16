@@ -11,9 +11,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { z } from 'zod';
 
 	import { A, Heading, Hr, P } from 'flowbite-svelte';
-	import { Form, createForm, Input, Checkbox, FormError, SubmitButton } from '$lib/forms';
+	import { Form, createForm } from '@/forms';
+	import { Field, CheckboxField } from '@/forms/fields';
 	import { page } from '$app/stores';
 	import { welcomeSearchParam } from '$lib/utils/constants';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	const url = $page.url;
 
@@ -30,34 +32,37 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		})
 		.refine((data) => data.password === data.passwordConfirm, m.PASSWORDS_DO_NOT_MATCH());
 
-	const superform = createForm(schema, async ({ form }) => {
-		const { data } = form;
-		const u = pb.collection('users');
-		await u.create(data);
-		const { record } = await u.authWithPassword(data.email, data.password);
-		await u.requestVerification(data.email);
-		//Join organization
-		if (Boolean(join)) {
-			await pb.collection('orgJoinRequests').create({
-				user: record.id,
-				organization: join,
-				status: OrgJoinRequestsStatusOptions.pending,
-				reminders: 0
-			});
-			await goto('/keypairoom?joined=true');
-			return;
-		}
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
+			const { data } = form;
+			const u = pb.collection('users');
+			await u.create(data);
+			const { record } = await u.authWithPassword(data.email, data.password);
+			await u.requestVerification(data.email);
+			//Join organization
+			if (Boolean(join)) {
+				await pb.collection('orgJoinRequests').create({
+					user: record.id,
+					organization: join,
+					status: OrgJoinRequestsStatusOptions.pending,
+					reminders: 0
+				});
+				await goto('/keypairoom?joined=true');
+				return;
+			}
 
-		window.location.assign(`/my?${welcomeSearchParam}`);
+			window.location.assign(`/my?${welcomeSearchParam}`);
+		}
 	});
 </script>
 
 <Heading tag="h4">Create an account</Heading>
 
-<Form {superform}>
-	<Input
-		{superform}
-		field="email"
+<Form {form} submitButtonText={m.Create_an_account()}>
+	<Field
+		{form}
+		name="email"
 		options={{
 			type: 'email',
 			label: m.Your_email(),
@@ -65,20 +70,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		}}
 	/>
 
-	<Input
-		{superform}
-		field="name"
+	<Field
+		{form}
+		name="name"
 		options={{
 			type: 'text',
 			label: m.Full_name(),
 			placeholder: m.John_Doe(),
-			helpText: m.Organizations_and_other_users_will_identify_you_by_your_name_()
+			description: m.Organizations_and_other_users_will_identify_you_by_your_name_()
 		}}
 	/>
 
-	<Input
-		{superform}
-		field="password"
+	<Field
+		{form}
+		name="password"
 		options={{
 			type: 'password',
 			label: m.Your_password(),
@@ -86,9 +91,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		}}
 	/>
 
-	<Input
-		{superform}
-		field="passwordConfirm"
+	<Field
+		{form}
+		name="passwordConfirm"
 		options={{
 			type: 'password',
 			label: m.Confirm_password(),
@@ -96,7 +101,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		}}
 	/>
 
-	<Checkbox {superform} field="acceptTerms">
+	<CheckboxField {form} name="acceptTerms">
 		{m.I_accept_the()}
 		<A
 			href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html#%F0%9F%92%BB-didroom-control-room-dashboard-%F0%9F%92%BB"
@@ -108,13 +113,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<A href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html" target="_blank">
 			{m.privacy_policy()}
 		</A>
-	</Checkbox>
-
-	<FormError />
-
-	<div class="flex justify-end">
-		<SubmitButton>{m.Create_an_account()}</SubmitButton>
-	</div>
+	</CheckboxField>
 </Form>
 
 <div class="flex flex-col gap-4">

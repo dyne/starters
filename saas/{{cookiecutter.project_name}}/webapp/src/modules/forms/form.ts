@@ -10,9 +10,11 @@ export type SubmitFunction<Data extends GenericRecord> = NonNullable<
 	SuperformOptions<Data>['onUpdate']
 >;
 
+export type FormOptions<Data extends GenericRecord> = Omit<SuperformOptions<Data>, 'onUpdate'>;
+
 export type CreateFormProps<Data extends GenericRecord> = {
 	adapter: ValidationAdapter<Data>;
-	options?: Omit<SuperformOptions<Data>, 'onUpdate'>;
+	options?: FormOptions<Data>;
 	onSubmit?: SubmitFunction<Data>;
 	initialData?: Partial<Data>;
 };

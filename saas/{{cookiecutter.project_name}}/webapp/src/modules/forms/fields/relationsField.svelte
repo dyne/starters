@@ -12,8 +12,8 @@
 	//
 
 	export let form: SuperForm<Data>;
-	export let name: FormPath<Data, string | string[]>;
-	export let options: Partial<FieldOptions> & { collection: C };
+	export let name: FormPath<Data>;
+	export let options: Partial<FieldOptions> & { collection: C | string };
 
 	//
 

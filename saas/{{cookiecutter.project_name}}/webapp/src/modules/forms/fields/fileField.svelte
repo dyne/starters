@@ -23,7 +23,7 @@
 	//
 
 	export let form: SuperForm<Data>;
-	export let name: FormPath<Data, File | File[]>;
+	export let name: FormPath<Data>;
 	export let options: Partial<FieldOptions & Omit<ComponentProps<Input>, 'type' | 'value'>> = {};
 
 	$: multiple = options.multiple ?? false;
