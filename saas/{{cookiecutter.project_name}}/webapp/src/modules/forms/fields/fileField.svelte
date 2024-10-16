@@ -12,20 +12,19 @@
 		type FileManagerValidator,
 		type RejectedFile
 	} from '@/components/custom/fileManager.svelte';
-
-	import type { Writable } from 'svelte/store';
-	import type { FieldOptions } from './types';
-	import type { HTMLInputAttributes } from 'svelte/elements';
-	import { pipe } from 'effect';
-	import { Tuple } from 'effect';
-
 	import Input from '@/components/ui/input/input.svelte';
+
+	import type { FieldOptions } from './types';
+	import type { Writable } from 'svelte/store';
+	import type { ComponentProps } from 'svelte';
+
+	import { pipe, Tuple } from 'effect';
 
 	//
 
 	export let form: SuperForm<Data>;
 	export let name: FormPath<Data, File | File[]>;
-	export let options: Partial<FieldOptions & Omit<HTMLInputAttributes, 'type'>> = {};
+	export let options: Partial<FieldOptions & Omit<ComponentProps<Input>, 'type' | 'value'>> = {};
 
 	$: multiple = options.multiple ?? false;
 
