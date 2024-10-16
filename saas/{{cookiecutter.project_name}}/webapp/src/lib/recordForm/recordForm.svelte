@@ -77,6 +77,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	//
 
+	// TODO - Make function that retrieves CollectionName from CollectionId
+	// in some cases we have an Id but not the typed collection name
 	export let collection: CollectionName;
 	export let initialData: Partial<RecordGeneric> = {};
 	export let recordId = '';

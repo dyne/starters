@@ -2,37 +2,38 @@
 	import { goto } from '$lib/i18n';
 	import { pb } from '@/pocketbase';
 	import { Collections } from '@/pocketbase/types';
-	import { Form, createForm, FormError, SubmitButton, Input } from '$lib/forms';
+	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Field } from '@/forms/fields';
 	import { z } from 'zod';
 	import { currentEmail } from './+layout.svelte';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	const schema = z.object({
 		email: z.string().email(),
 		password: z.string()
 	});
 
-	const superform = createForm(
-		schema,
-		async ({ form }) => {
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
 			const { data } = form;
 			const u = pb.collection('users');
 			await u.authWithPassword(data.email, data.password);
 			await goto('/my');
 		},
-		{ email: $currentEmail },
-		{ taintedMessage: null }
-	);
+		initialData: { email: $currentEmail },
+		options: { taintedMessage: null }
+	});
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form: formData } = form;
 
-	$: $currentEmail = $form.email;
+	$: $currentEmail = $formData.email;
 </script>
 
-<Form {superform}>
-	<Input
-		{superform}
-		field="email"
+<Form {form}>
+	<Field
+		{form}
+		name="email"
 		options={{
 			id: 'email',
 			type: 'email',
@@ -41,9 +42,9 @@
 		}}
 	/>
 
-	<Input
-		{superform}
-		field="password"
+	<Field
+		{form}
+		name="password"
 		options={{
 			id: 'password',
 			type: 'password',

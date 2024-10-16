@@ -3,34 +3,35 @@
 	import { loginUser } from '$lib/webauthn/index';
 	import { z } from 'zod';
 
-	import { Form, createForm, Input, FormError, SubmitButton } from '$lib/forms';
+	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Field } from '@/forms/fields';
 	import { currentEmail } from '../+layout.svelte';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	const schema = z.object({
 		email: z.string().email()
 	});
 
-	const superform = createForm(
-		schema,
-		async ({ form }) => {
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: async ({ form }) => {
 			const { data } = form;
 			await loginUser(data.email);
 			await goto('/my');
 		},
-		{ email: $currentEmail },
-		{ taintedMessage: null }
-	);
+		initialData: { email: $currentEmail },
+		options: { taintedMessage: null }
+	});
 
-	const { capture, restore, form } = superform;
-	export const snapshot = { capture, restore };
+	const { form: formData } = form;
 
-	$: $currentEmail = $form.email;
+	$: $currentEmail = $formData.email;
 </script>
 
-<Form {superform}>
-	<Input
-		{superform}
-		field="email"
+<Form {form}>
+	<Field
+		{form}
+		name="email"
 		options={{
 			id: 'email',
 			type: 'email',
