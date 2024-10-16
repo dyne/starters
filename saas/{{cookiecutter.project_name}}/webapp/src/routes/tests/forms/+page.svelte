@@ -1,11 +1,18 @@
 <script lang="ts">
-	import SelectInput from '@/components/custom/selectInput.svelte';
 	import { createForm, Form } from '@/forms';
-	import { Field, SwitchField, FileField, CheckboxField, TextareaField } from '@/forms/fields';
+	import {
+		Field,
+		SwitchField,
+		FileField,
+		CheckboxField,
+		TextareaField,
+		SelectField
+	} from '@/forms/fields';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { createDummyFile } from '@/utils/other';
 	import SuperDebug from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import { ZTestCollectionSelectFieldOptions } from '@/pocketbase/types';
 
 	const schema = createCollectionZodSchema('z_test_collection');
 
@@ -24,18 +31,18 @@
 	});
 
 	const { form: formData } = form;
+
+	const selectItems = Object.values(ZTestCollectionSelectFieldOptions).map((v) => ({
+		label: v,
+		value: v as string
+	}));
 </script>
 
 <Form {form}>
-	<SelectInput
-		items={[
-			{ label: 'ok', value: 'no' },
-			{ label: 'ok1', value: 'no1' },
-			{ label: 'ok2', value: 'no2' }
-		]}
-		placeholder="maio"
-		multiple
-	></SelectInput>
+	<SelectField {form} name="select_field" options={{ items: selectItems }} />
+	<SelectField {form} name="select_multi_field" options={{ items: selectItems, multiple: true }} />
+
+	<SuperDebug data={formData}></SuperDebug>
 
 	<Field {form} name="text_field" />
 	<Field {form} name="url_field" options={{ type: 'url' }} />
@@ -46,6 +53,4 @@
 	<SwitchField {form} name="boolean_field" />
 	<CheckboxField {form} name="boolean_field" />
 	<TextareaField {form} name="json_field" />
-
-	<SuperDebug data={formData}></SuperDebug>
 </Form>
