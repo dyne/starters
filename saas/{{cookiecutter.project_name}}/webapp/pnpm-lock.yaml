@@ -156,9 +156,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.5.14
         version: 0.5.14(prettier-plugin-svelte@3.2.6(prettier@3.3.3)(svelte@4.2.18))(prettier@3.3.3)
-      svelecte:
-        specifier: ^3.17.3
-        version: 3.17.3
       svelte:
         specifier: ^4.2.18
         version: 4.2.18
@@ -2852,9 +2849,6 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  svelecte@3.17.3:
-    resolution: {integrity: sha512-wnvoRxJIFFkm+CmXgjL4R3i/TcuYUIBkE+jDJSBD7AdSOzk1K6u3+nW4zwxaGT29zyZpiZkWeiy7lO62r5F+tg==}
-
   svelte-boring-avatars@1.2.6:
     resolution: {integrity: sha512-8+Z1DhsMUVI/V/5ik00Arw0PgbJcMdhTXq3YGqccBc5bYFeceCtMEMB0aWGhi8xFV+0aqZbWvS89Hcj16LlfHA==}
 
@@ -2928,9 +2922,6 @@ packages:
         optional: true
       typescript:
         optional: true
-
-  svelte-tiny-virtual-list@2.1.2:
-    resolution: {integrity: sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA==}
 
   svelte@4.2.18:
     resolution: {integrity: sha512-d0FdzYIiAePqRJEb90WlJDkjUEx42xhivxN8muUBmfZnP+tzUgz12DJ2hRJi8sIHCME7jeK1PTMgKPSfTd8JrA==}
@@ -6123,10 +6114,6 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelecte@3.17.3:
-    dependencies:
-      svelte-tiny-virtual-list: 2.1.2
-
   svelte-boring-avatars@1.2.6: {}
 
   svelte-check@3.8.4(postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.3)))(postcss@8.4.39)(svelte@4.2.18):
@@ -6185,8 +6172,6 @@ snapshots:
       postcss: 8.4.39
       postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.3))
       typescript: 5.5.3
-
-  svelte-tiny-virtual-list@2.1.2: {}
 
   svelte@4.2.18:
     dependencies:
