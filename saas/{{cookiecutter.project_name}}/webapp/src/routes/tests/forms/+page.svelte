@@ -1,8 +1,7 @@
 <script lang="ts">
-	import FileManager from '@/components/custom/fileManager.svelte';
+	import SelectInput from '@/components/custom/selectInput.svelte';
 	import { createForm, Form } from '@/forms';
-	import { Field } from '@/forms/fields';
-	import FileField from '@/forms/fields/fileField.svelte';
+	import { Field, SwitchField, FileField, CheckboxField, TextareaField } from '@/forms/fields';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { createDummyFile } from '@/utils/other';
 	import SuperDebug from 'sveltekit-superforms';
@@ -28,13 +27,25 @@
 </script>
 
 <Form {form}>
+	<SelectInput
+		items={[
+			{ label: 'ok', value: 'no' },
+			{ label: 'ok1', value: 'no1' },
+			{ label: 'ok2', value: 'no2' }
+		]}
+		placeholder="maio"
+		multiple
+	></SelectInput>
+
 	<Field {form} name="text_field" />
 	<Field {form} name="url_field" options={{ type: 'url' }} />
 	<Field {form} name="number_field" options={{ type: 'number' }} />
 	<FileField {form} name="file_field" />
 	<FileField {form} name="file_multi_field" options={{ multiple: true }} />
-	<!-- <FilesInput {form} field="file_multi_field" options={{ type: 'file', multiple: true }} /> -->
 	<Field {form} name="date_field" options={{ type: 'date' }} />
+	<SwitchField {form} name="boolean_field" />
+	<CheckboxField {form} name="boolean_field" />
+	<TextareaField {form} name="json_field" />
 
 	<SuperDebug data={formData}></SuperDebug>
 </Form>
