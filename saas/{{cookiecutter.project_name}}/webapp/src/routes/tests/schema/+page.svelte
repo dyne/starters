@@ -4,6 +4,7 @@
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import type { CollectionFormData } from '@/pocketbase/types';
 	import { z } from 'zod';
+	import { createDummyFile } from '@/utils/other';
 
 	const x = z
 		.object({
@@ -22,7 +23,7 @@
 
 	async function routine() {
 		const data: CollectionFormData<'z_test_collection'> = {
-			file_field: dummyFile(),
+			file_field: createDummyFile(),
 			richtext_field: 'AO',
 			text_field: 'Miao',
 			relation_multi_field: ['sqynj66ubxkl32s', '2yqpdt4p0h3o7s9'],
@@ -36,14 +37,8 @@
 		if (parsedData.success == true)
 			await pb.collection('z_test_collection').create(parsedData.data);
 	}
-	routine();
 
-	function dummyFile() {
-		return new File(['Hello, World!'], 'hello.txt', {
-			type: 'text/plain',
-			lastModified: Date.now()
-		});
-	}
+	routine();
 </script>
 
 {#await res then x}

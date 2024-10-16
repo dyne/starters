@@ -451,5 +451,9 @@
 	"start": "Start",
 	"decline_membership_request": "decline_membership_request",
 	"decline_membership_request_warning": "decline_membership_request_warning",
-	"Submit": "Submit"
+	"Submit": "Submit",
+	"New": "New",
+	"Files": "Files",
+	"Rejected_files": "Rejected files",
+	"Clear": "Clear"
 }

@@ -9,3 +9,7 @@ export type If<Condition extends boolean, IfTrue, IfFalse> = Condition extends t
 	: IfFalse;
 
 export type Not<Condition extends boolean> = Condition extends true ? false : true;
+
+//
+
+export type IsArray<T> = T extends Array<unknown> ? true : false;

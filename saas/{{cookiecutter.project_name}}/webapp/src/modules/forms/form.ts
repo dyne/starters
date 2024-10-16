@@ -12,9 +12,9 @@ export type SubmitFunction<Data extends GenericRecord> = NonNullable<
 
 export type CreateFormProps<Data extends GenericRecord> = {
 	adapter: ValidationAdapter<Data>;
-	options?: Omit<SuperformOptions<NoInfer<Data>>, 'onUpdate'>;
-	onSubmit?: SubmitFunction<NoInfer<Data>>;
-	initialData?: Partial<NoInfer<Data>>;
+	options?: Omit<SuperformOptions<Data>, 'onUpdate'>;
+	onSubmit?: SubmitFunction<Data>;
+	initialData?: Partial<Data>;
 };
 
 export function createForm<Data extends GenericRecord>(props: CreateFormProps<Data>) {

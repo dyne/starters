@@ -16,15 +16,32 @@ import type { If } from '@/utils/types';
 export function createCollectionZodSchema<C extends CollectionName>(
 	collection: C
 ): CollectionZodSchema<C> {
-	const { schema } = getCollectionModel(collection);
-	const entries = schema.map((fieldConfig) => {
+	const { schema: pocketbaseFieldsSchema } = getCollectionModel(collection);
+	const entries = pocketbaseFieldsSchema.map((fieldConfig) => {
 		const zodTypeConstructor = fieldConfigToZodTypeMap[fieldConfig.type] as FieldConfigToZodType;
 		const zodType = pipe(
 			zodTypeConstructor(fieldConfig),
+
+			// Array type handling
 			(zodType) => {
-				if (isArrayField(fieldConfig)) return z.array(zodType);
-				else return zodType;
+				if (isArrayField(fieldConfig)) {
+					const { minSelect, maxSelect } = z
+						.object({
+							minSelect: z.number().optional(),
+							maxSelect: z.number().optional()
+						})
+						.parse(fieldConfig.options);
+
+					let s = z.array(zodType);
+					if (minSelect) s = s.min(minSelect as number);
+					if (maxSelect) s = s.max(maxSelect as number);
+					return s;
+				} else {
+					return zodType;
+				}
 			},
+
+			// Optional type handling
 			(zodType) => {
 				if (fieldConfig.required) {
 					if (zodType instanceof z.ZodArray) return zodType.nonempty();
@@ -36,8 +53,10 @@ export function createCollectionZodSchema<C extends CollectionName>(
 				}
 			}
 		);
+
 		return [fieldConfig.name, zodType];
 	});
+
 	const rawObject = Object.fromEntries(entries);
 	return z.object(rawObject) as CollectionZodSchema<C>;
 }
