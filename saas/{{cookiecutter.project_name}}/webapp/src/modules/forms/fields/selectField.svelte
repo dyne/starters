@@ -1,5 +1,14 @@
 <script lang="ts" context="module">
 	import type { GenericRecord } from '@/utils/types';
+
+	// Copied from `bits-ui`
+	type WhenTrue<TrueOrFalse, IfTrue, IfFalse, IfNeither = IfTrue | IfFalse> = [
+		TrueOrFalse
+	] extends [true]
+		? IfTrue
+		: [TrueOrFalse] extends [false]
+			? IfFalse
+			: IfNeither;
 </script>
 
 <script lang="ts" generics="Data extends GenericRecord,T, Multiple extends boolean">
@@ -24,18 +33,24 @@
 
 	const value = fieldProxy(form, name) as Writable<T | T[]>;
 
-	function getSelectedFromValue(value: T | T[]) {
+	function getSelectedFromValue(
+		value: T | T[]
+	): WhenTrue<Multiple, Selected<T>[] | undefined, Selected<T> | undefined> {
 		if (!options.items) throw new Error('missing_select_options');
 		if (Array.isArray(value)) {
+			// @ts-expect-error – Slight type mismatch
 			return options.items.filter((option) => value.includes(option.value));
 		} else {
+			// @ts-expect-error – Slight type mismatch
 			return options.items.find((option) => option.value == value);
 		}
 	}
 
-	type ChangeFn = NonNullable<(typeof options)['onSelectedChange']>;
+	type OnSelectedChange = NonNullable<(typeof options)['onSelectedChange']>;
 
-	const handleSelectedChange: ChangeFn = (data: Selected<T> | Selected<T>[] | undefined) => {
+	const handleSelectedChange: OnSelectedChange = (
+		data: Selected<T> | Selected<T>[] | undefined
+	) => {
 		if (!data) return;
 		if (Array.isArray(data)) {
 			$value = data.map((selected) => selected.value);
@@ -51,8 +66,6 @@
 		options={{ label: options.label, description: options.description }}
 		let:attrs
 	>
-		<!-- TODO - Fix typescript -->
-		<!-- @ts-ignore -->
 		<SelectInput
 			{...options}
 			{attrs}
