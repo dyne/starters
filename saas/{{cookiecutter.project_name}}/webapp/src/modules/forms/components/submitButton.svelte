@@ -7,7 +7,6 @@
 	const { allErrors } = superform;
 
 	$: formHasErrors = $allErrors.filter((e) => e.path != FORM_ERROR_PATH).length > 0;
-	$: console.log(formHasErrors);
 </script>
 
 <Form.Button disabled={formHasErrors}>

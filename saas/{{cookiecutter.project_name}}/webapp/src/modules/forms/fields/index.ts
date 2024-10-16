@@ -4,5 +4,16 @@ import SwitchField from './switchField.svelte';
 import CheckboxField from './checkboxField.svelte';
 import TextareaField from './textareaField.svelte';
 import SelectField from './selectField.svelte';
+import DateField from './dateField.svelte';
+import RelationsField from './relationsField.svelte';
 
-export { Field, FileField, SwitchField, CheckboxField, TextareaField, SelectField };
+export {
+	Field,
+	FileField,
+	SwitchField,
+	CheckboxField,
+	TextareaField,
+	SelectField,
+	DateField,
+	RelationsField
+};

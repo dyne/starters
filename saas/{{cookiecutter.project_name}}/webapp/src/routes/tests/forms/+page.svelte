@@ -6,7 +6,8 @@
 		FileField,
 		CheckboxField,
 		TextareaField,
-		SelectField
+		SelectField,
+		RelationsField
 	} from '@/forms/fields';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { createDummyFile } from '@/utils/other';
@@ -41,6 +42,7 @@
 <Form {form}>
 	<SelectField {form} name="select_field" options={{ items: selectItems }} />
 	<SelectField {form} name="select_multi_field" options={{ items: selectItems, multiple: true }} />
+	<RelationsField {form} name="relation_field" options={{ collection: 'z_test_collection' }} />
 
 	<SuperDebug data={formData}></SuperDebug>
 
