@@ -10,16 +10,18 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { goto, m } from '$lib/i18n';
 	import { z } from 'zod';
 
-	import { A, Heading, Hr, P } from 'flowbite-svelte';
 	import { Form, createForm } from '@/forms';
 	import { Field, CheckboxField } from '@/forms/fields';
 	import { page } from '$app/stores';
-	import { welcomeSearchParam } from '$lib/utils/constants';
 	import { zod } from 'sveltekit-superforms/adapters';
 
-	const url = $page.url;
+	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
+	import { featureFlags } from '$lib/features';
+	import { OrganizationInviteSession } from '$lib/organizations/invites';
+	import { appTitle } from '$lib/strings';
+	import { WelcomeSession } from '$lib/utils/welcome';
+	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
 
-	const join = url.searchParams.get('join');
 	//
 
 	const schema = z
@@ -38,24 +40,44 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			const { data } = form;
 			const u = pb.collection('users');
 			await u.create(data);
-			const { record } = await u.authWithPassword(data.email, data.password);
+			await u.authWithPassword(data.email, data.password);
 			await u.requestVerification(data.email);
-			//Join organization
-			if (Boolean(join)) {
-				await pb.collection('orgJoinRequests').create({
-					user: record.id,
-					organization: join,
-					status: OrgJoinRequestsStatusOptions.pending,
-					reminders: 0
-				});
-				await goto('/keypairoom?joined=true');
-				return;
-			}
-
-			window.location.assign(`/my?${welcomeSearchParam}`);
+			WelcomeSession.start();
+			await goto('/my');
 		}
 	});
+
+	const { form: formData } = form;
+
+	if ($featureFlags.ORGANIZATIONS) {
+		const inviteSession = OrganizationInviteSession.getData();
+		if (inviteSession) $formData.email = inviteSession.email;
+	}
+
+	function getOrganization(id: string) {
+		return pb.collection('organizations').getOne(id, { requestKey: null });
+	}
+
+	$: disableEmail = $featureFlags.ORGANIZATIONS && OrganizationInviteSession.isActive();
 </script>
+
+{#if $featureFlags.ORGANIZATIONS}
+	{@const inviteSession = OrganizationInviteSession.getData()}
+	{#if inviteSession}
+		{#await getOrganization(inviteSession.organizationId) then organization}
+			<WelcomeBanner class="mb-6">
+				<div>
+					<P color="yellow">
+						{@html m.you_have_been_invited_by_organization_to_join_the_platform({
+							organizationName: organization.name
+						})}
+					</P>
+					<P color="yellow">{m.Please_register_using_the_provided_email_account_()}</P>
+				</div>
+			</WelcomeBanner>
+		{/await}
+	{/if}
+{/if}
 
 <Heading tag="h4">Create an account</Heading>
 
@@ -66,7 +88,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		options={{
 			type: 'email',
 			label: m.Your_email(),
-			placeholder: m.namefoundation_org()
+			placeholder: m.namefoundation_org(),
+			disabled: disableEmail
 		}}
 	/>
 
