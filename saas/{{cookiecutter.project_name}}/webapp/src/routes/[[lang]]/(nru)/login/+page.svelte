@@ -30,7 +30,7 @@
 	$: $currentEmail = $formData.email;
 </script>
 
-<Form {form}>
+<Form {form} submitButtonText="Log in">
 	<Field
 		{form}
 		name="email"
@@ -52,10 +52,4 @@
 			placeholder: '•••••'
 		}}
 	/>
-
-	<FormError />
-
-	<div class="flex justify-end">
-		<SubmitButton>Log in</SubmitButton>
-	</div>
 </Form>

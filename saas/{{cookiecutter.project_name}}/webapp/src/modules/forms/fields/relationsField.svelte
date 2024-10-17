@@ -13,7 +13,7 @@
 
 	export let form: SuperForm<Data>;
 	export let name: FormPath<Data>;
-	export let options: Partial<FieldOptions> & { collection: C | string };
+	export let options: Partial<FieldOptions> & { collection: C };
 
 	//
 

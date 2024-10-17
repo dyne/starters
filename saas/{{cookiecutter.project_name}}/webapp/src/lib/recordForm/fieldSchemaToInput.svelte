@@ -30,6 +30,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
+	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
+
 	import type { Selected } from 'bits-ui';
 
 	import { getFormContext } from '@/forms';
@@ -43,7 +45,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '@/forms/fields';
 
 	import { isArrayField } from '@/pocketbase/collections-models/utils';
-	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
+	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
@@ -84,10 +86,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	/* Relation */
 
-	let collectionId: string;
+	let collectionName: CollectionName;
 	let max: number;
 	if (fieldSchema.type == 'relation') {
-		collectionId = fieldSchema.options.collectionId as string;
+		const collectionId = fieldSchema.options.collectionId;
+		collectionName = getCollectionNameFromId(collectionId);
 		max = fieldSchema.options.maxSelect as number;
 	}
 </script>
@@ -122,7 +125,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{form}
 		{name}
 		options={{
-			collection: collectionId
+			collection: collectionName
 		}}
 	/>
 	<!-- <RelationsField

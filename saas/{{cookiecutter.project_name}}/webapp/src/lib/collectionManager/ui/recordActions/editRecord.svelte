@@ -1,10 +1,6 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
+	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
+
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import type { PBResponse } from '$lib/utils/types';
@@ -59,7 +55,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<div class="w-full">
 			<slot name="beforeForm"></slot>
 			<RecordForm
-				collection={record.collectionId}
+				collection={getCollectionNameFromId(record.collectionId)}
 				recordId={record.id}
 				initialData={record}
 				{fieldsSettings}

@@ -16,8 +16,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { Collections } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { createRecordLabel, searchTextFilter, excludeIdsFilter, mergeFilters } from './utils';
-	// @ts-ignore
-	import Svelecte from 'svelecte';
 
 	//
 
@@ -105,7 +103,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 </script>
 
-<Svelecte
+<!-- TODO - fix with shadcn -->
+<!-- <Svelecte
 	{name}
 	{valueField}
 	{labelField}
@@ -115,4 +114,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	on:change={handleChange}
 	{disabled}
 	{required}
-/>
+/> -->
