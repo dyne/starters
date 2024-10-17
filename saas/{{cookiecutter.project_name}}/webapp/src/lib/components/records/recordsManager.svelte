@@ -23,6 +23,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
+	import { Button } from '@/components/ui/button';
+
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 
 	import { pb } from '@/pocketbase';
@@ -35,7 +37,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import Drawer from '$lib/components/drawer.svelte';
-	import { Button } from 'flowbite-svelte';
 	import { Plus } from 'lucide-svelte';
 	import { createToggleStore } from '../utils/toggleStore';
 	import RecordForm, { type FieldsSettings } from '$lib/recordForm/recordForm.svelte';
@@ -151,7 +152,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	{#if showActions.includes('create')}
 		<div class="flex justify-end">
-			<Button color="alternative" size="xs" on:click={hideCreateDrawer.off}>
+			<Button variant="outline" size="sm" on:click={hideCreateDrawer.off}>
 				<Plus size="16" />
 				<span class="ml-1">Create new record</span>
 			</Button>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { A, Heading, P } from 'flowbite-svelte';
+	import { m } from '$lib/i18n';
+	import T from '@/components/custom/t.svelte';
 	const status = $page.status;
 	const title = status === 404 ? 'Not Found' : 'Internal Error';
 	const image = status === 404 ? '/404-computer.svg' : '/500.svg';
@@ -14,15 +15,15 @@
 		<img src={image} alt={title} />
 	</div>
 	<div class="flex w-full flex-col items-center justify-center gap-4">
-		<Heading tag="h3" class="text-primary-600">{status} {title}</Heading>
-		<Heading tag="h2">{message}</Heading>
+		<T tag="h3" class="text-primary-600">{status} {title}</T>
+		<T tag="h2">{message}</T>
 		<div class="w-full pt-8">
-			<P class="text-gray-400">Here are some Helpful links:</P>
+			<T class="text-gray-400">{m.Here_are_some_Helpful_link()}</T>
 			<ul class="flex gap-2">
-				<li><A href="/">Home</A></li>
-				<li><A href="/login">Login</A></li>
-				<li><A href="/register">Register</A></li>
-				<li><A href="/my">My</A></li>
+				<li><a href="/">{m.Home()}</a></li>
+				<li><a href="/login">{m.Login()}</a></li>
+				<li><a href="/register">{m.Register()}</a></li>
+				<li><a href="/my">{m.My()}</a></li>
 			</ul>
 		</div>
 	</div>

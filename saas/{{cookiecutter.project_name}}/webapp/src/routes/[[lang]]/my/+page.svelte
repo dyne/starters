@@ -1,5 +1,4 @@
 <script>
-	import { A } from 'flowbite-svelte';
 	import { featureFlags } from '$lib/features';
 	import { WelcomeSession } from '$lib/utils/welcome';
 
@@ -7,8 +6,8 @@
 </script>
 
 <div class="flex flex-col p-4">
-	<A href="/my/profile">My profile</A>
+	<a href="/my/profile">My profile</a>
 	{#if $featureFlags.ORGANIZATIONS}
-		<A href="/my/organizations">My organizations</A>
+		<a href="/my/organizations">My organizations</a>
 	{/if}
 </div>

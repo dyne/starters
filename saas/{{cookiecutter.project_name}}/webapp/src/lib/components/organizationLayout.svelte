@@ -5,19 +5,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Heading } from 'flowbite-svelte';
 	import OrganizationBreadcrumbs from './organizationBreadcrumbs.svelte';
 	import PageTop from '@/components/custom/pageTop.svelte';
 	import OrganizationTabs from './organizationTabs.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import PageContent from './pageContent.svelte';
+	import T from '@/components/custom/t.svelte';
 
 	export let org: OrganizationsResponse;
 </script>
 
 <PageTop>
 	<OrganizationBreadcrumbs />
-	<Heading tag="h4">{org.name}</Heading>
+	<T tag="h4">{org.name}</T>
 	<OrganizationTabs slot="bottom" organizationId={org.id} />
 </PageTop>
 

@@ -41,6 +41,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
+	import { Button } from '@/components/ui/button';
+
 	import { zod } from 'sveltekit-superforms/adapters';
 
 	import { m } from '$lib/i18n';
@@ -67,7 +69,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from './recordFormSetup';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
-	import { Button } from 'flowbite-svelte';
 
 	//
 
@@ -197,7 +198,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			: 'Create record';
 </script>
 
-<Form {form} showRequiredIndicator hide={["submitButton"]}>
+<Form {form} showRequiredIndicator hide={['submitButton']}>
 	{#each fieldsSchema as fieldSchema}
 		{@const name = fieldSchema.name}
 		{@const hidden = hide ? Object.keys(hide).includes(name) : false}
@@ -221,7 +222,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	<div class="flex justify-end gap-2">
 		{#if showCancelButton}
-			<Button color="alternative" on:click={() => dispatch('cancel', {})}>{m.Cancel()}</Button>
+			<Button variant="outline" on:click={() => dispatch('cancel', {})}>{m.Cancel()}</Button>
 		{/if}
 		<SubmitButton>{submitButtonText}</SubmitButton>
 	</div>

@@ -3,9 +3,9 @@
 	import { currentUser } from '@/pocketbase';
 	import DIDButton from '$lib/components/DIDButton.svelte';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import { Button } from 'flowbite-svelte';
 	import { m } from '$lib/i18n';
 	import { featureFlags } from '$lib/features';
+	import { Button } from '@/components/ui/button';
 </script>
 
 <Topbar>
@@ -26,7 +26,7 @@
 	</div>
 	<div slot="right" class="flex items-center gap-4">
 		{#if $featureFlags.AUTH}
-			<Button data-sveltekit-preload-data="false" href="/logout" size="xs" color="alternative">
+			<Button data-sveltekit-preload-data="off" href="/logout" size="sm" color="alternative">
 				{m.Sign_out()}
 			</Button>
 			<UserAvatar />

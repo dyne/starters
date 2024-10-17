@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { page } from '$app/stores';
 	import { i18n, m } from '.';
 	import { Dropdown, Button, DropdownHeader, DropdownItem } from 'flowbite-svelte';
-	import { ArrowPath } from 'lucide-svelte';
+	import { Languages } from 'lucide-svelte';
 
 	//
 
@@ -33,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<div class="flex items-center gap-3">
 		<p class="h-6 w-6 text-2xl leading-[1]">{languagesDisplay[languageTag()].flag}</p>
 		<p>{languagesDisplay[languageTag()].name}</p>
-		<ArrowPath size="18" />
+		<Languages size="18" />
 	</div>
 </Button>
 

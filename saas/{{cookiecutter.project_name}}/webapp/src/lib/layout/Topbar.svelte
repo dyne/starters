@@ -5,21 +5,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Navbar } from 'flowbite-svelte';
 </script>
 
-<div class="dark shrink-0 border-b">
-	<Navbar fluid>
-		<div class="shrink-0 items-center justify-start">
+<div class="shrink-0 border-b">
+	<div class="flex justify-between px-4 py-2">
+		<div class="shrink-0 items-center">
 			<slot name="left" />
 		</div>
-		<div class="justify-center">
+		<div class="">
 			<slot name="center" />
 		</div>
-		<div class="flex shrink-0 items-center justify-end">
+		<div class="flex shrink-0 items-center">
 			<slot name="right" />
 		</div>
-	</Navbar>
+	</div>
 </div>
 
 <!-- 

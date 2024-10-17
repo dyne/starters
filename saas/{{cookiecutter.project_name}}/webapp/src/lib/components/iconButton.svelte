@@ -5,9 +5,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
 	import { X } from 'lucide-svelte';
 	import type { IconComponent } from '@/components/types';
+	import { Button } from '@/components/ui/button';
 
 	export let icon: IconComponent = X;
 	export let border = false;
@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <Button
 	class={`${props.padding} ${!border ? '!border-transparent' : ''} !shrink-0`}
-	color="alternative"
+	variant="outline"
 	on:click
 	{href}
 >

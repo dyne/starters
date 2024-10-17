@@ -6,7 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script>
 	import { appTitle } from '$lib/strings';
-	import { NavBrand } from 'flowbite-svelte';
 
 	/*
 	 * The url to navigate to when the logo is clicked.
@@ -14,9 +13,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let href = '/my';
 </script>
 
-<NavBrand {href}>
+<a {href}>
 	<img src={'/logo.svg'} class="h-9" alt={appTitle} />
-</NavBrand>
+</a>
 
 <!--  
     @component 
