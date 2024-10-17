@@ -26,22 +26,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		SidebarGroup
 	} from 'flowbite-svelte';
 	import {
-		ArrowLeftOnRectangle,
-		CheckCircle,
-		Fire,
+		ArrowUpRightFromSquare,
+		Flame,
 		Home,
-		InboxArrowDown,
-		QuestionMarkCircle,
-		RectangleStack,
+		Inbox,
+		CircleHelp,
+		SquareStack,
 		User,
-		EllipsisHorizontal,
-		Document
-	} from 'svelte-heros-v2';
+		Ellipsis,
+		File
+	} from 'lucide-svelte';
 	import { createOrganizationSidebarLinks, getUserRole } from '$lib/organizations';
 	import { m } from '$lib/i18n';
 	import UserAvatar from '$lib/components/userAvatar.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
-	import Icon from '$lib/components/icon.svelte';
+	import Icon from '@/components/custom/icon.svelte';
 	import { goto } from '$lib/i18n';
 	import LanguageSwitcher from '$lib/i18n/languageSwitcher.svelte';
 	import SidebarButton from '$lib/layout/SidebarButton.svelte';
@@ -128,7 +127,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							},
 							{
 								text: m.notifications(),
-								icon: InboxArrowDown,
+								icon: Inbox,
 								href: '/my/notifications',
 								disabled: true
 							}
@@ -150,7 +149,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							{
 								text: m.My_organizations(),
 								href: '/my/organizations',
-								icon: RectangleStack
+								icon: SquareStack
 							}
 						]}
 					/>
@@ -178,7 +177,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					links={[
 						{
 							text: 'Help',
-							icon: QuestionMarkCircle,
+							icon: CircleHelp,
 							href: '',
 							disabled: true
 						}
@@ -197,7 +196,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							</div>
 							<span>{getUserDisplayName($currentUser)}</span>
 						</div>
-						<Icon src={EllipsisHorizontal} slot="right" />
+						<Icon src={Ellipsis} slot="right" />
 					</SidebarButton>
 
 					<Dropdown triggeredBy={idSelector} class="w-[215px]">
@@ -216,7 +215,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						{#if $featureFlags.DID}
 							{#await getUserDidUrl() then url}
 								<DropdownItem href={url} class="flex" target="_blank">
-									<Icon src={Document} mr />
+									<Icon src={File} mr />
 									{m.my_DID()}
 								</DropdownItem>
 							{/await}
@@ -225,7 +224,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						<DropdownDivider />
 
 						<DropdownItem href="/pricing" class="flex" on:click={toggleSidebar}>
-							<Icon src={Fire} mr class="text-red-700 dark:text-red-400" />
+							<Icon src={Flame} mr class="text-red-700 dark:text-red-400" />
 							{m.Go_Pro()}
 						</DropdownItem>
 
@@ -235,7 +234,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							on:click={() => goto('/logout')}
 							class="flex text-red-700 dark:text-red-400"
 						>
-							<Icon src={ArrowLeftOnRectangle} mr />
+							<Icon src={ArrowUpRightFromSquare} mr />
 							{m.Sign_out()}
 						</DropdownItem>
 					</Dropdown>

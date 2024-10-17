@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import { ArrowLeft, Pencil } from 'svelte-heros-v2';
+	import { ArrowLeft, Pencil } from 'lucide-svelte';
 	export let valueClass: string = '';
 	export let value: string;
 	export let handleChange: (value: string) => void;

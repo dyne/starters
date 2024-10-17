@@ -6,10 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import { XMark } from 'svelte-heros-v2';
-	import type { IconComponent } from '$lib/utils/types';
+	import { X } from 'lucide-svelte';
+	import type { IconComponent } from '@/components/types';
 
-	export let icon: IconComponent = XMark;
+	export let icon: IconComponent = X;
 	export let border = false;
 	export let size: keyof typeof sizes = 'xs';
 	export let href: string | undefined = undefined;

@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { RecordForm } from '$lib/recordForm';
 	import { Button, Modal } from 'flowbite-svelte';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
-	import { Plus } from 'svelte-heros-v2';
+	import { Plus } from 'lucide-svelte';
 
 	//
 

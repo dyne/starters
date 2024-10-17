@@ -5,7 +5,7 @@
 import type { OrganizationsResponse } from '@/pocketbase/types';
 import type { m as messages } from '$lib/i18n';
 import type { NavigationTab } from '$lib/components/navigationTabs.svelte';
-import { Cog, Home, Users } from 'svelte-heros-v2';
+import { Cog, Home, Users } from 'lucide-svelte';
 import type { SidebarItemProps } from '$lib/layout/SidebarLinks.svelte';
 import { pb } from '@/pocketbase';
 import type { OrgRole } from './roles';

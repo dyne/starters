@@ -27,7 +27,7 @@
 	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
-	import { InformationCircle } from 'svelte-heros-v2';
+	import { InformationCircle } from 'lucide-svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { WelcomeSession } from '$lib/utils/welcome';
 	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';

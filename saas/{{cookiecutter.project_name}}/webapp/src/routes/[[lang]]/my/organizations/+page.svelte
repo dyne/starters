@@ -10,8 +10,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '$lib/i18n';
-	import PageCard from '@/components/custom/pageCard.svelte';
-	import PageTop from '$lib/components/pageTop.svelte';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -25,11 +23,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		OrgRolesResponse
 	} from '@/pocketbase/types';
 
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import { Button } from '@/components/ui/button';
+	import { Badge } from '@/components/ui/badge';
+
 	import Avatar from '@/components/custom/avatar.svelte';
 	import T from '@/components/custom/t.svelte';
-	import { Badge } from '@/components/ui/badge';
+	import PageTop from '@/components/custom/pageTop.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 
 	import Icon from '@/components/custom/icon.svelte';
 	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
@@ -70,7 +71,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PageTop>
-	<SectionTitle title={m.My_organizations()} description={m.organzations_page_description()} />
+	<SectionTitle
+		tag="h3"
+		title={m.My_organizations()}
+		description={m.organzations_page_description()}
+	/>
 </PageTop>
 
 <PageContent>

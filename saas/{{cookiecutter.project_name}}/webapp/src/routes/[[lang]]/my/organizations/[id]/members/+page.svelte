@@ -16,10 +16,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { m } from '$lib/i18n';
 	import { OrgRoles, ProtectedOrgUI } from '$lib/organizations';
 
-	import { Badge } from 'flowbite-svelte';
 	import Button from '@/components/ui/button/button.svelte';
-	import { Pencil, Plus, XMark } from 'svelte-heros-v2';
+	import { Pencil, Plus, X } from 'lucide-svelte';
 
+	import Badge from '@/components/ui/badge/badge.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -36,6 +36,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
 
 	import Dialog from '@/components/custom/dialog.svelte';
+	import Icon from '@/components/custom/icon.svelte';
 
 	//
 
@@ -100,10 +101,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								</p>
 								<div class="flex gap-2">
 									{#if user.id == $currentUser?.id}
-										<Badge color="dark">{m.You()}</Badge>
+										<Badge>{m.You()}</Badge>
 									{/if}
 									{#if role.name != OrgRoles.MEMBER}
-										<Badge color="dark">{c(role.name)}</Badge>
+										<Badge>{c(role.name)}</Badge>
 									{/if}
 								</div>
 							</div>
@@ -114,15 +115,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 										{#if userRole.level < role.level}
 											<EditRecord {record} let:openModal>
 												<Button color="primary" size="sm" on:click={openModal}>
-													Edit role
-													<Pencil size="20" class="ml-2"></Pencil>
+													{m.Edit_role()}
+													<Icon src={Pencil} ml></Icon>
 												</Button>
 											</EditRecord>
 
 											<DeleteRecord {record} let:openModal>
 												<Button color="primary" size="sm" on:click={openModal}>
-													Remove
-													<XMark size="20" class="ml-2"></XMark>
+													{m.Remove()}
+													<Icon src={X} ml></Icon>
 												</Button>
 											</DeleteRecord>
 										{/if}

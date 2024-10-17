@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { ListgroupItem } from 'flowbite-svelte';
 	import IconButton from './iconButton.svelte';
-	// import { Eye } from 'svelte-heros-v2';
+	// import { Eye } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	// export let hideRemove = false;

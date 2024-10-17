@@ -5,16 +5,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { A, Button, Heading } from 'flowbite-svelte';
 	import { RecordForm } from '$lib/recordForm';
 	import { Collections, type OrganizationsResponse } from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { m } from '$lib/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
-	import PageTop from '$lib/components/pageTop.svelte';
-	import { ArrowLeft } from 'svelte-heros-v2';
-	import Icon from '$lib/components/icon.svelte';
+	import PageTop from '@/components/custom/pageTop.svelte';
+	import { ArrowLeft } from 'lucide-svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import { Button } from '@/components/ui/button';
+	import T from '@/components/custom/t.svelte';
 
 	const recordType = createTypeProp<OrganizationsResponse>();
 
@@ -24,11 +25,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PageTop>
-	<Button href="/my/organizations" outline size="xs">
+	<Button href="/my/organizations" variant="outline" size="sm">
 		<Icon src={ArrowLeft} mr></Icon>
 		{m.Back_to_my_organizations()}
 	</Button>
-	<Heading tag="h4">{m.Create_an_organization()}</Heading>
+	<T tag="h4">{m.Create_an_organization()}</T>
 </PageTop>
 
 <PageContent>

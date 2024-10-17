@@ -5,6 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import Icon from '@/components/custom/icon.svelte';
+
 	import { onDestroy } from 'svelte';
 	import { getErrorMessage } from '$lib/errorHandling';
 
@@ -14,7 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
 	import { Alert, Button, Modal, P } from 'flowbite-svelte';
-	import { Trash, XMark } from 'svelte-heros-v2';
+	import { Trash, X } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
 	export let record: RecordGeneric;
@@ -78,7 +80,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						open = false;
 					}}
 				>
-					<XMark size="20" />
+					<Icon src={X} mr></Icon>
 					<span class="ml-1">Cancel</span>
 				</Button>
 			</div>

@@ -1,7 +1,7 @@
 <script>
 	import { m } from '$lib/i18n';
 	import { Alert } from 'flowbite-svelte';
-	import { ExclamationTriangle } from 'svelte-heros-v2';
+	import { ExclamationTriangle } from 'lucide-svelte';
 </script>
 
 <Alert color="yellow" border>

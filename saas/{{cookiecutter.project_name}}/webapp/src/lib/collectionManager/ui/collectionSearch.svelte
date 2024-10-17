@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import { ChevronDown } from 'svelte-heros-v2';
+	import { ChevronDown } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
 	export let recordType = createTypeProp<RecordGeneric>();

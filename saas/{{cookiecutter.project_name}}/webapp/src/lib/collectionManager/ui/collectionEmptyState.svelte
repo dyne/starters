@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { CreateRecord } from './recordActions';
-	import { FolderOpen } from 'svelte-heros-v2';
+	import { FolderOpen } from 'lucide-svelte';
 	import type { IconComponent } from '$lib/utils/types';
 
 	import EmptyState from '$lib/components/emptyState.svelte';

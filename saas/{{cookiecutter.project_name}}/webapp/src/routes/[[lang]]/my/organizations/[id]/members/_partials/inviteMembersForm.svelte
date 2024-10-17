@@ -2,8 +2,8 @@
 	import EmailInputForm from './emailInputForm.svelte';
 	import EmailReviewForm from './emailReviewForm.svelte';
 
-	import Icon from '$lib/components/icon.svelte';
-	import { ArrowLeft, Envelope, XMark } from 'svelte-heros-v2';
+	import Icon from '@/components/custom/icon.svelte';
+	import { ArrowLeft, Mail, X } from 'lucide-svelte';
 	import Button from '@/components/ui/button/button.svelte';
 
 	import { m } from '$lib/i18n';
@@ -46,11 +46,11 @@
 			</Button>
 			<div class="flex items-center gap-2">
 				<Button variant="outline" on:click={onCancel}>
-					<Icon src={XMark} mr />
+					<Icon src={X} mr />
 					{m.Cancel()}
 				</Button>
 				<Button on:click={() => handleSuccess(emails)}>
-					<Icon src={Envelope} mr />
+					<Icon src={Mail} mr />
 					{m.Send_invites()}
 				</Button>
 			</div>

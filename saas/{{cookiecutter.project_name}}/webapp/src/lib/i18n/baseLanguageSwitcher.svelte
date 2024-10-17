@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { page } from '$app/stores';
 	import { i18n, m } from '.';
 	import { Dropdown, Button, DropdownHeader, DropdownItem } from 'flowbite-svelte';
-	import { ArrowPath } from 'svelte-heros-v2';
+	import { ArrowPath } from 'lucide-svelte';
 
 	//
 

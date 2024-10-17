@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { Button, Heading, Modal, P } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
-	import { Trash, XMark } from 'svelte-heros-v2';
+	import { Trash, XMark } from 'lucide-svelte';
 	import { CreateRecord } from './recordActions';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import type { ComponentProps } from 'svelte';

@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { pb } from '@/pocketbase';
 	import { Button, Tooltip } from 'flowbite-svelte';
 	import type { PBResponse } from '$lib/utils/types';
-	import { ArrowDownTray } from 'svelte-heros-v2';
+	import { ArrowDownTray } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
 	export let record: RecordGeneric;

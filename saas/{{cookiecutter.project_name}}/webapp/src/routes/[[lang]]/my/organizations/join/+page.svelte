@@ -14,8 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
 	import { m } from '$lib/i18n';
-	import { Avatar, Button, Modal, P } from 'flowbite-svelte';
-	import PageTop from '$lib/components/pageTop.svelte';
+	import PageTop from '@/components/custom/pageTop.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
@@ -26,6 +25,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
+
+	import { Button } from '@/components/ui/button';
+	import Avatar from '@/components/custom/avatar.svelte';
+	import T from '@/components/custom/t.svelte';
 
 	//
 
@@ -50,12 +53,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PageTop>
-	<Button href="/my/organizations" outline size="xs">
+	<Button href="/my/organizations" variant="outline" size="sm">
 		<Icon src={ArrowLeft} mr></Icon>
 		{m.Back_to_my_organizations()}
 	</Button>
 
-	<SectionTitle title={m.Join_an_organization()} hideLine></SectionTitle>
+	<SectionTitle tag="h3" title={m.Join_an_organization()} hideLine></SectionTitle>
 </PageTop>
 
 <PageContent>
@@ -85,7 +88,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						{#if !orgAuthorization}
 							<PlainCard let:Title let:Description>
 								<div class="flex items-center gap-4">
-									<Avatar src={avatarUrl} size="md" class="shrink-0" />
+									<Avatar src={avatarUrl} class="shrink-0" />
 									<div>
 										<Title>{org.name}</Title>
 										{#if hasDescription}
@@ -101,13 +104,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								<div slot="right" class="shrink-0 self-start pl-8">
 									{#if !sentMembershipRequest}
 										<ModalWrapper title={`${m.Send_a_request_to()} ${org.name}`} let:openModal>
-											<Button outline on:click={openModal}>
+											<Button variant="outline" on:click={openModal}>
 												{m.Join()}
 												<Icon src={UserPlus} ml></Icon>
 											</Button>
 
 											<svelte:fragment slot="modal" let:closeModal>
-												<P>{m.Please_confirm_that_you_want_to_join_this_organization_()}</P>
+												<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
 												<div class="flex items-center justify-center gap-2">
 													<Button color="alternative" on:click={closeModal}>
 														{m.Cancel()}

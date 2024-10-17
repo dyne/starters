@@ -41,7 +41,7 @@
 		Briefcase,
 		CurrencyDollar,
 		Bolt
-	} from 'svelte-heros-v2';
+	} from 'lucide-svelte';
 	import { appTitle } from '$lib/strings';
 	import { featureFlags } from '$lib/features';
 </script>

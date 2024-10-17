@@ -8,7 +8,7 @@
 
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import { Button, Modal } from 'flowbite-svelte';
-	import { Pencil } from 'svelte-heros-v2';
+	import { Pencil } from 'lucide-svelte';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
 	//

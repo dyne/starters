@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { Heading } from 'flowbite-svelte';
 	import OrganizationBreadcrumbs from './organizationBreadcrumbs.svelte';
-	import PageTop from './pageTop.svelte';
+	import PageTop from '@/components/custom/pageTop.svelte';
 	import OrganizationTabs from './organizationTabs.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import PageContent from './pageContent.svelte';

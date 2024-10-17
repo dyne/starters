@@ -12,15 +12,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '$paraglide/runtime';
 	import { page } from '$app/stores';
 	import { i18n, m } from '.';
-	import {
-		Dropdown,
-		DropdownDivider,
-		DropdownHeader,
-		DropdownItem,
-		SidebarDropdownWrapper
-	} from 'flowbite-svelte';
-	import { ArrowPath } from 'svelte-heros-v2';
-	import Icon from '$lib/components/icon.svelte';
+	import { Dropdown, DropdownHeader, DropdownItem } from 'flowbite-svelte';
+	import { Languages } from 'lucide-svelte';
+	import Icon from '@/components/custom/icon.svelte';
 	import SidebarButton from '$lib/layout/SidebarButton.svelte';
 
 	const languagesDisplay: Record<AvailableLanguageTag, { flag: string; name: string }> = {
@@ -40,7 +34,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<p class="h-6 w-6 text-2xl leading-[1]">{languagesDisplay[languageTag()].flag}</p>
 		<p>{languagesDisplay[languageTag()].name}</p>
 	</div>
-	<Icon src={ArrowPath} slot="right" size={18}></Icon>
+	<Icon src={Languages} slot="right" size={18}></Icon>
 </SidebarButton>
 
 <Dropdown triggeredBy={`#${id}`} class="w-[215px]">

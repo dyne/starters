@@ -482,5 +482,6 @@
 	"zencode_data": "Zencode data (JSON)",
 	"zencode_script": "Zencode script",
 	"Generate_keyring": "Generate keyring",
-	"Copied": "Copied!"
+	"Copied": "Copied!",
+	"Edit_role": "Edit role"
 }

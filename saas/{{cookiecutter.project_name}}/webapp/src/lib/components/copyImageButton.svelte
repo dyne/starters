@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { imageSrcToBlob } from '$lib/utils/clientFileDownload';
 	import { Button } from 'flowbite-svelte';
-	import { ClipboardDocument } from 'svelte-heros-v2';
+	import { ClipboardDocument } from 'lucide-svelte';
 
 	export let imageSrc: string;
 	export let delay = 2000;

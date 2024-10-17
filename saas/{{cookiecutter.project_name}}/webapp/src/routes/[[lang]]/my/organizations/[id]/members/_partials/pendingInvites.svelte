@@ -17,15 +17,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
-	import { Badge, Button } from 'flowbite-svelte';
-	import { UserPlus, NoSymbol, UserGroup, Trash } from 'svelte-heros-v2';
-	import PlainCard from '$lib/components/plainCard.svelte';
-	import { getUserDisplayName } from '$lib/utils/pb';
-	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import Icon from '$lib/components/icon.svelte';
-	import EmptyState from '$lib/components/emptyState.svelte';
+	import { Trash } from 'lucide-svelte';
+	import Badge from '@/components/ui/badge/badge.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { DeleteRecord } from '$lib/collectionManager';
 	import IconButton from '$lib/components/iconButton.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
