@@ -86,7 +86,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	>
 		{#if records.length > 0}
 			<PageCard>
-				<SectionTitle tag="h5" title={m.organization_invites()} />
+				<SectionTitle title={m.organization_invites()} />
+
 				{#each records as record}
 					<PlainCard>
 						{record.expand?.organization.name}
@@ -113,7 +114,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	>
 		{#if records.length}
 			<PageCard>
-				<SectionTitle tag="h5" title={m.Your_membership_requests()}></SectionTitle>
+				<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
 
 				<div class="space-y-4">
 					{#each records as request}
@@ -147,8 +148,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	</CollectionManager>
 
 	<PageCard>
-		<SectionTitle tag="h5" title={m.Your_organizations()}>
-			<div slot="right" class="flex justify-end gap-2">
+		<SectionTitle title={m.Your_organizations()}>
+			<svelte:fragment slot="right">
 				<Button size="sm" variant="outline" class="shrink-0 !px-4" href="/my/organizations/join">
 					<span class="ml-1"> {m.Join_an_organization()} </span>
 					<Icon src={UserPlus} ml />
@@ -157,7 +158,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					<span class="ml-1"> {m.Create_a_new_organization()} </span>
 					<Icon src={Plus} ml />
 				</Button>
-			</div>
+			</svelte:fragment>
 		</SectionTitle>
 
 		<CollectionManager

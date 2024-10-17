@@ -78,7 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			initialQueryParams={{ expand: 'user,role', filter: `organization.id="${organization.id}"` }}
 			let:records
 		>
-			<SectionTitle tag="h5" title={m.Members()} description={m.members_description()}>
+			<SectionTitle title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
 					<Button on:click={showInviteModal.on}>
 						<Plus size="20" class="mr-2" />

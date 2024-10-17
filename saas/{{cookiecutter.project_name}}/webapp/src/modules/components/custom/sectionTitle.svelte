@@ -5,37 +5,35 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import clsx from 'clsx';
-	import { Heading, Hr } from 'flowbite-svelte';
 	import type { ComponentProps } from 'svelte';
+	import Separator from '@/components/ui/separator/separator.svelte';
+	import T from './t.svelte';
 
 	export let title: string;
-	export let tag: ComponentProps<Heading>['tag'] = 'h4';
+	export let tag: ComponentProps<T>['tag'] = 'h4';
 	export let description: string | undefined = undefined;
 	export let hideLine = false;
 
 	$: hasDescription = $$slots.description || description;
-
-	$: headingClass = clsx('flex justify-between items-center', {
-		'!mb-2': hasDescription || !hideLine
-	});
-
-	$: hrClass = clsx('!m-0', { '!mb-2': hasDescription });
 </script>
 
-<div>
-	<div class={headingClass}>
+<div class="space-y-2">
+	<div class="flex flex-wrap items-center justify-between gap-2">
 		<div class="w-fit">
-			<Heading {tag}>{title}</Heading>
+			<T {tag}>{title}</T>
 		</div>
-		<slot name="right" />
+		<div class="flex flex-wrap justify-end gap-2">
+			<slot name="right" />
+		</div>
 	</div>
+
 	{#if !hideLine}
-		<Hr {hrClass} />
+		<Separator />
 	{/if}
+
 	{#if hasDescription}
 		<slot name="description">
-			<p class="text-sm text-gray-500">{description}</p>
+			<T class="text-sm text-gray-500">{description}</T>
 		</slot>
 	{/if}
 </div>

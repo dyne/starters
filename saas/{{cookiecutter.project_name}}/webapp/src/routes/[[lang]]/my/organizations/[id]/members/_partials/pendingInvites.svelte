@@ -49,7 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	{#if records.length}
 		<PageCard class="!space-y-6">
 			<SectionTitle
-				tag="h5"
+				tag="h4"
 				title={m.Pending_invites()}
 				description={m.pending_invites_description()}
 			/>

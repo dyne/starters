@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import PageCard from './pageCard.svelte';
-	import SectionTitle from '../../modules/components/custom/sectionTitle.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 
 	export let title: string;
 	export let description: string | undefined = undefined;
@@ -25,7 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		/>
 	{/if}
 
-	<SectionTitle tag="h6" {title} {description} hideLine></SectionTitle>
+	<SectionTitle {title} {description} hideLine></SectionTitle>
 
 	<slot name="bottom" />
 </PageCard>
