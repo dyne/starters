@@ -19,7 +19,7 @@ export const userChallengesSchema = z
 	})
 	.partial()
 	.refine((data) => {
-		return Object.values(data).filter((v) => String.isNonEmpty(v)).length >= 3;
+		return Object.values(data).filter(isStringNonEmpty).length >= 3;
 	}, 'AT_LEAST_THREE_QUESTIONS');
 
 export type UserChallenges = z.infer<typeof userChallengesSchema>;
