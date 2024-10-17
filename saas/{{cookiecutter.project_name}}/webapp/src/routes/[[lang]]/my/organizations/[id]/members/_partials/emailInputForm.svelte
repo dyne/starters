@@ -1,14 +1,13 @@
 <script lang="ts">
 	import Icon from '$lib/components/icon.svelte';
-	import { createForm, Form } from '$lib/forms';
-	import FieldHelpText from '$lib/forms/fields/fieldParts/fieldHelpText.svelte';
-	import SubmitButton from '$lib/forms/submitButton.svelte';
+	import { createForm, Form, SubmitButton } from '@/forms';
 	import { m } from '$lib/i18n';
 	import { readFileAsString } from '$lib/utils/files';
 	import { Array as A } from 'effect';
 	import { Alert, Button, Label } from 'flowbite-svelte';
 	import { ArrowRight } from 'svelte-heros-v2';
 	import { z } from 'zod';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	//
 
@@ -23,16 +22,19 @@
 		})
 		.refine((data) => Boolean(data.file_source) || Boolean(data.text_source));
 
-	const superform = createForm(schema, ({ form }) => {
-		onSuccess(getEmailsFromFormData(form.data));
+	const form = createForm({
+		adapter: zod(schema),
+		onSubmit: ({ form }) => {
+			onSuccess(getEmailsFromFormData(form.data));
+		}
 	});
-	const { form, tainted } = superform;
+	const { form: formData, tainted } = form;
 
-	$: emails = getEmailsFromFormData($form);
+	$: emails = getEmailsFromFormData($formData);
 
 	//
 
-	function getEmailsFromFormData(data: typeof $form) {
+	function getEmailsFromFormData(data: typeof $formData) {
 		return A.dedupe(extractEmailsFromText(data.file_source + ' ' + data.text_source));
 	}
 
@@ -54,7 +56,7 @@
 	async function handleFileUpload(fileList: FileList) {
 		const file = fileList.item(0);
 		if (!file) return;
-		$form['file_source'] = await readFileAsString(file);
+		$formData['file_source'] = await readFileAsString(file);
 	}
 
 	const acceptedFiles: Record<string, string | string[]> = {
@@ -73,6 +75,7 @@
 
 <div class="space-y-2">
 	<Label for="file">{m.Upload_a_file_containing_emails()}</Label>
+	<!-- TODO - review using shadcn -->
 	<input
 		name="file"
 		type="file"
@@ -80,10 +83,10 @@
 		accept={mimeTypes}
 		bind:files={fileList}
 	/>
-	<FieldHelpText text="{m.accepted_files()}: {acceptedFilesNames}" />
+	<!-- <FieldHelpText text="{m.accepted_files()}: {acceptedFilesNames}" /> -->
 </div>
 
-<Form {superform}>
+<Form {form} hide={['submitButton']}>
 	<div class="flex items-center gap-4">
 		<hr class="grow basis-1" />
 		<p>{m.and()} / {m.or()}</p>
@@ -93,7 +96,7 @@
 	<div class="space-y-2">
 		<Label for="file">{m.Paste_email_addresses_here()}</Label>
 		<textarea
-			bind:value={$form['text_source']}
+			bind:value={$formData['text_source']}
 			class="hover:border-primary-500 h-[150px] max-h-[150px] w-full resize-none rounded-lg border border-gray-200 focus:border-gray-200"
 		/>
 	</div>

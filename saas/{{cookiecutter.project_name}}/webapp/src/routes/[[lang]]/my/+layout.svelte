@@ -50,12 +50,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { featureFlags } from '$lib/features';
 	import { getUserDidUrl } from '$lib/did/index.js';
 
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 	import type {
 		OrgAuthorizationsResponse,
 		OrgRolesResponse,
 		OrganizationsResponse
-	} from '$lib/pocketbase/types';
+	} from '@/pocketbase/types';
 
 	//
 

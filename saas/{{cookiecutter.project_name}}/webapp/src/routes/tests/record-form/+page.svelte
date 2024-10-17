@@ -22,8 +22,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema/index.js';
 
-	export let data;
-	console.log(data.item);
+	// export let data;
+	// console.log(data.item);
 
 	const schema = createCollectionZodSchema('authorizations');
 	const adapter = zod(schema);

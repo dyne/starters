@@ -1,7 +1,7 @@
 import { loadFeatureFlags } from '$lib/features/index.js';
 import { redirect } from '$lib/i18n/index.js';
 import { OrganizationInviteSession } from '$lib/organizations/invites';
-import { pb } from '$lib/pocketbase/index.js';
+import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, url }) => {

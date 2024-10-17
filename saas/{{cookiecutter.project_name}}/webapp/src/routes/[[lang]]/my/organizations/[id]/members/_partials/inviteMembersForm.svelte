@@ -7,7 +7,7 @@
 	import { ArrowLeft, Envelope, XMark } from 'svelte-heros-v2';
 
 	import { m } from '$lib/i18n';
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '@/pocketbase';
 
 	//
 
