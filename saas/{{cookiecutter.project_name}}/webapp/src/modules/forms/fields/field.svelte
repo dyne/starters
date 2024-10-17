@@ -6,7 +6,7 @@
 	import * as Form from '@/components/ui/form';
 	import { Input } from '@/components/ui/input';
 	import type { FormPathLeaves, SuperForm } from 'sveltekit-superforms';
-	import { numberProxy, stringProxy } from 'sveltekit-superforms';
+	import { numberProxy, fieldProxy } from 'sveltekit-superforms';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import type { FieldOptions } from './types';
@@ -20,7 +20,7 @@
 	let { form: formData } = form;
 
 	const numberValue = numberProxy(formData, name);
-	const textValue = stringProxy(formData, name, { empty: 'undefined' });
+	const textValue = fieldProxy(formData, name);
 
 	$: valueProxy = options.type == 'number' ? numberValue : textValue;
 </script>

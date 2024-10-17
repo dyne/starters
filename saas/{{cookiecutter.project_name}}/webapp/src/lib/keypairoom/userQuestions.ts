@@ -3,31 +3,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { z } from 'zod';
-import _ from 'lodash';
 import { m } from '$lib/i18n';
+import _ from 'lodash';
+import { String } from 'effect';
 
 //
 
-const ZENROOM_NULL = 'null';
-
 export const userChallengesSchema = z
 	.object({
-		whereParentsMet: z.string().default(''),
-		nameFirstPet: z.string().default(''),
-		whereHomeTown: z.string().default(''),
-		nameFirstTeacher: z.string().default(''),
-		nameMotherMaid: z.string().default('')
+		whereParentsMet: z.string(),
+		nameFirstPet: z.string(),
+		whereHomeTown: z.string(),
+		nameFirstTeacher: z.string(),
+		nameMotherMaid: z.string()
 	})
 	.partial()
-	.transform(
-		(obj) =>
-			_.mapValues(obj, (v) => {
-				if (typeof v == 'string' && v.length >= 1) return v;
-				else return ZENROOM_NULL;
-			}) as Required<typeof obj>
-	)
-	.refine((v) => {
-		return Object.values(v).filter((v) => v === ZENROOM_NULL).length <= 2;
+	.refine((data) => {
+		return Object.values(data).filter((v) => String.isNonEmpty(v)).length >= 3;
 	}, 'AT_LEAST_THREE_QUESTIONS');
 
 export type UserChallenges = z.infer<typeof userChallengesSchema>;
@@ -40,3 +32,16 @@ export const userChallenges: Array<{ id: UserChallenge; text: string }> = [
 	{ id: 'nameFirstTeacher', text: m.nameFirstTeacher() },
 	{ id: 'nameMotherMaid', text: m.nameMotherMaid() }
 ];
+
+//
+
+const ZENROOM_NULL = 'null';
+
+export function formatAnswersForZenroom(data: UserChallenges): UserChallenges {
+	return _.mapValues(data, (v) => (isStringNonEmpty(v) ? v : ZENROOM_NULL));
+}
+
+function isStringNonEmpty(string: string | undefined) {
+	if (!string) return false;
+	else return String.isNonEmpty(string);
+}

@@ -3,8 +3,8 @@
 	import EmailReviewForm from './emailReviewForm.svelte';
 
 	import Icon from '$lib/components/icon.svelte';
-	import { Button } from 'flowbite-svelte';
 	import { ArrowLeft, Envelope, XMark } from 'svelte-heros-v2';
+	import Button from '@/components/ui/button/button.svelte';
 
 	import { m } from '$lib/i18n';
 	import { pb } from '@/pocketbase';
@@ -41,11 +41,11 @@
 	<div>
 		<EmailReviewForm bind:emails />
 		<div class="flex items-center justify-between gap-4 pt-6">
-			<Button outline on:click={() => (state = 'input')}>
+			<Button variant="outline" on:click={() => (state = 'input')}>
 				<Icon src={ArrowLeft} size={16} mr />{m.Back()}
 			</Button>
 			<div class="flex items-center gap-2">
-				<Button outline on:click={onCancel}>
+				<Button variant="outline" on:click={onCancel}>
 					<Icon src={XMark} mr />
 					{m.Cancel()}
 				</Button>

@@ -2,7 +2,8 @@
 	import {
 		userChallengesSchema,
 		userChallenges,
-		type UserChallenges
+		type UserChallenges,
+		formatAnswersForZenroom
 	} from '$lib/keypairoom/userQuestions.js';
 	import {
 		generateKeypair,
@@ -23,7 +24,7 @@
 	// Components
 	import { Form, createForm, FormError, SubmitButton } from '@/forms';
 	import { Field } from '@/forms/fields';
-	import { A, Alert, Button, Heading, Hr, P } from 'flowbite-svelte';
+	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { InformationCircle } from 'svelte-heros-v2';
@@ -33,6 +34,8 @@
 	import { m } from '$lib/i18n';
 	import RegenerateBanner from './_partials/RegenerateBanner.svelte';
 	import { log } from '$lib/utils/devLog';
+
+	import Button from '@/components/ui/button/button.svelte';
 
 	//
 
@@ -47,7 +50,7 @@
 		adapter: zod(schema),
 		onSubmit: async ({ form }) => {
 			const { email, questions } = form.data;
-			const challenges = userChallengesSchema.parse(questions);
+			const challenges = formatAnswersForZenroom(questions);
 			const keypair = await createKeypairFromFormData(email, challenges);
 
 			const privateKeys = keypair.keyring;

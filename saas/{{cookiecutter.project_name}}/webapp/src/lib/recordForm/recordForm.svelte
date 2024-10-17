@@ -197,7 +197,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			: 'Create record';
 </script>
 
-<Form {form} showRequiredIndicator>
+<Form {form} showRequiredIndicator hide={["submitButton"]}>
 	{#each fieldsSchema as fieldSchema}
 		{@const name = fieldSchema.name}
 		{@const hidden = hide ? Object.keys(hide).includes(name) : false}
