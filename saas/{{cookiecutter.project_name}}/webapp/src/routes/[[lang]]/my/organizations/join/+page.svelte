@@ -16,9 +16,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { m } from '$lib/i18n';
 	import { Avatar, Button, Modal, P } from 'flowbite-svelte';
 	import PageTop from '$lib/components/pageTop.svelte';
-	import Icon from '$lib/components/icon.svelte';
-	import { ArrowLeft, UserGroup, UserPlus } from 'svelte-heros-v2';
-	import SectionTitle from '$lib/components/sectionTitle.svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import PageCard from '$lib/components/pageCard.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
@@ -71,7 +71,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			let:records
 		>
 			<svelte:fragment slot="emptyState">
-				<EmptyState title={m.No_available_organizations_found()} icon={UserGroup} />
+				<EmptyState title={m.No_available_organizations_found()} icon={Users} />
 			</svelte:fragment>
 
 			{#if records.length > 0}

@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import PageCard from './pageCard.svelte';
-	import SectionTitle from './sectionTitle.svelte';
+	import SectionTitle from '../../modules/components/custom/sectionTitle.svelte';
 
 	export let title: string;
 	export let description: string | undefined = undefined;

@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { portal } from '$lib/components/utils/portal';
 	import { log } from '$lib/utils/devLog';
 	import { Input, Button } from 'flowbite-svelte';
@@ -25,4 +25,4 @@
 		<Input name="surname2" placeholder="surname2" required />
 		<Button id="submit2" type="submit">Submit</Button>
 	</form>
-</form>
+</form> -->

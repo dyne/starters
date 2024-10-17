@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import UserAvatar from '$lib/components/userAvatar.svelte';
 	import Icon from '$lib/components/icon.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
-	import SectionTitle from '$lib/components/sectionTitle.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { DeleteRecord } from '$lib/collectionManager';
 	import IconButton from '$lib/components/iconButton.svelte';
