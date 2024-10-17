@@ -20,7 +20,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import Button from '@/components/ui/button/button.svelte';
 	import { Pencil, Plus, XMark } from 'svelte-heros-v2';
 
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import UserAvatar from '$lib/components/userAvatar.svelte';

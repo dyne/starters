@@ -28,7 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { DeleteRecord } from '$lib/collectionManager';
 	import IconButton from '$lib/components/iconButton.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 

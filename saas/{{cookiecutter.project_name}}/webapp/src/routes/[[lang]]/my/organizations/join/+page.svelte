@@ -20,7 +20,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PageContent from '$lib/components/pageContent.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';

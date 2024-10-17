@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { Heading } from 'flowbite-svelte';
 	import { m } from '$lib/i18n';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 

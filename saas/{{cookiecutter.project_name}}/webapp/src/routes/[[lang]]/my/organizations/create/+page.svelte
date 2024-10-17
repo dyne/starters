@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { m } from '$lib/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 	import PageTop from '$lib/components/pageTop.svelte';
 	import { ArrowLeft } from 'svelte-heros-v2';
 	import Icon from '$lib/components/icon.svelte';

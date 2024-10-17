@@ -26,7 +26,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 
