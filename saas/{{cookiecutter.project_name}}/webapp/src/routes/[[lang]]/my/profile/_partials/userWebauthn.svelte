@@ -9,8 +9,6 @@
 	import { Collections, type WebauthnCredentialsResponse } from '@/pocketbase/types';
 	import { CollectionManager, DeleteRecord, EditRecord } from '$lib/collectionManager';
 
-	import { InformationCircle } from 'svelte-heros-v2';
-	import { Alert, Card, Heading, P, Spinner } from 'flowbite-svelte';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import T from '@/components/custom/t.svelte';
 	import { m } from '$lib/i18n';
@@ -18,7 +16,10 @@
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import Icon from '@/components/custom/icon.svelte';
-	import { Plus } from 'lucide-svelte';
+	import { Plus, Info } from 'lucide-svelte';
+	import Card from '@/components/custom/card.svelte';
+	import Spinner from '@/components/custom/spinner.svelte';
+	import Alert from '@/components/custom/alert.svelte';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
 	const recordType = createTypeProp<WebauthnCredentialsResponse<{ ID: string }>>();
@@ -43,10 +44,10 @@
 		<div class="space-y-2 py-4">
 			{#each records as record}
 				{@const label = Boolean(record.description) ? record.description : record.credential?.ID}
-				<Card class="max-w-none">
+				<Card>
 					<div class="flex items-center justify-between gap-4">
 						<div class="w-0 grow overflow-hidden">
-							<P>{label}</P>
+							<T>{label}</T>
 						</div>
 						<div class="flex gap-2">
 							<EditRecord {record} />
@@ -59,20 +60,16 @@
 	</CollectionManager>
 
 	{#await platformAuthenticatorAvailable}
-		<div class="flex flex-col items-center">
+		<div class="flex flex-col items-center gap-2">
 			<Spinner />
-			<P>Checking your device</P>
+			<T>{m.Checking_your_device()}</T>
 		</div>
 	{:then response}
 		{#if !response || !isWebauthnSupported()}
-			<Alert color="yellow" class="mt-2">
-				<svelte:fragment slot="icon">
-					<InformationCircle />
-				</svelte:fragment>
-				<span>
-					Your device does not have integrated Webauthn support. An external authenticator is
-					required.
-				</span>
+			<Alert variant="warning" icon={Info} let:Description>
+				<Description>
+					{m.Your_device_does_not_have_integrated_Webauthn_support_An_external_authenticator_is_required_()}
+				</Description>
 			</Alert>
 		{/if}
 	{/await}
