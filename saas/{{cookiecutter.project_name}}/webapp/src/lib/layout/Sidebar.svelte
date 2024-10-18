@@ -12,7 +12,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { getUIShellContext } from './UiShell.svelte';
 	import SidebarDefaultContainer from './SidebarDefaultContainer.svelte';
 	import SidebarDrawerContainer from './SidebarDrawerContainer.svelte';
-	import { Sidebar } from 'flowbite-svelte';
 	import { i18n } from '$lib/i18n';
 	import { page } from '$app/stores';
 
@@ -27,7 +26,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <svelte:component this={comp} {width} {darkMode}>
-	<Sidebar
+	<!-- <Sidebar
 		{activeUrl}
 		class="border-r-600 flex grow flex-col border-r bg-white dark:bg-gray-800"
 		asideClass={width}
@@ -50,5 +49,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				<slot name="bottom" />
 			</div>
 		</div>
-	</Sidebar>
+	</Sidebar> -->
 </svelte:component>

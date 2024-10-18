@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { NavigationTabProps } from '$lib/components/navigationTab.svelte';
 	import type { IconComponent } from '$lib/utils/types';
 
-	type BadgeColor = ComponentProps<Badge>['color'];
+	type BadgeColor = 'green' | 'blue';
 
 	interface SidebarLinkOptions {
 		badge?: {
@@ -30,7 +30,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
-	import { Badge, SidebarDropdownItem, SidebarItem } from 'flowbite-svelte';
 	import { getUIShellContext } from './UiShell.svelte';
 	import type { ComponentProps } from 'svelte';
 
@@ -53,7 +52,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 {#each links as entry}
-	{#if 'subLinks' in entry}
+	<!-- {#if 'subLinks' in entry}
 		<SidebarLinksDropdown props={entry} let:subEntry>
 			<SidebarDropdownItem
 				label={subEntry.text}
@@ -78,5 +77,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				{/if}
 			</svelte:fragment>
 		</SidebarItem>
-	{/if}
+	{/if} -->
 {/each}

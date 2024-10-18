@@ -5,7 +5,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { TableHeadCell } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	export let field: string;
@@ -28,12 +27,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 </script>
 
-<TableHeadCell>
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- <TableHeadCell>
 	<div role="columnheader" tabindex="0" on:click={handleClick} class="cursor-pointer select-none">
 		<span>{field}</span>
 		{#if isSort}
 			<span>{sortArrow}</span>
 		{/if}
 	</div>
-</TableHeadCell>
+</TableHeadCell> -->

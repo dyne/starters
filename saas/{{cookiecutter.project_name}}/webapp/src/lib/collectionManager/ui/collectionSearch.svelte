@@ -10,7 +10,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
 
-	import { Button, ButtonGroup, Dropdown, Search, Checkbox } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import { ChevronDown } from 'lucide-svelte';
@@ -61,6 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 </script>
 
+<!-- 
 <form class="flex gap-2">
 	{#if searchableFields.length !== 1}
 		<ButtonGroup class="z-20 w-full">
@@ -111,4 +111,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			{placeholder}
 		/>
 	{/if}
-</form>
+</form> -->

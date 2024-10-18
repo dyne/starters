@@ -6,7 +6,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { goto } from '$lib/i18n';
-	import { Pagination } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	const { dataManager } = getRecordsManagerContext();
@@ -36,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		</div>
 
 		<div class="flex w-full justify-center">
-			<Pagination
+			<!-- <Pagination
 				{pages}
 				activeClass="bg-blue-500 text-white"
 				on:previous={(e) => {
@@ -50,7 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					goto(`?page=${Number($currentPage) + 1}`);
 				}}
 				on:click={handlePaginationClick}
-			/>
+			/> -->
 		</div>
 	</div>
 {/if}

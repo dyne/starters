@@ -5,17 +5,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script>
-	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import { Dropdown } from 'flowbite-svelte';
+	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import { currentUser } from '@/pocketbase';
 </script>
 
 <button id="avatar-menu">
-	<UserAvatar />
+	{#if $currentUser}
+		<UserAvatar user={$currentUser} />
+	{/if}
 </button>
-<Dropdown
+<!-- <Dropdown
 	placement="bottom"
 	triggeredBy="#avatar-menu"
 	footerClass="w-full min-h-screen md:w-fit md:min-h-fit"
 >
 	<slot />
-</Dropdown>
+</Dropdown> -->

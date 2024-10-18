@@ -12,10 +12,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '$paraglide/runtime';
 	import { page } from '$app/stores';
 	import { i18n, m } from '.';
-	import { Dropdown, DropdownHeader, DropdownItem } from 'flowbite-svelte';
 	import { Languages } from 'lucide-svelte';
 	import Icon from '@/components/custom/icon.svelte';
-	import SidebarButton from '$lib/layout/SidebarButton.svelte';
+	// import SidebarButton from '$lib/layout/SidebarButton.svelte';
 
 	const languagesDisplay: Record<AvailableLanguageTag, { flag: string; name: string }> = {
 		en: { flag: '🇬🇧', name: 'English' },
@@ -29,15 +28,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	const id = 'language-switcher';
 </script>
 
-<SidebarButton {id}>
+<!-- <SidebarButton {id}>
 	<div class="flex gap-3">
 		<p class="h-6 w-6 text-2xl leading-[1]">{languagesDisplay[languageTag()].flag}</p>
 		<p>{languagesDisplay[languageTag()].name}</p>
 	</div>
 	<Icon src={Languages} slot="right" size={18}></Icon>
-</SidebarButton>
+</SidebarButton> -->
 
-<Dropdown triggeredBy={`#${id}`} class="w-[215px]">
+<!-- <Dropdown triggeredBy={`#${id}`} class="w-[215px]">
 	<DropdownHeader>
 		<span class="block truncate text-xs font-medium tracking-wide text-gray-500">
 			{m.Select_language()}
@@ -51,4 +50,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			{languagesDisplay[lang].name}
 		</DropdownItem>
 	{/each}
-</Dropdown>
+</Dropdown> -->

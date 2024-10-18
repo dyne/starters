@@ -6,9 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { pb } from '@/pocketbase';
-	import { Button, Tooltip } from 'flowbite-svelte';
 	import type { PBResponse } from '$lib/utils/types';
-	import { ArrowDownTray } from 'lucide-svelte';
+	import { ArrowDownSquareIcon } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
 	export let record: RecordGeneric;
@@ -19,8 +18,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 {#if url}
-	<Button href={url} target="_blank" class="!p-2" color="alternative">
-		<ArrowDownTray size="20" />
+	<!-- TODO - fix -->
+	<!-- <Button href={url} target="_blank" class="!p-2" color="alternative">
+		<ArrowDownSquareIcon size="20" />
 	</Button>
-	<Tooltip>Download: {value}</Tooltip>
+	<Tooltip>Download: {value}</Tooltip> -->
 {/if}

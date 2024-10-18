@@ -6,7 +6,7 @@ import type { OrganizationsResponse } from '@/pocketbase/types';
 import type { m as messages } from '$lib/i18n';
 import type { NavigationTab } from '$lib/components/navigationTabs.svelte';
 import { Cog, Home, Users } from 'lucide-svelte';
-import type { SidebarItemProps } from '$lib/layout/SidebarLinks.svelte';
+import type { SidebarItemProps } from '@/components/layout/sidebar/types';
 import { pb } from '@/pocketbase';
 import type { OrgRole } from './roles';
 
@@ -51,7 +51,7 @@ export function createOrganizationSidebarLinks(
 	return [
 		{
 			text: org.name,
-			subLinks: createOrganizationLinks(org.id, m, userRole),
+			links: createOrganizationLinks(org.id, m, userRole),
 			icon: pb.getFileUrl(org, org.avatar)
 		}
 	];

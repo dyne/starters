@@ -18,14 +18,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		HamburgerButton
 	} from '$lib/layout';
 	import {
-		Dropdown,
-		DropdownDivider,
-		DropdownHeader,
-		DropdownItem,
-		Hr,
-		SidebarGroup
-	} from 'flowbite-svelte';
-	import {
 		ArrowUpRightFromSquare,
 		Flame,
 		Home,
@@ -38,12 +30,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from 'lucide-svelte';
 	import { createOrganizationSidebarLinks, getUserRole } from '$lib/organizations';
 	import { m } from '$lib/i18n';
-	import UserAvatar from '$lib/components/userAvatar.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
 	import Icon from '@/components/custom/icon.svelte';
 	import { goto } from '$lib/i18n';
 	import LanguageSwitcher from '$lib/i18n/languageSwitcher.svelte';
-	import SidebarButton from '$lib/layout/SidebarButton.svelte';
+	// import SidebarButton from '$lib/layout/SidebarButton.svelte';
 	import { appTitle } from '$lib/strings';
 	import { version } from '$app/environment';
 	import { featureFlags } from '$lib/features';
@@ -55,6 +46,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		OrgRolesResponse,
 		OrganizationsResponse
 	} from '@/pocketbase/types';
+	import Separator from '@/components/ui/separator/separator.svelte';
+	import SidebarItems from '@/components/layout/sidebar/sidebarItems.svelte';
+	import T from '@/components/custom/t.svelte';
 
 	//
 
@@ -107,72 +101,79 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{/if}
 	</svelte:fragment>
 
-	<Sidebar darkMode>
-		<svelte:fragment slot="top">
-			<div class="flex items-center justify-between border-b border-gray-600 px-3 py-2.5">
-				<Logo />
-				<SidebarCloseButton />
-			</div>
-		</svelte:fragment>
-
-		<div class="space-y-0">
-			<SidebarGroup>
-				<div class="p-3">
-					<SidebarLinks
-						links={[
-							{
-								text: m.Home(),
-								href: '/my',
-								icon: Home
-							},
-							{
-								text: m.notifications(),
-								icon: Inbox,
-								href: '/my/notifications',
-								disabled: true
-							}
-						]}
-					/>
-				</div>
-			</SidebarGroup>
-
-			<Hr />
-
-			<p class="p-4 text-xs font-medium uppercase tracking-wide text-gray-500">
-				{m.organizations()}
-			</p>
-
-			<SidebarGroup>
-				<div class="space-y-2 p-3 pt-0">
-					<SidebarLinks
-						links={[
-							{
-								text: m.My_organizations(),
-								href: '/my/organizations',
-								icon: SquareStack
-							}
-						]}
-					/>
-
-					{#if $featureFlags.ORGANIZATIONS}
-						{#await getOrgAuthorizations() then authorizations}
-							{#each authorizations as authorization}
-								{@const organization = authorization.expand.organization}
-								{@const organizationId = organization.id}
-								{@const userId = $currentUser?.id ?? ''}
-								{#await getUserRole(organizationId, userId) then userRole}
-									{@const links = createOrganizationSidebarLinks(organization, m, userRole)}
-									<SidebarLinks {links} />
-								{/await}
-							{/each}
-						{/await}
-					{/if}
-				</div>
-			</SidebarGroup>
+	<!-- The sidebar -->
+	<div class="space-y-1">
+		<div class="flex items-center justify-between border-b border-gray-600 px-3 py-2.5">
+			<Logo />
+			<SidebarCloseButton />
 		</div>
 
-		<svelte:fragment slot="bottom">
-			<SidebarGroup class="space-y-1">
+		<SidebarItems
+			links={[
+				{
+					text: m.Home(),
+					href: '/my',
+					icon: Home
+				},
+				{
+					text: m.notifications(),
+					icon: Inbox,
+					href: '/my/notifications',
+					disabled: true
+				}
+			]}
+		/>
+
+		<Separator />
+
+		{#if $featureFlags.ORGANIZATIONS}
+			<T tag="small">{m.organizations()}</T>
+
+			<SidebarItems
+				links={[
+					{
+						text: m.My_organizations(),
+						href: '/my/organizations',
+						icon: SquareStack
+					}
+				]}
+			/>
+
+			{#await getOrgAuthorizations() then authorizations}
+				{#each authorizations as authorization}
+					{@const organization = authorization.expand.organization}
+					{@const organizationId = organization.id}
+					{@const userId = $currentUser?.id ?? ''}
+					{#await getUserRole(organizationId, userId) then userRole}
+						{@const links = createOrganizationSidebarLinks(organization, m, userRole)}
+						<SidebarItems {links} />
+					{/await}
+				{/each}
+			{/await}
+		{/if}
+	</div>
+
+	<Sidebar darkMode>
+		<!-- <svelte:fragment slot="top">
+	
+		</svelte:fragment> -->
+
+		<div class="space-y-0">
+			<p class="p-4 text-xs font-medium uppercase tracking-wide text-gray-500"></p>
+
+			<!-- <SidebarGroup>
+				<div class="space-y-2 p-3 pt-0">
+	
+
+					{#if $featureFlags.ORGANIZATIONS}
+
+					{/if}
+				</div>
+			</SidebarGroup> -->
+		</div>
+
+		<!-- <svelte:fragment slot="bottom"> -->
+		<!-- <SidebarGroup class="space-y-1">
 				<SidebarLinks
 					links={[
 						{
@@ -239,11 +240,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						</DropdownItem>
 					</Dropdown>
 				{/if}
-			</SidebarGroup>
-			<div class="mt-2 flex border-t border-t-white/20 pt-1">
+			</SidebarGroup> -->
+		<!-- <div class="mt-2 flex border-t border-t-white/20 pt-1">
 				<p class="px-2 font-mono text-xs text-white opacity-30">{appTitle} – Version {version}</p>
 			</div>
-		</svelte:fragment>
+		</svelte:fragment> -->
 	</Sidebar>
 
 	<MainContent>

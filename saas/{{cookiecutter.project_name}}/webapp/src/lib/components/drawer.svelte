@@ -5,7 +5,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Drawer, Heading } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
 	import PortalWrapper from './portalWrapper.svelte';
 	import IconButton from './iconButton.svelte';
@@ -28,7 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PortalWrapper>
-	<Drawer
+	<!-- <Drawer
 		bind:hidden
 		transitionType="fly"
 		{backdrop}
@@ -53,5 +52,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			</div>
 		{/if}
 		<slot />
-	</Drawer>
+	</Drawer> -->
 </PortalWrapper>

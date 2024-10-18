@@ -5,6 +5,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import Dialog from '@/components/custom/dialog.svelte';
+
+	import T from '@/components/custom/t.svelte';
+
+	import Alert from '@/components/custom/alert.svelte';
+
+	import { Button } from '@/components/ui/button';
+
 	import Icon from '@/components/custom/icon.svelte';
 
 	import { onDestroy } from 'svelte';
@@ -15,7 +23,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { PBResponse } from '$lib/utils/types';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
-	import { Alert, Button, Modal, P } from 'flowbite-svelte';
 	import { Trash, X } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
@@ -59,12 +66,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open title={modalTitle} size="xs">
+	<Dialog bind:open title={modalTitle}>
 		<div class="space-y-6 text-center">
-			<P>Are you sure you want to delete this record?</P>
+			<T>Are you sure you want to delete this record?</T>
 
 			{#if error}
-				<Alert color="red" class="text-left" dismissable>
+				<Alert variant="destructive" class="text-left">
 					<p class="font-bold">Error</p>
 					<p>{error}</p>
 				</Alert>
@@ -85,5 +92,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				</Button>
 			</div>
 		</div>
-	</Modal>
+	</Dialog>
 </PortalWrapper>

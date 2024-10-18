@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			initialData={organization}
 			submitButtonText={m.Save_changes()}
 			on:success={invalidateAll}
-			formSettings={{ dataType: 'json' }}
+			formSettings={{ dataType: 'form' }}
 		/>
 	</PageCard>
 </OrganizationLayout>

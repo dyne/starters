@@ -5,14 +5,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import T from '@/components/custom/t.svelte';
+
+	import Card from '@/components/custom/card.svelte';
+
 	import type { FieldsComponents, ViewAction } from './types';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './recordActions';
 	import FieldComponent from './fieldComponents/fieldComponentRenderer.svelte';
-
-	import { Card, P } from 'flowbite-svelte';
 
 	//
 
@@ -35,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <Card class={`!relative !max-w-none !p-4 ${isSelected ? outline : ''}`}>
 	{#if titleField}
-		<P weight="bold" class="mb-2">{record[titleField]}</P>
+		<T class="mb-2 font-bold">{record[titleField]}</T>
 	{/if}
 
 	{#if !hideActions.includes('select')}

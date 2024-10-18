@@ -31,7 +31,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import RecordSelect from './recordSelect.svelte';
 	import RecordSearch from './recordSearch.svelte';
-	import ArrayOrItemManager from '$lib/components/arrayOrItemManager.svelte';
+	import ArrayOrItemManager from '@/components/custom/arrayOrItemManager.svelte';
 
 	import { createRecordLabel } from './utils';
 	import { createTypeProp } from '$lib/utils/typeProp';

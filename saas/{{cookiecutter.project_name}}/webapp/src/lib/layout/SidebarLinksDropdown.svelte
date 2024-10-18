@@ -8,7 +8,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { Page } from '@sveltejs/kit';
 	import type { SidebarGroupProps } from './SidebarLinks.svelte';
 	import { page } from '$app/stores';
-	import { Avatar, SidebarDropdownWrapper } from 'flowbite-svelte';
 	import clsx from 'clsx';
 
 	export let props: SidebarGroupProps;
@@ -36,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	$: baseClass = clsx({ 'bg-gray-600': isCurrent, 'rounded-b-none': isOpen }, 'space-y-1');
 </script>
 
-<SidebarDropdownWrapper label={props.text} {ulClass} class={baseClass} bind:isOpen>
+<!-- <SidebarDropdownWrapper label={props.text} {ulClass} class={baseClass} bind:isOpen>
 	<svelte:fragment slot="icon">
 		{#if typeof props.icon == 'string'}
 			<Avatar src={props.icon} size="sm" class="ring-1 ring-gray-500" />
@@ -48,4 +47,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	{#each props.subLinks as subEntry}
 		<slot {subEntry} />
 	{/each}
-</SidebarDropdownWrapper>
+</SidebarDropdownWrapper> -->

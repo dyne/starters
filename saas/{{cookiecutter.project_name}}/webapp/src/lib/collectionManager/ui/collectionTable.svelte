@@ -14,15 +14,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	// Components
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-		Checkbox
-	} from 'flowbite-svelte';
 	import RecordsTableHead from './collectionTableHeader.svelte';
 	import Pagination from './pagination.svelte';
 
@@ -43,10 +34,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	$: selectAll = allRecordsSelected($selectedRecords);
 
 	$: hasNoActionColumn =
-		hideActions.includes('delete') &&
-		hideActions.includes('edit') &&
-		hideActions.includes('share') &&
-		!$$slots.actions;
+		hideActions.includes('delete') && hideActions.includes('edit') && hideActions.includes('share'); //&&
+	// !$$slots.actions;
 </script>
 
 {#if records.length === 0}
@@ -56,7 +45,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{/if}
 	</slot>
 {:else}
-	<Table>
+	<!-- <Table>
 		<TableHead>
 			{#if !hideActions.includes('select')}
 				<TableHeadCell>
@@ -122,7 +111,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				</TableBodyRow>
 			{/each}
 		</TableBody>
-	</Table>
+	</Table> -->
 	<div class="pt-6">
 		<Pagination />
 	</div>
