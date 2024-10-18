@@ -7,7 +7,6 @@
 	import LanguageSelect from '$lib/i18n/languageSelect.svelte';
 
 	import Logo from '@/components/layout/Logo.svelte';
-	// import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
 	import { createOrganizationSidebarLinks } from '$lib/organizations';
 	import { getUserRole } from '$lib/organizations/utils';
 	import { appTitle } from '$lib/strings';
@@ -59,9 +58,8 @@
 
 <Sidebar class="h-full">
 	<svelte:fragment slot="top">
-		<div class="flex items-center justify-between px-3 py-2.5">
+		<div class="px-3 py-2">
 			<Logo />
-			<!-- <SidebarCloseButton /> -->
 		</div>
 	</svelte:fragment>
 
@@ -93,18 +91,16 @@
 				</T>
 			</div>
 
-			<SidebarItems
-				links={[
-					{
-						text: m.My_organizations(),
-						href: '/my/organizations',
-						icon: SquareStack
-					}
-				]}
-			/>
-
-			<div class="p-3 pt-2">
-				<Separator></Separator>
+			<div class="!mb-3">
+				<SidebarItems
+					links={[
+						{
+							text: m.My_organizations(),
+							href: '/my/organizations',
+							icon: SquareStack
+						}
+					]}
+				/>
 			</div>
 
 			{#await getOrgAuthorizations() then authorizations}

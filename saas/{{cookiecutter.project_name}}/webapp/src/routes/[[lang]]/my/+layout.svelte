@@ -6,8 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { currentUser } from '@/pocketbase';
-	import { Logo, Topbar, HamburgerButton } from '$lib/layout';
-	import UIShell from '@/components/layout/uiShell.svelte';
+	import { Logo, Topbar, HamburgerButton, UiShell } from '@/components/layout';
 	import { m } from '$lib/i18n';
 	import { getUserDisplayName } from '$lib/utils/pb';
 
@@ -16,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	let sidebarLayoutBreakpoint = 1024;
 </script>
 
-<UIShell {sidebarLayoutBreakpoint}>
+<UiShell {sidebarLayoutBreakpoint}>
 	<svelte:fragment slot="top" let:sidebarMode>
 		{#if sidebarMode == 'drawer'}
 			<Topbar>
@@ -46,4 +45,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	</svelte:fragment>
 
 	<slot />
-</UIShell>
+</UiShell>

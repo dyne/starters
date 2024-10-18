@@ -1,5 +1,5 @@
 <script>
-	import { Logo, Topbar } from '$lib/layout';
+	import { Logo, Topbar } from '@/components/layout';
 	import { currentUser } from '@/pocketbase';
 	import DIDButton from '$lib/components/DIDButton.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
