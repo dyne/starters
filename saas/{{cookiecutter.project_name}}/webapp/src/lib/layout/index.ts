@@ -2,22 +2,10 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import UIShell from './UiShell.svelte';
 import AvatarMenu from './AvatarMenu.svelte';
 import HamburgerButton from './HamburgerButton.svelte';
-import Logo from './Logo.svelte';
+import Logo from '../../modules/components/layout/Logo.svelte';
 import MainContent from './MainContent.svelte';
-import SidebarCloseButton from './SidebarCloseButton.svelte';
-import SidebarLinks from './SidebarLinks.svelte';
-import Topbar from './Topbar.svelte';
+import Topbar from '../../modules/components/layout/Topbar.svelte';
 
-export {
-	UIShell,
-	AvatarMenu,
-	HamburgerButton,
-	Logo,
-	MainContent,
-	SidebarCloseButton,
-	SidebarLinks,
-	Topbar
-};
+export { AvatarMenu, HamburgerButton, Logo, MainContent, Topbar };

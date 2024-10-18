@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		</slot>
 	</Popover.Trigger>
 
-	<Popover.Content class="p-2">
+	<Popover.Content class="p-2" sameWidth>
 		{#each languages as language}
 			{@const { href, hreflang, name, flag, isCurrent } = language}
 			<slot name="language" {language}>

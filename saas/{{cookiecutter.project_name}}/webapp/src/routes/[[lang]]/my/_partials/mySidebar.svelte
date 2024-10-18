@@ -1,26 +1,26 @@
 <script lang="ts">
 	import { version } from '$app/environment';
+
 	import { getUserDidUrl } from '$lib/did';
 	import { featureFlags } from '$lib/features';
 	import { m } from '$lib/i18n';
-	import LanguageSwitcher from '$lib/i18n/languageSelect.svelte';
+	import LanguageSelect from '$lib/i18n/languageSelect.svelte';
 
-	import Logo from '$lib/layout/Logo.svelte';
-	import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
+	import Logo from '@/components/layout/Logo.svelte';
+	// import SidebarCloseButton from '$lib/layout/SidebarCloseButton.svelte';
 	import { createOrganizationSidebarLinks } from '$lib/organizations';
 	import { getUserRole } from '$lib/organizations/utils';
 	import { appTitle } from '$lib/strings';
 	import { getUserDisplayName } from '$lib/utils/pb';
-	import Icon from '@/components/custom/icon.svelte';
-	import T from '@/components/custom/t.svelte';
+
+	import { currentUser, pb } from '@/pocketbase';
 
 	import Sidebar from '@/components/layout/sidebar/sidebar.svelte';
 	import SidebarButton from '@/components/layout/sidebar/sidebarButton.svelte';
 	import SidebarItems from '@/components/layout/sidebar/sidebarItems.svelte';
-	import { Button } from '@/components/ui/button';
 	import * as Popover from '@/components/ui/popover';
 	import { Separator } from '@/components/ui/separator';
-	import { currentUser, pb } from '@/pocketbase';
+	import T from '@/components/custom/t.svelte';
 	import type {
 		OrganizationsResponse,
 		OrgAuthorizationsResponse,
@@ -35,14 +35,10 @@
 		CircleHelp,
 		SquareStack,
 		User,
-		Ellipsis,
-		File,
-		Languages
+		File
 	} from 'lucide-svelte';
 
 	//
-
-	function toggleSidebar() {}
 
 	function getOrgAuthorizations() {
 		type Authorizations = Required<
@@ -61,11 +57,11 @@
 	}
 </script>
 
-<Sidebar>
+<Sidebar class="h-full">
 	<svelte:fragment slot="top">
 		<div class="flex items-center justify-between px-3 py-2.5">
 			<Logo />
-			<SidebarCloseButton />
+			<!-- <SidebarCloseButton /> -->
 		</div>
 	</svelte:fragment>
 
@@ -139,13 +135,11 @@
 				]}
 			/>
 
-			<LanguageSwitcher>
+			<LanguageSelect>
 				<svelte:fragment slot="trigger" let:builder let:icon let:text>
 					<SidebarButton builders={[builder]} {icon} {text} />
 				</svelte:fragment>
-			</LanguageSwitcher>
-
-			<!-- <LanguageSwitcher /> -->
+			</LanguageSelect>
 
 			{#if $currentUser}
 				{@const avatar = pb.getFileUrl($currentUser, 'avatar')}
@@ -158,18 +152,8 @@
 						/>
 					</Popover.Trigger>
 
-					<Popover.Content class="space-y-1 p-2">
-						<!-- <DropdownHeader>
-							<span class="block truncate text-xs font-medium text-gray-500">
-								{getUserDisplayName($currentUser)}
-							</span>
-						</DropdownHeader> -->
-						<SidebarButton
-							text={m.My_profile()}
-							icon={User}
-							href="/my/profile"
-							on:click={toggleSidebar}
-						/>
+					<Popover.Content class="space-y-1 p-2" sameWidth>
+						<SidebarButton text={m.My_profile()} icon={User} href="/my/profile" />
 
 						{#if $featureFlags.DID}
 							{#await getUserDidUrl() then url}
@@ -177,13 +161,7 @@
 							{/await}
 						{/if}
 
-						<SidebarButton
-							href="/pricing"
-							on:click={toggleSidebar}
-							icon={Flame}
-							text={m.Go_Pro()}
-							disabled
-						/>
+						<SidebarButton href="/pricing" icon={Flame} text={m.Go_Pro()} disabled />
 
 						<Separator />
 

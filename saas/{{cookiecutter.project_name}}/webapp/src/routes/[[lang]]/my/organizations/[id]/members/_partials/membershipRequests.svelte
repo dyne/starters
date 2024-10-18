@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				{@const user = request.expand?.user}
 				{#if user}
 					<PlainCard>
-						<UserAvatar slot="left" size="md" {user}></UserAvatar>
+						<UserAvatar slot="left" {user}></UserAvatar>
 						{getUserDisplayName(user)}
 
 						<svelte:fragment slot="right">
@@ -79,7 +79,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 									<Icon src={UserPlus} ml></Icon>
 								</Button>
 
-								<ModalWrapper title={m.Warning()} size="xs" let:openModal>
+								<ModalWrapper title={m.Warning()} let:openModal>
 									<Button variant="outline" on:click={openModal}>
 										{m.Decline()}
 										<Icon src={CircleOffIcon} ml></Icon>

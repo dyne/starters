@@ -6,23 +6,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { currentUser } from '@/pocketbase';
-	import { UIShell, Logo, MainContent, Topbar, HamburgerButton } from '$lib/layout';
+	import { Logo, Topbar, HamburgerButton } from '$lib/layout';
+	import UIShell from '@/components/layout/uiShell.svelte';
 	import { m } from '$lib/i18n';
 	import { getUserDisplayName } from '$lib/utils/pb';
 
-	import Sidebar from './_partials/sidebar.svelte';
+	import MySidebar from './_partials/mySidebar.svelte';
 
 	let sidebarLayoutBreakpoint = 1024;
 </script>
 
-<UIShell {sidebarLayoutBreakpoint} let:toggleSidebar>
-	<svelte:fragment slot="top" let:sidebarLayoutMode>
-		{#if sidebarLayoutMode == 'drawer'}
+<UIShell {sidebarLayoutBreakpoint}>
+	<svelte:fragment slot="top" let:sidebarMode>
+		{#if sidebarMode == 'drawer'}
 			<Topbar>
 				<svelte:fragment slot="left">
-					<div class="flex space-x-2">
-						<Logo />
-					</div>
+					<Logo />
 				</svelte:fragment>
 				<svelte:fragment slot="center">
 					<div class="flex items-center">
@@ -36,18 +35,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						{/if}
 					</div>
 				</svelte:fragment>
-				<svelte:fragment slot="right">
-					<HamburgerButton />
-				</svelte:fragment>
+
+				<HamburgerButton slot="right" />
 			</Topbar>
 		{/if}
 	</svelte:fragment>
 
-	<Sidebar></Sidebar>
+	<svelte:fragment slot="sidebar">
+		<MySidebar />
+	</svelte:fragment>
 
-	<MainContent>
-		<div class="min-h-screen overflow-auto bg-[url('/bg.png')] bg-cover">
-			<slot />
-		</div>
-	</MainContent>
+	<slot />
 </UIShell>

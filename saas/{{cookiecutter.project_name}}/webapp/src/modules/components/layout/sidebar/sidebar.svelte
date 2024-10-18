@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-	export type SidebarLayoutMode = 'default' | 'drawer';
-</script>
-
 <script lang="ts">
 	import { ScrollArea } from '@/components/ui/scroll-area/index.js';
 
@@ -9,7 +5,7 @@
 	export { className as class };
 </script>
 
-<div class="flex flex-col border-r {className}">
+<div class="flex flex-col {className}">
 	{#if $$slots.top}
 		<div class="shrink-0 border-b">
 			<slot name="top" />

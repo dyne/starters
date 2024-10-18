@@ -95,7 +95,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					{#if user && role && userRole}
 						<PlainCard>
 							<div class="flex items-center gap-4">
-								<UserAvatar size="md" {user}></UserAvatar>
+								<UserAvatar {user}></UserAvatar>
 								<p>
 									{getUserDisplayName(user)}
 								</p>
