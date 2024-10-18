@@ -1,10 +1,9 @@
 <script lang="ts">
 	import Avatar from '@/components/custom/avatar.svelte';
-	import type { BaseSidebarItemProps } from './types';
+	import type { SidebarButtonProps } from './types';
 	import Icon from '@/components/custom/icon.svelte';
-	import { String } from 'effect';
 
-	export let props: BaseSidebarItemProps;
+	export let props: SidebarButtonProps;
 	let { icon, text } = props;
 </script>
 

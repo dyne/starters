@@ -1,6 +1,6 @@
 <script lang="ts">
+	import LanguageSelect from '$lib/i18n/languageSelect.svelte';
 	import { appTitle } from '$lib/strings';
-	import BaseLanguageSwitcher from '$lib/i18n/baseLanguageSwitcher.svelte';
 	import Card from '@/components/custom/card.svelte';
 
 	// TODO - Fix
@@ -20,5 +20,5 @@
 </div>
 
 <div class="fixed right-4 top-4 !m-0">
-	<BaseLanguageSwitcher />
+	<LanguageSelect />
 </div>

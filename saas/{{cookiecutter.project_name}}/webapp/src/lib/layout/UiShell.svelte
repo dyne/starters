@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script context="module" lang="ts">
 	import type { Writable } from 'svelte/store';
 	import { getContext } from 'svelte';
-	import type { SidebarLayoutMode } from './Sidebar.svelte';
+	import type { SidebarLayoutMode } from '../../modules/components/layout/sidebar/sidebar.svelte';
 
 	export const UI_SHELL_KEY = Symbol('usk');
 

@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import Drawer from '$lib/components/drawer.svelte';
-	import { getUIShellContext } from './UiShell.svelte';
+	import { getUIShellContext } from '$lib/layout/UiShell.svelte';
 
 	const { isSidebarHidden } = getUIShellContext();
 

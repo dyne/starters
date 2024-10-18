@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import clsx from 'clsx';
-	import { getUIShellContext } from './UiShell.svelte';
+	import { getUIShellContext } from '$lib/layout/UiShell.svelte';
 	import { slide } from 'svelte/transition';
 
 	export let width = 'w-40';

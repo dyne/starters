@@ -12,9 +12,11 @@ export { m };
 //
 
 import { goto as sveltekitGoto } from '$app/navigation';
-import { redirect as sveltekitRedirect } from '@sveltejs/kit';
+import { redirect as sveltekitRedirect, type Page } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import { page } from '$app/stores';
+import type { AvailableLanguageTag } from '$paraglide/runtime.js';
+import { Record } from 'effect';
 
 //
 
@@ -32,3 +34,27 @@ export function redirect(route: string, fromUrl: URL, statusCode: RedirectStatus
 }
 
 type RedirectStatusCode = Parameters<typeof sveltekitRedirect>['0'];
+
+//
+
+export const languagesDisplay: Record<AvailableLanguageTag, { flag: string; name: string }> = {
+	en: { flag: '🇬🇧', name: 'English' },
+	it: { flag: '🇮🇹', name: 'Italiano' },
+	de: { flag: '🇩🇪', name: 'Deutsch' },
+	fr: { flag: '🇫🇷', name: 'Français' },
+	da: { flag: '🇩🇰', name: 'Dansk' },
+	'pt-BR': { flag: '🇧🇷', name: 'Português' }
+};
+
+export function languagesData(page: Page) {
+	const currentLang = i18n.getLanguageFromUrl(page.url);
+
+	return Record.keys(languagesDisplay).map((lang) => ({
+		tag: lang,
+		href: i18n.route(page.url.pathname),
+		hreflang: lang,
+		flag: languagesDisplay[lang].flag,
+		name: languagesDisplay[lang].name,
+		isCurrent: lang == currentLang
+	}));
+}

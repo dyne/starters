@@ -1,17 +1,18 @@
 import type { IconComponent } from '@/components/types';
 
-export type BaseSidebarItemProps = {
+export type SidebarButtonProps = {
 	text: string;
 	icon?: IconComponent | string;
 	disabled?: boolean;
 };
 
-export type SidebarLinkProps = BaseSidebarItemProps & {
+export type SidebarLinkProps = SidebarButtonProps & {
 	href: string;
 	badge?: string;
+	target?: '_blank';
 };
 
-export type SidebarGroupProps = BaseSidebarItemProps & {
+export type SidebarGroupProps = SidebarButtonProps & {
 	links: SidebarLinkProps[];
 };
 

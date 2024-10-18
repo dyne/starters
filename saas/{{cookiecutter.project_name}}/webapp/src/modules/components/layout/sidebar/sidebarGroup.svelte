@@ -20,6 +20,8 @@
 	}
 
 	const name = nanoid(5);
+
+	// TODO - fix behavior of "organization home" link not working
 </script>
 
 <Accordion.Root value={isActive ? name : ''}>
@@ -37,9 +39,11 @@
 					variant: 'ghost'
 				}),
 				{
-					'hover:bg-transparent': isActive
+					'hover:bg-transparent': isActive,
+					'pointer-events-none opacity-50': props.disabled
 				}
 			)}
+			disabled={props.disabled}
 		>
 			<div class="flex items-center">
 				<SidebarIcon {props} />
