@@ -6,16 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { OrgRoles } from '$lib/organizations';
-	import { Button, A, P, Badge, Avatar } from 'flowbite-svelte';
-	import { Plus, UserPlus, Cog, PuzzlePiece, ArrowUturnLeft, XMark, Check } from 'svelte-heros-v2';
 	import { c } from '$lib/utils/strings.js';
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '$lib/i18n';
-	import SectionTitle from '$lib/components/sectionTitle.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
-	import PageTop from '$lib/components/pageTop.svelte';
-	import Icon from '$lib/components/icon.svelte';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '$lib/components/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -28,6 +22,18 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		OrgJoinRequestsResponse,
 		OrgRolesResponse
 	} from '@/pocketbase/types';
+
+	import { Button } from '@/components/ui/button';
+	import { Badge } from '@/components/ui/badge';
+
+	import Avatar from '@/components/custom/avatar.svelte';
+	import T from '@/components/custom/t.svelte';
+	import PageTop from '@/components/custom/pageTop.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
+
+	import Icon from '@/components/custom/icon.svelte';
+	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
 
 	//
 
@@ -65,7 +71,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PageTop>
-	<SectionTitle title={m.My_organizations()} description={m.organzations_page_description()} />
+	<SectionTitle
+		tag="h3"
+		title={m.My_organizations()}
+		description={m.organzations_page_description()}
+	/>
 </PageTop>
 
 <PageContent>
@@ -81,16 +91,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	>
 		{#if records.length > 0}
 			<PageCard>
-				<SectionTitle tag="h5" title={m.organization_invites()} />
+				<SectionTitle title={m.organization_invites()} />
+
 				{#each records as record}
 					<PlainCard>
 						{record.expand?.organization.name}
 						<svelte:fragment slot="right">
-							<Button outline on:click={() => updateInvite(record.id, 'accept')}>
+							<Button variant="outline" on:click={() => updateInvite(record.id, 'accept')}>
 								{m.accept_invite()}<Icon src={Check} ml />
 							</Button>
-							<Button outline on:click={() => updateInvite(record.id, 'decline')}>
-								{m.decline_invite()}<Icon src={XMark} ml />
+							<Button variant="outline" on:click={() => updateInvite(record.id, 'decline')}>
+								{m.decline_invite()}<Icon src={X} ml />
 							</Button>
 						</svelte:fragment>
 					</PlainCard>
@@ -108,7 +119,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	>
 		{#if records.length}
 			<PageCard>
-				<SectionTitle tag="h5" title={m.Your_membership_requests()}></SectionTitle>
+				<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
 
 				<div class="space-y-4">
 					{#each records as request}
@@ -119,20 +130,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								<Avatar slot="left" src={avatarUrl}></Avatar>
 
 								<div class="flex items-center space-x-2">
-									<P>{request.expand?.organization.name}</P>
-									<Badge color="yellow">{m.Pending()}</Badge>
+									<T>{request.expand?.organization.name}</T>
+									<Badge variant="default">{m.Pending()}</Badge>
 								</div>
 
 								<Button
 									slot="right"
-									outline
-									size="sm"
+									variant="outline"
 									on:click={() => {
 										deleteJoinRequest(request.id);
 									}}
 								>
 									{m.Undo_request()}
-									<Icon src={ArrowUturnLeft} ml></Icon>
+									<Icon src={Undo2} ml></Icon>
 								</Button>
 							</PlainCard>
 						{/if}
@@ -143,9 +153,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	</CollectionManager>
 
 	<PageCard>
-		<SectionTitle tag="h5" title={m.Your_organizations()}>
-			<div slot="right" class="flex justify-end gap-2">
-				<Button size="sm" outline class="shrink-0 !px-4" href="/my/organizations/join">
+		<SectionTitle title={m.Your_organizations()}>
+			<svelte:fragment slot="right">
+				<Button size="sm" variant="outline" class="shrink-0 !px-4" href="/my/organizations/join">
 					<span class="ml-1"> {m.Join_an_organization()} </span>
 					<Icon src={UserPlus} ml />
 				</Button>
@@ -153,7 +163,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					<span class="ml-1"> {m.Create_a_new_organization()} </span>
 					<Icon src={Plus} ml />
 				</Button>
-			</div>
+			</svelte:fragment>
 		</SectionTitle>
 
 		<CollectionManager
@@ -166,7 +176,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			let:records
 		>
 			<svelte:fragment slot="emptyState">
-				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={PuzzlePiece} />
+				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={Puzzle} />
 			</svelte:fragment>
 
 			{#if records.length > 0}
@@ -178,7 +188,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							<PlainCard let:Title let:Description>
 								<div class="flex items-center gap-2">
 									<Title>
-										<A href={`/my/organizations/${org.id}`}>{org.name}</A>
+										<a href={`/my/organizations/${org.id}`}>{org.name}</a>
 									</Title>
 									{#if role.name == ADMIN || role.name == OWNER}
 										<Badge color="dark">{c(role.name)}</Badge>
@@ -193,7 +203,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 										<Button
 											data-testid={`${org.name} link`}
 											size="sm"
-											outline
+											variant="outline"
 											href={`/my/organizations/${org.id}/settings`}
 										>
 											{m.Settings()}

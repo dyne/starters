@@ -9,10 +9,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { Collections, type OrganizationsResponse } from '@/pocketbase/types';
 	import { RecordForm } from '$lib/recordForm';
 	import { createTypeProp } from '$lib/utils/typeProp';
-	import { Heading } from 'flowbite-svelte';
 	import { m } from '$lib/i18n';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
+	import T from '@/components/custom/t.svelte';
 
 	//
 
@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <OrganizationLayout org={organization}>
 	<PageCard>
-		<Heading tag="h6" class="mb-6">{m.Manage_your_organization_public_info()}</Heading>
+		<T tag="h4" class="mb-6">{m.Manage_your_organization_public_info()}</T>
 		<RecordForm
 			{recordType}
 			collection={Collections.Organizations}
@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			initialData={organization}
 			submitButtonText={m.Save_changes()}
 			on:success={invalidateAll}
-			formSettings={{ dataType: 'json' }}
+			formSettings={{ dataType: 'form' }}
 		/>
 	</PageCard>
 </OrganizationLayout>

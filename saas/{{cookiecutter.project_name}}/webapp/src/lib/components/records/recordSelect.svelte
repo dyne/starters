@@ -13,8 +13,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { PBResponse } from '$lib/utils/types';
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import { pb } from '@/pocketbase';
-	import { Select } from 'flowbite-svelte';
 	import { createRecordLabel, excludeIdsFilter, mergeFilters } from './utils';
+	import SelectInput from '@/components/custom/selectInput.svelte';
 
 	//
 
@@ -80,12 +80,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 </script>
 
-<Select
+<SelectInput
 	{required}
 	{placeholder}
 	{disabled}
 	{name}
 	items={createItems(records)}
+	selected={recordId}
 	value={recordId}
 	on:input={handleInput}
 />

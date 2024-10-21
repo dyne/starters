@@ -24,10 +24,9 @@
 	// Components
 	import { Form, createForm, FormError, SubmitButton } from '@/forms';
 	import { Field } from '@/forms/fields';
-	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
-	import { InformationCircle } from 'svelte-heros-v2';
+	import { HelpCircle } from 'lucide-svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { WelcomeSession } from '$lib/utils/welcome';
 	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
@@ -36,6 +35,10 @@
 	import { log } from '$lib/utils/devLog';
 
 	import Button from '@/components/ui/button/button.svelte';
+	import T from '@/components/custom/t.svelte';
+	import Alert from '@/components/custom/alert.svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import Separator from '@/components/ui/separator/separator.svelte';
 
 	//
 
@@ -95,24 +98,22 @@
 {#if !seed}
 	{#if WelcomeSession.isActive()}
 		<WelcomeBanner class="mb-6">
-			<P color="yellow" weight="bold">{m.Thanks_for_joining_us()}</P>
-			<P color="yellow">
+			<T class="font-bold">{m.Thanks_for_joining_us()}</T>
+			<T>
 				{m.One_last_thing_before_to_using_the_app()}<br />
 				{m.we_need_you_to_answer_these_questions_as_they_will_be_used_to_secure_your_data_()}
-			</P>
+			</T>
 		</WelcomeBanner>
 	{/if}
 
 	<Card class="space-y-6 p-6">
-		<Heading tag="h4">{m.Generate_your_keys()}</Heading>
+		<T tag="h4">{m.Generate_your_keys()}</T>
 
 		{#if WelcomeSession.isActive()}
 			<Alert color="blue">
 				<span class="sr-only">{m.Info()}</span>
 				<span class="text mb-2 flex items-center font-bold">
-					<div class="mr-1">
-						<InformationCircle size="20" />
-					</div>
+					<Icon src={HelpCircle} mr />
 					{m.Important_information()}
 				</span>
 				<ul class="list-disc space-y-1 pl-4 pt-1">
@@ -129,19 +130,19 @@
 			<RegenerateBanner />
 		{/if}
 
-		<Hr />
+		<Separator />
 
 		<Form {form} class="space-y-6" submitButtonText={m.Generate_keys()}>
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Field {form} name="email" options={{ label: 'User email' }} />
 
-					<P size="sm" color="text-gray-400">
+					<T tag="small" class="text-gray-400">
 						{m.Your_email_wont_be_stored_anywhere_it_will_be_used_only_to_generate_the_keys_()}
-					</P>
+					</T>
 				</div>
 
-				<Hr />
+				<Separator />
 			{/if}
 
 			{#each userChallenges as question}
@@ -149,16 +150,16 @@
 			{/each}
 		</Form>
 
-		<Hr />
+		<Separator />
 
-		<A class="text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</A>
+		<a class="text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</a>
 	</Card>
 {:else}
 	<Card class="space-y-6">
-		<Heading tag="h4">{m.Keypair_creation_successful()}</Heading>
-		<P size="sm" color="text-gray-400 dark:text-gray-600">
+		<T tag="h4">{m.Keypair_creation_successful()}</T>
+		<T tag="small" class="text-gray-400 dark:text-gray-600">
 			{m.Please_store_this_in_a_safe_place_to_recover_your_account_in_the_future_this_passphrase_will_be_shown_only_one_time()}
-		</P>
+		</T>
 		<Alert color="blue">
 			<span class="font-mono">
 				{seed}

@@ -5,6 +5,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import Dialog from '@/components/custom/dialog.svelte';
+
+	import T from '@/components/custom/t.svelte';
+
+	import Spinner from '@/components/custom/spinner.svelte';
+
+	import { Button } from '@/components/ui/button';
+
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 
 	import type { PBResponse } from '$lib/utils/types';
@@ -14,9 +22,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { Collections, type AuthorizationsResponse } from '@/pocketbase/types';
 
 	import { RecordForm } from '$lib/recordForm';
-	import { Button, Modal, Spinner, P } from 'flowbite-svelte';
 	import { currentUser, pb } from '@/pocketbase';
-	import { ArrowLeft, Share, Trash } from 'svelte-heros-v2';
+	import { ArrowLeft, Share, Trash } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
@@ -75,7 +82,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <slot {openModal}>
 	<Button
 		class="!p-2"
-		color="alternative"
+		variant="outline"
 		on:click={() => {
 			openModal();
 		}}
@@ -88,7 +95,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<Spinner />
 {:then response}
 	<PortalWrapper>
-		<Modal bind:open size="md" title="Share signature">
+		<Dialog bind:open title="Share signature">
 			<div class="relative w-full">
 				{#if !removeAccess}
 					<RecordForm
@@ -113,7 +120,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					/>
 					{#if authorization}
 						<div class="absolute bottom-0 left-0">
-							<Button color="red" outline on:click={toggleRemoveAccess}>
+							<Button color="red" variant="outline" on:click={toggleRemoveAccess}>
 								<Trash size="20" />
 								<span class="ml-2"> Remove access </span>
 							</Button>
@@ -122,7 +129,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				{:else if removeLoading}
 					<Spinner />
 				{:else}
-					<P>Are you sure you want to remove all access to the signature?</P>
+					<!-- TODO - review message -->
+					<T>Are you sure you want to remove all access to the signature?</T>
 					<div class="mt-4 flex justify-between">
 						<Button class="space-x-2" color="alternative" on:click={toggleRemoveAccess}>
 							<ArrowLeft size="20" />
@@ -135,6 +143,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					</div>
 				{/if}
 			</div>
-		</Modal>
+		</Dialog>
 	</PortalWrapper>
 {/await}

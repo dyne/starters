@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { getUserDidUrl } from '$lib/did';
 	import { featureFlags } from '$lib/features';
-	import { Button } from 'flowbite-svelte';
+	import { Button } from '@/components/ui/button';
 
 	let url: string | undefined = undefined;
 
@@ -17,5 +17,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 {#if $featureFlags.DID && url}
-	<Button href={url} target="_blank" size="xs" class="ml-3" color="light">My DID</Button>
+	<Button href={url} target="_blank" size="sm" class="ml-3" variant="outline">My DID</Button>
 {/if}

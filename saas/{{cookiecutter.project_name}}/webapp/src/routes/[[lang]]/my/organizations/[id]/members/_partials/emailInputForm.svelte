@@ -1,13 +1,14 @@
 <script lang="ts">
-	import Icon from '$lib/components/icon.svelte';
+	import Icon from '@/components/custom/icon.svelte';
 	import { createForm, Form, SubmitButton } from '@/forms';
 	import { m } from '$lib/i18n';
 	import { readFileAsString } from '$lib/utils/files';
 	import { Array as A } from 'effect';
-	import { Alert, Button, Label } from 'flowbite-svelte';
-	import { ArrowRight } from 'svelte-heros-v2';
+	import { ArrowRight } from 'lucide-svelte';
 	import { z } from 'zod';
 	import { zod } from 'sveltekit-superforms/adapters';
+	import { Label } from '@/components/ui/label';
+	import Alert from '@/components/custom/alert.svelte';
 
 	//
 
@@ -102,7 +103,7 @@
 	</div>
 
 	{#if isFormTainted($tainted) && emails.length == 0}
-		<Alert color="yellow" border>
+		<Alert variant="warning">
 			<p class="font-bold">{m.Warning()}</p>
 			<p>
 				{m.We_havent_found_any_emails_in_the_provided_documents_please_upload_a_new_file_or_paste_new_content_()}
@@ -111,7 +112,7 @@
 	{/if}
 
 	{#if emails.length}
-		<Alert color="green" border>
+		<Alert variant="success">
 			<div class="flex items-center justify-between gap-2">
 				<p>✅ {emails.length} {m.Emails_found()}</p>
 				<SubmitButton>

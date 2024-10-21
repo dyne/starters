@@ -5,8 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
-	import { ArrowLeft, Pencil } from 'svelte-heros-v2';
+	import { Button } from '@/components/ui/button';
+	import { ArrowLeft, Pencil } from 'lucide-svelte';
 	export let valueClass: string = '';
 	export let value: string;
 	export let handleChange: (value: string) => void;
@@ -23,7 +23,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<h5 class={`${valueClass}`}>
 			{value}
 		</h5>
-		<Button on:click={() => (isInputNameOpen = true)} outline size="sm" class="w-14">
+		<Button on:click={() => (isInputNameOpen = true)} variant="outline" size="sm" class="w-14">
 			<Pencil />
 		</Button>
 	{/if}
@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<div class="flex flex-row">
 			<Button
 				on:click={() => (isInputNameOpen = false)}
-				outline
+				variant="outline"
 				size="sm"
 				class="text-bold h-8 w-8 px-0"
 			>
@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					<!-- <span class="text-sm font-bold">Back</span> -->
 				</div>
 			</Button>
-			<Button on:click={handleSave} outline size="sm" class="h-8 w-8 px-0 text-red-500">
+			<Button on:click={handleSave} variant="outline" size="sm" class="h-8 w-8 px-0 text-red-500">
 				<div class="flex flex-col">
 					<Pencil class="w-8" />
 					<!-- <span class="text-sm  font-bold">Save</span> -->

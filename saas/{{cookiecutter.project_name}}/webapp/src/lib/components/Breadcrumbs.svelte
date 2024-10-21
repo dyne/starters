@@ -10,7 +10,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <script lang="ts">
-	import { Breadcrumb as BreadcrumbComponent, BreadcrumbItem } from 'flowbite-svelte';
 	import { page } from '$app/stores';
 	import { calcBreadcrumbs } from './Breadcrumbs';
 	import type { Link } from '$lib/utils/types';
@@ -27,9 +26,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	$: calcBreadcrumbs($page, options).then((newBreadcrumbs) => (breadcrumbs = newBreadcrumbs));
 </script>
 
-<BreadcrumbComponent aria-label="breadcrumb">
+<!-- <BreadcrumbComponent aria-label="breadcrumb">
 	{#each breadcrumbs as { href, text }, i}
 		{@const isHomeBreadcrumb = i == 0}
 		<BreadcrumbItem home={isHomeBreadcrumb} {href}>{text}</BreadcrumbItem>
 	{/each}
-</BreadcrumbComponent>
+</BreadcrumbComponent> -->

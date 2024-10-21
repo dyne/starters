@@ -17,18 +17,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
-	import { Badge, Button } from 'flowbite-svelte';
-	import { UserPlus, NoSymbol, UserGroup, Trash } from 'svelte-heros-v2';
-	import PlainCard from '$lib/components/plainCard.svelte';
-	import { getUserDisplayName } from '$lib/utils/pb';
-	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import Icon from '$lib/components/icon.svelte';
-	import EmptyState from '$lib/components/emptyState.svelte';
-	import SectionTitle from '$lib/components/sectionTitle.svelte';
-	import ModalWrapper from '$lib/components/modalWrapper.svelte';
+	import { Trash } from 'lucide-svelte';
+	import Badge from '@/components/ui/badge/badge.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import { DeleteRecord } from '$lib/collectionManager';
 	import IconButton from '$lib/components/iconButton.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 
@@ -49,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	{#if records.length}
 		<PageCard class="!space-y-6">
 			<SectionTitle
-				tag="h5"
+				tag="h4"
 				title={m.Pending_invites()}
 				description={m.pending_invites_description()}
 			/>

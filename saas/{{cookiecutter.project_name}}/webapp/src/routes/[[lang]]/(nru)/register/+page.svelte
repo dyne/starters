@@ -15,12 +15,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { page } from '$app/stores';
 	import { zod } from 'sveltekit-superforms/adapters';
 
-	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import { featureFlags } from '$lib/features';
 	import { OrganizationInviteSession } from '$lib/organizations/invites';
 	import { appTitle } from '$lib/strings';
 	import { WelcomeSession } from '$lib/utils/welcome';
 	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
+	import T from '@/components/custom/t.svelte';
+	import Separator from '@/components/ui/separator/separator.svelte';
 
 	//
 
@@ -67,19 +68,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{#await getOrganization(inviteSession.organizationId) then organization}
 			<WelcomeBanner class="mb-6">
 				<div>
-					<P color="yellow">
+					<T>
 						{@html m.you_have_been_invited_by_organization_to_join_the_platform({
 							organizationName: organization.name
 						})}
-					</P>
-					<P color="yellow">{m.Please_register_using_the_provided_email_account_()}</P>
+					</T>
+					<T>{m.Please_register_using_the_provided_email_account_()}</T>
 				</div>
 			</WelcomeBanner>
 		{/await}
 	{/if}
 {/if}
 
-<Heading tag="h4">Create an account</Heading>
+<T tag="h4">Create an account</T>
 
 <Form {form} submitButtonText={m.Create_an_account()}>
 	<Field
@@ -126,23 +127,23 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	<CheckboxField {form} name="acceptTerms">
 		{m.I_accept_the()}
-		<A
+		<a
 			href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html#%F0%9F%92%BB-didroom-control-room-dashboard-%F0%9F%92%BB"
 			target="_blank"
 		>
 			{m.Terms_and_Conditions()}
-		</A>
+		</a>
 		{m.and()}
-		<A href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html" target="_blank">
+		<a href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html" target="_blank">
 			{m.privacy_policy()}
-		</A>
+		</a>
 	</CheckboxField>
 </Form>
 
 <div class="flex flex-col gap-4">
-	<Hr hrClass="!m-0" />
-	<P class="text-center" color="text-gray-500 dark:text-gray-400" size="sm">
+	<Separator />
+	<T class="text-center text-gray-500 dark:text-gray-400" tag="small">
 		{m.Already_have_an_account()}
-		<A href="/login">{m.Login_here()}</A>
-	</P>
+		<a href="/login">{m.Login_here()}</a>
+	</T>
 </div>

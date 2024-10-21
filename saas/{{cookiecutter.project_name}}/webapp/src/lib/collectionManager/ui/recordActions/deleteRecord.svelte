@@ -5,6 +5,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import Dialog from '@/components/custom/dialog.svelte';
+
+	import T from '@/components/custom/t.svelte';
+
+	import Alert from '@/components/custom/alert.svelte';
+
+	import { Button } from '@/components/ui/button';
+
+	import Icon from '@/components/custom/icon.svelte';
+
 	import { onDestroy } from 'svelte';
 	import { getErrorMessage } from '$lib/errorHandling';
 
@@ -13,8 +23,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { PBResponse } from '$lib/utils/types';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
-	import { Alert, Button, Modal, P } from 'flowbite-svelte';
-	import { Trash, XMark } from 'svelte-heros-v2';
+	import { Trash, X } from 'lucide-svelte';
 
 	type RecordGeneric = $$Generic<PBResponse>;
 	export let record: RecordGeneric;
@@ -57,12 +66,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open title={modalTitle} size="xs">
+	<Dialog bind:open title={modalTitle}>
 		<div class="space-y-6 text-center">
-			<P>Are you sure you want to delete this record?</P>
+			<T>Are you sure you want to delete this record?</T>
 
 			{#if error}
-				<Alert color="red" class="text-left" dismissable>
+				<Alert variant="destructive" class="text-left">
 					<p class="font-bold">Error</p>
 					<p>{error}</p>
 				</Alert>
@@ -78,10 +87,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						open = false;
 					}}
 				>
-					<XMark size="20" />
+					<Icon src={X} mr></Icon>
 					<span class="ml-1">Cancel</span>
 				</Button>
 			</div>
 		</div>
-	</Modal>
+	</Dialog>
 </PortalWrapper>

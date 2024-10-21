@@ -11,7 +11,6 @@
 	import { z } from 'zod';
 	import { Form, createForm } from '@/forms';
 	import { Field, TextareaField } from '@/forms/fields';
-	import { A, Alert, Heading, Hr, P } from 'flowbite-svelte';
 	import Card from '$lib/components/card.svelte';
 	import { featureFlags } from '$lib/features';
 	import { zod } from 'sveltekit-superforms/adapters';
@@ -19,6 +18,8 @@
 	import { m } from '$lib/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
 	import { log } from '$lib/utils/devLog';
+	import T from '@/components/custom/t.svelte';
+	import Separator from '@/components/ui/separator/separator.svelte';
 
 	//
 
@@ -81,41 +82,41 @@
 
 <Card class="space-y-6 p-6">
 	{#if !success}
-		<Heading tag="h4">{m.Regenerate_keys()}</Heading>
+		<T tag="h4">{m.Regenerate_keys()}</T>
 
 		{#if RegenerateKeyringSession.isActive()}
 			<RegenerateBanner />
 		{/if}
 
 		{#if $currentUser}
-			<P>{m.Please_type_here_your_seed_to_restore_your_keyring_()}</P>
+			<T>{m.Please_type_here_your_seed_to_restore_your_keyring_()}</T>
 		{:else}
-			<P>{m.Please_type_here_your_email_and_your_seed_to_restore_your_keyring_()}</P>
+			<T>{m.Please_type_here_your_email_and_your_seed_to_restore_your_keyring_()}</T>
 		{/if}
 
 		<Form {form} submitButtonText={m.Regenerate_keys()}>
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Field {form} name="email" options={{ label: m.User_email() }} />
-					<P size="sm" color="text-gray-400">
+					<T tag="small" class="text-gray-400">
 						{m.Your_email_wont_be_stored_anywhere_it_will_be_used_only_to_generate_the_keys_()}
-					</P>
+					</T>
 				</div>
 			{/if}
 
 			<TextareaField {form} name="seed" options={{ placeholder: textAreaPlaceholder }} />
 		</Form>
 
-		<Hr />
+		<Separator />
 
-		<A href="/keypairoom" class="text-sm">{m.Forgot_the_seed_Regenerate_it()}</A>
+		<a href="/keypairoom" class="text-sm">{m.Forgot_the_seed_Regenerate_it()}</a>
 	{:else}
 		<div class="flex flex-col space-y-4 p-6">
-			<Heading tag="h4">{m.Keys_regenerated()}</Heading>
-			<P>
+			<T tag="h4">{m.Keys_regenerated()}</T>
+			<T>
 				{m.Your_keys_have_been_regenerated_You_can_now_go_back_to()}
-				<A href="/my">{m.your_profile()}</A>.
-			</P>
+				<a href="/my">{m.your_profile()}</a>
+			</T>
 		</div>
 	{/if}
 </Card>

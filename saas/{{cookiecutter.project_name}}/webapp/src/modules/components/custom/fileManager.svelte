@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+	type MaybePromise<T> = T | Promise<T>;
+
 	export type RejectedFile = { file: File; reasons: string[] };
 	export type FileManagerValidator = (
 		newFiles: File[]
@@ -14,7 +16,6 @@
 	import _ from 'lodash';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import { m } from '$lib/i18n';
-	import type { MaybePromise } from '@sveltejs/kit';
 
 	//
 

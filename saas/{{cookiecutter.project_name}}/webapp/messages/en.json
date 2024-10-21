@@ -480,5 +480,9 @@
 	"your_profile": "your profile",
 	"Your_signature_file_is_valid": "Your signature file is valid ✅",
 	"zencode_data": "Zencode data (JSON)",
-	"zencode_script": "Zencode script"
+	"zencode_script": "Zencode script",
+	"Generate_keyring": "Generate keyring",
+	"Copied": "Copied!",
+	"Edit_role": "Edit role",
+	"Discard": "Discard"
 }

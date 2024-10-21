@@ -5,9 +5,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { FolderOpen } from 'svelte-heros-v2';
-	import type { IconComponent } from '$lib/utils/types';
-	import Icon from './icon.svelte';
+	import { FolderOpen } from 'lucide-svelte';
+	import type { IconComponent } from '@/components/types';
+	import Icon from '@/components/custom/icon.svelte';
 
 	export let title: string;
 	export let description: string | undefined = undefined;

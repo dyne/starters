@@ -1,23 +1,24 @@
 <script lang="ts">
-	import { Register } from 'flowbite-svelte-blocks';
+	import LanguageSelect from '$lib/i18n/languageSelect.svelte';
 	import { appTitle } from '$lib/strings';
-	import BaseLanguageSwitcher from '$lib/i18n/baseLanguageSwitcher.svelte';
+	import Card from '@/components/custom/card.svelte';
+
+	// TODO - Fix
 </script>
 
 <div class="grid h-screen place-items-center">
 	<div class="max-w-[500px]">
-		<Register href="/">
-			<svelte:fragment slot="top">
-				<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
-			</svelte:fragment>
-
+		<a href="/">
+			<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
+		</a>
+		<Card>
 			<div class="space-y-4 p-6 sm:p-8 md:space-y-6">
 				<slot />
 			</div>
-		</Register>
+		</Card>
 	</div>
 </div>
 
 <div class="fixed right-4 top-4 !m-0">
-	<BaseLanguageSwitcher />
+	<LanguageSelect />
 </div>

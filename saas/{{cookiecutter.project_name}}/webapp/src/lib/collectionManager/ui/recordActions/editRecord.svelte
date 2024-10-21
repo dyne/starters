@@ -1,4 +1,8 @@
 <script lang="ts">
+	import Dialog from '@/components/custom/dialog.svelte';
+
+	import { Button } from '@/components/ui/button';
+
 	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
 
 	import { createTypeProp } from '$lib/utils/typeProp';
@@ -7,8 +11,7 @@
 	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
 
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
-	import { Button, Modal } from 'flowbite-svelte';
-	import { Pencil } from 'svelte-heros-v2';
+	import { Pencil } from 'lucide-svelte';
 	import { getRecordsManagerContext } from '../../collectionManager.svelte';
 
 	//
@@ -45,13 +48,13 @@
 </script>
 
 <slot {openModal}>
-	<Button class="!p-2" color="alternative" on:click={openModal}>
+	<Button variant="outline" on:click={openModal}>
 		<Pencil size="20" />
 	</Button>
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open title={modalTitle} size="md">
+	<Dialog bind:open title={modalTitle}>
 		<div class="w-full">
 			<slot name="beforeForm"></slot>
 			<RecordForm
@@ -63,5 +66,5 @@
 			/>
 			<slot name="afterForm"></slot>
 		</div>
-	</Modal>
+	</Dialog>
 </PortalWrapper>

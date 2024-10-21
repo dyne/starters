@@ -61,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import GridSpinner from '$lib/components/gridSpinner.svelte';
 	import CollectionEmptyState from './ui/collectionEmptyState.svelte';
 
-	import { ExclamationTriangle } from 'svelte-heros-v2';
+	import { TriangleAlert } from 'lucide-svelte';
 
 	//
 
@@ -215,7 +215,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	{/if}
 {:catch}
 	<CollectionEmptyState
-		icon={ExclamationTriangle}
+		icon={TriangleAlert}
 		title="Loading error"
 		description="Some error occurred while loading records."
 	/>

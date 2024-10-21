@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { BaseSystemFields } from '@/pocketbase/types';
-import type { XCircle } from 'svelte-heros-v2';
+import type { XCircle } from 'lucide-svelte';
 
 /* TS utils */
 

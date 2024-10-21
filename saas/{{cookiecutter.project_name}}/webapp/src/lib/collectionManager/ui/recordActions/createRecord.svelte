@@ -5,6 +5,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
+	import Dialog from '@/components/custom/dialog.svelte';
+
+	import { Button } from '@/components/ui/button';
+
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
 
 	import { createEventDispatcher } from 'svelte';
@@ -13,9 +17,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { PBResponse } from '$lib/utils/types';
 
 	import { RecordForm } from '$lib/recordForm';
-	import { Button, Modal } from 'flowbite-svelte';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
-	import { Plus } from 'svelte-heros-v2';
+	import { Plus } from 'lucide-svelte';
 
 	//
 
@@ -45,7 +48,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <slot name="button" openModal={show.on}>
-	<Button class="shrink-0" color="alternative" on:click={show.on}>
+	<Button class="shrink-0" variant="outline" on:click={show.on}>
 		<Plus size="20" />
 		<span class="ml-1">
 			<slot>Add entry</slot>
@@ -54,7 +57,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </slot>
 
 <PortalWrapper>
-	<Modal bind:open={$show} title={modalTitle} size="md" placement="center">
+	<Dialog bind:open={$show} title={modalTitle}>
 		<div class="w-full">
 			<slot name="form" closeModal={show.off}>
 				<RecordForm
@@ -69,5 +72,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				/>
 			</slot>
 		</div>
-	</Modal>
+	</Dialog>
 </PortalWrapper>

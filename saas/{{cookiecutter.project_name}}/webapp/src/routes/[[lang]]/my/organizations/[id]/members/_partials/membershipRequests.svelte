@@ -17,16 +17,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '@/pocketbase/types';
 	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
-	import { Button } from 'flowbite-svelte';
-	import { UserPlus, NoSymbol, UserGroup } from 'svelte-heros-v2';
+	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
-	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import Icon from '$lib/components/icon.svelte';
-	import EmptyState from '$lib/components/emptyState.svelte';
-	import SectionTitle from '$lib/components/sectionTitle.svelte';
+	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
-	import PageCard from '$lib/components/pageCard.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
+	import { Button } from '@/components/ui/button';
 
 	//
 
@@ -61,7 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	{#if records.length}
 		<PageCard>
 			<SectionTitle
-				tag="h5"
+				tag="h4"
 				title={m.Pending_membership_requests()}
 				description={m.pending_membership_requests_description()}
 			/>
@@ -70,20 +69,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				{@const user = request.expand?.user}
 				{#if user}
 					<PlainCard>
-						<UserAvatar slot="left" size="md" {user}></UserAvatar>
+						<UserAvatar slot="left" {user}></UserAvatar>
 						{getUserDisplayName(user)}
 
 						<svelte:fragment slot="right">
 							<div class="space-x-1">
-								<Button outline on:click={() => updateRequestStatus(request, accepted)}>
+								<Button variant="outline" on:click={() => updateRequestStatus(request, accepted)}>
 									{m.Accept()}
 									<Icon src={UserPlus} ml></Icon>
 								</Button>
 
-								<ModalWrapper title={m.Warning()} size="xs" let:openModal>
-									<Button outline on:click={openModal}>
+								<ModalWrapper title={m.Warning()} let:openModal>
+									<Button variant="outline" on:click={openModal}>
 										{m.Decline()}
-										<Icon src={NoSymbol} ml></Icon>
+										<Icon src={CircleOffIcon} ml></Icon>
 									</Button>
 
 									<svelte:fragment slot="modal" let:closeModal>

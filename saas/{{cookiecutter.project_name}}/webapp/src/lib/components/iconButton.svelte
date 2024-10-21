@@ -5,11 +5,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
-	import { XMark } from 'svelte-heros-v2';
-	import type { IconComponent } from '$lib/utils/types';
+	import { X } from 'lucide-svelte';
+	import type { IconComponent } from '@/components/types';
+	import { Button } from '@/components/ui/button';
 
-	export let icon: IconComponent = XMark;
+	export let icon: IconComponent = X;
 	export let border = false;
 	export let size: keyof typeof sizes = 'xs';
 	export let href: string | undefined = undefined;
@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <Button
 	class={`${props.padding} ${!border ? '!border-transparent' : ''} !shrink-0`}
-	color="alternative"
+	variant="outline"
 	on:click
 	{href}
 >

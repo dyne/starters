@@ -1,51 +1,24 @@
 <script lang="ts">
 	import { currentUser } from '@/pocketbase';
-	import {
-		Footer,
-		FooterBrand,
-		FooterCopyright,
-		FooterIcon,
-		FooterLink,
-		FooterLinkGroup,
-		Input,
-		Label,
-		NavBrand,
-		NavHamburger,
-		NavLi,
-		NavUl,
-		Navbar,
-		P,
-		Textarea
-	} from 'flowbite-svelte';
-	import { Button } from 'flowbite-svelte';
-	import {
-		Contact,
-		ContentWithImage,
-		Facebook,
-		FeatureDefault,
-		FeatureItem,
-		Github,
-		HeroHeader,
-		PricingBodyHead,
-		PricingCard,
-		PricingHead,
-		PricingItem,
-		PricingItemWrapper,
-		Section,
-		Twitter
-	} from 'flowbite-svelte-blocks';
-	import {
-		PresentationChartLine,
-		AcademicCap,
-		Cog,
-		Briefcase,
-		CurrencyDollar,
-		Bolt
-	} from 'svelte-heros-v2';
+
 	import { appTitle } from '$lib/strings';
 	import { featureFlags } from '$lib/features';
+	import { m } from '$lib/i18n';
+	import { Button } from '@/components/ui/button';
+
+	// TODO - rebuild home
 </script>
 
+<div class="flex items-center justify-between border-b p-4">
+	<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
+
+	<div>
+		<Button variant="outline" href="/login">{m.Login()}</Button>
+		<Button variant="outline" href="/register">{m.Register()}</Button>
+	</div>
+</div>
+
+<!-- 
 <div class="flex flex-col gap-20">
 	<header>
 		<Navbar let:hidden let:toggle fluid={false}>
@@ -342,7 +315,6 @@
 		</Contact>
 	</Section>
 
-	<!-- svelte-ignore missing-declaration -->
 	<Section>
 		<Footer footerType="socialmedia">
 			<div class="grid gap-12 lg:grid-cols-6 lg:gap-24">
@@ -366,9 +338,7 @@
 					<FooterLinkGroup>
 						<FooterLink liClass="mb-4" href="/">{appTitle}</FooterLink>
 						<FooterLink liClass="mb-4" href="https://tailwindcss.com/">Tailwind CSS</FooterLink>
-						<FooterLink liClass="mb-4" href="https://flowbite-svelte.com/"
-							>{appTitle}-Svelte</FooterLink
-						>
+	
 					</FooterLinkGroup>
 				</div>
 				<div>
@@ -377,10 +347,7 @@
 					</h2>
 					<FooterLinkGroup>
 						<FooterLink liClass="mb-4" href="https://discord.gg/4eeurUVvTy">Discord</FooterLink>
-						<FooterLink
-							liClass="mb-4"
-							href="https://github.com/shinokada/flowbite-svelte-blocks/issues">GitHub</FooterLink
-						>
+			
 					</FooterLinkGroup>
 				</div>
 				<div>
@@ -388,19 +355,14 @@
 						Follow us
 					</h2>
 					<FooterLinkGroup>
-						<FooterLink liClass="mb-4" href="https://github.com/shinokada/flowbite-svelte-blocks"
-							>Gihub</FooterLink
-						>
+		
 						<FooterLink liClass="mb-4" href="https://discord.gg/4eeurUVvTy">Discord</FooterLink>
 					</FooterLinkGroup>
 				</div>
 				<div>
 					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-400 dark:text-white">Legal</h2>
 					<FooterLinkGroup>
-						<FooterLink
-							liClass="mb-4"
-							href="https://github.com/shinokada/flowbite-svelte-blocks/LICENSE">LICENSE</FooterLink
-						>
+				
 					</FooterLinkGroup>
 				</div>
 			</div>
@@ -415,4 +377,4 @@
 			</div>
 		</Footer>
 	</Section>
-</div>
+</div> -->

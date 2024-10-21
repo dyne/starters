@@ -1,13 +1,21 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
-	import { ClipboardDocument } from 'svelte-heros-v2';
-	import Icon from '$lib/components/icon.svelte';
+	import Button from '@/components/ui/button/button.svelte';
+	import { ClipboardPlus } from 'lucide-svelte';
+	import Icon from '@/components/custom/icon.svelte';
 	import type { ComponentProps } from 'svelte';
+	import { m } from '$lib/i18n';
 
-	export let textToCopy: string;
-	export let delay = 2000;
-	export let buttonProps: ComponentProps<Button> = {};
-	export let iconSize = 20;
+	//
+
+	type $$Props = ComponentProps<Button> & {
+		delay?: number;
+		iconSize?: number;
+		textToCopy: string;
+	};
+
+	export let textToCopy: $$Props['textToCopy'];
+	export let delay: $$Props['delay'] = 2000;
+	export let iconSize: $$Props['iconSize'] = 20;
 
 	let isCopied = false;
 
@@ -20,11 +28,11 @@
 	}
 </script>
 
-<Button on:click={copyText} color="alternative" {...buttonProps}>
+<Button variant="outline" on:click={copyText} color="alternative" {...$$restProps}>
 	{#if !isCopied}
 		<slot />
-		<Icon src={ClipboardDocument} ml size={iconSize}></Icon>
+		<Icon src={ClipboardPlus} size={iconSize}></Icon>
 	{:else}
-		<span class="whitespace-nowrap">✅ Copied!</span>
+		<span class="whitespace-nowrap">✅ {m.Copied()}</span>
 	{/if}
 </Button>

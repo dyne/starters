@@ -5,16 +5,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { Button, Heading, Modal, P } from 'flowbite-svelte';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
-	import { Trash, XMark } from 'svelte-heros-v2';
+	import { Trash, X } from 'lucide-svelte';
 	import { CreateRecord } from './recordActions';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import type { ComponentProps } from 'svelte';
+	import T from '@/components/custom/t.svelte';
+	import { Button } from '@/components/ui/button';
+	import Icon from '@/components/custom/icon.svelte';
+	import { m } from '$lib/i18n';
+	import Dialog from '@/components/custom/dialog.svelte';
 
 	//
 
-	export let headingTag: ComponentProps<Heading>['tag'] = 'h4';
+	export let headingTag: ComponentProps<T>['tag'] = 'h4';
 	export let showDeleteModal = false;
 	export let description: string | null = null;
 	export let hideCreateButton = false;
@@ -33,25 +37,26 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <div class="mb-4 flex items-center justify-between">
 	<slot name="title">
-		<Heading tag={headingTag}>{collection}</Heading>
+		<T tag={headingTag}>{collection}</T>
 	</slot>
 	{#if description}
-		<P class="pt-6 text-slate-600">{description}</P>
+		<T class="pt-6 text-slate-600">{description}</T>
 	{/if}
 	<div class="flex shrink-0 items-center space-x-4">
 		{#if $selectedRecords.length > 0}
-			<P><span class="font-bold">{$selectedRecords.length}</span> selected</P>
+			<T><span class="font-bold">{$selectedRecords.length}</span> selected</T>
 			<div class="flex items-center space-x-2">
 				<Button color="alternative" on:click={discardSelection}>
-					<XMark size="20" />
-					<span class="ml-1">Discard</span>
+					<Icon src={X} mr />
+					{m.Discard()}
 				</Button>
 				<Button
-					color="alternative"
+					variant="outline"
 					on:click={() => {
 						showDeleteModal = true;
 					}}
 				>
+					<!-- TODO - improve here -->
 					<Trash size="20" />
 					<span class="ml-1">Delete</span>
 				</Button>
@@ -68,11 +73,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </div>
 
 <PortalWrapper>
-	<Modal bind:open={showDeleteModal} title="Delete records" size="xs">
+	<Dialog bind:open={showDeleteModal} title="Delete records">
 		<div class="space-y-6 text-center">
-			<P>
+			<T>
 				Are you sure you want to delete <span class="font-bold">{$selectedRecords.length}</span> records?
-			</P>
+			</T>
 			<div class="flex justify-center gap-2">
 				<Button color="red" on:click={deleteSelection}>Delete</Button>
 				<Button
@@ -83,5 +88,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				>
 			</div>
 		</div>
-	</Modal>
+	</Dialog>
 </PortalWrapper>
