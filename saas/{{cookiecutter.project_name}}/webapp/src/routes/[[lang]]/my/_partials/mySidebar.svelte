@@ -39,6 +39,7 @@
 
 	//
 
+	// TODO - Improve subscription
 	function getOrgAuthorizations() {
 		type Authorizations = Required<
 			OrgAuthorizationsResponse<{
