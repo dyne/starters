@@ -32,3 +32,12 @@ export function isLinkActive(href: string, page: Page, includeSubpages = false) 
 	const isParent = page.url.pathname.includes(href);
 	return includeSubpages ? isParent : isExact;
 }
+
+//
+
+export function removeTrailingSlash(text: string) {
+	if (text.endsWith('/')) {
+		return text.slice(0, -1);
+	}
+	return text;
+}

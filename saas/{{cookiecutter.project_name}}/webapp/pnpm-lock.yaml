@@ -29,6 +29,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      debounce:
+        specifier: ^2.2.0
+        version: 2.2.0
       effect:
         specifier: ^3.8.3
         version: 3.8.3
@@ -41,9 +44,15 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
+      p-debounce:
+        specifier: ^4.0.0
+        version: 4.0.0
       pocketbase:
         specifier: ^0.21.3
         version: 0.21.5
+      svelecte:
+        specifier: ^4.3.1
+        version: 4.3.1(svelte@4.2.19)
       svelte-boring-avatars:
         specifier: ^1.2.6
         version: 1.2.6
@@ -102,6 +111,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      cmdk-sv:
+        specifier: ^0.0.18
+        version: 0.0.18(svelte@4.2.19)
       debug:
         specifier: ^4.3.5
         version: 4.3.7
@@ -1271,6 +1283,11 @@ packages:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
+  cmdk-sv@0.0.18:
+    resolution: {integrity: sha512-istixiQSy9Ez/mQ4VXWB69btqNyDZckbd1XFEwR46Vw+n5zjdmvoWAcOTj0uX3FZXtw9ikwLVmfoW2nwwMClRg==}
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0-next.1
+
   code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
 
@@ -1337,6 +1354,10 @@ packages:
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
+
+  debounce@2.2.0:
+    resolution: {integrity: sha512-Xks6RUDLZFdz8LIdR6q0MTH44k7FikOmnh5xkSjMig6ch45afc8sjTjRQf3P6ax8dMgcQrYO/AR2RGWURrruqw==}
+    engines: {node: '>=18'}
 
   debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
@@ -2042,6 +2063,10 @@ packages:
     resolution: {integrity: sha512-JjCoypp+jKn1ttEFExxhetCKeJt9zhAgAve5FXHixTvFDW/5aEktX9bufBKLRRMdU7bNtpLfcGu94B3cdEJgjg==}
     engines: {node: '>= 0.8.0'}
 
+  p-debounce@4.0.0:
+    resolution: {integrity: sha512-4Ispi9I9qYGO4lueiLDhe4q4iK5ERK8reLsuzH6BPaXn53EGaua8H66PXIFGrW897hwjXp+pVLrm/DLxN0RF0A==}
+    engines: {node: '>=12'}
+
   p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==}
     engines: {node: '>=10'}
@@ -2477,6 +2502,11 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  svelecte@4.3.1:
+    resolution: {integrity: sha512-0wyPDel4J16ecwaDHvgdXsI5QvuC1pU8n2FY3tO4X39e6gcrnoQkgV3zVWYdm7xAQaqawAgZNBDgNZlonPLOmw==}
+    peerDependencies:
+      svelte: ^3.43.0 || ^4.0.0
+
   svelte-boring-avatars@1.2.6:
     resolution: {integrity: sha512-8+Z1DhsMUVI/V/5ik00Arw0PgbJcMdhTXq3YGqccBc5bYFeceCtMEMB0aWGhi8xFV+0aqZbWvS89Hcj16LlfHA==}
 
@@ -2545,6 +2575,9 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-tiny-virtual-list@2.1.2:
+    resolution: {integrity: sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA==}
 
   svelte@4.2.19:
     resolution: {integrity: sha512-IY1rnGr6izd10B0A8LqsBfmlT5OILVuZ7XsI0vdGPEvuonFV7NYEUK4dAkm9Zg2q0Um92kYjTpS1CAP3Nh/KWw==}
@@ -3969,6 +4002,12 @@ snapshots:
 
   clsx@2.1.1: {}
 
+  cmdk-sv@0.0.18(svelte@4.2.19):
+    dependencies:
+      bits-ui: 0.21.16(svelte@4.2.19)
+      nanoid: 5.0.7
+      svelte: 4.2.19
+
   code-red@1.0.4:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
@@ -4022,6 +4061,8 @@ snapshots:
 
   dayjs@1.11.13:
     optional: true
+
+  debounce@2.2.0: {}
 
   debug@4.3.7:
     dependencies:
@@ -4772,6 +4813,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
+  p-debounce@4.0.0: {}
+
   p-limit@3.1.0:
     dependencies:
       yocto-queue: 0.1.0
@@ -5130,6 +5173,11 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  svelecte@4.3.1(svelte@4.2.19):
+    dependencies:
+      svelte: 4.2.19
+      svelte-tiny-virtual-list: 2.1.2
+
   svelte-boring-avatars@1.2.6: {}
 
   svelte-check@3.8.6(postcss-load-config@4.0.2(postcss@8.4.47))(postcss@8.4.47)(svelte@4.2.19):
@@ -5184,6 +5232,8 @@ snapshots:
       postcss: 8.4.47
       postcss-load-config: 4.0.2(postcss@8.4.47)
       typescript: 5.6.3
+
+  svelte-tiny-virtual-list@2.1.2: {}
 
   svelte@4.2.19:
     dependencies:

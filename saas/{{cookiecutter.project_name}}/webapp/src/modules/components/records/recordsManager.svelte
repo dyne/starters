@@ -38,7 +38,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import Drawer from '$lib/components/drawer.svelte';
 	import { Plus } from 'lucide-svelte';
-	import { createToggleStore } from '../utils/toggleStore';
+	import { createToggleStore } from '../../../lib/components/utils/toggleStore';
 	import RecordForm, { type FieldsSettings } from '$lib/recordForm/recordForm.svelte';
 
 	//

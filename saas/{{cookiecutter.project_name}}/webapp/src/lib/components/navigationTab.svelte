@@ -12,42 +12,32 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { IconComponent, LinkWithIcon } from '$lib/utils/types';
-	import type { Page } from '@sveltejs/kit';
-	import clsx from 'clsx';
-	import { resolveRoute } from '$lib/i18n';
+	import type { LinkWithIcon } from '$lib/utils/types';
+	import { isLinkActive } from '@/utils/other';
+	import Icon from '@/components/custom/icon.svelte';
+	import { cn } from '@/components/utils';
 
 	export let props: NavigationTabProps;
 	let { href, icon, text, activeForSubpages = true } = props;
 
 	//
 
-	$: isActive = isTabActive(href, $page);
-
-	function isTabActive(href: string, page: Page) {
-		const isExact = page.url.pathname == resolveRoute(href, page.url);
-		const isNested = page.url.pathname.includes(href);
-		return activeForSubpages ? isNested : isExact;
-	}
+	$: isActive = isLinkActive(href, $page, activeForSubpages);
 
 	//
 
-	$: classes = clsx(
-		'inline-block text-sm font-medium text-center p-4 border-b-2 flex whitespace-nowrap',
+	$: classes = cn(
+		'inline-block text-sm font-medium text-center p-4 py-3 border-b-2 flex items-center whitespace-nowrap',
 		{
-			'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 dark:text-gray-400':
-				!isActive,
-			'text-primary-600 border-b-2 border-primary-600 dark:text-primary-500 dark:border-primary-500 active':
-				isActive
+			'border-transparent hover:border-primary/20': !isActive,
+			'text-primary border-primary border-b-2': isActive
 		}
 	);
 </script>
 
 <a role="tab" class={classes} {href}>
 	{#if icon}
-		<div class="mr-2">
-			<svelte:component this={icon} size="20"></svelte:component>
-		</div>
+		<Icon src={icon} mr></Icon>
 	{/if}
 	{text}
 </a>

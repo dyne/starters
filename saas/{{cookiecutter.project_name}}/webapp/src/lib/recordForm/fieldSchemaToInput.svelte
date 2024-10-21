@@ -49,7 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { AnyZodObject } from 'zod';
 	import type { ClientResponseErrorData } from '$lib/errorHandling';
-	import type { RecordsManagerOptions } from '$lib/components/records/recordsManager.svelte';
+	import type { RecordsManagerOptions } from '@/components/records/recordsManager.svelte';
 	import type { PBResponse } from '$lib/utils/types';
 
 	//
