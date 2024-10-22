@@ -41,3 +41,9 @@ export function removeTrailingSlash(text: string) {
 	}
 	return text;
 }
+
+//
+
+export function wait(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}

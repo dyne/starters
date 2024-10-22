@@ -5,6 +5,8 @@
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import type { CollectionName } from '@/pocketbase/collections-models/types';
 import type { PBResponse } from '$lib/utils/types';
+import { String } from 'effect';
+import type { CollectionRecords } from '@/pocketbase/types';
 
 //
 
@@ -18,37 +20,22 @@ export function searchTextFilter(collection: CollectionName, text: string) {
 		.join(' || ');
 }
 
+function getCollectionFieldNames(collection: CollectionName): string[] {
+	const fieldNames: string[] = getCollectionModel(collection).schema.map((field) => field.name);
+	if (collection == 'users') fieldNames.push('email');
+	return fieldNames;
+}
+
 //
 
 export function mergeFilters(...filters: Array<string | undefined>): string | undefined {
-	const validFilters: Array<string> = filters.filter(isNonEmptyString);
+	const validFilters = filters.filter(String.isString).filter(String.isNonEmpty);
 	if (validFilters.length == 1) return validFilters[0];
 	else if (validFilters.length > 1) return validFilters.map((f) => `(${f})`).join(' && ');
 	else return undefined;
 }
 
-function isNonEmptyString(s: string | undefined): s is string {
-	return typeof s == 'string' && Boolean(s);
-}
-
 //
-
-function getCollectionFieldNames(collection: CollectionName): string[] {
-	const fieldNames: string[] = [];
-
-	if (collection == 'users') {
-		fieldNames.push('email');
-	}
-
-	const collectionSchema = getCollectionModel(collection);
-	if (collectionSchema) {
-		collectionSchema.schema.forEach((field) => {
-			fieldNames.push(field.name);
-		});
-	}
-
-	return fieldNames;
-}
 
 //
 
@@ -68,4 +55,21 @@ export function createRecordLabel<R extends PBResponse>(
 		.map((f) => record[f])
 		.filter((f) => Boolean(f))
 		.join(' | ');
+}
+
+//
+
+export type RecordPresenter<R> = (record: R) => { label: string; description?: string };
+
+export function defaultRecordPresenter<C extends CollectionName, R = CollectionRecords[C]>(
+	collection: C
+): RecordPresenter<R> {
+	const fields = getCollectionModel(collection)
+		.schema.filter((field) => field.type == 'text')
+		.map((field) => field.name) as (keyof R)[];
+
+	return (record) => {
+		const label = fields.map((f) => record[f]).join(' - ');
+		return { label };
+	};
 }

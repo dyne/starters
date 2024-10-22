@@ -2,4 +2,13 @@
 	import RecordSearch from '@/components/records/recordSearch.svelte';
 </script>
 
-<RecordSearch collection="features" options={{}}></RecordSearch>
+<RecordSearch
+	collection="features"
+	options={{
+		recordPresenter: (record) => {
+			return {
+				label: JSON.stringify(record.envVariables)
+			};
+		}
+	}}
+/>

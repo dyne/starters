@@ -2,6 +2,8 @@
 
 export type GenericRecord = Record<string, unknown>;
 
+export type MaybePromise<T> = T | Promise<T>;
+
 // Logic operations
 
 export type If<Condition extends boolean, IfTrue, IfFalse> = Condition extends true

@@ -50,9 +50,6 @@ importers:
       pocketbase:
         specifier: ^0.21.3
         version: 0.21.5
-      svelecte:
-        specifier: ^4.3.1
-        version: 4.3.1(svelte@4.2.19)
       svelte-boring-avatars:
         specifier: ^1.2.6
         version: 1.2.6
@@ -75,6 +72,12 @@ importers:
       '@internationalized/date':
         specifier: ^3.5.6
         version: 3.5.6
+      '@melt-ui/pp':
+        specifier: ^0.3.2
+        version: 0.3.2(@melt-ui/svelte@0.83.0(svelte@4.2.19))(svelte@4.2.19)
+      '@melt-ui/svelte':
+        specifier: ^0.83.0
+        version: 0.83.0(svelte@4.2.19)
       '@playwright/test':
         specifier: ^1.45.2
         version: 1.48.1
@@ -666,10 +669,21 @@ packages:
   '@lix-js/fs@1.0.0':
     resolution: {integrity: sha512-B3gnR0B7mOiYePnxh+XNU1OpVvvRYcLJ3MrdqkFVKiXz1fbKKCEMA53Vwhu3ehAMFFDB1Mo9+GVjiY2ssbA/ZQ==}
 
+  '@melt-ui/pp@0.3.2':
+    resolution: {integrity: sha512-xKkPvaIAFinklLXcQOpwZ8YSpqAFxykjWf8Y/fSJQwsixV/0rcFs07hJ49hJjPy5vItvw5Qa0uOjzFUbXzBypQ==}
+    peerDependencies:
+      '@melt-ui/svelte': '>= 0.29.0'
+      svelte: ^3.55.0 || ^4.0.0 || ^5.0.0-next.1
+
   '@melt-ui/svelte@0.76.2':
     resolution: {integrity: sha512-7SbOa11tXUS95T3fReL+dwDs5FyJtCEqrqG3inRziDws346SYLsxOQ6HmX+4BkIsQh1R8U3XNa+EMmdMt38lMA==}
     peerDependencies:
       svelte: '>=3 <5'
+
+  '@melt-ui/svelte@0.83.0':
+    resolution: {integrity: sha512-E7QT+8YSftz+Hdk1W0hNR3f+cnaF2COMWkStn+2u4vk0RO1I9mXRJl+bJD6uhYaH146oxEB+5elu/ABbv6rpsA==}
+    peerDependencies:
+      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0-next.118
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2502,11 +2516,6 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  svelecte@4.3.1:
-    resolution: {integrity: sha512-0wyPDel4J16ecwaDHvgdXsI5QvuC1pU8n2FY3tO4X39e6gcrnoQkgV3zVWYdm7xAQaqawAgZNBDgNZlonPLOmw==}
-    peerDependencies:
-      svelte: ^3.43.0 || ^4.0.0
-
   svelte-boring-avatars@1.2.6:
     resolution: {integrity: sha512-8+Z1DhsMUVI/V/5ik00Arw0PgbJcMdhTXq3YGqccBc5bYFeceCtMEMB0aWGhi8xFV+0aqZbWvS89Hcj16LlfHA==}
 
@@ -2575,9 +2584,6 @@ packages:
         optional: true
       typescript:
         optional: true
-
-  svelte-tiny-virtual-list@2.1.2:
-    resolution: {integrity: sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA==}
 
   svelte@4.2.19:
     resolution: {integrity: sha512-IY1rnGr6izd10B0A8LqsBfmlT5OILVuZ7XsI0vdGPEvuonFV7NYEUK4dAkm9Zg2q0Um92kYjTpS1CAP3Nh/KWw==}
@@ -3314,7 +3320,24 @@ snapshots:
 
   '@lix-js/fs@1.0.0': {}
 
+  '@melt-ui/pp@0.3.2(@melt-ui/svelte@0.83.0(svelte@4.2.19))(svelte@4.2.19)':
+    dependencies:
+      '@melt-ui/svelte': 0.83.0(svelte@4.2.19)
+      estree-walker: 3.0.3
+      magic-string: 0.30.10
+      svelte: 4.2.19
+
   '@melt-ui/svelte@0.76.2(svelte@4.2.19)':
+    dependencies:
+      '@floating-ui/core': 1.6.0
+      '@floating-ui/dom': 1.6.3
+      '@internationalized/date': 3.5.6
+      dequal: 2.0.3
+      focus-trap: 7.6.0
+      nanoid: 5.0.7
+      svelte: 4.2.19
+
+  '@melt-ui/svelte@0.83.0(svelte@4.2.19)':
     dependencies:
       '@floating-ui/core': 1.6.0
       '@floating-ui/dom': 1.6.3
@@ -5173,11 +5196,6 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelecte@4.3.1(svelte@4.2.19):
-    dependencies:
-      svelte: 4.2.19
-      svelte-tiny-virtual-list: 2.1.2
-
   svelte-boring-avatars@1.2.6: {}
 
   svelte-check@3.8.6(postcss-load-config@4.0.2(postcss@8.4.47))(postcss@8.4.47)(svelte@4.2.19):
@@ -5232,8 +5250,6 @@ snapshots:
       postcss: 8.4.47
       postcss-load-config: 4.0.2(postcss@8.4.47)
       typescript: 5.6.3
-
-  svelte-tiny-virtual-list@2.1.2: {}
 
   svelte@4.2.19:
     dependencies:
