@@ -107,7 +107,7 @@ function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionT
 			return `${field.name}${optionalQuestionMark} : ${COLLECTION_RESPONSES}["${modelName}"]`;
 		});
 
-	const expandType = expands.length == 0 ? 'never' : `{ ${expands.join('\n')} }`;
+	const expandType = expands.length == 0 ? 'Record<string,never>' : `{ ${expands.join('\n')} }`;
 
 	return {
 		type: `${EXPORT_TYPE} ${typeName} = ${expandType}`,

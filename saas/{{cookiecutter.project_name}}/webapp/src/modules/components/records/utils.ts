@@ -6,7 +6,7 @@ import { getCollectionModel } from '@/pocketbase/collections-models';
 import type { CollectionName } from '@/pocketbase/collections-models/types';
 import type { PBResponse } from '$lib/utils/types';
 import { String } from 'effect';
-import type { CollectionRecords } from '@/pocketbase/types';
+import type { CollectionResponses } from '@/pocketbase/types';
 
 //
 
@@ -59,9 +59,9 @@ export function createRecordLabel<R extends PBResponse>(
 
 //
 
-export type RecordPresenter<R> = (record: R) => { label: string; description?: string };
+export type RecordPresenter<R> = (record: R) => { label: string; description?: string } | string;
 
-export function defaultRecordPresenter<C extends CollectionName, R = CollectionRecords[C]>(
+export function defaultRecordPresenter<C extends CollectionName, R = CollectionResponses[C]>(
 	collection: C
 ): RecordPresenter<R> {
 	const fields = getCollectionModel(collection)

@@ -3,12 +3,14 @@
 </script>
 
 <RecordSearch
-	collection="features"
-	options={{
-		recordPresenter: (record) => {
-			return {
-				label: JSON.stringify(record.envVariables)
-			};
-		}
+	collection="z_test_collection"
+	expand
+	onSelect={(record) => {
+		record.expand.relation_multi_field;
+		console.log('ok');
+	}}
+	presenter={(record) => {
+		record.expand.relation_field;
+		return '';
 	}}
 />
