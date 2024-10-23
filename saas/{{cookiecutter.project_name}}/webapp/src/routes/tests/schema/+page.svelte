@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { pb } from '@/pocketbase';
-	import type { ZTestCollectionRecord } from '@/pocketbase/types';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
-	import type { CollectionFormData } from '@/pocketbase/types';
+	import type { CollectionFormDatas } from '@/pocketbase/types';
 	import { z } from 'zod';
 	import { createDummyFile } from '@/utils/other';
 
@@ -17,12 +16,10 @@
 			})
 		});
 
-	const u = x.parse({});
-
 	const res = pb.collection('z_test_collection').getFullList();
 
 	async function routine() {
-		const data: CollectionFormData<'z_test_collection'> = {
+		const data: CollectionFormDatas['z_test_collection'] = {
 			file_field: createDummyFile(),
 			richtext_field: 'AO',
 			text_field: 'Miao',

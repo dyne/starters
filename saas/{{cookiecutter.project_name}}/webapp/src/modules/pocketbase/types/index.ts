@@ -1,5 +1,5 @@
 export * from './index.generated';
-export type { CollectionFormData } from './collectionFormData';
+export * from './extra.generated';
 
 //
 
