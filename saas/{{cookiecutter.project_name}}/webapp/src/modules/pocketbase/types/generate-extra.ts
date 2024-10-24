@@ -104,10 +104,11 @@ function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionT
 			assert(model, 'missing model');
 			const modelName = model.name;
 			const optionalQuestionMark = field.required ? '' : '?';
-			return `${field.name}${optionalQuestionMark} : ${COLLECTION_RESPONSES}["${modelName}"]`;
+			const optionalArray = field.options.maxSelect == 1 ? '' : '[]';
+			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${modelName}"])${optionalArray}`;
 		});
 
-	const expandType = expands.length == 0 ? 'Record<string,never>' : `{ ${expands.join('\n')} }`;
+	const expandType = expands.length == 0 ? 'never' : `{ ${expands.join('\n')} }`;
 
 	return {
 		type: `${EXPORT_TYPE} ${typeName} = ${expandType}`,

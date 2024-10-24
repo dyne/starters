@@ -5,12 +5,7 @@
 <RecordSearch
 	collection="z_test_collection"
 	expand
-	onSelect={(record) => {
-		record.expand.relation_multi_field;
-		console.log('ok');
-	}}
 	presenter={(record) => {
-		record.expand.relation_field;
-		return '';
+		return [record.text_field, record.expand?.relation_multi_field?.map((u) => u.name)].join(' | ');
 	}}
 />

@@ -7,10 +7,12 @@
 		C extends CollectionName,
 		Expand extends boolean,
 		Response = CollectionResponses[C]
-	> = If<Expand, Response & { expand: CollectionExpands[C] }, Response>;
+	> = If<Expand, Response & { expand?: Partial<CollectionExpands[C]> }, Response>;
 </script>
 
 <script lang="ts" generics="C extends CollectionName, Expand extends boolean">
+	import { getRelationFields } from '@/pocketbase/collections-models/utils';
+
 	import type { If } from '@/utils/types';
 
 	import type { RecordFullListOptions } from 'pocketbase';
@@ -29,14 +31,13 @@
 
 	export let collection: C;
 	export let expand: Expand = false as Expand;
-	expand;
 
 	export let exclude: RecordIdString[] = [];
 	export let disabled = false;
 	export let label: string | undefined = undefined;
 	export let placeholder: string | undefined = undefined;
 
-	export let onSelect: (record: ExpandableResponse<C, Expand>) => void;
+	export let onSelect: (record: ExpandableResponse<C, Expand>) => void = () => {};
 	export let presenter: RecordPresenter<ExpandableResponse<C, Expand>> =
 		defaultRecordPresenter(collection);
 
@@ -49,10 +50,16 @@
 			};
 			if (exclude.length > 0) options.filter = excludeIdsFilter(exclude);
 			if (text) options.filter = mergeFilters(options.filter, searchTextFilter(collection, text));
+			if (expand) {
+				const relationFields = getRelationFields(collection);
+				if (relationFields.length > 0) options.expand = relationFields.join(',');
+			}
 
 			const records = await pb
 				.collection(collection)
 				.getFullList<ExpandableResponse<C, Expand>>(options);
+
+			console.log(records);
 
 			return records.map((item) => {
 				const presentation = presenter(item);
@@ -73,8 +80,8 @@
 	// }
 </script>
 
-<Search searchFn={createSearchFunction()} {onSelect} {label} {placeholder} {disabled}>
-	<!-- <svelte:fragment slot="item" let:item>
-			<slot name="item" item={typeCaster(item)}></slot>
-	</svelte:fragment> -->
-</Search>
+<Search searchFn={createSearchFunction()} {onSelect} {label} {placeholder} {disabled} />
+
+<!-- <svelte:fragment slot="item" let:item>
+		<slot name="item" item={typeCaster(item)}></slot>
+</svelte:fragment> -->

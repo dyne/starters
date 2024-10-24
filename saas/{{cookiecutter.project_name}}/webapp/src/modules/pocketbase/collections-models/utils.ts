@@ -1,4 +1,5 @@
-import type { AnyFieldConfig, FieldConfig } from './types';
+import { getCollectionModel } from '.';
+import type { AnyFieldConfig, CollectionName, FieldConfig } from './types';
 
 //
 
@@ -13,4 +14,10 @@ export function isArrayField(
 
 export function isRequiredField(fieldConfig: AnyFieldConfig): boolean {
 	return fieldConfig.required;
+}
+
+export function getRelationFields<C extends CollectionName>(collection: C): string[] {
+	return getCollectionModel(collection)
+		.schema.filter((field) => field.type == 'relation')
+		.map((field) => field.name);
 }
