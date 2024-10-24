@@ -1,10 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-<script lang="ts">
+<!-- <script lang="ts">
 	import type { RecordFullListOptions } from 'pocketbase';
 
 	import type { RecordInputOptions } from './types';
@@ -78,9 +72,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		// @ts-ignore
 		recordId = e.target.value;
 	}
-</script>
+</script> -->
 
-<SelectInput
+<!-- <SelectInput
 	{required}
 	{placeholder}
 	{disabled}
@@ -89,4 +83,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	selected={recordId}
 	value={recordId}
 	on:input={handleInput}
-/>
+/> -->

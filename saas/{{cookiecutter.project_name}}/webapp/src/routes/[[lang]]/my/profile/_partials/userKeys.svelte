@@ -30,7 +30,7 @@
 	</div>
 {:else}
 	<div class="flex justify-between">
-		<T tag="p">{m.You_have_no_keys_yet_()}</T>
+		<T tag="p">{m.You_have_no_keys_yet()}</T>
 		<Button color="primary" size="sm" href="/keypairoom">{m.Generate_keyring()}</Button>
 	</div>
 {/if}

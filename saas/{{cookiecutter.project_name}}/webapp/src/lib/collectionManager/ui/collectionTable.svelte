@@ -1,9 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
+<!-- 
 <script lang="ts">
 	import type { FieldsComponents, ViewAction } from './types';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
@@ -45,7 +40,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		{/if}
 	</slot>
 {:else}
-	<!-- <Table>
+	<Table>
 		<TableHead>
 			{#if !hideActions.includes('select')}
 				<TableHeadCell>
@@ -111,8 +106,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				</TableBodyRow>
 			{/each}
 		</TableBody>
-	</Table> -->
+	</Table>
 	<div class="pt-6">
 		<Pagination />
 	</div>
-{/if}
+{/if} -->

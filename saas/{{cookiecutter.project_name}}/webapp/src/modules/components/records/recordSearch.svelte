@@ -29,6 +29,7 @@
 
 	export let collection: C;
 	export let expand: Expand = false as Expand;
+	expand;
 
 	export let exclude: RecordIdString[] = [];
 	export let disabled = false;

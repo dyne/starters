@@ -1,9 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
+<!-- 
 <script lang="ts">
 	import RecordSelect from '@/components/records/recordSelect.svelte';
 	// import RelationsManager from '$lib/components/relationsManager.svelte';
@@ -67,4 +62,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			}
 		}}
 	/>
-</div>
+</div> -->

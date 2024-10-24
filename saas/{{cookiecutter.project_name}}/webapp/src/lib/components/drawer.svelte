@@ -1,10 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
-<script lang="ts">
+<!-- <script lang="ts">
 	import { sineIn } from 'svelte/easing';
 	import PortalWrapper from './portalWrapper.svelte';
 	import IconButton from './iconButton.svelte';
@@ -27,7 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <PortalWrapper>
-	<!-- <Drawer
+	<Drawer
 		bind:hidden
 		transitionType="fly"
 		{backdrop}
@@ -52,5 +46,5 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			</div>
 		{/if}
 		<slot />
-	</Drawer> -->
-</PortalWrapper>
+	</Drawer>
+</PortalWrapper> -->

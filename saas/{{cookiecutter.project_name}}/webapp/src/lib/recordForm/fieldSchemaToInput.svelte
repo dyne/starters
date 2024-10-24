@@ -60,6 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let component: FieldComponentProp = undefined;
 	export let hidden = false;
 	export let relationInputOptions: Partial<RecordsManagerOptions<R>> = {};
+	relationInputOptions;
 	export let label = fieldSchema.name as string;
 	export let description: string | undefined = undefined;
 	export let placeholder: string | undefined = undefined;

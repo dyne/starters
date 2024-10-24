@@ -1,12 +1,7 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts" context="module">
 	import type { RecordInputOptions } from './types';
 	import type { PBResponse } from '$lib/utils/types';
+	import type { FieldsSettings } from '$lib/recordForm';
 
 	export type InputMode = 'search' | 'select';
 
@@ -21,6 +16,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}> &
 		Partial<RecordInputOptions<R>>;
 </script>
+
+<!-- 
 
 <script lang="ts">
 	import { Button } from '@/components/ui/button';
@@ -177,4 +174,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			}}
 		/>
 	</div>
-</Drawer>
+</Drawer> -->
