@@ -8,6 +8,7 @@ import type {
 	AnyCollectionModel,
 	FieldConfig
 } from '@/pocketbase/collections-models/types';
+import { Record } from 'effect';
 
 //
 

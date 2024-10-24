@@ -1,6 +1,20 @@
 <script context="module" lang="ts">
 	import type { GenericRecord } from '@/utils/types';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
+
+	export type CollectionFieldOptions<
+		C extends CollectionName,
+		Expand extends boolean = false,
+		Multiple extends boolean = false
+	> = {
+		collection: C;
+		expand?: Expand;
+		filter?: string;
+		exclude?: RecordIdString[];
+		presenter?: RecordPresenter<ExpandableResponse<C, Expand>>;
+		mode?: 'search' | 'select';
+		multiple?: Multiple;
+	};
 </script>
 
 <script
@@ -31,15 +45,7 @@
 
 	export let form: SuperForm<Data>;
 	export let name: FormPath<Data>;
-	export let options: Partial<FieldOptions> & {
-		collection: C;
-		expand?: Expand;
-		filter?: string;
-		exclude?: RecordIdString[];
-		presenter?: RecordPresenter<ExpandableResponse<C, Expand>>;
-		mode?: 'search' | 'select';
-		multiple?: Multiple;
-	};
+	export let options: Partial<FieldOptions> & CollectionFieldOptions<C, Expand, Multiple>;
 
 	let {
 		collection,

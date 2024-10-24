@@ -14,6 +14,7 @@
 	import type { Writable } from 'svelte/store';
 
 	import { capitalize } from 'effect/String';
+	import RequiredIndicator from '../components/requiredIndicator.svelte';
 
 	//
 
@@ -30,7 +31,11 @@
 	<Form.Control let:attrs>
 		<div class="flex items-center gap-2">
 			<Checkbox {...attrs} bind:checked={$value} />
-			<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
+
+			<Form.Label>
+				{options.label ?? capitalize(name)}
+				<RequiredIndicator field={name} />
+			</Form.Label>
 		</div>
 	</Form.Control>
 

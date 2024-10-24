@@ -6,6 +6,7 @@ import { getJsonDataSize } from '@/utils/other';
 
 import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
 import type { SetFieldType } from 'type-fest';
+import { m } from '$lib/i18n';
 
 /* Field Config -> Zod Type */
 
@@ -113,16 +114,25 @@ export type FieldConfigToZodType<Config extends AnyFieldConfig = AnyFieldConfig>
 
 function validateDomains(
 	zodString: z.ZodString,
-	exceptDomains: readonly string[] | undefined,
-	onlyDomains: readonly string[] | undefined
+	exceptDomains: readonly string[] | undefined = undefined,
+	onlyDomains: readonly string[] | undefined = undefined
 ) {
-	return zodString
-		.refine((string) => {
-			if (exceptDomains) return exceptDomains.every((domain) => !string.includes(domain));
-			else return true;
-		})
-		.refine((email) => {
-			if (onlyDomains) return onlyDomains.some((domain) => email.includes(domain));
-			else return true;
-		});
+	let s: z.ZodString | z.ZodEffects<z.ZodString> | z.ZodEffects<z.ZodEffects<z.ZodString>> =
+		zodString;
+
+	if (onlyDomains?.length) {
+		s = s.refine(
+			(string) => onlyDomains.some((domain) => string.includes(domain)),
+			m.URL_is_not_in_allowed_domains_list() + ': ' + (onlyDomains ?? []).join(', ')
+		);
+	}
+
+	if (exceptDomains?.length) {
+		s = s.refine(
+			(string) => exceptDomains.every((domain) => !string.includes(domain)),
+			m.URL_is_in_forbidden_domains_list() + ': ' + (exceptDomains ?? []).join(', ')
+		);
+	}
+
+	return s;
 }

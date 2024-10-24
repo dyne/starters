@@ -9,7 +9,7 @@
 
 	export type FormContext<Data extends GenericRecord> = {
 		form: SuperForm<Data>;
-		showRequiredIndicator: boolean;
+		hideRequiredIndicator: boolean;
 	};
 
 	export function getFormContext<Data extends GenericRecord>(): FormContext<Data> {
@@ -28,7 +28,7 @@
 	//
 
 	export let form: SuperForm<T, any>;
-	export let showRequiredIndicator = false;
+	export let hideRequiredIndicator = false;
 	export let loadingText: string | undefined = m.Please_wait();
 	export let submitButtonText: string | undefined = m.Submit();
 	export let hide: ('error' | 'submitButton' | 'loading')[] = [];
@@ -41,7 +41,7 @@
 	$: enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
 
 	const { enhance, delayed } = form;
-	setContext<FormContext<T>>(FORM_KEY, { form, showRequiredIndicator });
+	setContext<FormContext<T>>(FORM_KEY, { form, hideRequiredIndicator });
 </script>
 
 <form class={className} method="post" use:enhance {enctype}>

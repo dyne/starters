@@ -1,22 +1,19 @@
 <script lang="ts" context="module">
-	import type { RecordsManagerOptions } from '@/collections-management/records/recordsManager.svelte';
-	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
-	import type {
-		PBResponse,
-		ExtractPBRecord,
-		ExtractPBExpand,
-		StringKeys,
-		ArrayExtract
-	} from '$lib/utils/types';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionFieldOptions } from '@/collections-management/collectionField.svelte';
+	import type { FieldComponentProp } from './fieldConfigToField.svelte';
 
 	import { Form, type FormOptions } from '@/forms';
-	import type { ComponentProps } from 'svelte';
-	import type { GenericRecord } from '@/utils/types';
+	import type { MaybePromise } from '@/utils/types';
 
-	type Keys<R extends PBResponse> = StringKeys<ExtractPBRecord<R>>;
+	//
 
-	export type FieldsSettings<R extends PBResponse = PBResponse> = {
+	type Keys<T> = Extract<keyof T, string>;
+
+	export type FieldsOptions<
+		C extends CollectionName,
+		Expand extends boolean,
+		R = CollectionRecords[C]
+	> = {
 		labels: { [K in Keys<R>]?: string };
 		descriptions: { [K in Keys<R>]?: string };
 		placeholders: { [K in Keys<R>]?: string };
@@ -25,47 +22,49 @@
 		hide: { [K in Keys<R>]?: R[K] };
 		defaults: { [K in Keys<R>]?: R[K] };
 		relations: {
-			[K in Keys<R>]?: K extends keyof ExtractPBExpand<R>
-				? RecordsManagerOptions<ArrayExtract<ExtractPBExpand<R>[K]>>
-				: RecordsManagerOptions;
+			[K in Keys<R>]?: CollectionFieldOptions<C, Expand>;
 		};
 		components: { [K in Keys<R>]?: FieldComponentProp };
 	};
-
-	type FormSettings<Data extends GenericRecord> = FormOptions<Data> & ComponentProps<Form<Data>>;
 </script>
 
-<script lang="ts" generics="C extends CollectionName">
-	import type { CollectionRecords } from '@/pocketbase/types';
+<script lang="ts" generics="C extends CollectionName, Expand extends boolean">
+	import { pipe } from 'effect/Function';
+
+	import { ClientResponseError } from 'pocketbase';
+
+	import { normalizeError } from '@/utils/other';
+
+	import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
+
 	import { Button } from '@/components/ui/button';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { m } from '$lib/i18n';
 	import { c } from '$lib/utils/strings';
-	import { createEventDispatcher } from 'svelte';
 	import { pb } from '@/pocketbase';
-
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
+	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
-
 	import type { SuperForm } from 'sveltekit-superforms/client';
-
 	import { createForm, FormError, SubmitButton } from '@/forms';
-
 	import {
 		cleanFormDataFiles,
 		getFileFieldsInitialData,
 		mockFileFieldsInitialData
-	} from './recordFormSetup';
-	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
+	} from './collectionFormSetup';
+	import FieldSchemaToInput from './fieldConfigToField.svelte';
+	import { setError, type FormPathLeaves } from 'sveltekit-superforms';
+	import { Record } from 'effect';
 
 	//
 
 	export let collection: C;
 	export let initialData: Partial<CollectionRecords[C]> = {};
-	export let recordId: string | undefined = undefined;
+	export let recordId: RecordIdString | undefined = undefined;
 
-	export let fieldsSettings: Partial<FieldsSettings<CollectionRecords[C]>> = {};
+	export let expand: Expand = false as Expand;
+
+	export let fieldsOptions: Partial<FieldsOptions<C, Expand>> = {};
 	let {
 		order = [],
 		exclude = [],
@@ -76,32 +75,23 @@
 		placeholders,
 		descriptions,
 		defaults = {}
-	} = fieldsSettings;
+	} = fieldsOptions;
 
-	export let formSettings: Partial<FormSettings<CollectionRecords[C]>> = {};
+	export let formOptions: Partial<FormOptions<CollectionRecords[C]>> = {};
 
 	export let submitButtonText = '';
 	export let showCancelButton = false;
+	export let hideRequiredIndicator = false;
 
-	//
-
-	const dispatch = createEventDispatcher<{
-		success: {
-			record: CollectionRecords[C];
-		};
-		edit: {
-			record: CollectionRecords[C];
-		};
-		create: {
-			record: CollectionRecords[C];
-		};
-		cancel: {};
-	}>();
+	export let onSuccess: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
+	export let onCreate: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
+	export let onEdit: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
+	export let onCancel: () => MaybePromise<void> = () => {};
 
 	/* Schema generation */
 
 	const collectionModel = getCollectionModel(collection);
-	const fieldsSchema = collectionModel.schema.sort(sortFieldsSchema).filter(filterFieldsSchema);
+	const fieldsConfigs = collectionModel.schema.sort(sortFieldsConfigs).filter(filterFieldsConfigs);
 	const zodSchema = createCollectionZodSchema(collection).omit(
 		// @ts-ignore
 		// TODO - Improve type handling here
@@ -110,7 +100,7 @@
 
 	/* Superform creation */
 
-	let form: SuperForm<GenericRecord>;
+	let form: SuperForm<CollectionResponses[C]>;
 
 	$: {
 		let seededData = { ...defaults, ...initialData }; // "defaults" must be overwritten by "initialData"
@@ -125,31 +115,48 @@
 			adapter: zod(zodSchema),
 
 			onSubmit: async ({ form }) => {
-				const data = cleanFormDataFiles(form.data, fileFieldsInitialData);
-				// @ts-ignore
-				// const formData = createFormData(data);
-				let record: RecordGeneric;
-				if (Boolean(recordId)) {
-					record = await pb.collection(collection).update(recordId, form.data);
-					dispatch('edit', { record });
-				} else {
-					record = await pb.collection(collection).create(form.data);
-					dispatch('create', { record });
+				try {
+					const data = pipe(
+						cleanFormDataFiles(form.data, fileFieldsInitialData),
+						Record.map((v) => (v === undefined ? null : v))
+					);
+					let record: CollectionResponses[C];
+					if (recordId) {
+						record = await pb.collection(collection).update(recordId, data);
+						onEdit(record);
+					} else {
+						record = await pb.collection(collection).create(data);
+						onCreate(record);
+					}
+					onSuccess(record);
+				} catch (e) {
+					if (e instanceof ClientResponseError) {
+						const details = e.data.data as Record<
+							FormPathLeaves<CollectionRecords[C]>,
+							{ message: string; code: string }
+						>;
+						Record.toEntries(details).forEach(([path, data]) => {
+							if (path in form.data) setError(form, path, data.message);
+							else setError(form, `${path} - ${data.message}`);
+						});
+						setError(form, e.message);
+					} else {
+						setError(form, normalizeError(e));
+					}
 				}
-				dispatch('success', { record });
 			},
 			// @ts-ignore
 			initialData: mockedData, // TODO : improve typings
 			options: {
 				dataType: 'form',
-				...formSettings
+				...formOptions
 			}
 		});
 	}
 
 	/* Schema filters */
 
-	function sortFieldsSchema(a: any, b: any) {
+	function sortFieldsConfigs(a: any, b: any) {
 		const aIndex = order.indexOf(a.name);
 		const bIndex = order.indexOf(b.name);
 		if (aIndex === -1 && bIndex === -1) {
@@ -164,44 +171,55 @@
 		return aIndex - bIndex;
 	}
 
-	function filterFieldsSchema(schema: AnyFieldConfig) {
-		return !exclude.includes(schema.name as Keys<RecordGeneric>);
+	function filterFieldsConfigs(config: AnyFieldConfig) {
+		return !exclude.includes(config.name as Keys<CollectionRecords[C]>);
 	}
 
 	/* */
 
-	submitButtonText = Boolean(submitButtonText)
+	$: submitButtonText = Boolean(submitButtonText)
 		? submitButtonText
 		: Boolean(recordId)
-			? 'Edit record'
-			: 'Create record';
+			? m.Edit_record()
+			: m.Create_record();
+
+	// Ts helper
+
+	function getFieldConfigName(fieldConfig: AnyFieldConfig) {
+		return fieldConfig.name as Keys<CollectionRecords[C]>;
+	}
 </script>
 
-<Form {form} showRequiredIndicator hide={['submitButton']}>
-	{#each fieldsSchema as fieldSchema}
-		{@const name = fieldSchema.name}
+<Form {form} {hideRequiredIndicator} hide={['submitButton', 'error']}>
+	{#each fieldsConfigs as fieldSchema}
+		{@const name = getFieldConfigName(fieldSchema)}
 		{@const hidden = hide ? Object.keys(hide).includes(name) : false}
 		{@const label = c(labels?.[name] ?? name)}
 		{@const component = components?.[name]}
-		{@const relationInputOptions = relations?.[name] ?? {}}
+		{@const collectionFieldOptions = relations?.[name] ?? {}}
 		{@const description = descriptions?.[name]}
 		{@const placeholder = placeholders?.[name]}
 		<FieldSchemaToInput
 			{description}
 			{label}
-			{fieldSchema}
+			fieldConfig={fieldSchema}
 			{hidden}
 			{component}
-			{relationInputOptions}
+			collectionFieldOptions={{
+				...collectionFieldOptions,
+				expand
+			}}
 			{placeholder}
 		/>
 	{/each}
+
+	<slot {form} />
 
 	<FormError />
 
 	<div class="flex justify-end gap-2">
 		{#if showCancelButton}
-			<Button variant="outline" on:click={() => dispatch('cancel', {})}>{m.Cancel()}</Button>
+			<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
 		{/if}
 		<SubmitButton>{submitButtonText}</SubmitButton>
 	</div>
