@@ -131,7 +131,7 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper {form} field={name} {options} let:attrs>
+	<FieldWrapper field={name} {options} let:attrs>
 		<FileManager bind:data={$valueProxy} {validator} {multiple} let:addFiles>
 			<Input
 				{...attrs}

@@ -118,7 +118,7 @@
 				try {
 					const data = pipe(
 						cleanFormDataFiles(form.data, fileFieldsInitialData),
-						Record.map((v) => (v === undefined ? null : v))
+						Record.map((v) => (v === undefined ? null : v)) // IMPORTANT!
 					);
 					let record: CollectionResponses[C];
 					if (recordId) {
