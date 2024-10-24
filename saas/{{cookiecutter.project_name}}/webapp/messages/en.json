@@ -408,5 +408,8 @@
 	"Edit_record": "Edit record",
 	"Create_record": "Create record",
 	"URL_is_in_forbidden_domains_list": "URL is in forbidden domains list",
-	"URL_is_not_in_allowed_domains_list": "URL is not in allowed domains list"
+	"URL_is_not_in_allowed_domains_list": "URL is not in allowed domains list",
+	"Some_error_occurred_while_loading_records_": "Some error occurred while loading records.",
+	"No_items_here": "No items here!",
+	"Start_by_adding_a_record_to_this_collection_": "Start by adding a record to this collection."
 }

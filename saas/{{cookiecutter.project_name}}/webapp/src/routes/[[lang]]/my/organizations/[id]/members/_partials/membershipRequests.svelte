@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
+	import { CollectionManager } from '@/collections-management';
 	import { pb } from '@/pocketbase/index.js';
 	import {
 		Collections,
@@ -48,14 +48,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </script>
 
 <CollectionManager
-	collection={Collections.OrgJoinRequests}
-	initialQueryParams={{
-		filter: `organization.id = "${organization.id}" && status = "${pending}"`,
-		expand: 'user'
-	}}
-	{recordType}
+	collection="orgJoinRequests"
+	filter={`organization.id = "${organization.id}" && status = "${pending}"`}
+	expand
 	let:records
-	hideEmptyState
+	hide={['emptyState']}
 >
 	{#if records.length}
 		<PageCard>

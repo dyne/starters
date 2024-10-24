@@ -7,7 +7,7 @@
 	import { currentUser } from '@/pocketbase';
 
 	import { Collections, type WebauthnCredentialsResponse } from '@/pocketbase/types';
-	import { CollectionManager, DeleteRecord, EditRecord } from '$lib/collectionManager';
+	import { CollectionManager, DeleteRecord, EditRecord } from '@/collections-management/manager';
 
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import T from '@/components/custom/t.svelte';
@@ -39,7 +39,7 @@
 		{recordType}
 		collection={Collections.WebauthnCredentials}
 		let:records
-		editFormSettings={{ exclude: ['user', 'credential'] }}
+		editFormOptions={{ exclude: ['user', 'credential'] }}
 	>
 		<div class="space-y-2 py-4">
 			{#each records as record}

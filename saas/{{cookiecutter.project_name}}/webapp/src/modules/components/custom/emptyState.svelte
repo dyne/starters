@@ -1,13 +1,8 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
 	import { FolderOpen } from 'lucide-svelte';
 	import type { IconComponent } from '@/components/types';
 	import Icon from '@/components/custom/icon.svelte';
+	import T from './t.svelte';
 
 	export let title: string;
 	export let description: string | undefined = undefined;
@@ -19,17 +14,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<Icon src={icon} size={40} />
 	</div>
 
-	<slot name="title">
-		<p class="font-semibold text-gray-400">
+	{#if title}
+		<T tag="h4">
 			{title}
-		</p>
-	</slot>
+		</T>
+	{/if}
 
-	<slot name="description">
-		{#if description}
-			<p class=" w-fit text-sm font-medium text-gray-400">{description}</p>
-		{/if}
-	</slot>
+	{#if description}
+		<T>{description}</T>
+	{/if}
 
 	<slot name="bottom" />
 </div>

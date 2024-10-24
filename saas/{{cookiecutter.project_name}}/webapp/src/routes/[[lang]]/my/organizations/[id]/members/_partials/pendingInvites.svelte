@@ -5,40 +5,26 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
-	import { pb } from '@/pocketbase';
-	import {
-		OrgJoinRequestsStatusOptions,
-		type OrgJoinRequestsRecord,
-		type UsersResponse,
-		type OrgJoinRequestsResponse,
-		type OrganizationsResponse,
-		type OrgInvitesResponse
-	} from '@/pocketbase/types';
-	import { createTypeProp } from '$lib/utils/typeProp.js';
+	import CollectionManager from '@/collections-management/manager/collectionManager.svelte';
+	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import { m } from '$lib/i18n';
 	import { Trash } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import { DeleteRecord } from '$lib/collectionManager';
+	import { DeleteRecord } from '@/collections-management/manager';
 	import IconButton from '$lib/components/iconButton.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 
 	export let organization: OrganizationsResponse;
-
-	const recordType = createTypeProp<OrgInvitesResponse>();
 </script>
 
 <CollectionManager
 	collection="org_invites"
-	initialQueryParams={{
-		filter: `organization.id = "${organization.id}"`
-	}}
-	{recordType}
+	filter={`organization.id = "${organization.id}"`}
 	let:records
-	hideEmptyState
+	hide={['emptyState']}
 >
 	{#if records.length}
 		<PageCard class="!space-y-6">

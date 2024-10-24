@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
 	import { OrgRoles } from '$lib/organizations';
 	import { c } from '$lib/utils/strings.js';
@@ -11,17 +5,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '$lib/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
-	import EmptyState from '$lib/components/emptyState.svelte';
+	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
-	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
-	import { createTypeProp } from '$lib/utils/typeProp';
-	import type {
-		OrganizationsResponse,
-		OrgAuthorizationsResponse,
-		OrgInvitesResponse,
-		OrgJoinRequestsResponse,
-		OrgRolesResponse
-	} from '@/pocketbase/types';
+	import CollectionManager from '@/collections-management/manager/collectionManager.svelte';
 
 	import { Button } from '@/components/ui/button';
 	import { Badge } from '@/components/ui/badge';
@@ -50,24 +36,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		});
 	}
 
-	const invitesType = createTypeProp<OrgInvitesResponse<{ organization: OrganizationsResponse }>>();
-
 	/* Org membership requests */
 
 	async function deleteJoinRequest(requestId: string) {
 		await pb.collection('orgJoinRequests').delete(requestId);
 		invalidateAll();
 	}
-
-	const joinRequestsType =
-		createTypeProp<OrgJoinRequestsResponse<{ organization: OrganizationsResponse }>>();
-
-	/* Org list */
-
-	const authorizationsType =
-		createTypeProp<
-			OrgAuthorizationsResponse<{ organization: OrganizationsResponse; role: OrgRolesResponse }>
-		>();
 </script>
 
 <PageTop>
@@ -81,12 +55,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <PageContent>
 	<CollectionManager
 		collection="org_invites"
-		recordType={invitesType}
-		initialQueryParams={{
-			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`,
-			expand: 'organization'
-		}}
-		hideEmptyState
+		expand={['organization']}
+		filter={`user.id = "${$currentUser?.id ?? ''}" && declined = false`}
+		hide={['emptyState']}
 		let:records
 	>
 		{#if records.length > 0}
@@ -95,7 +66,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 				{#each records as record}
 					<PlainCard>
-						{record.expand?.organization.name}
+						{record.expand?.organization?.name}
 						<svelte:fragment slot="right">
 							<Button variant="outline" on:click={() => updateInvite(record.id, 'accept')}>
 								{m.accept_invite()}<Icon src={Check} ml />
@@ -112,9 +83,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	<CollectionManager
 		collection="orgJoinRequests"
-		recordType={joinRequestsType}
-		initialQueryParams={{ expand: 'organization', filter: `user.id = "${$currentUser?.id}"` }}
-		hideEmptyState
+		expand={['organization']}
+		filter={`user.id = "${$currentUser?.id}"`}
+		hide={['emptyState']}
 		let:records
 	>
 		{#if records.length}
@@ -130,7 +101,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								<Avatar slot="left" src={avatarUrl}></Avatar>
 
 								<div class="flex items-center space-x-2">
-									<T>{request.expand?.organization.name}</T>
+									<T>{request.expand?.organization?.name}</T>
 									<Badge variant="default">{m.Pending()}</Badge>
 								</div>
 
@@ -168,11 +139,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 		<CollectionManager
 			collection="orgAuthorizations"
-			recordType={authorizationsType}
-			initialQueryParams={{
-				expand: 'organization,role',
-				filter: `user.id = "${$currentUser?.id}"`
-			}}
+			expand={['organization', 'role']}
+			filter={`user.id = "${$currentUser?.id}"`}
 			let:records
 		>
 			<svelte:fragment slot="emptyState">

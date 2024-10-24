@@ -20,10 +20,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
-	import EmptyState from '$lib/components/emptyState.svelte';
+	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
-	import CollectionManager from '$lib/collectionManager/collectionManager.svelte';
+	import { CollectionManager } from '@/collections-management';
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import { Button } from '@/components/ui/button';
@@ -63,12 +63,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <PageContent>
 	<PageCard>
-		<CollectionManager
-			{recordType}
+		<!-- <CollectionManager
 			collection="organizations"
 			initialQueryParams={{
 				expand,
 				filter: `(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`
+			}}
+			subscribe={['orgJoinRequests']}
+			let:records
+		> -->
+		<CollectionManager
+			collection="organizations"
+			indirectExpand={{
+				orgJoinRequests: "organization",
+				orgAuthorizations: "organization"
 			}}
 			subscribe={['orgJoinRequests']}
 			let:records
@@ -80,6 +88,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			{#if records.length > 0}
 				<div class="space-y-2">
 					{#each records as org}
+						{@const o = org.ciao.}
 						{@const avatarUrl = pb.files.getUrl(org, org.avatar)}
 						{@const hasDescription = Boolean(org.description)}
 						{@const sentMembershipRequest = org.expand?.[expandOrgJoinReq]?.at(0)}

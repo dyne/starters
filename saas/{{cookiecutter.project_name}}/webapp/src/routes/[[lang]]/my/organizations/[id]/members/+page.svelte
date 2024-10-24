@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { CollectionManager } from '$lib/collectionManager';
+	import { CollectionManager } from '@/collections-management/manager';
 	import {
 		Collections,
 		type OrgAuthorizationsResponse,
@@ -26,8 +26,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { c } from '$lib/utils/strings.js';
-	import EditRecord from '$lib/collectionManager/ui/recordActions/editRecord.svelte';
-	import DeleteRecord from '$lib/collectionManager/ui/recordActions/deleteRecord.svelte';
+	import EditRecord from '@/collections-management/manager/ui/recordActions/editRecord.svelte';
+	import DeleteRecord from '@/collections-management/manager/ui/recordActions/deleteRecord.svelte';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
@@ -65,18 +65,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<PageCard>
 		<CollectionManager
 			{recordType}
-			collection={Collections.OrgAuthorizations}
-			formSettings={{
-				hide: { organization: organization.id },
+			collection="orgAuthorizations"
+			expand={["user","role"]}
+			formOptions={{
+				fieldsOptions:{	hide: { organization: organization.id },
 				relations: {
-					role: { inputMode: 'select', displayFields: ['name'] },
-					user: { displayFields: ['name', 'email'] }
+					role: { mode: 'select', presenter: (record) => record. },
+					user: { presenter: (record) => record. }
+				}}
+			}}
+			editFormOptions={{
+				fieldsOptions: {
+					exclude: ['user']
 				}
 			}}
-			editFormSettings={{
-				exclude: ['user']
-			}}
-			initialQueryParams={{ expand: 'user,role', filter: `organization.id="${organization.id}"` }}
+			filter={`organization.id="${organization.id}"`}
 			let:records
 		>
 			<SectionTitle title={m.Members()} description={m.members_description()}>
