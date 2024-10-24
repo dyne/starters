@@ -402,5 +402,7 @@
 	"Submit": "Submit",
 	"Select_a_value": "Select a value",
 	"Search": "Search",
-	"No_results_found": "No_results_found"
+	"No_results_found": "No results found",
+	"No_items_selected": "No items selected",
+	"No_options_available": "No options available"
 }

@@ -1,31 +1,24 @@
 <script lang="ts" context="module">
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import type { CollectionExpands, CollectionResponses, RecordIdString } from '@/pocketbase/types';
-	import type { RecordPresenter } from './utils';
-
-	type ExpandableResponse<
-		C extends CollectionName,
-		Expand extends boolean,
-		Response = CollectionResponses[C]
-	> = If<Expand, Response & { expand?: Partial<CollectionExpands[C]> }, Response>;
 </script>
 
 <script lang="ts" generics="C extends CollectionName, Expand extends boolean">
-	import { getRelationFields } from '@/pocketbase/collections-models/utils';
-
-	import type { If } from '@/utils/types';
-
-	import type { RecordFullListOptions } from 'pocketbase';
-	import { pb } from '@/pocketbase';
 	import {
 		searchTextFilter,
 		excludeIdsFilter,
 		mergeFilters,
-		defaultRecordPresenter
+		createDefaultRecordPresenter
 	} from './utils';
 
 	import Search from '@/components/custom/search.svelte';
 	import type { SearchFunction } from '@/components/custom/search.svelte';
+	import { getRelationFields } from '@/pocketbase/collections-models/utils';
+
+	import type { ExpandableResponse } from './types';
+	import type { RecordIdString } from '@/pocketbase/types';
+	import type { RecordPresenter } from './utils';
+	import type { RecordFullListOptions } from 'pocketbase';
+	import { pb } from '@/pocketbase';
 
 	//
 
@@ -34,22 +27,27 @@
 
 	export let exclude: RecordIdString[] = [];
 	export let disabled = false;
+	export let filter: string | undefined = undefined;
 	export let label: string | undefined = undefined;
 	export let placeholder: string | undefined = undefined;
 
 	export let onSelect: (record: ExpandableResponse<C, Expand>) => void = () => {};
 	export let presenter: RecordPresenter<ExpandableResponse<C, Expand>> =
-		defaultRecordPresenter(collection);
+		createDefaultRecordPresenter(collection);
 
 	//
 
-	function createSearchFunction(): SearchFunction<ExpandableResponse<C, Expand>> {
+	function createSearchFunction(
+		exclude: RecordIdString[] = [],
+		filter: string | undefined = undefined
+	): SearchFunction<ExpandableResponse<C, Expand>> {
 		return async (text: string | undefined) => {
 			const options: RecordFullListOptions = {
 				requestKey: null
 			};
 			if (exclude.length > 0) options.filter = excludeIdsFilter(exclude);
 			if (text) options.filter = mergeFilters(options.filter, searchTextFilter(collection, text));
+			if (filter) options.fields = mergeFilters(options.filter, filter);
 			if (expand) {
 				const relationFields = getRelationFields(collection);
 				if (relationFields.length > 0) options.expand = relationFields.join(',');
@@ -59,17 +57,11 @@
 				.collection(collection)
 				.getFullList<ExpandableResponse<C, Expand>>(options);
 
-			console.log(records);
-
-			return records.map((item) => {
-				const presentation = presenter(item);
-				return {
-					value: item,
-					label: typeof presentation == 'string' ? presentation : presentation.label,
-					description: typeof presentation == 'object' ? presentation.description : undefined,
-					disabled: false
-				};
-			});
+			return records.map((item) => ({
+				value: item,
+				label: presenter(item),
+				disabled: false
+			}));
 		};
 	}
 
@@ -80,7 +72,13 @@
 	// }
 </script>
 
-<Search searchFn={createSearchFunction()} {onSelect} {label} {placeholder} {disabled} />
+<Search
+	searchFn={createSearchFunction(exclude, filter)}
+	{onSelect}
+	{label}
+	{placeholder}
+	{disabled}
+/>
 
 <!-- <svelte:fragment slot="item" let:item>
 		<slot name="item" item={typeCaster(item)}></slot>

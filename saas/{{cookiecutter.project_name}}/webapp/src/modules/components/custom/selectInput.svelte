@@ -16,28 +16,39 @@
 
 	type $$Props = SelectProps<T, Multiple> & { placeholder?: string; attrs?: ControlAttrs };
 	$: props = $$props as $$Props;
+
+	export let selected: $$Props['selected'] = undefined;
 </script>
 
-<Select.Root {...$$restProps}>
+<Select.Root {...$$restProps} bind:selected>
 	<!-- Reference: https://formsnap.dev/docs/recipes/bits-ui-select -->
-	{#if props.selected}
-		{#if Array.isArray(props.selected)}
-			{#each props.selected as item}
+	{#if selected}
+		{#if Array.isArray(selected)}
+			{#each selected as item}
 				<input name={props.attrs?.name} hidden value={item} />
 			{/each}
+		{:else}
 			<input name={props.attrs?.name} hidden value={props.selected} />
 		{/if}
 	{/if}
 
 	<Select.Trigger {...props.attrs}>
-		<Select.Value placeholder={props.placeholder ?? m.Select_a_value()} />
+		{#if selected}
+			<Select.Value />
+		{:else}
+			<span data-placeholder>{props.placeholder ?? m.Select_a_value()}</span>
+		{/if}
 	</Select.Trigger>
 
 	<Select.Content>
-		{#if props.items}
+		{#if props.items?.length}
 			{#each props.items as { label, value }}
 				<Select.Item {label} {value}>{label}</Select.Item>
 			{/each}
+		{:else}
+			<Select.Item class="flex justify-center [&>span]:hidden" disabled value={undefined}>
+				{m.No_options_available()}
+			</Select.Item>
 		{/if}
 	</Select.Content>
 </Select.Root>

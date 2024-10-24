@@ -16,6 +16,9 @@
 	import _ from 'lodash';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import { m } from '$lib/i18n';
+	import List from './list.svelte';
+	import ListHeader from './listHeader.svelte';
+	import ListItem from './listItem.svelte';
 
 	//
 
@@ -67,43 +70,35 @@
 	<slot {addFiles} />
 
 	{#if (Array.isArray(data) && data.length > 0) || Boolean(data)}
-		<div class="divide-y overflow-hidden rounded-md border">
-			<div class="bg-primary-foreground pl-3">
-				<T tag="small">{m.Files()}</T>
-			</div>
+		<List>
+			<ListHeader label={m.Files()} />
 			<ArrayOrItemManager bind:data let:item let:removeItem>
 				{@const isNew = isNewFile(item)}
-				<div class="flex items-center justify-between px-1 py-1 pl-3">
-					<div>
-						<slot name="file" file={item} {isNew}>
-							<div class="flex items-center gap-2">
-								<T tag="p">
-									{item.name}
-								</T>
-								{#if isNew}
-									<Badge variant="secondary">{m.New()}</Badge>
-								{/if}
-							</div>
-						</slot>
-					</div>
-
-					<Button variant="ghost" size="icon" class="size-8" on:click={removeItem}>
-						<Icon src={X} size={20} />
-					</Button>
-				</div>
+				<ListItem on:click={removeItem}>
+					<slot name="file" file={item} {isNew}>
+						<div class="flex items-center gap-2">
+							<T tag="p">
+								{item.name}
+							</T>
+							{#if isNew}
+								<Badge variant="secondary">{m.New()}</Badge>
+							{/if}
+						</div>
+					</slot>
+				</ListItem>
 			</ArrayOrItemManager>
-		</div>
+		</List>
 	{/if}
 
 	{#if rejectedFiles.length > 0}
-		<div class="divide-y overflow-hidden rounded-md border">
-			<div class="bg-primary-foreground flex items-center justify-between pl-3">
+		<List>
+			<ListHeader class="flex items-center justify-between">
 				<T tag="small">{m.Rejected_files()}</T>
 				<Button variant="link" class="h-6 text-xs" on:click={clearRejectedFiles}>
 					<X size={14} class="mr-1" />
 					{m.Clear()}
 				</Button>
-			</div>
+			</ListHeader>
 			{#each rejectedFiles as rejection}
 				<div class="px-3 py-1 leading-tight text-red-600">
 					<T tag="small" class="!font-normal">{rejection.file.name}</T>
@@ -116,6 +111,6 @@
 					</ul>
 				</div>
 			{/each}
-		</div>
+		</List>
 	{/if}
 </div>

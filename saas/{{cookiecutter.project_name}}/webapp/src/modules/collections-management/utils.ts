@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import type { CollectionName } from '@/pocketbase/collections-models/types';
 import type { PBResponse } from '$lib/utils/types';
@@ -59,9 +55,9 @@ export function createRecordLabel<R extends PBResponse>(
 
 //
 
-export type RecordPresenter<R> = (record: R) => { label: string; description?: string } | string;
+export type RecordPresenter<R> = (record: R) => string;
 
-export function defaultRecordPresenter<C extends CollectionName, R = CollectionResponses[C]>(
+export function createDefaultRecordPresenter<C extends CollectionName, R = CollectionResponses[C]>(
 	collection: C
 ): RecordPresenter<R> {
 	const fields = getCollectionModel(collection)
@@ -69,7 +65,6 @@ export function defaultRecordPresenter<C extends CollectionName, R = CollectionR
 		.map((field) => field.name) as (keyof R)[];
 
 	return (record) => {
-		const label = fields.map((f) => record[f]).join(' - ');
-		return { label };
+		return fields.map((f) => record[f]).join(' - ');
 	};
 }

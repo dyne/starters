@@ -18,6 +18,7 @@
 	import { fly } from 'svelte/transition';
 	import Spinner from './spinner.svelte';
 	import Icon from './icon.svelte';
+	import T from './t.svelte';
 
 	//
 
@@ -61,9 +62,12 @@
 
 	//
 
+	let searchText: string | undefined = undefined;
+
 	$: if ($selected) {
 		onSelect(($selected.value as SearchResult<T>).value);
 		$selected = undefined;
+		searchText = undefined;
 	}
 </script>
 
@@ -75,7 +79,7 @@
 			class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 			use:melt={$labelBuilder}
 		>
-			<span class="text-sm font-medium text-gray-900">Choose your favorite manga:</span>
+			<span class="text-sm font-medium text-gray-900">{label}</span>
 		</label>
 	{/if}
 
@@ -86,8 +90,9 @@
 			class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 			{placeholder}
 			{disabled}
+			bind:value={searchText}
 		/>
-		<div class="absolute right-2 top-1/2 z-10 -translate-y-1/2 text-gray-900">
+		<div class="text-primary absolute right-3 top-1/2 z-10 -translate-y-1/2 opacity-50">
 			<Icon src={$open ? ChevronUp : ChevronDown} class="size-4"></Icon>
 		</div>
 	</div>
@@ -134,10 +139,10 @@
 						</div>
 					</li>
 				{:else}
-					<li
-						class="relative cursor-pointer rounded-md py-1 pl-8 pr-4 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-700"
-					>
-						{m.No_results_found()}
+					<li class="text-primary/30 flex justify-center py-2">
+						<T tag="small">
+							{m.No_results_found()}
+						</T>
 					</li>
 				{/each}
 			{/await}

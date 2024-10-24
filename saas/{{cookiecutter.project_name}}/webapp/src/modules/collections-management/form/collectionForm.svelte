@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts" context="module">
 	import type { RecordsManagerOptions } from '@/collections-management/records/recordsManager.svelte';
 	import type { FieldComponentProp } from './fieldSchemaToInput.svelte';
@@ -14,6 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		StringKeys,
 		ArrayExtract
 	} from '$lib/utils/types';
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
 
 	import { Form, type FormOptions } from '@/forms';
 	import type { ComponentProps } from 'svelte';
@@ -40,25 +35,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	type FormSettings<Data extends GenericRecord> = FormOptions<Data> & ComponentProps<Form<Data>>;
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="C extends CollectionName">
+	import type { CollectionRecords } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
-
 	import { zod } from 'sveltekit-superforms/adapters';
-
 	import { m } from '$lib/i18n';
-
 	import { c } from '$lib/utils/strings';
-
 	import { createEventDispatcher } from 'svelte';
 	import { pb } from '@/pocketbase';
 
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
+	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 
 	import type { SuperForm } from 'sveltekit-superforms/client';
-	import type { AnyZodObject } from 'zod';
-	import type { ClientResponseErrorData } from '$lib/errorHandling';
 
 	import { createForm, FormError, SubmitButton } from '@/forms';
 
@@ -67,24 +57,15 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		getFileFieldsInitialData,
 		mockFileFieldsInitialData
 	} from './recordFormSetup';
-	import { createTypeProp } from '$lib/utils/typeProp';
 	import FieldSchemaToInput from './fieldSchemaToInput.svelte';
 
 	//
 
-	type RecordGeneric = $$Generic<PBResponse>;
-	export let recordType = createTypeProp<RecordGeneric>();
-	recordType;
+	export let collection: C;
+	export let initialData: Partial<CollectionRecords[C]> = {};
+	export let recordId: string | undefined = undefined;
 
-	//
-
-	// TODO - Make function that retrieves CollectionName from CollectionId
-	// in some cases we have an Id but not the typed collection name
-	export let collection: CollectionName;
-	export let initialData: Partial<RecordGeneric> = {};
-	export let recordId = '';
-
-	export let fieldsSettings: Partial<FieldsSettings<RecordGeneric>> = {};
+	export let fieldsSettings: Partial<FieldsSettings<CollectionRecords[C]>> = {};
 	let {
 		order = [],
 		exclude = [],
@@ -97,9 +78,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		defaults = {}
 	} = fieldsSettings;
 
-	// TODO - Fix type
-	// Check what is the correct type to pass here
-	export let formSettings: Partial<FormSettings<RecordGeneric>> = {};
+	export let formSettings: Partial<FormSettings<CollectionRecords[C]>> = {};
 
 	export let submitButtonText = '';
 	export let showCancelButton = false;
@@ -108,13 +87,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	const dispatch = createEventDispatcher<{
 		success: {
-			record: RecordGeneric;
+			record: CollectionRecords[C];
 		};
 		edit: {
-			record: RecordGeneric;
+			record: CollectionRecords[C];
 		};
 		create: {
-			record: RecordGeneric;
+			record: CollectionRecords[C];
 		};
 		cancel: {};
 	}>();

@@ -47,3 +47,11 @@ export function removeTrailingSlash(text: string) {
 export function wait(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+//
+
+export function ensureArray<T>(data: T | T[] | undefined | null): T[] {
+	if (Array.isArray(data)) return data;
+	if (data) return [data];
+	else return [];
+}

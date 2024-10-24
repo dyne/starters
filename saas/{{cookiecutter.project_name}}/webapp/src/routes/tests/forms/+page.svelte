@@ -6,14 +6,14 @@
 		FileField,
 		CheckboxField,
 		TextareaField,
-		SelectField,
-		RelationsField
+		SelectField
 	} from '@/forms/fields';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { createDummyFile } from '@/utils/other';
 	import SuperDebug from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { ZTestCollectionSelectFieldOptions } from '@/pocketbase/types';
+	import { CollectionField } from '@/collections-management';
 
 	const schema = createCollectionZodSchema('z_test_collection');
 
@@ -24,7 +24,8 @@
 			throw new Error('no wayy');
 		},
 		initialData: {
-			file_field: createDummyFile()
+			file_field: createDummyFile(),
+			relation_field: '8pqa9tnjse6qt9m'
 		},
 		options: {
 			dataType: 'form'
@@ -42,7 +43,54 @@
 <Form {form}>
 	<SelectField {form} name="select_field" options={{ items: selectItems }} />
 	<SelectField {form} name="select_multi_field" options={{ items: selectItems, multiple: true }} />
-	<RelationsField {form} name="relation_field" options={{ collection: 'z_test_collection' }} />
+
+	<CollectionField
+		{form}
+		name="relation_field"
+		options={{
+			mode: 'search',
+			collection: 'z_test_collection',
+			presenter: (record) => {
+				return record.text_field;
+			}
+		}}
+	/>
+
+	<CollectionField
+		{form}
+		name="relation_multi_field"
+		options={{
+			mode: 'search',
+			multiple: true,
+			collection: 'z_test_collection',
+			presenter: (record) => {
+				return record.text_field;
+			}
+		}}
+	/>
+
+	<CollectionField
+		{form}
+		name="relation_field"
+		options={{
+			collection: 'z_test_collection',
+			presenter: (record) => {
+				return record.text_field;
+			}
+		}}
+	/>
+
+	<CollectionField
+		{form}
+		name="relation_multi_field"
+		options={{
+			multiple: true,
+			collection: 'z_test_collection',
+			presenter: (record) => {
+				return record.text_field;
+			}
+		}}
+	/>
 
 	<SuperDebug data={formData}></SuperDebug>
 
