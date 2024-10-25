@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCollectionZodSchema } from '.';
-import type { CollectionFormDatas } from '@/pocketbase/types';
+import type { CollectionFormData } from '@/pocketbase/types';
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import { subYears, addYears, differenceInMilliseconds, addMilliseconds } from 'date-fns';
 
@@ -14,7 +14,7 @@ describe('generated collection zod schema', () => {
 		expect(parseResult.success).toBe(false);
 	});
 
-	const baseData: CollectionFormDatas['z_test_collection'] = {
+	const baseData: CollectionFormData['z_test_collection'] = {
 		number_field: 3,
 		relation_field: 'generic-id',
 		text_field: 'sampletext',
@@ -29,7 +29,7 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('fails the validation for file with bad mimeType', () => {
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			file_field: dummyFile('text/json')
 		};
@@ -41,7 +41,7 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('accepts empty string for optional url', () => {
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			url_field: ''
 		};
@@ -50,7 +50,7 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('doesn`t accept url with bad domain', () => {
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			url_field: 'https://miao.com'
 		};
@@ -61,7 +61,7 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('fails the regex test', () => {
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			text_field: 'abc 123'
 		};
@@ -71,7 +71,7 @@ describe('generated collection zod schema', () => {
 
 	it('fails the json size check with a large JSON object', () => {
 		const jsonMaxSize = getCollectionModel('z_test_collection').schema[12].options.maxSize;
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			json_field: generateLargeJSONObject(jsonMaxSize * 1.5)
 		};
@@ -84,7 +84,7 @@ describe('generated collection zod schema', () => {
 	it('passes the json size check with a small JSON object', () => {
 		const jsonMaxSize = getCollectionModel('z_test_collection').schema[12].options.maxSize;
 		const jsonObject = generateLargeJSONObject(jsonMaxSize * 0.5);
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			json_field: jsonObject
 		};
@@ -96,7 +96,7 @@ describe('generated collection zod schema', () => {
 		const minDate = getCollectionModel('z_test_collection').schema[6].options.min;
 		const earlierDate = subYears(minDate, 10);
 
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			date_field: earlierDate.toISOString()
 		};
@@ -108,7 +108,7 @@ describe('generated collection zod schema', () => {
 		const maxDate = getCollectionModel('z_test_collection').schema[6].options.max;
 		const laterDate = addYears(maxDate, 10);
 
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			date_field: laterDate.toISOString()
 		};
@@ -123,7 +123,7 @@ describe('generated collection zod schema', () => {
 
 		console.log(min, betweenDate.toISOString(), max);
 
-		const data: CollectionFormDatas['z_test_collection'] = {
+		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			date_field: betweenDate.toISOString()
 		};

@@ -1,24 +1,9 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
-	import { CollectionManager } from '@/collections-management/manager';
-	import {
-		Collections,
-		type OrgAuthorizationsResponse,
-		type OrgRolesResponse,
-		type UsersResponse
-	} from '@/pocketbase/types';
-	import { createTypeProp } from '$lib/utils/typeProp';
+	import { CollectionManager } from '@/collections-components/manager';
 	import { m } from '$lib/i18n';
 	import { OrgRoles, ProtectedOrgUI } from '$lib/organizations';
-
 	import Button from '@/components/ui/button/button.svelte';
 	import { Pencil, Plus, X } from 'lucide-svelte';
-
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
@@ -26,15 +11,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { c } from '$lib/utils/strings.js';
-	import EditRecord from '@/collections-management/manager/ui/recordActions/editRecord.svelte';
-	import DeleteRecord from '@/collections-management/manager/ui/recordActions/deleteRecord.svelte';
+	import EditRecord from '@/collections-components/manager/ui/actions/editRecord.svelte';
+	import DeleteRecord from '@/collections-components/manager/ui/actions/deleteRecord.svelte';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
 	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
 	import PendingInvites from './_partials/pendingInvites.svelte';
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
-
 	import Dialog from '@/components/custom/dialog.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 
@@ -43,13 +27,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	export let data;
 	$: organization = data.organization;
 	$: userRole = data.userRole;
-
-	type AuthorizationWithUser = OrgAuthorizationsResponse<{
-		user: UsersResponse;
-		role: OrgRolesResponse;
-	}>;
-
-	const recordType = createTypeProp<AuthorizationWithUser>();
 
 	//
 
@@ -61,24 +38,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<MembershipRequests {organization} />
 		<PendingInvites {organization} />
 	</ProtectedOrgUI>
-	<!-- relations: {
-		role: { mode: 'select', presenter: (record) => record. },
-		user: { presenter: (record) => record.expand. }
-	}} -->
 
 	<PageCard>
 		<CollectionManager
 			collection="orgAuthorizations"
 			expand={['user', 'role']}
 			formOptions={{
-				fieldsOptions: { hide: { organization: organization.id }, relations: {
-					role: {mode: "select", presenter: (record) => record.}
-				} }
+				hide: { organization: organization.id },
+				relations: {
+					role: { mode: 'select', displayFields: ['name'] },
+					user: { displayFields: ['name'] }
+				}
 			}}
 			editFormOptions={{
-				fieldsOptions: {
-					exclude: ['user']
-				}
+				exclude: ['user']
 			}}
 			filter={`organization.id="${organization.id}"`}
 			let:records

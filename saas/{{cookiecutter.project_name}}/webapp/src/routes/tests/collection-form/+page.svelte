@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CollectionForm } from '@/collections-management';
+	import { CollectionForm } from '@/collections-components';
 	import FormDebug from '@/forms/components/formDebug.svelte';
 	import SuperDebug from 'sveltekit-superforms';
 </script>

@@ -5,9 +5,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getRecordsManagerContext } from './collectionManager.svelte';
 	import { Trash, X } from 'lucide-svelte';
-	import { CreateRecord } from './recordActions';
+	import { CreateRecord } from './actions';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import type { ComponentProps } from 'svelte';
 	import T from '@/components/custom/t.svelte';

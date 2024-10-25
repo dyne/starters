@@ -9,9 +9,11 @@
 	export let icon: IconComponent = FolderOpen;
 </script>
 
-<div class="flex flex-col items-center justify-center rounded-lg border p-10 text-center">
-	<div class="text-gray-400">
-		<Icon src={icon} size={40} />
+<div
+	class="text-primary/40 flex flex-col items-center justify-center rounded-lg border p-10 text-center"
+>
+	<div class="mb-6 opacity-50">
+		<Icon src={icon} size={70} />
 	</div>
 
 	{#if title}

@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
-	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './recordActions';
+	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './actions';
 	import FieldComponent from './fieldComponents/fieldComponentRenderer.svelte';
 
 	//

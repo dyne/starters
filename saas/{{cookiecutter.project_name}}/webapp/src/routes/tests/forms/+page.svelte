@@ -13,7 +13,7 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { ZTestCollectionSelectFieldOptions } from '@/pocketbase/types';
-	import { CollectionField } from '@/collections-management';
+	import { CollectionField } from '@/collections-components';
 
 	const schema = createCollectionZodSchema('z_test_collection');
 

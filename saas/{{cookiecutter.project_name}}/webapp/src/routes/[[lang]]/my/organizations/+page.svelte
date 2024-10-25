@@ -7,7 +7,7 @@
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
-	import CollectionManager from '@/collections-management/manager/collectionManager.svelte';
+	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 
 	import { Button } from '@/components/ui/button';
 	import { Badge } from '@/components/ui/badge';

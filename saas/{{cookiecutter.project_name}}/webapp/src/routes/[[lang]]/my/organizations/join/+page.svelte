@@ -21,7 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
-	import { CollectionManager } from '@/collections-management';
+	import { CollectionManager } from '@/collections-components';
 
 	import { Button } from '@/components/ui/button';
 	import Avatar from '@/components/custom/avatar.svelte';

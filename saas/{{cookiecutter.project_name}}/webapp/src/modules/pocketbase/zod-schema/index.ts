@@ -11,7 +11,7 @@ import type { CollectionZodRawShapes } from '../types';
 
 // Runtime conversion
 
-type CollectionZodSchema<C extends CollectionName> = z.ZodObject<CollectionZodRawShapes[C]>;
+export type CollectionZodSchema<C extends CollectionName> = z.ZodObject<CollectionZodRawShapes[C]>;
 
 export function createCollectionZodSchema<C extends CollectionName>(
 	collection: C

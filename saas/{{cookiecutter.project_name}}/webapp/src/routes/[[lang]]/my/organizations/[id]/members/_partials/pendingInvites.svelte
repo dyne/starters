@@ -5,13 +5,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import CollectionManager from '@/collections-management/manager/collectionManager.svelte';
+	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import { m } from '$lib/i18n';
 	import { Trash } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import { DeleteRecord } from '@/collections-management/manager';
+	import { DeleteRecord } from '@/collections-components/manager';
 	import IconButton from '$lib/components/iconButton.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 

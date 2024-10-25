@@ -132,7 +132,7 @@ function createCollectionZodRawType(model: AnyCollectionModel): GeneratedCollect
 	};
 }
 
-// Needed for `@/collections-management`
+// Needed for `@/collections-components`
 
 function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionTypeData {
 	const collectionName = model.name;

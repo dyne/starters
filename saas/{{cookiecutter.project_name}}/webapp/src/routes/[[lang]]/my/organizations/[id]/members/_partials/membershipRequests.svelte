@@ -5,17 +5,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { CollectionManager } from '@/collections-management';
+	import { CollectionManager } from '@/collections-components';
 	import { pb } from '@/pocketbase/index.js';
 	import {
-		Collections,
 		OrgJoinRequestsStatusOptions,
 		type OrgJoinRequestsRecord,
-		type UsersResponse,
 		type OrgJoinRequestsResponse,
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
-	import { createTypeProp } from '$lib/utils/typeProp.js';
 	import { m } from '$lib/i18n';
 	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -30,8 +27,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	//
 
 	export let organization: OrganizationsResponse;
-
-	const recordType = createTypeProp<OrgJoinRequestsResponse<{ user: UsersResponse }>>();
 
 	//
 
@@ -50,7 +45,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <CollectionManager
 	collection="orgJoinRequests"
 	filter={`organization.id = "${organization.id}" && status = "${pending}"`}
-	expand
+	expand={['user']}
 	let:records
 	hide={['emptyState']}
 >

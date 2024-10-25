@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { CollectionForm } from '@/collections-management';
+	import { CollectionForm } from '@/collections-components';
 	import { m } from '$lib/i18n';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';

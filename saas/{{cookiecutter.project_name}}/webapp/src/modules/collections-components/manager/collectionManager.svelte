@@ -1,24 +1,11 @@
 <script lang="ts" context="module">
-	import CollectionForm from '../form/collectionForm.svelte';
-
+	import type { PartialCollectionFormOptions } from '../form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-
-	import { getContext, type ComponentProps } from 'svelte';
+	import { getContext } from 'svelte';
 	import type { RecordService } from 'pocketbase';
-	import type { Writable } from 'svelte/store';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
 
-	import type { Simplify } from 'type-fest';
-	import type {
-		CollectionExpands,
-		CollectionRecords,
-		CollectionResponses
-	} from '@/pocketbase/types';
-
-
-	type FormOptions<C extends CollectionName> = Simplify<
-		Omit<ComponentProps<CollectionForm<C>>, 'collection' | 'recordId' | 'initialData' | 'fieldsOptions' | 'onCreate' | 'onEdit'>
-	>;
+	//
 
 	const PAGE_PARAM = 'page';
 
@@ -52,9 +39,9 @@
 		// 	discardSelection: () => void;
 		// };
 		formsOptions: {
-			base: FormOptions<C>;
-			create: FormOptions<C>;
-			edit: FormOptions<C>;
+			base: PartialCollectionFormOptions<C>;
+			create: PartialCollectionFormOptions<C>;
+			edit: PartialCollectionFormOptions<C>;
 		};
 	};
 
@@ -69,18 +56,15 @@
 
 <script
 	lang="ts"
-	generics="C extends CollectionName, Expand extends ExpandProp<C>, InverseExpand extends InverseExpandProp"
+	generics="C extends CollectionName, Expand extends ExpandProp<C> = never, InverseExpand extends InverseExpandProp = never"
 >
+	import { FolderIcon } from 'lucide-svelte';
+
+	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
 	import { Array } from 'effect';
-
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
-
 	import { m } from '$lib/i18n';
-
 	import type { Page } from '@sveltejs/kit';
-
-	import { getRelationFields } from '@/pocketbase/collections-models/utils';
-
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { page } from '$app/stores';
@@ -92,12 +76,16 @@
 
 	export let collection: C;
 
-	export let formOptions: FormOptions<C> = {};
-	export let createFormOptions: FormOptions<C> = {};
-	export let editFormOptions: FormOptions<C> = {};
+	//
+
+	export let formOptions: PartialCollectionFormOptions<C> = {};
+	export let createFormOptions: PartialCollectionFormOptions<C> = {};
+	export let editFormOptions: PartialCollectionFormOptions<C> = {};
+
+	//
 
 	export let subscribe: CollectionName[] = [];
-	export let expand: Expand = [] as unknown as Expand;
+	export let expand: Expand | undefined = undefined;
 	export let inverseExpand: InverseExpand | undefined = undefined;
 	inverseExpand;
 
@@ -133,7 +121,7 @@
 		// 	const pageNumber = Number(page.url.searchParams.get(PAGE_PARAM));
 		// 	options.page = Boolean(pageNumber) ? pageNumber : 1;
 		// }
-		if (e) options.expand = getRelationFields(collection).join(', ');
+		if (e && e.length > 0) options.expand = e.join(', ');
 		return options;
 	}
 
@@ -141,7 +129,9 @@
 
 	$: recordService = pb.collection(collection);
 
-	let records: ExpandableResponse<C, Expand, InverseExpand>[] = [];
+	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
+
+	let records: T[] = [];
 
 	let error: ClientResponseError | undefined = undefined;
 
@@ -162,8 +152,7 @@
 		// 	records = res;
 		// }
 		try {
-			records =
-				await recordService.getFullList<ExpandableResponse<C, Expand, InverseExpand>>(fetchOptions);
+			records = await recordService.getFullList<T>(fetchOptions);
 		} catch (e) {
 			error = e as ClientResponseError;
 		}
@@ -222,8 +211,6 @@
 			edit: editFormOptions
 		}
 	});
-
-	//
 </script>
 
 {#if error}
@@ -240,7 +227,7 @@
 			<EmptyState
 				title={m.No_items_here()}
 				description={m.Start_by_adding_a_record_to_this_collection_()}
-				icon={MessageCircleWarning}
+				icon={FolderIcon}
 			/>
 		{/if}
 	</slot>

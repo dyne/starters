@@ -21,7 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { Collections, type AuthorizationsResponse } from '@/pocketbase/types';
 
-	import { RecordForm } from '$lib/recordForm';
+	import { CollectionForm } from '@/collections-components';
 	import { currentUser, pb } from '@/pocketbase';
 	import { ArrowLeft, Share, Trash } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -98,7 +98,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<Dialog bind:open title="Share signature">
 			<div class="relative w-full">
 				{#if !removeAccess}
-					<RecordForm
+					<!-- <CollectionForm
 						{recordType}
 						on:success={handleSuccess}
 						initialData={authorization}
@@ -125,7 +125,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								<span class="ml-2"> Remove access </span>
 							</Button>
 						</div>
-					{/if}
+					{/if} -->
 				{:else if removeLoading}
 					<Spinner />
 				{:else}

@@ -8,7 +8,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import type { PBResponse } from '$lib/utils/types';
-	import { RecordForm, type FieldsSettings } from '$lib/recordForm';
+	import { CollectionForm, type CollectionFormOption } from '@/collections-components/form';
 
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
 	import { Pencil } from 'lucide-svelte';

@@ -5,14 +5,9 @@
 		isPlatformAuthenticatorAvailable
 	} from '$lib/webauthn';
 	import { currentUser } from '@/pocketbase';
-
-	import { Collections, type WebauthnCredentialsResponse } from '@/pocketbase/types';
-	import { CollectionManager, DeleteRecord, EditRecord } from '@/collections-management/manager';
-
-	import { createTypeProp } from '$lib/utils/typeProp';
+	import { CollectionManager, DeleteRecord, EditRecord } from '@/collections-components/manager';
 	import T from '@/components/custom/t.svelte';
 	import { m } from '$lib/i18n';
-
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import Icon from '@/components/custom/icon.svelte';
@@ -20,11 +15,17 @@
 	import Card from '@/components/custom/card.svelte';
 	import Spinner from '@/components/custom/spinner.svelte';
 	import Alert from '@/components/custom/alert.svelte';
+	import type { WebauthnCredentialsResponse } from '@/pocketbase/types';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();
-	const recordType = createTypeProp<WebauthnCredentialsResponse<{ ID: string }>>();
-
 	const userEmailAddress = $currentUser?.email!;
+
+	// ts helper
+
+	function getCredentialId(record: WebauthnCredentialsResponse): string {
+		// @ts-expect-error
+		return record.credential.ID ?? '';
+	}
 </script>
 
 <div class="space-y-4">
@@ -36,14 +37,13 @@
 	<Separator></Separator>
 
 	<CollectionManager
-		{recordType}
-		collection={Collections.WebauthnCredentials}
+		collection="webauthnCredentials"
 		let:records
 		editFormOptions={{ exclude: ['user', 'credential'] }}
 	>
 		<div class="space-y-2 py-4">
 			{#each records as record}
-				{@const label = Boolean(record.description) ? record.description : record.credential?.ID}
+				{@const label = Boolean(record.description) ? record.description : getCredentialId(record)}
 				<Card>
 					<div class="flex items-center justify-between gap-4">
 						<div class="w-0 grow overflow-hidden">

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CollectionForm } from '@/collections-management';
+	import { CollectionForm } from '@/collections-components';
 	import { m } from '$lib/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';

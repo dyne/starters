@@ -21,7 +21,7 @@ export type ResolveInverseExpandProps<E extends InverseExpandProp> = {
 
 export type ExpandableResponse<
 	C extends CollectionName,
-	Expand extends ExpandProp<C>,
+	Expand extends ExpandProp<C> = never,
 	InverseExpand extends InverseExpandProp = never
 > = CollectionResponses[C] & {
 	expand?: Simplify<ResolveExpandProp<C, Expand> & ResolveInverseExpandProps<InverseExpand>>;

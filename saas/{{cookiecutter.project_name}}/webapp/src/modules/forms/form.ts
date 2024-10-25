@@ -6,11 +6,14 @@ import { defaults, setError, superForm } from 'sveltekit-superforms/client';
 
 //
 
-export type SubmitFunction<Data extends GenericRecord> = NonNullable<
+export type SubmitFunction<Data extends GenericRecord = GenericRecord> = NonNullable<
 	SuperformOptions<Data>['onUpdate']
 >;
 
-export type FormOptions<Data extends GenericRecord> = Omit<SuperformOptions<Data>, 'onUpdate'>;
+export type FormOptions<Data extends GenericRecord = GenericRecord> = Omit<
+	SuperformOptions<Data>,
+	'onUpdate'
+>;
 
 export type CreateFormProps<Data extends GenericRecord> = {
 	adapter: ValidationAdapter<Data>;

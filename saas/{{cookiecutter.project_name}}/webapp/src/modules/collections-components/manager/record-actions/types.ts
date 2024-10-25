@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import type { ValueOf } from '$lib/utils/types';
 
 export const RecordActions = {
@@ -14,3 +10,5 @@ export const RecordActions = {
 
 export type RecordAction = ValueOf<typeof RecordActions>;
 export const RecordActionsArray = Object.values(RecordActions);
+
+export type ViewAction = Exclude<RecordAction, 'create'>;

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { CollectionSelect } from '@/collections-management';
-	import CollectionSearch from '@/collections-management/collectionSearch.svelte';
+	import { CollectionSelect } from '@/collections-components';
+	import CollectionSearch from '@/collections-components/collectionSearch.svelte';
 </script>
 
 <div class="space-y-4">
