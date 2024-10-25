@@ -1,12 +1,19 @@
 <script lang="ts">
 	import { CollectionForm } from '@/collections-components';
 	import FormDebug from '@/forms/components/formDebug.svelte';
-	import SuperDebug from 'sveltekit-superforms';
+	import { toast } from 'svelte-sonner';
 </script>
 
-<CollectionForm collection="z_test_collection" let:form>
+<CollectionForm
+	collection="z_test_collection"
+	let:form
+	onSuccess={(record) => {
+		toast.success(JSON.stringify(record));
+	}}
+>
 	<FormDebug {form} />
 </CollectionForm>
+
 <!-- 
 <div class="mx-auto max-w-xl p-4">
 	<RecordForm

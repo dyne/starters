@@ -1,5 +1,8 @@
+import { dev } from '$app/environment';
 import { resolveRoute } from '$lib/i18n';
 import type { Page } from '@sveltejs/kit';
+
+//
 
 export function getJsonDataSize(data: unknown): number {
 	return new Blob([JSON.stringify(data)]).size;
@@ -54,4 +57,15 @@ export function ensureArray<T>(data: T | T[] | undefined | null): T[] {
 	if (Array.isArray(data)) return data;
 	if (data) return [data];
 	else return [];
+}
+
+//
+
+export function log(data: unknown) {
+	if (dev) console.log(data);
+}
+
+export function pipeLog<T>(data: T): T {
+	log(data);
+	return data;
 }

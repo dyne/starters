@@ -7,6 +7,7 @@
 
 <script lang="ts" generics="T, Multiple extends boolean = false">
 	import { m } from '$lib/i18n';
+	import { omit } from 'lodash/fp';
 
 	import * as Select from '@/components/ui/select';
 	import type { SelectProps } from 'bits-ui';
@@ -20,7 +21,8 @@
 	export let selected: $$Props['selected'] = undefined;
 </script>
 
-<Select.Root {...$$restProps} bind:selected>
+<Select.Root {...omit(['attrs', 'placeholder', 'label'], $$restProps)} bind:selected>
+	<!-- <Select.Root {...$$restProps} bind:selected> -->
 	<!-- Reference: https://formsnap.dev/docs/recipes/bits-ui-select -->
 	{#if selected}
 		{#if Array.isArray(selected)}

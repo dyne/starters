@@ -12,8 +12,8 @@
 	export let contentClass = '';
 </script>
 
-<div class="flex items-center justify-between px-1 py-1 pl-3 {className}">
-	<div class={contentClass}>
+<div class="flex items-center justify-between gap-6 px-1 py-1 pl-3 {className}">
+	<div class="w-0 grow overflow-hidden {contentClass}">
 		<slot>
 			{#if label}
 				<T tag="p">

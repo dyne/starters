@@ -1,54 +1,55 @@
 <script lang="ts" generics="C extends CollectionName">
-	import { getCollectionModel } from '@/pocketbase/collections-models';
+	import type { SuperForm } from 'sveltekit-superforms';
 
+	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import type { KeyOf, MaybePromise } from '@/utils/types';
-	import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
+	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
-	import { zod } from 'sveltekit-superforms/adapters';
 	import { m } from '$lib/i18n';
 	import { c } from '$lib/utils/strings';
 	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
-	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Form, FormError, SubmitButton } from '@/forms';
 	import { setupCollectionForm } from './collectionFormSetup';
 	import FieldSchemaToInput from './fieldConfigToField.svelte';
 	import {
 		defaultFormOptions,
 		type OnCollectionFormSuccess,
-		type CollectionFormOptions
+		type CollectionFormOptions,
+		type FieldsOptions
 	} from './formOptions';
-	import { merge } from 'lodash';
-	import Spinner from '@/components/custom/spinner.svelte';
 
 	//
 
 	export let collection: C;
 	export let recordId: RecordIdString | undefined = undefined;
+	export let initialData: Partial<CollectionRecords[C]> = {};
 
 	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
 	export let onCancel: () => MaybePromise<void> = () => {};
 
-	export let options: CollectionFormOptions<C> = {};
+	export let options: CollectionFormOptions<C> = defaultFormOptions<C>();
 
-	//
+	/* */
 
-	let { fields, ui } = merge(defaultFormOptions<C>(), options);
-	let { submitButtonText, hideRequiredIndicator, showCancelButton } = ui;
+	let form: SuperForm<CollectionRecords[C]>;
+	$: form = setupCollectionForm<C>({
+		collection,
+		recordId,
+		onSuccess,
+		options,
+		initialData
+	});
 
-	let fieldsConfigs: AnyFieldConfig[] = getCollectionModel(collection).schema.sort();
-	// let {
-	// 	order,
-	// 	components,
+	/* Sorting fields */
 
-	// 	labels,
-	// 	descriptions,
-	// 	placeholders,
-	// 	relations
-	// } = fields;
+	let fieldsConfigs: AnyFieldConfig[] = getCollectionModel(collection)
+		.schema.sort(createFieldConfigSorter(options.fields?.order))
+		.filter(
+			(config) => !options.fields?.exclude.includes(config.name as KeyOf<CollectionRecords[C]>)
+		);
 
-	/* Schema generation */
-
-	function createFieldConfigSorter(order: string[]) {
+	function createFieldConfigSorter(order: string[] = []) {
 		return (a: AnyFieldConfig, b: AnyFieldConfig) => {
 			const aIndex = order.indexOf(a.name);
 			const bIndex = order.indexOf(b.name);
@@ -65,24 +66,23 @@
 		};
 	}
 
-	/* Superform creation */
-
 	/* */
 
-	$: submitButtonText = Boolean(ui.submitButtonText)
+	let submitButtonText: string | undefined = undefined;
+	$: submitButtonText = Boolean(options?.ui?.submitButtonText)
 		? submitButtonText
 		: Boolean(recordId)
 			? m.Edit_record()
 			: m.Create_record();
 
-	// ts helpers
+	/* ts helpers */
 
 	function getFieldConfigName(fieldConfig: AnyFieldConfig) {
 		return fieldConfig.name as KeyOf<CollectionRecords[C]>;
 	}
 
 	function getRelationsOptions(
-		relationProp: typeof relations,
+		relationProp: FieldsOptions<C>['relations'],
 		fieldName: KeyOf<CollectionRecords[C]>
 	) {
 		// @ts-expect-error Type mismatch but we don't care
@@ -90,20 +90,20 @@
 	}
 </script>
 
-{#await setupCollectionForm({ collection, recordId, onSuccess, options })}
-	<div class="flex w-full justify-center p-4">
-		<Spinner></Spinner>
-	</div>
-{:then form}
-	<Form {form} {hideRequiredIndicator} hide={['submitButton', 'error']}>
+{#key initialData}
+	<Form
+		{form}
+		hideRequiredIndicator={Boolean(options.ui?.hideRequiredIndicator)}
+		hide={['submitButton', 'error']}
+	>
 		{#each fieldsConfigs as fieldSchema}
 			{@const name = getFieldConfigName(fieldSchema)}
-			{@const hidden = hide ? Object.keys(hide).includes(name) : false}
-			{@const label = c(labels?.[name] ?? name)}
-			{@const component = components?.[name]}
-			{@const collectionFieldOptions = getRelationsOptions(relations, name)}
-			{@const description = descriptions?.[name]}
-			{@const placeholder = placeholders?.[name]}
+			{@const hidden = Object.keys(options.fields?.hide ?? {}).includes(name)}
+			{@const label = c(options.fields?.labels?.[name] ?? name)}
+			{@const component = options.fields?.components?.[name]}
+			{@const collectionFieldOptions = getRelationsOptions(options.fields?.relations ?? {}, name)}
+			{@const description = options.fields?.descriptions?.[name]}
+			{@const placeholder = options.fields?.placeholders?.[name]}
 			<FieldSchemaToInput
 				{description}
 				{label}
@@ -120,10 +120,10 @@
 		<FormError />
 
 		<div class="flex justify-end gap-2">
-			{#if showCancelButton}
+			{#if options.ui?.showCancelButton}
 				<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
 			{/if}
 			<SubmitButton>{submitButtonText}</SubmitButton>
 		</div>
 	</Form>
-{/await}
+{/key}

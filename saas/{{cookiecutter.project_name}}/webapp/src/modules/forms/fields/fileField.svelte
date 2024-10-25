@@ -13,11 +13,10 @@
 		type RejectedFile
 	} from '@/components/custom/fileManager.svelte';
 	import Input from '@/components/ui/input/input.svelte';
-
+	import { buttonVariants } from '@/components/ui/button';
 	import type { FieldOptions } from './types';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentProps } from 'svelte';
-
 	import { pipe, Tuple } from 'effect';
 
 	//
@@ -136,7 +135,9 @@
 			<Input
 				{...attrs}
 				{...options}
+				placeholder="Upload a file"
 				type="file"
+				class="hover:bg-primary/10 file:bg-primary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
 				on:change={(e) => {
 					const fileList = e.currentTarget.files;
 					if (fileList) addFiles([...fileList]);

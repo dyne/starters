@@ -111,11 +111,11 @@
 		<List class="min-h-[42px]">
 			{#if valueExists($valueProxy)}
 				<ArrayOrItemManager bind:data={$valueProxy} let:item let:removeItem>
-					{#await fetchRecord(collection, item) then record}
-						<ListItem on:click={removeItem}>
+					<ListItem on:click={removeItem}>
+						{#await fetchRecord(collection, item) then record}
 							{presenter(record)}
-						</ListItem>
-					{/await}
+						{/await}
+					</ListItem>
 				</ArrayOrItemManager>
 			{:else}
 				<ListItem hideButton class="h-10 !justify-center">

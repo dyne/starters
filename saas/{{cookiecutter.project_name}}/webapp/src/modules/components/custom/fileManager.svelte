@@ -69,7 +69,7 @@
 <div class="space-y-2">
 	<slot {addFiles} />
 
-	{#if (Array.isArray(data) && data.length > 0) || Boolean(data)}
+	{#if (Array.isArray(data) && data.length > 0) || (!multiple && Boolean(data))}
 		<List>
 			<ListHeader label={m.Files()} />
 			<ArrayOrItemManager bind:data let:item let:removeItem>

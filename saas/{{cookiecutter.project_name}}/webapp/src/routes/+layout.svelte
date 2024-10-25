@@ -15,4 +15,4 @@
 	<slot />
 </ParaglideJS>
 
-<Toaster richColors />
+<Toaster richColors closeButton />

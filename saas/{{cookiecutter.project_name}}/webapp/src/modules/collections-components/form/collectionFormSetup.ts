@@ -1,9 +1,4 @@
-import type {
-	AnyCollectionModel,
-	FieldConfig,
-	CollectionName,
-	FieldType
-} from '@/pocketbase/collections-models/types';
+import type { FieldConfig, CollectionName, FieldType } from '@/pocketbase/collections-models/types';
 import { pipe, Record, String } from 'effect';
 import type { CollectionFormMode, CollectionFormOptions } from './formOptions';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
@@ -16,38 +11,34 @@ import { pb } from '@/pocketbase';
 import { createForm } from '@/forms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { ensureArray, normalizeError } from '@/utils/other';
-import { ClientResponseError } from 'pocketbase';
-import type { RecordIdString } from '@/pocketbase/types';
+import { ClientResponseError, type CollectionModel } from 'pocketbase';
+import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
 
 //
 
-type SetupCollectionFormProps<C extends CollectionName, Data extends GenericRecord> = {
-	collection: CollectionName;
+type SetupCollectionFormProps<C extends CollectionName> = {
+	collection: C;
+	initialData: Partial<CollectionRecords[C]>;
 	recordId?: RecordIdString;
 	options?: CollectionFormOptions<C>;
-	onSuccess?: (record: Data, mode: CollectionFormMode) => MaybePromise<void>;
+	onSuccess?: (record: CollectionResponses[C], mode: CollectionFormMode) => MaybePromise<void>;
 };
 
-export async function setupCollectionForm<C extends CollectionName, Data extends GenericRecord>({
+export function setupCollectionForm<C extends CollectionName>({
 	collection,
 	recordId = undefined,
 	options = {},
+	initialData = {},
 	onSuccess = () => {}
-}: SetupCollectionFormProps<C, Data>): Promise<SuperForm<Data>> {
-	const collectionModel = getCollectionModel(collection);
+}: SetupCollectionFormProps<C>): SuperForm<CollectionRecords[C]> {
+	const collectionModel = getCollectionModel(collection) as CollectionModel;
 
 	/* Schema creation */
 
 	const baseSchema = createCollectionZodSchema(collection) as z.AnyZodObject;
-	const schema = baseSchema
-		.omit(Object.fromEntries((options.fields?.exclude ?? []).map((key) => [key, true])))
-		.strip() // Very important!
-		.strict();
-
-	/* Initial data */
-
-	let initialData: GenericRecord = {};
-	if (recordId) initialData = await pb.collection(collection).getOne(recordId);
+	const schema = baseSchema.omit(
+		Object.fromEntries((options.fields?.exclude ?? []).map((key) => [key, true]))
+	);
 
 	/* Initial data processing */
 	/* This must be done for two reasons
@@ -74,10 +65,10 @@ export async function setupCollectionForm<C extends CollectionName, Data extends
 
 	const processedInitialData = pipe(
 		merge(cloneDeep(initialData), options.fields?.defaults, options.fields?.hide), // Seeding data
+		(data) => removeExcessProperties(data, collectionModel),
 		(data) => mockInitialDataFiles(data, collectionModel),
 		(data) => stringifyJsonFields(data, collectionModel),
-		Record.filter((v) => Boolean(v)), // Useful to remove `undefined` that sometimes cause problems
-		(data) => schema.parse(data) // Strips excess properties
+		Record.filter((v) => Boolean(v)) // Useful to remove `undefined` values that sometimes cause problems
 	);
 
 	/* Form creation */
@@ -97,16 +88,18 @@ export async function setupCollectionForm<C extends CollectionName, Data extends
 					Record.map((v) => (v === undefined ? null : v)) // IMPORTANT!
 				);
 				if (recordId) {
-					const record = await pb.collection(collection).update<Data>(recordId, data);
+					const record = await pb
+						.collection(collection)
+						.update<CollectionResponses[C]>(recordId, data);
 					onSuccess(record, 'update');
 				} else {
-					const record = await pb.collection(collection).create<Data>(data);
+					const record = await pb.collection(collection).create<CollectionResponses[C]>(data);
 					onSuccess(record, 'create');
 				}
 			} catch (e) {
 				if (e instanceof ClientResponseError) {
 					const details = e.data.data as Record<
-						FormPathLeaves<Data>,
+						FormPathLeaves<CollectionRecords[C]>,
 						{ message: string; code: string }
 					>;
 
@@ -125,12 +118,19 @@ export async function setupCollectionForm<C extends CollectionName, Data extends
 
 	//
 
-	return form as SuperForm<Data>;
+	return form as SuperForm<CollectionRecords[C]>;
 }
 
 //
 
-function mockInitialDataFiles(recordData: GenericRecord, collectionModel: AnyCollectionModel) {
+function removeExcessProperties(recordData: GenericRecord, collectionModel: CollectionModel) {
+	const collectionFields = collectionModel.schema.map((f) => f.name);
+	return Record.filter(recordData, (_, k) => collectionFields.includes(k));
+}
+
+//
+
+function mockInitialDataFiles(recordData: GenericRecord, collectionModel: CollectionModel) {
 	return mapRecordDataByFieldType(
 		recordData,
 		collectionModel,
@@ -159,7 +159,7 @@ function mockFile(filename: string, fileFieldConfig: FieldConfig<'file'>) {
 
 //
 
-function stringifyJsonFields(recordData: GenericRecord, collectionModel: AnyCollectionModel) {
+function stringifyJsonFields(recordData: GenericRecord, collectionModel: CollectionModel) {
 	return mapRecordDataByFieldType(recordData, collectionModel, 'json', (fieldValue) => {
 		if (!fieldValue) return fieldValue;
 		return JSON.stringify(fieldValue);
@@ -171,7 +171,7 @@ function stringifyJsonFields(recordData: GenericRecord, collectionModel: AnyColl
 export function cleanFormDataFiles(
 	recordData: GenericRecord,
 	initialData: GenericRecord,
-	model: AnyCollectionModel
+	model: CollectionModel
 ) {
 	const data = cloneDeep(recordData);
 
@@ -221,7 +221,7 @@ class FieldConfigNotFound extends Error {}
 
 function mapRecordDataByFieldType<T extends FieldType = never>(
 	recordData: GenericRecord,
-	model: AnyCollectionModel,
+	model: CollectionModel,
 	fieldType: T,
 	handler: (value: unknown, fieldConfig: FieldConfig<T>) => unknown
 ) {
