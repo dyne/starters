@@ -15,8 +15,9 @@
 		CollectionResponses
 	} from '@/pocketbase/types';
 
+
 	type FormOptions<C extends CollectionName> = Simplify<
-		Omit<ComponentProps<CollectionForm<C, true>>, 'recordId' | 'initialData' | 'collection'>
+		Omit<ComponentProps<CollectionForm<C>>, 'collection' | 'recordId' | 'initialData' | 'fieldsOptions' | 'onCreate' | 'onEdit'>
 	>;
 
 	const PAGE_PARAM = 'page';
@@ -63,22 +64,12 @@
 		return getContext(RECORDS_MANAGER_KEY);
 	}
 
-	//
-
-	export type BaseIndirectExpand = Partial<{
-		[K in keyof CollectionRecords]: keyof CollectionRecords[K];
-	}>;
-
-	type TransformIndirectExpand<Exp extends BaseIndirectExpand> = {
-		[K in keyof Exp as `${K & string}_via_${Exp[K] & string}`]: true;
-	};
-
-	type Expand<C extends CollectionName> = (keyof CollectionExpands[C])[];
+	import type { InverseExpandProp, ExpandProp, ExpandableResponse } from '../types';
 </script>
 
 <script
 	lang="ts"
-	generics="C extends CollectionName, E extends Expand<C>, IndirectExpand extends BaseIndirectExpand"
+	generics="C extends CollectionName, Expand extends ExpandProp<C>, InverseExpand extends InverseExpandProp"
 >
 	import { Array } from 'effect';
 
@@ -106,8 +97,9 @@
 	export let editFormOptions: FormOptions<C> = {};
 
 	export let subscribe: CollectionName[] = [];
-	export let expand: E = [] as unknown as E;
-	export let indirectExpand: IndirectExpand | undefined = undefined;
+	export let expand: Expand = [] as unknown as Expand;
+	export let inverseExpand: InverseExpand | undefined = undefined;
+	inverseExpand;
 
 	export let filter: string | undefined = undefined;
 	export let sort: string | undefined = '-created';
@@ -149,19 +141,11 @@
 
 	$: recordService = pb.collection(collection);
 
-	type ExpandableResponse<
-		C extends CollectionName,
-		E extends Expand<C>,
-		Response = CollectionResponses[C]
-	> = Response & { expand?: Partial<Pick<CollectionExpands[C], E[number]>> };
-
-	let records: (ExpandableResponse<C, E> & {
-		ciao: TransformIndirectExpand<IndirectExpand>;
-	})[] = [];
-	let totalPages = writable(0);
+	let records: ExpandableResponse<C, Expand, InverseExpand>[] = [];
 
 	let error: ClientResponseError | undefined = undefined;
 
+	// let totalPages = writable(0);
 	$: loadRecords($fetchOptions);
 	async function loadRecords(fetchOptions: FetchOptions) {
 		// if (paginate) {
@@ -178,7 +162,8 @@
 		// 	records = res;
 		// }
 		try {
-			records = await recordService.getFullList<ExpandableResponse<C, Expand>>(fetchOptions);
+			records =
+				await recordService.getFullList<ExpandableResponse<C, Expand, InverseExpand>>(fetchOptions);
 		} catch (e) {
 			error = e as ClientResponseError;
 		}

@@ -1,37 +1,32 @@
 <script context="module" lang="ts">
 	import type { GenericRecord } from '@/utils/types';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { ExpandProp, ExpandableResponse } from './types';
 
-	export type CollectionFieldOptions<
-		C extends CollectionName,
-		Expand extends boolean = false,
-		Multiple extends boolean = false
-	> = {
-		collection: C;
+	export type CollectionFieldOptions<C extends CollectionName, Expand extends ExpandProp<C>> = {
 		expand?: Expand;
 		filter?: string;
 		exclude?: RecordIdString[];
-		presenter?: RecordPresenter<ExpandableResponse<C, Expand>>;
+		displayFn?: RecordPresenter<ExpandableResponse<C, Expand>>;
+		displayFields?: (keyof CollectionRecords[C])[];
 		mode?: 'search' | 'select';
-		multiple?: Multiple;
+		multiple?: boolean;
 	};
 </script>
 
 <script
 	lang="ts"
-	generics="Data extends GenericRecord, C extends CollectionName, Expand extends boolean, Multiple extends boolean"
+	generics="Data extends GenericRecord, C extends CollectionName, Expand extends ExpandProp<C> = never"
 >
 	import { m } from '$lib/i18n';
-
 	import { ensureArray } from '@/utils/other';
 	import ListItem from '@/components/custom/listItem.svelte';
 	import { pb } from '@/pocketbase';
 	import ArrayOrItemManager from '@/components/custom/arrayOrItemManager.svelte';
 	import type { Writable } from 'svelte/store';
 	import { CollectionSelect } from '.';
-	import type { ExpandableResponse } from './types';
 	import { createDefaultRecordPresenter, type RecordPresenter } from './utils';
-	import type { RecordIdString } from '@/pocketbase/types';
+	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import * as Form from '@/components/ui/form';
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy } from 'sveltekit-superforms/client';
@@ -45,14 +40,14 @@
 
 	export let form: SuperForm<Data>;
 	export let name: FormPath<Data>;
-	export let options: Partial<FieldOptions> & CollectionFieldOptions<C, Expand, Multiple>;
+	export let collection: C;
+	export let expand: Expand | undefined = undefined;
+	export let options: Partial<FieldOptions> & CollectionFieldOptions<C, Expand> = {};
 
 	let {
-		collection,
 		mode = 'select',
-		presenter = createDefaultRecordPresenter(collection),
-		expand = false as Expand,
-		multiple = false as Multiple,
+		displayFn: presenter = createDefaultRecordPresenter(collection),
+		multiple = false,
 		exclude = []
 	} = options;
 
@@ -69,7 +64,7 @@
 		else return Boolean(value);
 	}
 
-	function addItem(proxy: typeof valueProxy, value: string, multiple: Multiple) {
+	function addItem(proxy: typeof valueProxy, value: string, multiple: boolean) {
 		proxy.update((v) => {
 			if (multiple) {
 				if (Array.isArray(v)) {
@@ -91,7 +86,8 @@
 				{expand}
 				exclude={[...exclude, ...ensureArray($valueProxy)]}
 				filter={options.filter}
-				presenter={options.presenter}
+				displayFn={options.displayFn}
+				displayFields={options.displayFields}
 				onSelect={(record) => {
 					addItem(valueProxy, record.id, multiple);
 				}}
@@ -102,11 +98,13 @@
 				{expand}
 				exclude={[...exclude, ...ensureArray($valueProxy)]}
 				filter={options.filter}
-				presenter={options.presenter}
+				displayFn={options.displayFn}
+				displayFields={options.displayFields}
 				onSelect={(record) => {
 					if (record) addItem(valueProxy, record.id, multiple);
 				}}
 				clearValueOnSelect
+				{attrs}
 			/>
 		{/if}
 

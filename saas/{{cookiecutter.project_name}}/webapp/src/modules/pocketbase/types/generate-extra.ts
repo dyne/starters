@@ -17,6 +17,7 @@ const COLLECTION = 'Collection';
 const FORM_DATA = 'FormData';
 const EXPAND = 'Expand';
 const ZOD_RAW_SHAPE = 'ZodRawShape';
+const RELATED_COLLECTIONS = 'RelatedCollections';
 
 const EXPORT_TYPE = 'export type ';
 const SEPARATOR = '/* ------------------ */';
@@ -37,10 +38,13 @@ async function main() {
 	const formDataIndexType = createIndexType(formDataTypes, FORM_DATA);
 
 	const expandTypes = sortedCollections.map(createCollectionExpand);
-	const expandIndexType = createIndexType(expandTypes, EXPAND);
+	const expandIndexType = createIndexType(expandTypes, EXPAND, true);
 
 	const zodTypes = sortedCollections.map(createCollectionZodRawType);
-	const zodIndexType = createIndexType(zodTypes, ZOD_RAW_SHAPE);
+	const zodIndexType = createIndexType(zodTypes, ZOD_RAW_SHAPE, true);
+
+	const relatedCollectionTypes = sortedCollections.map(createCollectionRelatedCollections);
+	const relatedCollectionsIndexType = createIndexType(relatedCollectionTypes, RELATED_COLLECTIONS);
 
 	const code = [
 		IMPORT_STATEMENTS,
@@ -48,11 +52,14 @@ async function main() {
 		...formDataTypes.map((t) => t.type),
 		formDataIndexType,
 		SEPARATOR,
+		...zodTypes.map((t) => t.type),
+		zodIndexType,
+		SEPARATOR,
 		...expandTypes.map((t) => t.type),
 		expandIndexType,
 		SEPARATOR,
-		...zodTypes.map((t) => t.type),
-		zodIndexType
+		...relatedCollectionTypes.map((t) => t.type),
+		relatedCollectionsIndexType
 	].join('\n\n');
 
 	const formatOptions = await prettier.resolveConfig(import.meta.url, { editorconfig: true });
@@ -93,29 +100,7 @@ function createCollectionFormDataType(model: AnyCollectionModel): GeneratedColle
 	};
 }
 
-function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionTypeData {
-	const collectionName = model.name;
-	const typeName = capitalize(camelCase(model.name)) + EXPAND;
-
-	const expands = model.schema
-		.filter((field) => field.type == 'relation')
-		.map((field) => {
-			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
-			assert(model, 'missing model');
-			const modelName = model.name;
-			const optionalQuestionMark = field.required ? '' : '?';
-			const optionalArray = field.options.maxSelect == 1 ? '' : '[]';
-			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${modelName}"])${optionalArray}`;
-		});
-
-	const expandType = expands.length == 0 ? 'never' : `{ ${expands.join('\n')} }`;
-
-	return {
-		type: `${EXPORT_TYPE} ${typeName} = ${expandType}`,
-		typeName,
-		collectionName
-	};
-}
+// Needed for `@/pocketbase/zod-schema`
 
 function createCollectionZodRawType(model: AnyCollectionModel): GeneratedCollectionTypeData {
 	const collectionName = model.name;
@@ -147,9 +132,62 @@ function createCollectionZodRawType(model: AnyCollectionModel): GeneratedCollect
 	};
 }
 
-function createIndexType(data: GeneratedCollectionTypeData[], category: string) {
+// Needed for `@/collections-management`
+
+function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionTypeData {
+	const collectionName = model.name;
+	const typeName = capitalize(camelCase(model.name)) + EXPAND;
+
+	const expands = model.schema
+		.filter((field) => field.type == 'relation')
+		.map((field) => {
+			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
+			assert(model, 'missing model');
+			const modelName = model.name;
+			const optionalQuestionMark = field.required ? '' : '?';
+			const optionalArray = field.options.maxSelect == 1 ? '' : '[]';
+			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${modelName}"])${optionalArray}`;
+		});
+
+	const expandType = expands.length == 0 ? 'never' : `{ ${expands.join('\n')} }`;
+
+	return {
+		type: `${EXPORT_TYPE} ${typeName} = ${expandType}`,
+		typeName,
+		collectionName
+	};
+}
+
+function createCollectionRelatedCollections(
+	model: AnyCollectionModel
+): GeneratedCollectionTypeData {
+	const collectionName = model.name;
+	const typeName = capitalize(camelCase(model.name)) + RELATED_COLLECTIONS;
+
+	const relatedCollections = model.schema
+		.filter((field) => field.type == 'relation')
+		.map((field) => {
+			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
+			assert(model, 'missing model');
+			return `${field.name} : "${model.name}"`;
+		});
+
+	const relatedType =
+		relatedCollections.length == 0 ? 'never' : `{ ${relatedCollections.join('\n')} }`;
+
+	return {
+		type: `${EXPORT_TYPE} ${typeName} = ${relatedType}`,
+		typeName,
+		collectionName
+	};
+}
+
+//
+
+function createIndexType(data: GeneratedCollectionTypeData[], category: string, addPlural = false) {
 	const entries = data.map((d) => `${d.collectionName} : ${d.typeName}`);
-	return `${EXPORT_TYPE} ${COLLECTION}${category}s = { ${entries.join('\n')} }`;
+	const s = addPlural ? 's' : '';
+	return `${EXPORT_TYPE} ${COLLECTION}${category}${s} = { ${entries.join('\n')} }`;
 }
 
 //

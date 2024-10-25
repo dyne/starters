@@ -8,9 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import {
 		OrgJoinRequestsStatusOptions,
-		type OrgAuthorizationsResponse,
 		type OrgJoinRequestsRecord,
-		type OrgJoinRequestsResponse,
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
 	import { m } from '$lib/i18n';
@@ -24,7 +22,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import { CollectionManager } from '@/collections-management';
-	import { createTypeProp } from '$lib/utils/typeProp';
 
 	import { Button } from '@/components/ui/button';
 	import Avatar from '@/components/custom/avatar.svelte';
@@ -40,16 +37,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			reminders: 0
 		} satisfies OrgJoinRequestsRecord);
 	}
-
-	const expandOrgJoinReq = 'orgJoinRequests_via_organization';
-	const expandOrgAuth = 'orgAuthorizations_via_organization';
-	const expand = [expandOrgJoinReq, expandOrgAuth].join(', ');
-	const recordType = createTypeProp<
-		OrganizationsResponse<{
-			[expandOrgJoinReq]: OrgJoinRequestsResponse[];
-			[expandOrgAuth]: OrgAuthorizationsResponse[];
-		}>
-	>();
 </script>
 
 <PageTop>
@@ -63,20 +50,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <PageContent>
 	<PageCard>
-		<!-- <CollectionManager
-			collection="organizations"
-			initialQueryParams={{
-				expand,
-				filter: `(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`
-			}}
-			subscribe={['orgJoinRequests']}
-			let:records
-		> -->
 		<CollectionManager
 			collection="organizations"
-			indirectExpand={{
-				orgJoinRequests: "organization",
-				orgAuthorizations: "organization"
+			filter={`(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`}
+			inverseExpand={{
+				orgJoinRequests: 'organization',
+				orgAuthorizations: 'organization'
 			}}
 			subscribe={['orgJoinRequests']}
 			let:records
@@ -88,11 +67,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			{#if records.length > 0}
 				<div class="space-y-2">
 					{#each records as org}
-						{@const o = org.ciao.}
 						{@const avatarUrl = pb.files.getUrl(org, org.avatar)}
 						{@const hasDescription = Boolean(org.description)}
-						{@const sentMembershipRequest = org.expand?.[expandOrgJoinReq]?.at(0)}
-						{@const orgAuthorization = org.expand?.[expandOrgAuth]?.at(0)}
+						{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
+						{@const orgAuthorization = org.expand?.orgAuthorizations_via_organization?.at(0)}
 
 						{#if !orgAuthorization}
 							<PlainCard let:Title let:Description>

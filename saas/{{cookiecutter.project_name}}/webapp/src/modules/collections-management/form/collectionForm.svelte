@@ -1,52 +1,20 @@
-<script lang="ts" context="module">
-	import type { CollectionFieldOptions } from '@/collections-management/collectionField.svelte';
-	import type { FieldComponentProp } from './fieldConfigToField.svelte';
-
-	import { Form, type FormOptions } from '@/forms';
-	import type { MaybePromise } from '@/utils/types';
-
-	//
-
-	type Keys<T> = Extract<keyof T, string>;
-
-	export type FieldsOptions<
-		C extends CollectionName,
-		Expand extends boolean,
-		R = CollectionRecords[C]
-	> = {
-		labels: { [K in Keys<R>]?: string };
-		descriptions: { [K in Keys<R>]?: string };
-		placeholders: { [K in Keys<R>]?: string };
-		order: Array<Keys<R>>;
-		exclude: Array<Keys<R>>;
-		hide: { [K in Keys<R>]?: R[K] };
-		defaults: { [K in Keys<R>]?: R[K] };
-		relations: {
-			[K in Keys<R>]?: CollectionFieldOptions<C, Expand>;
-		};
-		components: { [K in Keys<R>]?: FieldComponentProp };
-	};
-</script>
-
-<script lang="ts" generics="C extends CollectionName, Expand extends boolean">
+<script lang="ts" generics="C extends CollectionName">
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { KeyOf, MaybePromise } from '@/utils/types';
 	import { pipe } from 'effect/Function';
-
 	import { ClientResponseError } from 'pocketbase';
-
 	import { normalizeError } from '@/utils/other';
-
 	import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
-
 	import { Button } from '@/components/ui/button';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { m } from '$lib/i18n';
 	import { c } from '$lib/utils/strings';
 	import { pb } from '@/pocketbase';
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
+	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import type { SuperForm } from 'sveltekit-superforms/client';
-	import { createForm, FormError, SubmitButton } from '@/forms';
+	import { Form, createForm, FormError, SubmitButton, type FormOptions } from '@/forms';
 	import {
 		cleanFormDataFiles,
 		getFileFieldsInitialData,
@@ -55,6 +23,7 @@
 	import FieldSchemaToInput from './fieldConfigToField.svelte';
 	import { setError, type FormPathLeaves } from 'sveltekit-superforms';
 	import { Record } from 'effect';
+	import type { FieldsOptions } from './fieldsOptions';
 
 	//
 
@@ -62,9 +31,7 @@
 	export let initialData: Partial<CollectionRecords[C]> = {};
 	export let recordId: RecordIdString | undefined = undefined;
 
-	export let expand: Expand = false as Expand;
-
-	export let fieldsOptions: Partial<FieldsOptions<C, Expand>> = {};
+	export let fieldsOptions: Partial<FieldsOptions<C>> = {};
 	let {
 		order = [],
 		exclude = [],
@@ -79,7 +46,7 @@
 
 	export let formOptions: Partial<FormOptions<CollectionRecords[C]>> = {};
 
-	export let submitButtonText = '';
+	export let submitButtonText: string | undefined = undefined;
 	export let showCancelButton = false;
 	export let hideRequiredIndicator = false;
 
@@ -97,6 +64,25 @@
 		// TODO - Improve type handling here
 		Object.fromEntries(exclude.map((key) => [key, true]))
 	);
+
+	function sortFieldsConfigs(a: any, b: any) {
+		const aIndex = order.indexOf(a.name);
+		const bIndex = order.indexOf(b.name);
+		if (aIndex === -1 && bIndex === -1) {
+			return 0;
+		}
+		if (aIndex === -1) {
+			return 1;
+		}
+		if (bIndex === -1) {
+			return -1;
+		}
+		return aIndex - bIndex;
+	}
+
+	function filterFieldsConfigs(config: AnyFieldConfig) {
+		return !exclude.includes(config.name as keyof CollectionRecords[C]);
+	}
 
 	/* Superform creation */
 
@@ -154,27 +140,6 @@
 		});
 	}
 
-	/* Schema filters */
-
-	function sortFieldsConfigs(a: any, b: any) {
-		const aIndex = order.indexOf(a.name);
-		const bIndex = order.indexOf(b.name);
-		if (aIndex === -1 && bIndex === -1) {
-			return 0;
-		}
-		if (aIndex === -1) {
-			return 1;
-		}
-		if (bIndex === -1) {
-			return -1;
-		}
-		return aIndex - bIndex;
-	}
-
-	function filterFieldsConfigs(config: AnyFieldConfig) {
-		return !exclude.includes(config.name as Keys<CollectionRecords[C]>);
-	}
-
 	/* */
 
 	$: submitButtonText = Boolean(submitButtonText)
@@ -183,10 +148,18 @@
 			? m.Edit_record()
 			: m.Create_record();
 
-	// Ts helper
+	// ts helpers
 
 	function getFieldConfigName(fieldConfig: AnyFieldConfig) {
-		return fieldConfig.name as Keys<CollectionRecords[C]>;
+		return fieldConfig.name as KeyOf<CollectionRecords[C]>;
+	}
+
+	function getRelationsOptions(
+		relationProp: typeof relations,
+		fieldName: KeyOf<CollectionRecords[C]>
+	) {
+		// @ts-expect-error Type mismatch but we don't care
+		return relationProp?.[fieldName] ?? {};
 	}
 </script>
 
@@ -196,7 +169,7 @@
 		{@const hidden = hide ? Object.keys(hide).includes(name) : false}
 		{@const label = c(labels?.[name] ?? name)}
 		{@const component = components?.[name]}
-		{@const collectionFieldOptions = relations?.[name] ?? {}}
+		{@const collectionFieldOptions = getRelationsOptions(relations, name)}
 		{@const description = descriptions?.[name]}
 		{@const placeholder = placeholders?.[name]}
 		<FieldSchemaToInput
@@ -205,10 +178,7 @@
 			fieldConfig={fieldSchema}
 			{hidden}
 			{component}
-			collectionFieldOptions={{
-				...collectionFieldOptions,
-				expand
-			}}
+			{collectionFieldOptions}
 			{placeholder}
 		/>
 	{/each}

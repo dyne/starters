@@ -1,19 +1,13 @@
-<script lang="ts" context="module">
+<script lang="ts" generics="C extends CollectionName, Expand extends ExpandProp<C> = never">
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-</script>
-
-<script lang="ts" generics="C extends CollectionName, Expand extends boolean">
+	import type { ControlAttrs } from 'formsnap';
+	import type { ExpandableResponse, ExpandProp } from './types';
 	import { onMount } from 'svelte';
 	import { pb } from '@/pocketbase';
-
-	import { getRelationFields } from '@/pocketbase/collections-models/utils';
-
 	import type { RecordFullListOptions } from 'pocketbase';
-
-	import type { ExpandableResponse } from './types';
-	import type { RecordIdString } from '@/pocketbase/types';
+	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import {
-		createDefaultRecordPresenter,
+		createRecordDisplay,
 		excludeIdsFilter,
 		mergeFilters,
 		type RecordPresenter
@@ -25,67 +19,65 @@
 	// TODO - support two-way binding
 
 	export let collection: C;
-	export let expand: Expand = false as Expand;
+	export let expand: Expand | undefined = undefined;
 
 	export let exclude: RecordIdString[] = [];
 	export let disabled = false;
 	export let filter: string | undefined = undefined;
 	export let placeholder: string | undefined = undefined;
+
 	export let clearValueOnSelect = false;
 
 	export let onSelect: (record: ExpandableResponse<C, Expand> | undefined) => void = () => {};
-	export let presenter: RecordPresenter<ExpandableResponse<C, Expand>> =
-		createDefaultRecordPresenter(collection);
+
+	export let displayFields: (keyof CollectionRecords[C])[] | undefined = undefined;
+	export let displayFn: RecordPresenter<ExpandableResponse<C, Expand>> | undefined = undefined;
+
+	export let attrs: ControlAttrs | undefined = undefined;
 
 	//
 
-	type ResponseData = ExpandableResponse<C, Expand>;
+	type R = ExpandableResponse<C, Expand>;
 
-	let selectOptions: Selected<ResponseData>[] = [];
+	let selectOptions: Selected<R>[] = [];
 
 	async function loadRecords(
 		exclude: RecordIdString[] = [],
-		filter: string | undefined = undefined
+		filter: string | undefined = undefined,
+		expand: Expand = [] as unknown as Expand
 	) {
 		const options: RecordFullListOptions = {
 			requestKey: null
 		};
 		if (exclude.length > 0) options.filter = excludeIdsFilter(exclude);
 		if (filter) options.filter = mergeFilters(options.filter, filter);
-		if (expand) {
-			const relationFields = getRelationFields(collection);
-			if (relationFields.length > 0) options.expand = relationFields.join(',');
-		}
+		if (expand && expand.length) options.expand = expand.join(',');
 
-		const records = await pb.collection(collection).getFullList<ResponseData>(options);
+		const records = await pb.collection(collection).getFullList<R>(options);
 
 		selectOptions = records.map((item) => ({
 			value: item,
-			label: presenter(item)
+			label: createRecordDisplay<R>(item, displayFields, displayFn)
 		}));
 	}
 
 	//
 
 	onMount(() => {
-		loadRecords(exclude, filter);
-
-		pb.collection(collection).subscribe('*', () => loadRecords(exclude, filter));
-
-		return () => {
-			pb.collection(collection).unsubscribe('*');
-		};
+		loadRecords(exclude, filter, expand);
+		pb.collection(collection).subscribe('*', () => loadRecords(exclude, filter, expand));
+		return () => pb.collection(collection).unsubscribe('*');
 	});
 
 	$: loadRecords(exclude, filter);
 
 	//
 
-	let selected: Selected<ResponseData> | undefined = undefined;
+	let selected: Selected<R> | undefined = undefined;
 	$: {
 		onSelect(selected?.value);
 		if (clearValueOnSelect) selected = undefined;
 	}
 </script>
 
-<SelectInput {placeholder} {disabled} items={selectOptions} bind:selected />
+<SelectInput {placeholder} {disabled} items={selectOptions} bind:selected {attrs} />

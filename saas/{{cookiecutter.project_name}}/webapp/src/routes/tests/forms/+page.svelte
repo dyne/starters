@@ -47,48 +47,33 @@
 	<CollectionField
 		{form}
 		name="relation_field"
+		collection="z_test_collection"
 		options={{
 			mode: 'search',
-			collection: 'z_test_collection',
-			presenter: (record) => {
-				return record.text_field;
-			}
+			displayFields: ['text_field']
 		}}
 	/>
 
 	<CollectionField
 		{form}
 		name="relation_multi_field"
+		collection="z_test_collection"
 		options={{
 			mode: 'search',
 			multiple: true,
-			collection: 'z_test_collection',
-			presenter: (record) => {
-				return record.text_field;
-			}
+			displayFields: ['number_field']
 		}}
 	/>
 
-	<CollectionField
-		{form}
-		name="relation_field"
-		options={{
-			collection: 'z_test_collection',
-			presenter: (record) => {
-				return record.text_field;
-			}
-		}}
-	/>
+	<CollectionField {form} name="relation_field" collection="z_test_collection" />
 
 	<CollectionField
 		{form}
 		name="relation_multi_field"
+		collection="z_test_collection"
 		options={{
 			multiple: true,
-			collection: 'z_test_collection',
-			presenter: (record) => {
-				return record.text_field;
-			}
+			displayFields: ['text_field']
 		}}
 	/>
 

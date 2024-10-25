@@ -61,18 +61,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		<MembershipRequests {organization} />
 		<PendingInvites {organization} />
 	</ProtectedOrgUI>
+	<!-- relations: {
+		role: { mode: 'select', presenter: (record) => record. },
+		user: { presenter: (record) => record.expand. }
+	}} -->
 
 	<PageCard>
 		<CollectionManager
-			{recordType}
 			collection="orgAuthorizations"
-			expand={["user","role"]}
+			expand={['user', 'role']}
 			formOptions={{
-				fieldsOptions:{	hide: { organization: organization.id },
-				relations: {
-					role: { mode: 'select', presenter: (record) => record. },
-					user: { presenter: (record) => record. }
-				}}
+				fieldsOptions: { hide: { organization: organization.id }, relations: {
+					role: {mode: "select", presenter: (record) => record.}
+				} }
 			}}
 			editFormOptions={{
 				fieldsOptions: {

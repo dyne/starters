@@ -1,44 +1,17 @@
 <script lang="ts" context="module">
-	import type { FieldOptions } from '@/forms/fields/types';
-
-	import type { GenericRecord } from '@/utils/types';
-	import type { SvelteComponent, ComponentEvents, ComponentProps, ComponentType } from 'svelte';
-
-	type BaseFieldComponent = SvelteComponent<{
-		field: string;
-		superform: SuperForm<GenericRecord>;
-		options: FieldOptions;
-	}>;
-
-	export function createFieldComponent<C extends BaseFieldComponent>(
-		component: ComponentType<C>,
-		props?: Omit<ComponentProps<C>, 'field' | 'superform'>,
-		events?: ComponentEvents<C>
-	) {
-		return { component, props, events };
-	}
-
-	export type FieldComponentData<C extends BaseFieldComponent = BaseFieldComponent> = ReturnType<
-		typeof createFieldComponent<C>
-	>;
-
-	export type FieldComponentProp<C extends BaseFieldComponent = BaseFieldComponent> =
-		| FieldComponentData<C>
-		| undefined;
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { ExpandProp } from '../types';
 </script>
 
-<script
-	lang="ts"
-	generics="C extends CollectionName, Expand extends boolean, Multiple extends boolean"
->
+<script lang="ts" generics="C extends CollectionName">
+	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import { getFormContext } from '@/forms';
 	import { CheckboxField, FileField, Field, SelectField, TextareaField } from '@/forms/fields';
 	import CollectionField, { type CollectionFieldOptions } from '../collectionField.svelte';
 	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
 	import { isArrayField } from '@/pocketbase/collections-models/utils';
-	import type { AnyFieldConfig, CollectionName } from '@/pocketbase/collections-models/types';
-	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { Selected } from '@/components/custom/selectInput.svelte';
+	import type { FieldComponentProp } from './fieldComponent';
 
 	//
 
@@ -50,11 +23,11 @@
 	export let hidden = false;
 
 	export let collectionFieldOptions: Omit<
-		CollectionFieldOptions<C, Expand, Multiple>,
+		CollectionFieldOptions<C, ExpandProp<C>>,
 		'collection'
 	> = {};
 
-	export let component: FieldComponentProp = undefined;
+	export let component: FieldComponentProp | undefined = undefined;
 
 	//
 
@@ -114,8 +87,8 @@
 	<CollectionField
 		{form}
 		{name}
+		collection={collectionName}
 		options={{
-			collection: collectionName,
 			...collectionFieldOptions,
 			multiple,
 			label,

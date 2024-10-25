@@ -15,3 +15,9 @@ export type Not<Condition extends boolean> = Condition extends true ? false : tr
 //
 
 export type IsArray<T> = T extends Array<unknown> ? true : false;
+
+export type KeyOf<T> = Extract<keyof T, string>;
+
+export type ValueOf<T> = T[keyof T];
+
+export type InferArrayType<T> = T extends (infer U)[] ? U : T;

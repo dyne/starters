@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { CollectionSelect } from '@/collections-management';
-	import RecordSearch from '@/collections-management/collectionSearch.svelte';
+	import CollectionSearch from '@/collections-management/collectionSearch.svelte';
 </script>
 
 <div class="space-y-4">
-	<RecordSearch
+	<CollectionSearch
 		collection="z_test_collection"
-		expand
-		presenter={(record) => {
-			return [record.text_field, record.expand?.relation_multi_field?.map((u) => u.name)].join(
-				' | '
-			);
-		}}
+		expand={['relation_multi_field']}
+		displayFn={(record) => record.expand?.relation_multi_field?.map((u) => u.name).join(', ') ?? ''}
 	/>
 
-	<CollectionSelect collection="z_test_collection" onSelect={(r) => console.log(r)} />
+	<CollectionSelect
+		collection="z_test_collection"
+		onSelect={(r) => console.log(r)}
+		expand={['relation_multi_field']}
+		displayFn={(record) => {
+			return record.expand?.relation_multi_field?.map((u) => u.name).join(', ') ?? '';
+		}}
+	/>
 </div>
