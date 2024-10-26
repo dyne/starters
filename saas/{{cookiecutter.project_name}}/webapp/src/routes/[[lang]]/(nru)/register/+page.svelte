@@ -18,6 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import A from '@/components/custom/a.svelte';
 
 	//
 
@@ -123,16 +124,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	<CheckboxField {form} name="acceptTerms">
 		{m.I_accept_the()}
-		<a
+		<A
 			href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html#%F0%9F%92%BB-didroom-control-room-dashboard-%F0%9F%92%BB"
 			target="_blank"
 		>
 			{m.Terms_and_Conditions()}
-		</a>
+		</A>
 		{m.and()}
-		<a href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html" target="_blank">
+		<A href="https://didroom.com/guides/7_terms-and-conditions/privacy-policy.html" target="_blank">
 			{m.privacy_policy()}
-		</a>
+		</A>
 	</CheckboxField>
 </Form>
 
@@ -140,6 +141,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<Separator />
 	<T class="text-center text-gray-500 dark:text-gray-400" tag="small">
 		{m.Already_have_an_account()}
-		<a href="/login">{m.Login_here()}</a>
+		<A href="/login">{m.Login_here()}</A>
 	</T>
 </div>

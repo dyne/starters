@@ -11,6 +11,7 @@
 	import T from '@/components/custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import A from '@/components/custom/a.svelte';
 
 	const modes: Link[] = [
 		{
@@ -46,6 +47,6 @@
 
 	<T class="self-center text-gray-500 dark:text-gray-400" tag="small">
 		{m.Dont_have_an_account()}
-		<a href="/register">{m.Register_here()}</a>
+		<A href="/register">{m.Register_here()}</A>
 	</T>
 </div>

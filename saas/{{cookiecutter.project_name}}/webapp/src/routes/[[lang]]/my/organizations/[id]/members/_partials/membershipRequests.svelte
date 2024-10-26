@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
 	import { CollectionManager } from '@/collections-components';
 	import { pb } from '@/pocketbase/index.js';
@@ -15,15 +9,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	} from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
-	import PlainCard from '$lib/components/plainCard.svelte';
+	import PlainCard from '$lib/components/itemCard.svelte';
 	import { getUserDisplayName } from '@/pocketbase/utils';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import { Button } from '@/components/ui/button';
-	import { userChallengesSchema } from '@/keypairoom/userQuestions';
+	import Dialog from '@/components/custom/dialog.svelte';
+	import { toast } from 'svelte-sonner';
+	import Trash from 'lucide-svelte/icons/trash';
+	import X from 'lucide-svelte/icons/x';
 
 	//
 
@@ -60,46 +56,64 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 				description={m.pending_membership_requests_description()}
 			/>
 
-			{#each records as request}
-				{@const user = request.expand?.user}
-				{#if user}
-					<PlainCard>
-						<UserAvatar slot="left" {user}></UserAvatar>
-						{getUserDisplayName(user)}
+			<div class="space-y-2">
+				{#each records as request}
+					{@const user = request.expand?.user}
+					{#if user}
+						<PlainCard>
+							<UserAvatar slot="left" {user} />
 
-						<svelte:fragment slot="right">
-							<div class="space-x-1">
-								<Button variant="outline" on:click={() => updateRequestStatus(request, accepted)}>
-									{m.Accept()}
-									<Icon src={UserPlus} ml></Icon>
-								</Button>
+							{getUserDisplayName(user)}
 
-								<ModalWrapper title={m.Warning()} let:openModal>
-									<Button variant="outline" on:click={openModal}>
-										{m.Decline()}
-										<Icon src={CircleOffIcon} ml></Icon>
+							<svelte:fragment slot="right">
+								<div class="space-x-1">
+									<Button
+										variant="outline"
+										on:click={() =>
+											updateRequestStatus(request, accepted)
+												.then(() => toast.success(m.Request_accepted_sucessfully()))
+												.catch(() =>
+													toast.error(m.An_error_occurred_while_handling_membership_request())
+												)}
+									>
+										{m.Accept()}
+										<Icon src={UserPlus} ml />
 									</Button>
 
-									<svelte:fragment slot="modal" let:closeModal>
-										<p>{m.decline_membership_request_warning()}</p>
-										<div class="flex items-center justify-center gap-2">
-											<Button color="alternative" on:click={closeModal}>
-												{m.Cancel()}
+									<Dialog title={m.Warning()}>
+										<svelte:fragment slot="trigger" let:builder>
+											<Button variant="outline" builders={[builder]}>
+												{m.Decline()}
+												<Icon src={CircleOffIcon} ml />
 											</Button>
-											<Button
-												color="red"
-												on:click={() => updateRequestStatus(request, rejected).then(closeModal)}
-											>
-												{m.decline_membership_request()}
-											</Button>
-										</div>
-									</svelte:fragment>
-								</ModalWrapper>
-							</div>
-						</svelte:fragment>
-					</PlainCard>
-				{/if}
-			{/each}
+										</svelte:fragment>
+
+										<svelte:fragment slot="content" let:closeDialog>
+											<p>{m.decline_membership_request_warning()}</p>
+											<div class="flex items-center justify-center gap-2">
+												<Button variant="outline" on:click={closeDialog}>
+													{m.Cancel()}
+													<Icon src={X} ml />
+												</Button>
+												<Button
+													variant="destructive"
+													on:click={() =>
+														updateRequestStatus(request, rejected)
+															.then(closeDialog)
+															.then(() => toast.info(m.Membership_request_declined_successfully()))}
+												>
+													{m.decline_membership_request()}
+													<Icon src={Trash} ml />
+												</Button>
+											</div>
+										</svelte:fragment>
+									</Dialog>
+								</div>
+							</svelte:fragment>
+						</PlainCard>
+					{/if}
+				{/each}
+			</div>
 		</PageCard>
 	{/if}
 </CollectionManager>

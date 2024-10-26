@@ -85,7 +85,6 @@
 			if (options.expand) options.expand = options.expand + ',' + expand;
 			else options.expand = expand;
 		}
-		// TODO - Test
 
 		try {
 			if (perPage) {
@@ -180,9 +179,7 @@
 	<slot {records} selectedRecords={$selectedRecords} Pagination={CollectionManagerPagination} />
 
 	{#if !hide.includes('pagination')}
-		<div class="mt-6">
-			<CollectionManagerPagination />
-		</div>
+		<CollectionManagerPagination class="mt-6" />
 	{/if}
 {:else}
 	<slot name="emptyState">

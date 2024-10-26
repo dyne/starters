@@ -426,5 +426,11 @@
 	"Record_authorization_removed_successfully": "Record authorization removed successfully",
 	"Update_authorizations": "Update authorizations",
 	"Select_all_records": "Select all records",
-	"Deselect_all_records": "Deselect all records"
+	"Deselect_all_records": "Deselect all records",
+	"Request_accepted_sucessfully": "Request accepted sucessfully",
+	"An_error_occurred_while_handling_membership_request": "An error occurred while handling membership request",
+	"Not_Found": "Not Found",
+	"Internal_Error": "Internal Error",
+	"Come_back_home": "Come back home!",
+	"Membership_request_declined_successfully": "Membership request declined successfully"
 }

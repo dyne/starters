@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import T from '@/components/custom/t.svelte';
+	import A from '@/components/custom/a.svelte';
 
 	// TODO - Better <a> styling
 
@@ -53,9 +54,9 @@
 			<div class="w-full space-y-1 pt-8">
 				<T class="text-gray-400">Here are some Helpful link:</T>
 				<ul class="flex gap-6">
-					<li><a href="/">Home</a></li>
-					<li><a href="/login">Login</a></li>
-					<li><a href="/register">Register</a></li>
+					<li><A href="/">Home</A></li>
+					<li><A href="/login">Login</A></li>
+					<li><A href="/register">Register</A></li>
 				</ul>
 			</div>
 		{/if}

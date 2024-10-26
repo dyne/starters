@@ -2,10 +2,8 @@
 	import { cn } from '@/components/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import Card from '@/components/custom/card.svelte';
+	import ItemCard from '$lib/components/itemCard.svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
-	import RecordCardTitle from './recordCardTitle.svelte';
-	import RecordCardDescription from './recordCardDescription.svelte';
 	import {
 		RecordShare,
 		RecordSelect,
@@ -19,27 +17,29 @@
 	export let record: CollectionResponses[C];
 	export let hide: Array<ItemAction> = [];
 
+	let className = '';
+	export { className as class };
+
 	//
 
 	const { selectionContext: selection } = getCollectionManagerContext();
 	const { selectedRecords } = selection;
 
-	$: classes = cn({
+	$: classes = cn(className, {
 		'border-primary': $selectedRecords.includes(record.id)
 	});
 </script>
 
-<Card class={classes} contentClass="!p-4 flex justify-between gap-6">
-	<div class="flex w-0 grow gap-4">
+<ItemCard class="{classes} " let:Title let:Description>
+	<svelte:fragment slot="left">
 		{#if !hide.includes('select')}
 			<RecordSelect {record} />
 		{/if}
-		<div>
-			<slot Title={RecordCardTitle} Description={RecordCardDescription}></slot>
-		</div>
-	</div>
+	</svelte:fragment>
 
-	<div class="">
+	<slot {Title} {Description} />
+
+	<svelte:fragment slot="right">
 		<slot name="right" {record} />
 		{#if !hide.includes('edit')}
 			<RecordEdit {record} />
@@ -50,5 +50,5 @@
 		{#if !hide.includes('delete')}
 			<RecordDelete {record} />
 		{/if}
-	</div>
-</Card>
+	</svelte:fragment>
+</ItemCard>

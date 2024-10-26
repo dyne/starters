@@ -10,7 +10,7 @@
 	type $$Props = DialogProps & {
 		title?: string;
 		description?: string;
-		open: boolean;
+		open?: boolean;
 		class?: string;
 		contentClass?: string;
 	};
@@ -22,7 +22,13 @@
 
 <Dialog.Root bind:open {...omit($$restProps, 'title')} portal="body">
 	<Dialog.Trigger asChild let:builder>
-		<slot name="trigger" {builder}></slot>
+		<slot
+			name="trigger"
+			{builder}
+			openDialog={() => {
+				open = true;
+			}}
+		/>
 	</Dialog.Trigger>
 
 	<Dialog.Content class={contentClass}>
@@ -40,6 +46,6 @@
 			<Separator></Separator>
 		{/if}
 
-		<slot {Footer} />
+		<slot name="content" {Footer} closeDialog={() => (open = false)} />
 	</Dialog.Content>
 </Dialog.Root>

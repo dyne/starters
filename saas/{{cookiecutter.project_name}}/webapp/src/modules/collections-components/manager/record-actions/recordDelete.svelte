@@ -55,26 +55,28 @@
 		</slot>
 	</svelte:fragment>
 
-	<div class="space-y-6">
-		<T>{m.Are_you_sure_you_want_to_delete_this_record()}</T>
+	<svelte:fragment slot="content">
+		<div class="space-y-6">
+			<T>{m.Are_you_sure_you_want_to_delete_this_record()}</T>
 
-		{#if error}
-			<Alert variant="destructive">
-				<p class="font-bold">{m.Error()}</p>
-				<p>{error}</p>
-			</Alert>
-		{/if}
+			{#if error}
+				<Alert variant="destructive">
+					<p class="font-bold">{m.Error()}</p>
+					<p>{error}</p>
+				</Alert>
+			{/if}
 
-		<div class="flex justify-center gap-2">
-			<Button variant="destructive" on:click={() => deleteRecord(record)}>
-				<Icon src={Trash} mr />
-				{m.Delete()}
-			</Button>
+			<div class="flex justify-center gap-2">
+				<Button variant="destructive" on:click={() => deleteRecord(record)}>
+					<Icon src={Trash} mr />
+					{m.Delete()}
+				</Button>
 
-			<Button variant="outline" on:click={dialogState.off}>
-				<Icon src={X} mr />
-				{m.Cancel()}
-			</Button>
+				<Button variant="outline" on:click={dialogState.off}>
+					<Icon src={X} mr />
+					{m.Cancel()}
+				</Button>
+			</div>
 		</div>
-	</div>
+	</svelte:fragment>
 </Dialog>

@@ -5,7 +5,7 @@
 	import { m } from '@/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '@/components/custom/emptyState.svelte';
-	import PlainCard from '$lib/components/plainCard.svelte';
+	import PlainCard from '$lib/components/itemCard.svelte';
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 
 	import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@
 	import Icon from '@/components/custom/icon.svelte';
 	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
 	import { capitalize } from '@/utils/other';
+	import A from '@/components/custom/a.svelte';
 
 	//
 
@@ -162,7 +163,7 @@
 							<PlainCard let:Title let:Description>
 								<div class="flex items-center gap-2">
 									<Title>
-										<a href={`/my/organizations/${org.id}`}>{org.name}</a>
+										<A href={`/my/organizations/${org.id}`}>{org.name}</A>
 									</Title>
 									{#if role.name == ADMIN || role.name == OWNER}
 										<Badge color="dark">{capitalize(role.name)}</Badge>

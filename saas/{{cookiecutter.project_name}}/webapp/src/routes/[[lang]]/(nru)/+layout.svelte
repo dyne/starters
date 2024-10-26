@@ -2,15 +2,16 @@
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
 	import { appTitle } from '@/utils/strings';
 	import Card from '@/components/custom/card.svelte';
+	import A from '@/components/custom/a.svelte';
 
 	// TODO - Fix
 </script>
 
 <div class="grid h-screen place-items-center">
 	<div class="max-w-[500px]">
-		<a href="/">
+		<A href="/">
 			<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
-		</a>
+		</A>
 		<Card>
 			<div class="space-y-4 p-6 sm:p-8 md:space-y-6">
 				<slot />

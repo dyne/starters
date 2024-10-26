@@ -48,7 +48,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 
 	function toggleSidebar() {
-		if ($sidebarMode == 'drawer') $showSidebar = false;
+		if ($sidebarMode == 'drawer') showSidebar.toggle();
+	}
+
+	function closeSidebar() {
+		if ($sidebarMode == 'drawer') showSidebar.off();
 	}
 
 	setContext<UIShellContext>(UI_SHELL_KEY, {
@@ -57,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		sidebarMode
 	});
 
-	onNavigate(toggleSidebar);
+	onNavigate(closeSidebar);
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} />

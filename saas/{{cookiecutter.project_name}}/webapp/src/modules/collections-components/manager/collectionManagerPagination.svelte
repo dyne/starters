@@ -2,17 +2,23 @@
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import * as Pagination from '@/components/ui/pagination';
 
+	let className = '';
+	export { className as class };
+
 	const { paginationContext, fetchOptions } = getCollectionManagerContext();
 	const { currentPage: currentPageStore, totalItems } = paginationContext;
+
+	$: show = typeof $fetchOptions.perPage == 'number' && ($totalItems ?? 0) > $fetchOptions.perPage;
 </script>
 
-{#if $fetchOptions.perPage}
+{#if show && $fetchOptions.perPage}
 	<Pagination.Root
 		count={$totalItems ?? 0}
 		perPage={$fetchOptions.perPage}
 		bind:page={$currentPageStore}
 		let:pages
 		let:currentPage
+		class={className}
 	>
 		<Pagination.Content>
 			<Pagination.Item>

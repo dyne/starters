@@ -1,13 +1,14 @@
 <script>
 	import { featureFlags } from '@/features';
 	import { WelcomeSession } from '@/auth/welcome';
+	import A from '@/components/custom/a.svelte';
 
 	if (WelcomeSession.isActive()) WelcomeSession.end();
 </script>
 
 <div class="flex flex-col p-4">
-	<a href="/my/profile">My profile</a>
+	<A href="/my/profile">My profile</A>
 	{#if $featureFlags.ORGANIZATIONS}
-		<a href="/my/organizations">My organizations</a>
+		<A href="/my/organizations">My organizations</A>
 	{/if}
 </div>

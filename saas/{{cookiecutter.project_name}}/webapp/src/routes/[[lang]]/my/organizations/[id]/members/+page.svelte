@@ -7,7 +7,7 @@
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import PlainCard from '$lib/components/plainCard.svelte';
+	import PlainCard from '$lib/components/itemCard.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
@@ -59,7 +59,7 @@
 		>
 			<SectionTitle title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
-					<Button on:click={showInviteModal.on}>
+					<Button variant="outline" on:click={showInviteModal.on}>
 						<Plus size="20" class="mr-2" />
 						{m.invite_members()}
 					</Button>
@@ -77,12 +77,12 @@
 								<p>
 									{getUserDisplayName(user)}
 								</p>
-								<div class="flex gap-2">
+								<div class="flex gap-1">
 									{#if user.id == $currentUser?.id}
 										<Badge>{m.You()}</Badge>
 									{/if}
 									{#if role.name != OrgRoles.MEMBER}
-										<Badge>{capitalize(role.name)}</Badge>
+										<Badge variant="secondary">{capitalize(role.name)}</Badge>
 									{/if}
 								</div>
 							</div>
@@ -93,7 +93,7 @@
 										{#if userRole.level < role.level}
 											<RecordEdit {record}>
 												<svelte:fragment slot="trigger" let:builder>
-													<Button color="primary" size="sm" builders={[builder]}>
+													<Button variant="outline" size="sm" builders={[builder]}>
 														{m.Edit_role()}
 														<Icon src={Pencil} ml />
 													</Button>
@@ -102,7 +102,7 @@
 
 											<RecordDelete {record}>
 												<svelte:fragment slot="trigger" let:builder>
-													<Button color="primary" size="sm" builders={[builder]}>
+													<Button variant="outline" size="sm" builders={[builder]}>
 														{m.Remove()}
 														<Icon src={X} ml />
 													</Button>
