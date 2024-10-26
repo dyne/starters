@@ -31,7 +31,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import { onNavigate } from '$app/navigation';
 
 	export let sidebarLayoutBreakpoint: number | undefined = undefined;

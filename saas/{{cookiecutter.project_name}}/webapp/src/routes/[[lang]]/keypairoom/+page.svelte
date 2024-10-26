@@ -24,7 +24,7 @@
 	// Components
 	import { Form, createForm } from '@/forms';
 	import { Field } from '@/forms/fields';
-	import CopyButton from '$lib/components/copyButton.svelte';
+	import CopyButton from '@/components/custom/copyButton.svelte';
 	import { HelpCircle } from 'lucide-svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';

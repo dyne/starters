@@ -9,13 +9,11 @@
 
 	type $$Props = ComponentProps<Button> & {
 		delay?: number;
-		iconSize?: number;
 		textToCopy: string;
 	};
 
 	export let textToCopy: $$Props['textToCopy'];
 	export let delay: $$Props['delay'] = 2000;
-	export let iconSize: $$Props['iconSize'] = 20;
 
 	let isCopied = false;
 
@@ -28,10 +26,10 @@
 	}
 </script>
 
-<Button variant="outline" on:click={copyText} color="alternative" {...$$restProps}>
+<Button variant="outline" on:click={copyText} {...$$restProps}>
 	{#if !isCopied}
 		<slot />
-		<Icon src={ClipboardPlus} size={iconSize}></Icon>
+		<Icon src={ClipboardPlus} ml />
 	{:else}
 		<span class="whitespace-nowrap">✅ {m.Copied()}</span>
 	{/if}

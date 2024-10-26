@@ -2,7 +2,7 @@
 	import { toast } from 'svelte-sonner';
 	import { getExceptionMessage } from '@/utils/errors';
 	import { m } from '@/i18n';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import Icon from '@/components/custom/icon.svelte';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import T from '@/components/custom/t.svelte';

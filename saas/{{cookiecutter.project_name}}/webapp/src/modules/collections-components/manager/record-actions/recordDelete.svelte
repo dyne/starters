@@ -3,7 +3,7 @@
 	import { getExceptionMessage } from '@/utils/errors';
 	import type { MaybePromise } from '@/utils/types';
 	import { m } from '@/i18n';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import T from '@/components/custom/t.svelte';
 	import Alert from '@/components/custom/alert.svelte';

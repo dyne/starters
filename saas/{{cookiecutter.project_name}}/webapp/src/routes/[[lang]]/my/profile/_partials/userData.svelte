@@ -14,7 +14,7 @@
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { z } from 'zod';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import SubmitButton from '@/forms/components/submitButton.svelte';
 
 	//

@@ -9,8 +9,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { currentUser } from '@/pocketbase';
 	import { getUserRole, type OrgRole } from '@/organizations';
 	import { createOrganizationLinks } from '@/organizations';
-	import type { NavigationTabProps } from './navigationTab.svelte';
-	import NavigationTabs from './navigationTabs.svelte';
+	import type { NavigationTabProps } from '@/components/custom/navigationTab.svelte';
+	import NavigationTabs from '@/components/custom/navigationTabs.svelte';
 
 	export let organizationId: string;
 

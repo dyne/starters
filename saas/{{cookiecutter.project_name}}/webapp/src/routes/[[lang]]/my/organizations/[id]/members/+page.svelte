@@ -13,10 +13,10 @@
 	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
 	import { getUserDisplayName } from '@/pocketbase/utils';
-	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
+	import OrganizationLayout from '@/organizations/components/organizationLayout.svelte';
 	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
 	import PendingInvites from './_partials/pendingInvites.svelte';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { capitalize } from '@/utils/other';

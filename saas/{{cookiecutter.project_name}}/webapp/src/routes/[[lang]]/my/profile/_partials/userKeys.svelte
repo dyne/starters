@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CopyButton from '$lib/components/copyButton.svelte';
+	import CopyButton from '@/components/custom/copyButton.svelte';
 	import type { PublicKeys } from '@/keypairoom/utils';
 	import Button from '@/components/ui/button/button.svelte';
 	import T from '@/components/custom/t.svelte';

@@ -8,7 +8,7 @@
 	} from '@/collections-components/form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import { Button } from '@/components/ui/button';
-	import { createToggleStore } from '$lib/components/utils/toggleStore';
+	import { createToggleStore } from '@/components/custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
 	import { Plus } from 'lucide-svelte';

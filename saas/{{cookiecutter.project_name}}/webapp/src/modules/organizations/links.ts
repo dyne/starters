@@ -4,7 +4,7 @@
 
 import type { OrganizationsResponse } from '@/pocketbase/types';
 import type { m as messages } from '@/i18n';
-import type { NavigationTab } from '$lib/components/navigationTabs.svelte';
+import type { NavigationTab } from '@/components/custom/navigationTabs.svelte';
 import { Cog, Home, Users } from 'lucide-svelte';
 import type { SidebarItemProps } from '@/components/layout/sidebar/types';
 import { pb } from '@/pocketbase';

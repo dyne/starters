@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts" context="module">
 	export interface NavigationTabProps extends LinkWithIcon {
 		activeForSubpages?: boolean;
@@ -23,8 +17,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	//
 
 	$: isActive = isLinkActive(href, $page, activeForSubpages);
-
-	//
 
 	$: classes = cn(
 		'inline-block text-sm font-medium text-center p-4 py-3 border-b-2 flex items-center whitespace-nowrap',

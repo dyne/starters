@@ -5,13 +5,13 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts" context="module">
-	import type { CalcBreadcrumbsOptions } from './Breadcrumbs';
+	import type { CalcBreadcrumbsOptions } from './breadcrumbs';
 	export { type CalcBreadcrumbsOptions as BreadcrumbsOptions };
 </script>
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { calcBreadcrumbs } from './Breadcrumbs';
+	import { calcBreadcrumbs } from './breadcrumbs';
 	import type { Link } from '@/components/types';
 
 	//
