@@ -29,7 +29,7 @@
 <Button variant="outline" on:click={copyText} {...$$restProps}>
 	{#if !isCopied}
 		<slot />
-		<Icon src={ClipboardPlus} ml />
+		<Icon src={ClipboardPlus} ml={Boolean($$slots.default)} />
 	{:else}
 		<span class="whitespace-nowrap">✅ {m.Copied()}</span>
 	{/if}

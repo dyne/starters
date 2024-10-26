@@ -64,7 +64,7 @@
 		</div>
 	</svelte:fragment>
 
-	<div class="space-y-1 p-2">
+	<div class="p-2">
 		<SidebarItems
 			links={[
 				{
@@ -119,7 +119,7 @@
 	{/if}
 
 	<svelte:fragment slot="bottom">
-		<div class="space-y-1 p-2">
+		<div class="p-2">
 			<SidebarItems
 				links={[
 					{

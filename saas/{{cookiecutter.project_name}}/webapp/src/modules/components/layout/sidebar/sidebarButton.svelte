@@ -19,6 +19,7 @@
 	class={classes}
 	on:click
 	{...Record.remove($$restProps, 'text')}
+	size="sm"
 >
 	<div class="flex items-center">
 		<SidebarIcon {props} />
