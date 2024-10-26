@@ -10,7 +10,6 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$paraglide: './src/paraglide',
 			'@': './src/modules',
 			$zencode: './client_zencode'
 		},

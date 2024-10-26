@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { zod } from 'sveltekit-superforms/adapters';
 
 	import { featureFlags } from '@/features';
-	import { OrganizationInviteSession } from '$lib/organizations/invites';
+	import { OrganizationInviteSession } from '@/organizations/invites';
 	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';

@@ -16,7 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { m } from '@/i18n';
 	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
-	import { getUserDisplayName } from '$lib/utils/pb';
+	import { getUserDisplayName } from '@/pocketbase/utils';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';

@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { createI18n } from '@inlang/paraglide-sveltekit';
-import * as runtime from '$paraglide/runtime.js';
-import * as m from '$paraglide/messages.js';
+import * as runtime from './paraglide/runtime.js';
+import * as m from './paraglide/messages.js';
 
 export const i18n = createI18n(runtime);
-export { m };
+export { m, runtime };
 
 //
 
@@ -15,7 +15,7 @@ import { goto as sveltekitGoto } from '$app/navigation';
 import { redirect as sveltekitRedirect, type Page } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import { page } from '$app/stores';
-import type { AvailableLanguageTag } from '$paraglide/runtime.js';
+import type { AvailableLanguageTag } from './paraglide/runtime.js';
 import { Record } from 'effect';
 
 //

@@ -5,7 +5,7 @@
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { Link } from '$lib/utils/types';
+	import type { Link } from '@/components/types';
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
 	import T from '@/components/custom/t.svelte';

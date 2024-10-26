@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CollectionManager } from '@/collections-components/manager';
 	import { m } from '@/i18n';
-	import { OrgRoles, ProtectedOrgUI } from '$lib/organizations';
+	import { OrgRoles, ProtectedOrgUI } from '@/organizations';
 	import Button from '@/components/ui/button/button.svelte';
 	import { Pencil, Plus, X } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
@@ -10,16 +10,16 @@
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
-	import { c } from '$lib/utils/strings.js';
 	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
-	import { getUserDisplayName } from '$lib/utils/pb';
+	import { getUserDisplayName } from '@/pocketbase/utils';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
 	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
 	import PendingInvites from './_partials/pendingInvites.svelte';
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import Icon from '@/components/custom/icon.svelte';
+	import { capitalize } from '@/utils/other';
 
 	//
 
@@ -82,7 +82,7 @@
 										<Badge>{m.You()}</Badge>
 									{/if}
 									{#if role.name != OrgRoles.MEMBER}
-										<Badge>{c(role.name)}</Badge>
+										<Badge>{capitalize(role.name)}</Badge>
 									{/if}
 								</div>
 							</div>

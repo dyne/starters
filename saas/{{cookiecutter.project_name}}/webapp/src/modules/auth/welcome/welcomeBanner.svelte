@@ -1,6 +1,6 @@
 <script>
 	import { m } from '@/i18n';
-	import { appTitle } from '$lib/strings';
+	import { appTitle } from '@/utils/strings';
 	import Alert from '@/components/custom/alert.svelte';
 	import T from '@/components/custom/t.svelte';
 

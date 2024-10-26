@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import { currentUser } from '@/pocketbase';
 	import { Logo, Topbar, HamburgerButton, UiShell } from '@/components/layout';
 	import { m } from '@/i18n';
-	import { getUserDisplayName } from '$lib/utils/pb';
+	import { getUserDisplayName } from '@/pocketbase/utils';
 
 	import MySidebar from './_partials/mySidebar.svelte';
 

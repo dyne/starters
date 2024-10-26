@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-	import { appTitle } from '$lib/strings';
+	import { appTitle } from '@/utils/strings';
 	import Card from '@/components/custom/card.svelte';
 
 	// TODO - Fix

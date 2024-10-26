@@ -1,6 +1,6 @@
 import { loadFeatureFlags } from '@/features/index.js';
 import { redirect } from '@/i18n/index.js';
-import { OrganizationInviteSession } from '$lib/organizations/invites';
+import { OrganizationInviteSession } from '@/organizations/invites';
 import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
 

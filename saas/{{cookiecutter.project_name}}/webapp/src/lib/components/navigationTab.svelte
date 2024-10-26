@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { LinkWithIcon } from '$lib/utils/types';
+	import type { LinkWithIcon } from '@/components/types';
 	import { isLinkActive } from '@/utils/other';
 	import Icon from '@/components/custom/icon.svelte';
 	import { cn } from '@/components/utils';

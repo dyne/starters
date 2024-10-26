@@ -11,15 +11,16 @@
 	import { z } from 'zod';
 	import { Form, createForm } from '@/forms';
 	import { Field, TextareaField } from '@/forms/fields';
-	import Card from '$lib/components/card.svelte';
+	import Card from '@/components/custom/card.svelte';
 	import { featureFlags } from '@/features';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 	import { m } from '@/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
-	import { log } from '$lib/utils/devLog';
+	import { log } from '@/utils/other';
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import PageCard from '@/components/custom/pageCard.svelte';
 
 	//
 
@@ -80,7 +81,7 @@
 		'skin buyer sunset person run push elevator under debris soft surge man';
 </script>
 
-<Card class="space-y-6 p-6">
+<PageCard>
 	{#if !success}
 		<T tag="h4">{m.Regenerate_keys()}</T>
 
@@ -119,4 +120,4 @@
 			</T>
 		</div>
 	{/if}
-</Card>
+</PageCard>

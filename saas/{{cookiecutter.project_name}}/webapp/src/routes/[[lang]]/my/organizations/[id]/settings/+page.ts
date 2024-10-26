@@ -1,4 +1,4 @@
-import { blockMembersWithoutRoles } from '$lib/organizations';
+import { blockMembersWithoutRoles } from '@/organizations';
 
 export const load = async ({ params, fetch }) => {
 	const organizationId = params.id;

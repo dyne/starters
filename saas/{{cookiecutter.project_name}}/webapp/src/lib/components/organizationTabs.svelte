@@ -7,8 +7,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { m } from '@/i18n';
 	import { currentUser } from '@/pocketbase';
-	import { getUserRole, type OrgRole } from '$lib/organizations';
-	import { createOrganizationLinks } from '$lib/organizations';
+	import { getUserRole, type OrgRole } from '@/organizations';
+	import { createOrganizationLinks } from '@/organizations';
 	import type { NavigationTabProps } from './navigationTab.svelte';
 	import NavigationTabs from './navigationTabs.svelte';
 

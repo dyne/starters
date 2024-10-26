@@ -1,4 +1,6 @@
 <script lang="ts" generics="C extends CollectionName">
+	import { capitalize } from '@/utils/other';
+
 	import type { SuperForm } from 'sveltekit-superforms';
 
 	import { getCollectionModel } from '@/pocketbase/collections-models';
@@ -7,7 +9,6 @@
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
 	import { m } from '@/i18n';
-	import { c } from '$lib/utils/strings';
 	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import { Form, FormError, SubmitButton, type FormOptions } from '@/forms';
 	import { setupCollectionForm } from './collectionFormSetup';
@@ -104,7 +105,7 @@
 		{#each fieldsConfigs as fieldSchema}
 			{@const name = getFieldConfigName(fieldSchema)}
 			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
-			{@const label = c(fieldsOptions?.labels?.[name] ?? name)}
+			{@const label = capitalize(fieldsOptions?.labels?.[name] ?? name)}
 			{@const component = fieldsOptions?.components?.[name]}
 			{@const collectionFieldOptions = getRelationsOptions(fieldsOptions?.relations ?? {}, name)}
 			{@const description = fieldsOptions?.descriptions?.[name]}

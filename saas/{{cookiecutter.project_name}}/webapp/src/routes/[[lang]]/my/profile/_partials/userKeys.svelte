@@ -1,11 +1,11 @@
 <script lang="ts">
 	import CopyButton from '$lib/components/copyButton.svelte';
-	import { capitalizeFirstLetter } from '$lib/utils/strings';
 	import type { PublicKeys } from '@/keypairoom/utils';
 	import Button from '@/components/ui/button/button.svelte';
 	import T from '@/components/custom/t.svelte';
 	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import { capitalize } from '@/utils/other';
 
 	export let keys: PublicKeys | undefined = undefined;
 </script>
@@ -16,7 +16,7 @@
 {#if keys}
 	<div class="flex flex-col gap-4">
 		{#each Object.entries(keys) as [keyName, key]}
-			{@const title = capitalizeFirstLetter(keyName.replaceAll('_', ' '))}
+			{@const title = capitalize(keyName.replaceAll('_', ' '))}
 			<div class="flex w-full flex-row items-center justify-between gap-4">
 				<div class="w-0 grow overflow-hidden">
 					<T class="font-medium">{title}</T>

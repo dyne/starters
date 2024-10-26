@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { calcBreadcrumbs } from './Breadcrumbs';
-	import type { Link } from '$lib/utils/types';
+	import type { Link } from '@/components/types';
 
 	//
 

@@ -1,6 +1,7 @@
 import { pb } from '@/pocketbase';
-import { bufferDecode, bufferEncode } from '$lib/utils/buffer';
-import { log } from '$lib/utils/devLog';
+import { log } from '@/utils/other';
+
+//
 
 export async function registerUser(username: string, description = '') {
 	const credentialCreationOptions = await pb.send('/api/webauthn/register/begin/' + username, {});
@@ -88,4 +89,21 @@ export async function isPlatformAuthenticatorAvailable() {
 	if (isWebauthnSupported())
 		return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
 	else return false;
+}
+
+/* Utils */
+
+// Base64 to ArrayBuffer
+function bufferDecode(value: string) {
+	return Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
+}
+
+function bufferEncode(buffer: ArrayBuffer) {
+	let binary = '';
+	const bytes = new Uint8Array(buffer);
+	const len = bytes.byteLength;
+	for (let i = 0; i < len; i++) {
+		binary += String.fromCharCode(bytes[i]);
+	}
+	return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }

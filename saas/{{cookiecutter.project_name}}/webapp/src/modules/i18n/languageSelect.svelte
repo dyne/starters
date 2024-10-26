@@ -11,10 +11,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import Icon from '@/components/custom/icon.svelte';
 	import * as Popover from '@/components/ui/popover';
 	import { Button } from '@/components/ui/button';
-	import { languageTag } from '$paraglide/runtime';
+	import { runtime } from '.';
 
 	const languages = languagesData($page);
-	$: currentLanguage = languages.find((l) => l.tag == languageTag())!;
+	$: currentLanguage = languages.find((l) => l.tag == runtime.languageTag())!;
 </script>
 
 <Popover.Root>

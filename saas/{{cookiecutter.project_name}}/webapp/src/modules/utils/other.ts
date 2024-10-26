@@ -60,8 +60,8 @@ export function maybeArrayIsValue<T>(data: MaybeArray<T>): boolean {
 
 //
 
-export function log(data: unknown) {
-	if (dev) console.log(data);
+export function log(...data: unknown[]) {
+	if (dev) console.log(...data);
 }
 
 export function pipeLog<T>(data: T): T {

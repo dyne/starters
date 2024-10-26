@@ -11,7 +11,7 @@ import { redirect } from '@/i18n';
 import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '@/keypairoom/keypair';
 import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 
-import { OrganizationInviteSession } from '$lib/organizations/invites/index.js';
+import { OrganizationInviteSession } from '@/organizations/invites/index.js';
 
 export const load = async ({ url, fetch }) => {
 	if (!browser) return;

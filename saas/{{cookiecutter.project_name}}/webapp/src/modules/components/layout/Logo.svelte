@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script>
-	import { appTitle } from '$lib/strings';
+	import { appTitle } from '@/utils/strings';
 
 	/*
 	 * The url to navigate to when the logo is clicked.

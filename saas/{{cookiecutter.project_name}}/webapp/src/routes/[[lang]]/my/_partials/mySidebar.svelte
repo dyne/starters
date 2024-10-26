@@ -7,10 +7,10 @@
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
 
 	import Logo from '@/components/layout/Logo.svelte';
-	import { createOrganizationSidebarLinks } from '$lib/organizations';
-	import { getUserRole } from '$lib/organizations/utils';
-	import { appTitle } from '$lib/strings';
-	import { getUserDisplayName } from '$lib/utils/pb';
+	import { createOrganizationSidebarLinks } from '@/organizations';
+	import { getUserRole } from '@/organizations/utils';
+	import { appTitle } from '@/utils/strings';
+	import { getUserDisplayName } from '@/pocketbase/utils';
 
 	import { currentUser, pb } from '@/pocketbase';
 

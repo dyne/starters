@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { currentUser } from '@/pocketbase';
 
-	import { appTitle } from '$lib/strings';
+	import { appTitle } from '@/utils/strings';
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
 	import { Button } from '@/components/ui/button';

@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { OrgRoles } from '$lib/organizations';
-	import { c } from '$lib/utils/strings.js';
+	import { OrgRoles } from '@/organizations';
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '@/i18n';
@@ -20,6 +19,7 @@
 
 	import Icon from '@/components/custom/icon.svelte';
 	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
+	import { capitalize } from '@/utils/other';
 
 	//
 
@@ -165,7 +165,7 @@
 										<a href={`/my/organizations/${org.id}`}>{org.name}</a>
 									</Title>
 									{#if role.name == ADMIN || role.name == OWNER}
-										<Badge color="dark">{c(role.name)}</Badge>
+										<Badge color="dark">{capitalize(role.name)}</Badge>
 									{/if}
 								</div>
 								{#if org.description}

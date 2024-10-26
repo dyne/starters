@@ -2,7 +2,7 @@
 	import Icon from '@/components/custom/icon.svelte';
 	import { createForm, Form, SubmitButton } from '@/forms';
 	import { m } from '@/i18n';
-	import { readFileAsString } from '$lib/utils/files';
+	import { readFileAsString } from '@/utils/files';
 	import { Array as A } from 'effect';
 	import { ArrowRight } from 'lucide-svelte';
 	import { z } from 'zod';

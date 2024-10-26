@@ -6,7 +6,7 @@
 
 	import '../app.postcss';
 	import { version } from '$app/environment';
-	import { appTitle } from '$lib/strings';
+	import { appTitle } from '@/utils/strings';
 
 	console.info(`${appTitle} version: 🔖 ${version}`);
 </script>
