@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$lib/i18n';
+	import { goto } from '@/i18n';
 	import { loginUser } from '@/webauthn/index';
 	import { z } from 'zod';
 

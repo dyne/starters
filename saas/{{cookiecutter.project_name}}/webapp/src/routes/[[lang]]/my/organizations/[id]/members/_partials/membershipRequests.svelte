@@ -13,7 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrgJoinRequestsResponse,
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
@@ -23,6 +23,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	import ModalWrapper from '$lib/components/modalWrapper.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import { Button } from '@/components/ui/button';
+	import { userChallengesSchema } from '@/keypairoom/userQuestions';
 
 	//
 
@@ -44,8 +45,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <CollectionManager
 	collection="orgJoinRequests"
-	filter={`organization.id = "${organization.id}" && status = "${pending}"`}
-	expand={['user']}
+	fetchOptions={{
+		filter: `organization.id = "${organization.id}" && status = "${pending}"`,
+		expand: ['user']
+	}}
 	let:records
 	hide={['emptyState']}
 >

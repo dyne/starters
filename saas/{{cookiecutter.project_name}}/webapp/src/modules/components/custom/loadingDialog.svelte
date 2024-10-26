@@ -13,7 +13,7 @@
 >
 	<AlertDialog.Content
 		class="flex !w-1/5 !min-w-[150px] flex-col items-center justify-center gap-2"
-		tabindex={-1}
+		tabindex={null}
 	>
 		<Spinner />
 		<AlertDialog.Description>

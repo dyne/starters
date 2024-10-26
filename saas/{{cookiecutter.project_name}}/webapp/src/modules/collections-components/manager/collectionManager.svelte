@@ -1,99 +1,54 @@
-<script lang="ts" context="module">
-	import type { CollectionFormOptions, FieldsOptions } from '../form/formOptions';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import { getContext } from 'svelte';
-	import type { RecordService } from 'pocketbase';
-	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
-	import CollectionManagerPagination from './collectionManagerPagination.svelte';
-
-	//
-
-	type FetchOptions<
-		C extends CollectionName,
-		Expand extends ExpandProp<C> = never,
-		InverseExpand extends InverseExpandProp = never
-	> = {
-		subscribe: CollectionName[];
-		expand: Expand;
-		inverseExpand: InverseExpand;
-		filter: string;
-		sort: string;
-		perPage: number | false;
-	};
-
-	type PaginationContext = {
-		currentPage: Writable<number | undefined>;
-		totalItems: Writable<number | undefined>;
-	};
-
-	export type RecordsManagerContext<
-		C extends CollectionName,
-		Expand extends ExpandProp<C> = never,
-		InverseExpand extends InverseExpandProp = never
-	> = {
-		collection: CollectionName;
-		recordService: RecordService;
-		fetchOptions: Writable<Partial<FetchOptions<C, Expand, InverseExpand>>>;
-		paginationContext: PaginationContext;
-		selectionContext: {
-			selectedRecords: Writable<RecordIdString[]>;
-			areAllRecordsSelected: (selectedRecords: RecordIdString[]) => boolean;
-			toggleSelectAllRecords: () => void;
-			discardSelection: () => void;
-		};
-		formsOptions: {
-			base: CollectionFormOptions;
-			create: CollectionFormOptions;
-			edit: CollectionFormOptions;
-		};
-		formFieldsOptions: {
-			base: Partial<FieldsOptions<C>>;
-			create: Partial<FieldsOptions<C>>;
-			edit: Partial<FieldsOptions<C>>;
-		};
-	};
-
-	const RECORDS_MANAGER_KEY = Symbol('rmk');
-
-	export function getRecordsManagerContext<C extends CollectionName>(): RecordsManagerContext<C> {
-		return getContext(RECORDS_MANAGER_KEY);
-	}
-
-	import type { InverseExpandProp, ExpandProp, ExpandableResponse } from '../types';
-</script>
-
 <script
 	lang="ts"
 	generics="C extends CollectionName, Expand extends ExpandProp<C> = never, InverseExpand extends InverseExpandProp = never"
 >
+	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
+
 	import { ensureArray } from '@/utils/other';
 	import { FolderIcon } from 'lucide-svelte';
-	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
-	import type { RecordIdString } from '@/pocketbase/types';
 	import { Array as A } from 'effect';
+	import CollectionManagerPagination from './collectionManagerPagination.svelte';
+
+	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { ExpandProp, InverseExpandProp } from '../types';
+	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
+	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
+	import type { ExpandableResponse } from '../types';
+	import {
+		COLLECTION_MANAGER_KEY,
+		type CollectionManagerContext,
+		type FetchOptions
+	} from './collectionManagerContext';
+	import type { UIOptions as CollectionFormUIOptions, FieldsOptions } from '../form/formOptions';
+	import type { FormOptions as SuperformsOptions } from '@/forms';
 
 	//
 
 	export let collection: C;
 
-	export let formOptions: CollectionFormOptions = {};
-	export let createFormOptions: CollectionFormOptions = {};
-	export let editFormOptions: CollectionFormOptions = {};
+	export let hide: ('emptyState' | 'pagination')[] = [];
+	export let fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {};
+
+	//
+
+	export let formUIOptions: CollectionFormUIOptions = {};
+	export let createFormUIOptions: CollectionFormUIOptions = {};
+	export let editFormUIOptions: CollectionFormUIOptions = {};
+
+	export let formSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
+	export let createFormSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
+	export let editFormSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
 
 	export let formFieldsOptions: Partial<FieldsOptions<C>> = {};
 	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
-
-	export let hide: ('emptyState' | 'pagination')[] = [];
-
-	export let fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {};
 
 	//
 
@@ -130,6 +85,7 @@
 			if (options.expand) options.expand = options.expand + ',' + expand;
 			else options.expand = expand;
 		}
+		// TODO - Test
 
 		try {
 			if (perPage) {
@@ -180,7 +136,7 @@
 
 	/* Context */
 
-	setContext<RecordsManagerContext<C, Expand, InverseExpand>>(RECORDS_MANAGER_KEY, {
+	setContext<CollectionManagerContext<C, Expand, InverseExpand>>(COLLECTION_MANAGER_KEY, {
 		collection,
 		recordService,
 		paginationContext: {
@@ -195,14 +151,21 @@
 			discardSelection
 		},
 		formsOptions: {
-			base: formOptions,
-			create: createFormOptions,
-			edit: editFormOptions
-		},
-		formFieldsOptions: {
-			base: formFieldsOptions,
-			create: createFormFieldsOptions,
-			edit: editFormFieldsOptions
+			base: {
+				uiOptions: formUIOptions,
+				superformsOptions: formSuperformsOptions,
+				fieldsOptions: formFieldsOptions
+			},
+			create: {
+				uiOptions: createFormUIOptions,
+				superformsOptions: createFormSuperformsOptions,
+				fieldsOptions: createFormFieldsOptions
+			},
+			edit: {
+				uiOptions: editFormUIOptions,
+				superformsOptions: editFormSuperformsOptions,
+				fieldsOptions: editFormFieldsOptions
+			}
 		}
 	});
 </script>

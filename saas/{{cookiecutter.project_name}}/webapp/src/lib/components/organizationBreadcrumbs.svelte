@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { pb } from '@/pocketbase';
 	import type { BreadcrumbsOptions } from './Breadcrumbs.svelte';
 	import Breadcrumbs from './Breadcrumbs.svelte';

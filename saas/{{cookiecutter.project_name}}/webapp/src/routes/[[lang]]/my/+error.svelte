@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import T from '@/components/custom/t.svelte';
 	const status = $page.status;
 	const title = status === 404 ? 'Not Found' : 'Internal Error';

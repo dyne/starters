@@ -3,7 +3,7 @@
 	import { currentUser } from '@/pocketbase';
 	import { CollectionManager, RecordDelete, RecordEdit } from '@/collections-components/manager';
 	import T from '@/components/custom/t.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import Icon from '@/components/custom/icon.svelte';

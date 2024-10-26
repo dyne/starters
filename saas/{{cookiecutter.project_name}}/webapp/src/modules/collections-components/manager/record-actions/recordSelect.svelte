@@ -2,12 +2,12 @@
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import { Array } from 'effect';
 	import { Checkbox } from '@/components/ui/checkbox';
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 
 	export let record: CollectionResponses[C];
 
-	let { selectionContext: selection } = getRecordsManagerContext();
+	let { selectionContext: selection } = getCollectionManagerContext();
 	let { selectedRecords } = selection;
 
 	$: checked = $selectedRecords.includes(record.id);

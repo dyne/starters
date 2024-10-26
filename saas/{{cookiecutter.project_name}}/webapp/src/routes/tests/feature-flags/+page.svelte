@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { featureFlags } from '$lib/features';
+	import { featureFlags } from '@/features';
 </script>
 
 <div class="space-y-8 p-4">

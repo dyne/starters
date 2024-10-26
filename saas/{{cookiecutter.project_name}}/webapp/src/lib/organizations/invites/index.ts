@@ -1,4 +1,4 @@
-import { createSessionStorageHandlers } from '$lib/utils/sessionStorage';
+import { createSessionStorageHandlers } from '@/utils/sessionStorage';
 
 type OrganizationInviteSession = {
 	organizationId: string;

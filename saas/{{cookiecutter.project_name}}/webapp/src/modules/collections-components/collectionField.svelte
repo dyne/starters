@@ -18,7 +18,7 @@
 	lang="ts"
 	generics="Data extends GenericRecord, C extends CollectionName, Expand extends ExpandProp<C> = never"
 >
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { ensureArray } from '@/utils/other';
 	import ListItem from '@/components/custom/listItem.svelte';
 	import { pb } from '@/pocketbase';

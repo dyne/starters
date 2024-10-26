@@ -3,21 +3,21 @@
 
 	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import type { KeyOf, MaybePromise } from '@/utils/types';
+	import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { c } from '$lib/utils/strings';
 	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
-	import { Form, FormError, SubmitButton } from '@/forms';
+	import { Form, FormError, SubmitButton, type FormOptions } from '@/forms';
 	import { setupCollectionForm } from './collectionFormSetup';
 	import FieldSchemaToInput from './fieldConfigToField.svelte';
 	import {
-		defaultFormOptions,
 		type OnCollectionFormSuccess,
-		type CollectionFormOptions,
 		type FieldsOptions,
-		defaultFieldsOptions
+		defaultFieldsOptions,
+		type UIOptions,
+		defaultUIOptions
 	} from './formOptions';
 
 	//
@@ -30,7 +30,8 @@
 	export let onCancel: () => MaybePromise<void> = () => {};
 
 	export let fieldsOptions: Partial<FieldsOptions<C>> = defaultFieldsOptions<C>();
-	export let options: CollectionFormOptions = defaultFormOptions();
+	export let uiOptions: UIOptions = defaultUIOptions();
+	export let superformsOptions: FormOptions<CollectionRecords[C]> = {};
 
 	/* */
 
@@ -40,7 +41,8 @@
 		fieldsOptions,
 		recordId,
 		onSuccess,
-		options,
+		uiOptions,
+		superformsOptions: superformsOptions as FormOptions<GenericRecord>,
 		initialData
 	});
 
@@ -72,8 +74,8 @@
 	/* */
 
 	let submitButtonText: string | undefined = undefined;
-	$: submitButtonText = Boolean(options?.ui?.submitButtonText)
-		? options?.ui?.submitButtonText
+	$: submitButtonText = Boolean(uiOptions?.submitButtonText)
+		? uiOptions?.submitButtonText
 		: Boolean(recordId)
 			? m.Edit_record()
 			: m.Create_record();
@@ -96,7 +98,7 @@
 {#key initialData}
 	<Form
 		{form}
-		hideRequiredIndicator={Boolean(options.ui?.hideRequiredIndicator)}
+		hideRequiredIndicator={Boolean(uiOptions.hideRequiredIndicator)}
 		hide={['submitButton', 'error']}
 	>
 		{#each fieldsConfigs as fieldSchema}
@@ -128,7 +130,7 @@
 			</div>
 			<div class="flex gap-2">
 				<slot name="footer-right"></slot>
-				{#if options.ui?.showCancelButton}
+				{#if uiOptions.showCancelButton}
 					<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
 				{/if}
 				<SubmitButton>{submitButtonText}</SubmitButton>

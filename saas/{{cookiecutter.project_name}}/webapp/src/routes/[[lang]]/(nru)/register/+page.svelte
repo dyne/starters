@@ -6,20 +6,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <script lang="ts">
 	import { pb } from '@/pocketbase';
-	import { OrgJoinRequestsStatusOptions } from '@/pocketbase/types';
-	import { goto, m } from '$lib/i18n';
+	import { goto, m } from '@/i18n';
 	import { z } from 'zod';
 
 	import { Form, createForm } from '@/forms';
 	import { Field, CheckboxField } from '@/forms/fields';
-	import { page } from '$app/stores';
 	import { zod } from 'sveltekit-superforms/adapters';
 
-	import { featureFlags } from '$lib/features';
+	import { featureFlags } from '@/features';
 	import { OrganizationInviteSession } from '$lib/organizations/invites';
-	import { appTitle } from '$lib/strings';
-	import { WelcomeSession } from '$lib/utils/welcome';
-	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
+	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 

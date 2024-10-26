@@ -6,7 +6,7 @@
 	import { ShareRecord, SelectRecord, EditRecord, DeleteRecord } from './recordActions';
 	import EmptyState from './collectionEmptyState.svelte';
 	import FieldComponent from './fieldComponents/fieldComponentRenderer.svelte';
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 
 	// Components
 	import RecordsTableHead from './collectionTableHeader.svelte';
@@ -23,7 +23,7 @@
 	export let hideActions: Array<ViewAction> = [];
 	export let hideEmptyState = false;
 
-	const { selectionManager } = getRecordsManagerContext();
+	const { selectionManager } = getCollectionManagerContext();
 	const { allRecordsSelected, toggleSelectAllRecords, selectedRecords } = selectionManager;
 
 	$: selectAll = allRecordsSelected($selectedRecords);

@@ -5,7 +5,7 @@
 	import { createTypeProp } from '$lib/utils/typeProp';
 	import type { PBResponse, StringKeys } from '$lib/utils/types';
 
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import { ChevronDown } from 'lucide-svelte';
 
@@ -18,7 +18,7 @@
 	export let allFieldsCaption: string = 'All fields';
 	export let filtersActiveCaption: string = 'Filters active';
 
-	const { dataManager, collection } = getRecordsManagerContext();
+	const { dataManager, collection } = getCollectionManagerContext();
 	const { queryParams } = dataManager;
 	const allFields = getCollectionModel(collection).schema.map((field) => field.name) ?? [];
 	let selected: string[] = [allFieldsCaption];

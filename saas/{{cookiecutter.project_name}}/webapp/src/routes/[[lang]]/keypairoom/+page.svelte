@@ -19,18 +19,17 @@
 	} from '@/keypairoom/utils.js';
 	import { currentUser, pb } from '@/pocketbase';
 	import { z } from 'zod';
-	import { featureFlags } from '$lib/features';
+	import { featureFlags } from '@/features';
 
 	// Components
-	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Form, createForm } from '@/forms';
 	import { Field } from '@/forms/fields';
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import Card from '$lib/components/card.svelte';
 	import { HelpCircle } from 'lucide-svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { WelcomeSession } from '$lib/utils/welcome';
-	import WelcomeBanner from '$lib/components/welcomeBanner.svelte';
-	import { m } from '$lib/i18n';
+	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
+	import { m } from '@/i18n';
 	import RegenerateBanner from './_partials/RegenerateBanner.svelte';
 	import { log } from '$lib/utils/devLog';
 

@@ -1,16 +1,15 @@
 <script lang="ts" generics="C extends CollectionName">
 	import Icon from '@/components/custom/icon.svelte';
 	import type { CollectionRecords } from '@/pocketbase/types';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import {
-		defaultFormOptions,
 		type OnCollectionFormSuccess,
 		type CollectionFormOptions
 	} from '@/collections-components/form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import { Button } from '@/components/ui/button';
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
 	import { Plus } from 'lucide-svelte';
 	import Sheet from '@/components/custom/sheet.svelte';
@@ -22,8 +21,6 @@
 	collection;
 
 	export let initialData: Partial<CollectionRecords[C]> | undefined = undefined;
-
-	export let formOptions: CollectionFormOptions<C> = {};
 	export let sheetTitle: string | undefined = undefined;
 
 	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
@@ -32,19 +29,14 @@
 
 	const show = createToggleStore(false);
 
-	const { collection: c, formsOptions } = getRecordsManagerContext();
+	const { collection: c, formsOptions } = getCollectionManagerContext();
 	const collectionName: C = c as C; // ts-fix
 
 	const title = sheetTitle ?? m.Create_record();
 
-	const options = merge(
-		formOptions,
-		formsOptions.base,
-		formsOptions.create,
-		defaultFormOptions<C>({
-			ui: { submitButtonText: title, triggerToast: true }
-		})
-	);
+	const options: CollectionFormOptions<C> = merge(formsOptions.base, formsOptions.create, {
+		ui: { submitButtonText: title, triggerToast: true }
+	} as CollectionFormOptions<C>);
 
 	const handleSuccess: OnCollectionFormSuccess<C> = (record) => {
 		show.off();
@@ -63,6 +55,11 @@
 	</svelte:fragment>
 
 	<svelte:fragment slot="content">
-		<CollectionForm {initialData} collection={collectionName} {options} onSuccess={handleSuccess} />
+		<CollectionForm
+			{initialData}
+			collection={collectionName}
+			{...options}
+			onSuccess={handleSuccess}
+		/>
 	</svelte:fragment>
 </Sheet>

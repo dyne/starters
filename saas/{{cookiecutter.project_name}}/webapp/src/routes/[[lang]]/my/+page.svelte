@@ -1,6 +1,6 @@
 <script>
-	import { featureFlags } from '$lib/features';
-	import { WelcomeSession } from '$lib/utils/welcome';
+	import { featureFlags } from '@/features';
+	import { WelcomeSession } from '@/auth/welcome';
 
 	if (WelcomeSession.isActive()) WelcomeSession.end();
 </script>

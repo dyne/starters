@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { version } from '$app/environment';
 
-	import { getUserDidUrl } from '$lib/did';
-	import { featureFlags } from '$lib/features';
-	import { m } from '$lib/i18n';
-	import LanguageSelect from '$lib/i18n/languageSelect.svelte';
+	import { getUserDidUrl } from '@/did';
+	import { featureFlags } from '@/features';
+	import { m } from '@/i18n';
+	import LanguageSelect from '@/i18n/languageSelect.svelte';
 
 	import Logo from '@/components/layout/Logo.svelte';
 	import { createOrganizationSidebarLinks } from '$lib/organizations';

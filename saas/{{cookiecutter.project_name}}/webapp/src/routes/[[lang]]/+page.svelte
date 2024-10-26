@@ -2,8 +2,8 @@
 	import { currentUser } from '@/pocketbase';
 
 	import { appTitle } from '$lib/strings';
-	import { featureFlags } from '$lib/features';
-	import { m } from '$lib/i18n';
+	import { featureFlags } from '@/features';
+	import { m } from '@/i18n';
 	import { Button } from '@/components/ui/button';
 
 	// TODO - rebuild home
@@ -12,10 +12,12 @@
 <div class="flex items-center justify-between border-b p-4">
 	<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 
-	<div>
-		<Button variant="outline" href="/login">{m.Login()}</Button>
-		<Button variant="outline" href="/register">{m.Register()}</Button>
-	</div>
+	{#if $featureFlags.AUTH}
+		<div>
+			<Button variant="outline" href="/login">{m.Login()}</Button>
+			<Button variant="outline" href="/register">{m.Register()}</Button>
+		</div>
+	{/if}
 </div>
 
 <!-- 

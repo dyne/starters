@@ -1,8 +1,8 @@
 <script lang="ts" generics="C extends CollectionName">
 	import { toast } from 'svelte-sonner';
-	import { normalizeError } from '@/utils/other';
+	import { getExceptionMessage } from '@/utils/errors';
 	import type { MaybePromise } from '@/utils/types';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import T from '@/components/custom/t.svelte';
@@ -10,7 +10,7 @@
 	import { Button } from '@/components/ui/button';
 	import Icon from '@/components/custom/icon.svelte';
 	import { onDestroy } from 'svelte';
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Trash, X } from 'lucide-svelte';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import type { CollectionResponses } from '@/pocketbase/types';
@@ -21,7 +21,7 @@
 	export let dialogTitle = m.Delete_record();
 	export let beforeDelete: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
 
-	let { recordService } = getRecordsManagerContext<C>();
+	let { recordService } = getCollectionManagerContext<C>();
 
 	//
 
@@ -37,7 +37,7 @@
 			dialogState.off();
 			toast.info(m.Record_deleted_successfully());
 		} catch (e) {
-			error = normalizeError(e);
+			error = getExceptionMessage(e);
 		}
 	}
 
@@ -48,7 +48,7 @@
 
 <Dialog bind:open={$dialogState} title={dialogTitle}>
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" open={dialogState.on} {builder}>
+		<slot name="trigger" openModal={dialogState.on} {builder}>
 			<Button variant="outline" size="icon" builders={[builder]}>
 				<Icon src={Trash} />
 			</Button>

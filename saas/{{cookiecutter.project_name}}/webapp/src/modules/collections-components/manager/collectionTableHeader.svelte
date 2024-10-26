@@ -5,11 +5,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <!-- <script lang="ts">
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 
 	export let field: string;
 
-	const { dataManager } = getRecordsManagerContext();
+	const { dataManager } = getCollectionManagerContext();
 	const { queryParams } = dataManager;
 
 	let isSort = false;

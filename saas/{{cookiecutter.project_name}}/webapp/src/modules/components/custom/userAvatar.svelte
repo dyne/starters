@@ -3,7 +3,7 @@
 	import Avatar from './avatar.svelte';
 	import type { UsersResponse } from '@/pocketbase/types';
 	import { pb } from '@/pocketbase';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 
 	type $$Props = AvatarProps & { user?: UsersResponse };
 	export let user: $$Props['user'] = pb.authStore.model as UsersResponse;

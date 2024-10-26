@@ -1,7 +1,7 @@
 <script lang="ts" generics="C extends CollectionName">
 	import { toast } from 'svelte-sonner';
-	import { normalizeError } from '@/utils/other';
-	import { m } from '$lib/i18n';
+	import { getExceptionMessage } from '@/utils/errors';
+	import { m } from '@/i18n';
 	import { createToggleStore } from '$lib/components/utils/toggleStore';
 	import Icon from '@/components/custom/icon.svelte';
 	import Dialog from '@/components/custom/dialog.svelte';
@@ -87,12 +87,10 @@
 				onSuccess={handleSuccess}
 				initialData={authorization}
 				recordId={authorization?.id}
-				options={{
-					ui: {
-						submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
-						triggerToast: true,
-						toastText: m.Record_shared_successfully()
-					}
+				uiOptions={{
+					submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
+					triggerToast: true,
+					toastText: m.Record_shared_successfully()
 				}}
 				fieldsOptions={{
 					hide: {
@@ -123,7 +121,7 @@
 			{#if error}
 				<Alert variant="destructive" let:Title let:Description>
 					<Title>{m.Error()}</Title>
-					<Description>{normalizeError(error)}</Description>
+					<Description>{getExceptionMessage(error)}</Description>
 				</Alert>
 			{/if}
 
@@ -141,7 +139,7 @@
 	{:catch error}
 		<Alert variant="destructive" let:Title let:Description>
 			<Title>{m.Error()}</Title>
-			<Description>{normalizeError(error)}</Description>
+			<Description>{getExceptionMessage(error)}</Description>
 		</Alert>
 	{/await}
 </Dialog>

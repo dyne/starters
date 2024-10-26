@@ -1,19 +1,11 @@
 import { dev } from '$app/environment';
-import { resolveRoute } from '$lib/i18n';
+import { resolveRoute } from '@/i18n';
 import type { Page } from '@sveltejs/kit';
 
 //
 
 export function getJsonDataSize(data: unknown): number {
 	return new Blob([JSON.stringify(data)]).size;
-}
-
-export function normalizeError(e: unknown): string {
-	if (e instanceof Error) {
-		return e.message;
-	} else {
-		return JSON.stringify(e);
-	}
 }
 
 export function capitalize(text: string) {

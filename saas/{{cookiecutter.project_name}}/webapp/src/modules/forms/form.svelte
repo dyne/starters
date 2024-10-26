@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts" generics="T extends GenericRecord">
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 
 	import { setContext } from 'svelte';
 	import FormError from './components/formError.svelte';

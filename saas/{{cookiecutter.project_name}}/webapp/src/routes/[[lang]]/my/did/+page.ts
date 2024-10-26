@@ -1,8 +1,8 @@
 import { getKeyringFromLocalStorage } from '@/keypairoom/keypair';
-import { loadFeatureFlags } from '$lib/features';
+import { loadFeatureFlags } from '@/features';
 import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
-import { redirect } from '$lib/i18n';
+import { redirect } from '@/i18n';
 
 export const load = async ({ url, fetch }) => {
 	const { DID, KEYPAIROOM } = await loadFeatureFlags(fetch);

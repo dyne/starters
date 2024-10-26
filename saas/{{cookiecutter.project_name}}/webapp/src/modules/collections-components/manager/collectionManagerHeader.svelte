@@ -1,6 +1,6 @@
 <!-- 
 <script lang="ts">
-	import { getRecordsManagerContext } from './collectionManager.svelte';
+	import { getCollectionManagerContext } from './collectionManager.svelte';
 	import { Trash, X } from 'lucide-svelte';
 	import { CreateRecord } from './actions';
 	import PortalWrapper from '$lib/components/portalWrapper.svelte';
@@ -8,7 +8,7 @@
 	import T from '@/components/custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 	import Icon from '@/components/custom/icon.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import Dialog from '@/components/custom/dialog.svelte';
 
 	//
@@ -18,7 +18,7 @@
 	export let description: string | null = null;
 	export let hideCreateButton = false;
 
-	const { collection, selectionManager, dataManager } = getRecordsManagerContext();
+	const { collection, selectionManager, dataManager } = getCollectionManagerContext();
 	const { recordService, loadRecords } = dataManager;
 	const { selectedRecords, discardSelection } = selectionManager;
 

@@ -1,6 +1,6 @@
-import { loadFeatureFlags } from '$lib/features';
+import { loadFeatureFlags } from '@/features';
 import { getUserPublicKeys } from '@/keypairoom/utils';
-import { redirect } from '$lib/i18n';
+import { redirect } from '@/i18n';
 
 export const load = async ({ url, fetch }) => {
 	const { KEYPAIROOM, AUTH } = await loadFeatureFlags(fetch);

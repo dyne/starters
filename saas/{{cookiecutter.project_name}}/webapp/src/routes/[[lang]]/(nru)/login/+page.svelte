@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$lib/i18n';
+	import { goto } from '@/i18n';
 	import { pb } from '@/pocketbase';
 	import { Collections } from '@/pocketbase/types';
 	import { Form, createForm, FormError, SubmitButton } from '@/forms';

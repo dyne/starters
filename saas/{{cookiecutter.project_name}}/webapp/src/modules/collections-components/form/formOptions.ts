@@ -7,9 +7,9 @@ import type {
 	CollectionRelatedCollections as Related
 } from '@/pocketbase/types';
 import type { ExpandProp } from '../types';
-import type { FormOptions as SuperformOptions } from '@/forms';
 import type { KeyOf, MaybePromise } from '@/utils/types';
-import { merge } from 'lodash';
+import type { ComponentProps } from 'svelte';
+import type { CollectionForm } from '.';
 
 /* Fields */
 
@@ -48,7 +48,7 @@ export function defaultFieldsOptions<C extends CollectionName>(): FieldsOptions<
 
 /* UI */
 
-type UIOptions = {
+export type UIOptions = {
 	submitButtonText?: string | undefined;
 	showCancelButton?: boolean;
 	hideRequiredIndicator?: boolean;
@@ -56,29 +56,12 @@ type UIOptions = {
 	toastText?: string;
 };
 
-function defaultUIOptions(): UIOptions {
+export function defaultUIOptions(): UIOptions {
 	return {
 		submitButtonText: undefined,
 		showCancelButton: false,
 		hideRequiredIndicator: false
 	};
-}
-
-/* Wrapper type */
-
-export type CollectionFormOptions = {
-	superform?: SuperformOptions;
-	ui?: UIOptions;
-};
-
-export function defaultFormOptions(options: CollectionFormOptions = {}): CollectionFormOptions {
-	return merge(
-		{
-			superform: {},
-			ui: defaultUIOptions()
-		},
-		options
-	);
 }
 
 /*  */
@@ -89,3 +72,10 @@ export type OnCollectionFormSuccess<C extends CollectionName> = (
 	record: CollectionResponses[C],
 	mode: CollectionFormMode
 ) => MaybePromise<void>;
+
+//
+
+export type CollectionFormOptions<C extends CollectionName> = Pick<
+	ComponentProps<CollectionForm<C>>,
+	'fieldsOptions' | 'superformsOptions' | 'uiOptions'
+>;

@@ -1,6 +1,6 @@
 import type { FieldConfig, CollectionName, FieldType } from '@/pocketbase/collections-models/types';
 import { pipe, Record, String } from 'effect';
-import type { CollectionFormMode, CollectionFormOptions, FieldsOptions } from './formOptions';
+import type { CollectionFormMode, FieldsOptions, UIOptions } from './formOptions';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
@@ -8,12 +8,13 @@ import z from 'zod';
 import type { GenericRecord, MaybePromise } from '@/utils/types';
 import { merge, cloneDeep } from 'lodash';
 import { pb } from '@/pocketbase';
-import { createForm } from '@/forms';
+import { createForm, type FormOptions } from '@/forms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { ensureArray, normalizeError } from '@/utils/other';
+import { ensureArray } from '@/utils/other';
+import { getExceptionMessage } from '@/utils/errors';
 import { ClientResponseError, type CollectionModel } from 'pocketbase';
 import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
-import { m } from '$lib/i18n';
+import { m } from '@/i18n';
 import { toast } from 'svelte-sonner';
 
 //
@@ -23,7 +24,8 @@ type SetupCollectionFormProps<C extends CollectionName> = {
 	fieldsOptions: Partial<FieldsOptions<C>>;
 	initialData: Partial<CollectionRecords[C]>;
 	recordId?: RecordIdString;
-	options?: CollectionFormOptions;
+	superformsOptions?: FormOptions;
+	uiOptions?: UIOptions;
 	onSuccess?: (record: CollectionResponses[C], mode: CollectionFormMode) => MaybePromise<void>;
 };
 
@@ -31,9 +33,10 @@ export function setupCollectionForm<C extends CollectionName>({
 	collection,
 	recordId = undefined,
 	fieldsOptions = {},
-	options = {},
 	initialData = {},
-	onSuccess = () => {}
+	onSuccess = () => {},
+	superformsOptions = {},
+	uiOptions = {}
 }: SetupCollectionFormProps<C>): SuperForm<CollectionRecords[C]> {
 	const collectionModel = getCollectionModel(collection) as CollectionModel;
 
@@ -82,7 +85,7 @@ export function setupCollectionForm<C extends CollectionName>({
 		initialData: processedInitialData,
 		options: {
 			dataType: 'form',
-			...(options.superform ?? {})
+			...superformsOptions
 		},
 
 		onSubmit: async ({ form }) => {
@@ -101,9 +104,9 @@ export function setupCollectionForm<C extends CollectionName>({
 					onSuccess(record, 'create');
 				}
 
-				if (options.ui?.triggerToast) {
-					const toastText = options.ui?.toastText
-						? options.ui?.toastText
+				if (uiOptions?.triggerToast) {
+					const toastText = uiOptions?.toastText
+						? uiOptions?.toastText
 						: recordId
 							? m.Record_updated_successfully()
 							: m.Record_created_successfully();
@@ -124,7 +127,7 @@ export function setupCollectionForm<C extends CollectionName>({
 
 					setError(form, e.message);
 				} else {
-					setError(form, normalizeError(e));
+					setError(form, getExceptionMessage(e));
 				}
 			}
 		}

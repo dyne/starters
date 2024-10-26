@@ -3,7 +3,7 @@
 	import UserKeys from './_partials/userKeys.svelte';
 	import UserWebauthn from './_partials/userWebauthn.svelte';
 
-	import { featureFlags } from '$lib/features';
+	import { featureFlags } from '@/features';
 	import Card from '@/components/custom/card.svelte';
 
 	export let data;

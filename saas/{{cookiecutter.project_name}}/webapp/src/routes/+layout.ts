@@ -1,4 +1,4 @@
-import { loadFeatureFlags } from '$lib/features';
+import { loadFeatureFlags } from '@/features';
 
 export const ssr = false;
 

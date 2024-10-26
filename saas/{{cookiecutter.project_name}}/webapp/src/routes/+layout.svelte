@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-	import { i18n } from '$lib/i18n';
+	import { i18n } from '@/i18n';
 
 	import { Toaster } from '@/components/ui/sonner';
 

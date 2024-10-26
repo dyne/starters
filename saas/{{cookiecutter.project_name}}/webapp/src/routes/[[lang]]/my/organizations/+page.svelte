@@ -3,7 +3,7 @@
 	import { c } from '$lib/utils/strings.js';
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/plainCard.svelte';
@@ -55,8 +55,10 @@
 <PageContent>
 	<CollectionManager
 		collection="org_invites"
-		expand={['organization']}
-		filter={`user.id = "${$currentUser?.id ?? ''}" && declined = false`}
+		fetchOptions={{
+			expand: ['organization'],
+			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`
+		}}
 		hide={['emptyState']}
 		let:records
 	>
@@ -83,8 +85,10 @@
 
 	<CollectionManager
 		collection="orgJoinRequests"
-		expand={['organization']}
-		filter={`user.id = "${$currentUser?.id}"`}
+		fetchOptions={{
+			expand: ['organization'],
+			filter: `user.id = "${$currentUser?.id}"`
+		}}
 		hide={['emptyState']}
 		let:records
 	>
@@ -139,8 +143,10 @@
 
 		<CollectionManager
 			collection="orgAuthorizations"
-			expand={['organization', 'role']}
-			filter={`user.id = "${$currentUser?.id}"`}
+			fetchOptions={{
+				expand: ['organization', 'role'],
+				filter: `user.id = "${$currentUser?.id}"`
+			}}
 			let:records
 		>
 			<svelte:fragment slot="emptyState">

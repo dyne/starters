@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CollectionForm } from '@/collections-components';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import PageContent from '$lib/components/pageContent.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 	import PageTop from '@/components/custom/pageTop.svelte';
@@ -29,7 +29,9 @@
 					avatar: m.Avatar()
 				}
 			}}
-			submitButtonText={m.Create_organization()}
+			uiOptions={{
+				submitButtonText: m.Create_organization()
+			}}
 			onSuccess={(record) => {
 				window.location.assign(`/my/organizations/${record.id}`);
 			}}

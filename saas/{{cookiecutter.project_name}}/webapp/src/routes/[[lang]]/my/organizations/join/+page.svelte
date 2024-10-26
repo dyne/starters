@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrgJoinRequestsRecord,
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import PageTop from '@/components/custom/pageTop.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
@@ -52,12 +52,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	<PageCard>
 		<CollectionManager
 			collection="organizations"
-			filter={`(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`}
-			inverseExpand={{
-				orgJoinRequests: 'organization',
-				orgAuthorizations: 'organization'
+			fetchOptions={{
+				filter: `(id != orgAuthorizations_via_organization.organization.id) && (orgAuthorizations_via_organization.user.id = "${$currentUser?.id}")`,
+				inverseExpand: {
+					orgJoinRequests: 'organization',
+					orgAuthorizations: 'organization'
+				},
+				subscribe: ['orgJoinRequests']
 			}}
-			subscribe={['orgJoinRequests']}
 			let:records
 		>
 			<svelte:fragment slot="emptyState">

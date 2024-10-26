@@ -12,10 +12,10 @@
 	import { Form, createForm } from '@/forms';
 	import { Field, TextareaField } from '@/forms/fields';
 	import Card from '$lib/components/card.svelte';
-	import { featureFlags } from '$lib/features';
+	import { featureFlags } from '@/features';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
 	import { log } from '$lib/utils/devLog';
 	import T from '@/components/custom/t.svelte';

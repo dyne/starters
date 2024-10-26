@@ -7,11 +7,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <script lang="ts">
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { Trash } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import { DeleteRecord } from '@/collections-components/manager';
+	import { RecordDelete } from '@/collections-components/manager';
 	import IconButton from '$lib/components/iconButton.svelte';
 	import PageCard from '@/components/custom/pageCard.svelte';
 
@@ -22,7 +22,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <CollectionManager
 	collection="org_invites"
-	filter={`organization.id = "${organization.id}"`}
+	fetchOptions={{
+		filter: `organization.id = "${organization.id}"`
+	}}
 	let:records
 	hide={['emptyState']}
 >
@@ -49,9 +51,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 							{/if}
 						</div>
 
-						<DeleteRecord record={invite} let:openModal>
-							<IconButton icon={Trash} on:click={openModal} />
-						</DeleteRecord>
+						<RecordDelete record={invite}>
+							<svelte:fragment slot="trigger" let:openModal>
+								<IconButton icon={Trash} on:click={openModal} />
+							</svelte:fragment>
+						</RecordDelete>
 					</div>
 				{/each}
 			</div>

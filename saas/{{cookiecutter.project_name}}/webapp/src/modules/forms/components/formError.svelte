@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getFormContext } from '@/forms';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { FORM_ERROR_PATH } from '../form';
 	import Alert from '@/components/custom/alert.svelte';
 	import { TriangleAlert } from 'lucide-svelte';

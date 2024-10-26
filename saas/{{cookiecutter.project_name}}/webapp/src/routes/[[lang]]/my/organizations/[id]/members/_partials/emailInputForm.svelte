@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@/components/custom/icon.svelte';
 	import { createForm, Form, SubmitButton } from '@/forms';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { readFileAsString } from '$lib/utils/files';
 	import { Array as A } from 'effect';
 	import { ArrowRight } from 'lucide-svelte';

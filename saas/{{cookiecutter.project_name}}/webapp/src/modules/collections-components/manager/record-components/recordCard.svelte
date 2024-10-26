@@ -3,7 +3,7 @@
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import Card from '@/components/custom/card.svelte';
-	import { getRecordsManagerContext } from '../collectionManager.svelte';
+	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import RecordCardTitle from './recordCardTitle.svelte';
 	import RecordCardDescription from './recordCardDescription.svelte';
 	import {
@@ -21,7 +21,7 @@
 
 	//
 
-	const { selectionContext: selection } = getRecordsManagerContext();
+	const { selectionContext: selection } = getCollectionManagerContext();
 	const { selectedRecords } = selection;
 
 	$: classes = cn({

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import * as Avatar from '@/components/ui/avatar';
 	import type { AvatarProps } from 'bits-ui';
 

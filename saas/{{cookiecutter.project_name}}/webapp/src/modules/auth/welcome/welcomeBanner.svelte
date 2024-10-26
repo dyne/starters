@@ -1,5 +1,5 @@
 <script>
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { appTitle } from '$lib/strings';
 	import Alert from '@/components/custom/alert.svelte';
 	import T from '@/components/custom/t.svelte';

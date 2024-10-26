@@ -8,7 +8,7 @@
 <script lang="ts" generics="T, Multiple extends boolean = false">
 	import { maybeArrayIsValue } from '@/utils/other';
 
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { omit } from 'lodash/fp';
 
 	import * as Select from '@/components/ui/select';

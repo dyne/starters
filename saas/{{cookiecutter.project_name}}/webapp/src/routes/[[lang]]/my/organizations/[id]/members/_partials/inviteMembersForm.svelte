@@ -6,7 +6,7 @@
 	import { ArrowLeft, Mail, X } from 'lucide-svelte';
 	import Button from '@/components/ui/button/button.svelte';
 
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { pb } from '@/pocketbase';
 
 	//

@@ -10,7 +10,7 @@ import {
 } from '@/pocketbase/types';
 import _ from 'lodash';
 import type { Keypair } from './keypair';
-import { createSessionStorageHandlers } from '$lib/utils/sessionStorage';
+import { createSessionStorageHandlers } from '@/utils/sessionStorage';
 
 export type PublicKeys = Omit<UsersPublicKeysRecord, 'owner'>;
 

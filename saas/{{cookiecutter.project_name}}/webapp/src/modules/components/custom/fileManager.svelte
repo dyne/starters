@@ -15,7 +15,7 @@
 	import Icon from './icon.svelte';
 	import _ from 'lodash';
 	import Badge from '@/components/ui/badge/badge.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import List from './list.svelte';
 	import ListHeader from './listHeader.svelte';
 	import ListItem from './listItem.svelte';

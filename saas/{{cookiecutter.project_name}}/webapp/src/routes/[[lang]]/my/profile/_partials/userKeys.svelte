@@ -4,7 +4,7 @@
 	import type { PublicKeys } from '@/keypairoom/utils';
 	import Button from '@/components/ui/button/button.svelte';
 	import T from '@/components/custom/t.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
 
 	export let keys: PublicKeys | undefined = undefined;

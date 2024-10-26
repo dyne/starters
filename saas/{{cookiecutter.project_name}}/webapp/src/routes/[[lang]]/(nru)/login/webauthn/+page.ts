@@ -1,4 +1,4 @@
-import { loadFeatureFlags } from '$lib/features';
+import { loadFeatureFlags } from '@/features';
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ fetch }) => {

@@ -3,7 +3,7 @@
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { Pencil, X } from 'lucide-svelte';
 	import Icon from '@/components/custom/icon.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import T from '@/components/custom/t.svelte';
 

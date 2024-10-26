@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconButton from '$lib/components/iconButton.svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
 	import { Array as A } from 'effect';

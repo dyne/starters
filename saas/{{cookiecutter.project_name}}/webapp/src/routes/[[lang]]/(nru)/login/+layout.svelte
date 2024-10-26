@@ -6,8 +6,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { Link } from '$lib/utils/types';
-	import { featureFlags } from '$lib/features';
-	import { m } from '$lib/i18n';
+	import { featureFlags } from '@/features';
+	import { m } from '@/i18n';
 	import T from '@/components/custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 	import Separator from '@/components/ui/separator/separator.svelte';

@@ -5,8 +5,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 <script lang="ts">
-	import { getUserDidUrl } from '$lib/did';
-	import { featureFlags } from '$lib/features';
+	import { getUserDidUrl } from '@/did';
+	import { featureFlags } from '@/features';
 	import { Button } from '@/components/ui/button';
 
 	let url: string | undefined = undefined;

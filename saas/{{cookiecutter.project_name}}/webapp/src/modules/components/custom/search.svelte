@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts" generics="T">
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { createCombobox, melt } from '@melt-ui/svelte';
 	import { Check, ChevronDown, ChevronUp } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';

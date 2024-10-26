@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CollectionManager } from '@/collections-components/manager';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import { OrgRoles, ProtectedOrgUI } from '$lib/organizations';
 	import Button from '@/components/ui/button/button.svelte';
 	import { Pencil, Plus, X } from 'lucide-svelte';
@@ -11,8 +11,7 @@
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { c } from '$lib/utils/strings.js';
-	import EditRecord from '@/collections-components/manager/ui/actions/editRecord.svelte';
-	import DeleteRecord from '@/collections-components/manager/ui/actions/deleteRecord.svelte';
+	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
 	import { getUserDisplayName } from '$lib/utils/pb';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
@@ -42,18 +41,20 @@
 	<PageCard>
 		<CollectionManager
 			collection="orgAuthorizations"
-			expand={['user', 'role']}
-			formOptions={{
+			fetchOptions={{
+				expand: ['user', 'role'],
+				filter: `organization.id="${organization.id}"`
+			}}
+			formFieldsOptions={{
 				hide: { organization: organization.id },
 				relations: {
 					role: { mode: 'select', displayFields: ['name'] },
 					user: { displayFields: ['name'] }
 				}
 			}}
-			editFormOptions={{
+			editFormFieldsOptions={{
 				exclude: ['user']
 			}}
-			filter={`organization.id="${organization.id}"`}
 			let:records
 		>
 			<SectionTitle title={m.Members()} description={m.members_description()}>
@@ -90,19 +91,23 @@
 								<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
 									<div class="space-x-1">
 										{#if userRole.level < role.level}
-											<EditRecord {record} let:openModal>
-												<Button color="primary" size="sm" on:click={openModal}>
-													{m.Edit_role()}
-													<Icon src={Pencil} ml></Icon>
-												</Button>
-											</EditRecord>
+											<RecordEdit {record}>
+												<svelte:fragment slot="trigger" let:builder>
+													<Button color="primary" size="sm" builders={[builder]}>
+														{m.Edit_role()}
+														<Icon src={Pencil} ml />
+													</Button>
+												</svelte:fragment>
+											</RecordEdit>
 
-											<DeleteRecord {record} let:openModal>
-												<Button color="primary" size="sm" on:click={openModal}>
-													{m.Remove()}
-													<Icon src={X} ml></Icon>
-												</Button>
-											</DeleteRecord>
+											<RecordDelete {record}>
+												<svelte:fragment slot="trigger" let:builder>
+													<Button color="primary" size="sm" builders={[builder]}>
+														{m.Remove()}
+														<Icon src={X} ml />
+													</Button>
+												</svelte:fragment>
+											</RecordDelete>
 										{/if}
 									</div>
 								</ProtectedOrgUI>

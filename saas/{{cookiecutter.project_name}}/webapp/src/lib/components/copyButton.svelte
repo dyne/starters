@@ -3,7 +3,7 @@
 	import { ClipboardPlus } from 'lucide-svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import type { ComponentProps } from 'svelte';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 
 	//
 

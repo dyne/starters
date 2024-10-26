@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { m } from '$lib/i18n';
+	import { m } from '@/i18n';
 	import T from '@/components/custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 	import { Input } from '@/components/ui/input';

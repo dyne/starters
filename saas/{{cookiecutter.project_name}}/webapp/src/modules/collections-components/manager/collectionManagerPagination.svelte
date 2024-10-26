@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getRecordsManagerContext } from './collectionManager.svelte';
+	import { getCollectionManagerContext } from './collectionManagerContext';
 	import * as Pagination from '@/components/ui/pagination';
 
-	const { paginationContext, fetchOptions } = getRecordsManagerContext();
+	const { paginationContext, fetchOptions } = getCollectionManagerContext();
 	const { currentPage: currentPageStore, totalItems } = paginationContext;
 </script>
 

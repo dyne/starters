@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { verifyUser } from '$lib/auth/verifyUser';
-import { loadFeatureFlags } from '$lib/features';
+import { verifyUser } from '@/auth/verifyUser';
+import { loadFeatureFlags } from '@/features';
 import { error } from '@sveltejs/kit';
 
 import { browser } from '$app/environment';
-import { redirect } from '$lib/i18n';
+import { redirect } from '@/i18n';
 import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '@/keypairoom/keypair';
 import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 

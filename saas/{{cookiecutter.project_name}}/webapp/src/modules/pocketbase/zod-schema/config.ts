@@ -6,7 +6,7 @@ import { getJsonDataSize } from '@/utils/other';
 
 import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
 import type { SetFieldType } from 'type-fest';
-import { m } from '$lib/i18n';
+import { m } from '@/i18n';
 
 /* Field Config -> Zod Type */
 
