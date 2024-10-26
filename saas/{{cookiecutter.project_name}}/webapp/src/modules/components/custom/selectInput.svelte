@@ -6,6 +6,8 @@
 </script>
 
 <script lang="ts" generics="T, Multiple extends boolean = false">
+	import { maybeArrayIsValue } from '@/utils/other';
+
 	import { m } from '$lib/i18n';
 	import { omit } from 'lodash/fp';
 
@@ -35,7 +37,7 @@
 	{/if}
 
 	<Select.Trigger {...props.attrs}>
-		{#if selected}
+		{#if maybeArrayIsValue(selected)}
 			<Select.Value />
 		{:else}
 			<span data-placeholder>{props.placeholder ?? m.Select_a_value()}</span>

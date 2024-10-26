@@ -4,8 +4,8 @@ import { OrganizationInviteSession } from '$lib/organizations/invites';
 import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
 
-export const load = async ({ params, url }) => {
-	const featureFlags = await loadFeatureFlags();
+export const load = async ({ params, url, fetch }) => {
+	const featureFlags = await loadFeatureFlags(fetch);
 	if (!featureFlags.ORGANIZATIONS) error(404);
 
 	OrganizationInviteSession.start({

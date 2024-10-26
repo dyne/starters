@@ -70,7 +70,7 @@
 
 	let submitButtonText: string | undefined = undefined;
 	$: submitButtonText = Boolean(options?.ui?.submitButtonText)
-		? submitButtonText
+		? options?.ui?.submitButtonText
 		: Boolean(recordId)
 			? m.Edit_record()
 			: m.Create_record();

@@ -13,6 +13,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { ensureArray, normalizeError } from '@/utils/other';
 import { ClientResponseError, type CollectionModel } from 'pocketbase';
 import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
+import { m } from '$lib/i18n';
+import { toast } from 'svelte-sonner';
 
 //
 
@@ -84,17 +86,27 @@ export function setupCollectionForm<C extends CollectionName>({
 		onSubmit: async ({ form }) => {
 			try {
 				const data = pipe(
-					cleanFormDataFiles(form.data, processedInitialData, collectionModel),
+					cleanFormDataFiles(form.data, initialData, collectionModel),
 					Record.map((v) => (v === undefined ? null : v)) // IMPORTANT!
 				);
 				if (recordId) {
 					const record = await pb
 						.collection(collection)
 						.update<CollectionResponses[C]>(recordId, data);
-					onSuccess(record, 'update');
+					onSuccess(record, 'edit');
 				} else {
 					const record = await pb.collection(collection).create<CollectionResponses[C]>(data);
 					onSuccess(record, 'create');
+				}
+
+				if (options.ui?.triggerToast) {
+					const toastText = options.ui?.toastText
+						? options.ui?.toastText
+						: recordId
+							? m.Record_updated_successfully()
+							: m.Record_created_successfully();
+
+					toast.success(toastText);
 				}
 			} catch (e) {
 				if (e instanceof ClientResponseError) {
@@ -184,7 +196,7 @@ export function cleanFormDataFiles(
 				)
 			);
 		}),
-		Record.filter(String.isString), // Ensure filenames
+		Record.filter((v) => Array.isArray(v) || String.isString(v)), // Ensure filenames
 		Record.map((v) => ensureArray(v)) // Ensuring array for easier checking
 	);
 

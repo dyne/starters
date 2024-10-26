@@ -2,14 +2,15 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import RecordForm from './recordForm.svelte';
+import RecordCreate from './recordCreate.svelte';
+import RecordEdit from './recordEdit.svelte';
 // import DeleteRecord from './deleteRecord.svelte';
-// import EditRecord from './editRecord.svelte';
 // import RecordSelect from './recordSelect.svelte';
 // import RecordShare from './recordShare.svelte';
 
 export {
-	RecordForm
+	RecordCreate,
+	RecordEdit
 	//  RecordDelete, RecordEdit, SelectRecord, RecordShare
 };
 

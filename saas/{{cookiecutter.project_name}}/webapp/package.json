@@ -101,7 +101,7 @@
 		"lodash": "^4.17.21",
 		"nanoid": "^5.0.7",
 		"p-debounce": "^4.0.0",
-		"pocketbase": "^0.21.3",
+		"pocketbase": "^0.21.5",
 		"svelte-boring-avatars": "^1.2.6",
 		"svelte-loading-spinners": "^0.3.6",
 		"type-fest": "^4.26.1",

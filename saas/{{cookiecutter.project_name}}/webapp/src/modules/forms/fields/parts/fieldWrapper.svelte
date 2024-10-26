@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { GenericRecord } from '@/utils/types';
-
 	import { capitalize } from 'effect/String';
 
 	import * as Form from '@/components/ui/form';

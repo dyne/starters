@@ -67,6 +67,8 @@
 		let:attrs
 	>
 		<SelectInput
+			items={options.items}
+			multiple={options.multiple}
 			{attrs}
 			selected={getSelectedFromValue($value)}
 			onSelectedChange={handleSelectedChange}

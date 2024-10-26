@@ -15,7 +15,7 @@ import { OrganizationInviteSession } from '$lib/organizations/invites/index.js';
 
 export const load = async ({ url, fetch }) => {
 	if (!browser) return;
-	const featureFlags = await loadFeatureFlags();
+	const featureFlags = await loadFeatureFlags(fetch);
 
 	// Auth
 

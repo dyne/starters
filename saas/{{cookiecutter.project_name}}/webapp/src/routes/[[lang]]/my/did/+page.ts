@@ -4,8 +4,8 @@ import { pb } from '@/pocketbase';
 import { error } from '@sveltejs/kit';
 import { redirect } from '$lib/i18n';
 
-export const load = async ({ url }) => {
-	const { DID, KEYPAIROOM } = await loadFeatureFlags();
+export const load = async ({ url, fetch }) => {
+	const { DID, KEYPAIROOM } = await loadFeatureFlags(fetch);
 	if (!KEYPAIROOM && !DID) error(404);
 
 	const keyring = getKeyringFromLocalStorage();

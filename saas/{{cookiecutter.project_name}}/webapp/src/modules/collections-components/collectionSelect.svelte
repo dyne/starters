@@ -2,8 +2,8 @@
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import type { ControlAttrs } from 'formsnap';
 	import type { ExpandableResponse, ExpandProp } from './types';
-	import { onMount } from 'svelte';
-	import { pb } from '@/pocketbase';
+	import { onDestroy, onMount } from 'svelte';
+	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import type { RecordFullListOptions } from 'pocketbase';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import {
@@ -63,12 +63,7 @@
 
 	//
 
-	onMount(() => {
-		loadRecords(exclude, filter, expand);
-		pb.collection(collection).subscribe('*', () => loadRecords(exclude, filter, expand));
-		return () => pb.collection(collection).unsubscribe('*');
-	});
-
+	setupComponentPbSubscriptions(collection, () => loadRecords(exclude, filter, expand));
 	$: loadRecords(exclude, filter);
 
 	//

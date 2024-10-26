@@ -23,12 +23,12 @@ export function getPublicKeysFromKeypair(keypair: Keypair): PublicKeys {
 	return publicKeys;
 }
 
-export async function getUserPublicKeys(userId: string | undefined = undefined) {
+export async function getUserPublicKeys(userId: string | undefined = undefined, fetchFn = fetch) {
 	const id = userId ?? pb.authStore.model?.id ?? '';
 	try {
 		return await pb
 			.collection(Collections.UsersPublicKeys)
-			.getFirstListItem<UsersPublicKeysResponse>(`owner.id = '${id}'`);
+			.getFirstListItem<UsersPublicKeysResponse>(`owner.id = '${id}'`, { fetch: fetchFn });
 	} catch (e) {
 		return undefined;
 	}

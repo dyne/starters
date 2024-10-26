@@ -52,6 +52,8 @@ type UIOptions = {
 	submitButtonText?: string | undefined;
 	showCancelButton?: boolean;
 	hideRequiredIndicator?: boolean;
+	triggerToast?: boolean;
+	toastText?: string;
 };
 
 function defaultUIOptions(): UIOptions {
@@ -85,7 +87,7 @@ export function defaultFormOptions<C extends CollectionName>(
 
 /*  */
 
-export type CollectionFormMode = 'create' | 'update';
+export type CollectionFormMode = 'create' | 'edit';
 
 export type OnCollectionFormSuccess<C extends CollectionName> = (
 	record: CollectionResponses[C],

@@ -53,10 +53,17 @@ export function wait(ms: number) {
 
 //
 
-export function ensureArray<T>(data: T | T[] | undefined | null): T[] {
+type MaybeArray<T> = T | T[] | undefined | null;
+
+export function ensureArray<T>(data: MaybeArray<T>): T[] {
 	if (Array.isArray(data)) return data;
 	if (data) return [data];
 	else return [];
+}
+
+export function maybeArrayIsValue<T>(data: MaybeArray<T>): boolean {
+	if (Array.isArray(data)) return Boolean(data.length);
+	else return Boolean(data);
 }
 
 //

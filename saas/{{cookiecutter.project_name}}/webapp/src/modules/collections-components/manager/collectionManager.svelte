@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
-	import type { PartialCollectionFormOptions } from '../form/formOptions';
+	import type { CollectionFormOptions } from '../form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import { getContext } from 'svelte';
+	import { getContext, onDestroy } from 'svelte';
 	import type { RecordService } from 'pocketbase';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
 
@@ -19,13 +19,12 @@
 
 	export type RecordsManagerContext<C extends CollectionName> = {
 		collection: CollectionName;
-		recordService: RecordService;
+		reloadRecords: () => void;
 		// fetchOptions: FetchOptions & {
 		// 	PAGE_PARAM: string;
 		// };
 		// paginationData: Writable<PaginationData>
 		// dataManager: {
-		// 	loadRecords: () => Promise<void>;
 		// 	perPage: Writable<number>;
 		// 	currentPage: Writable<string>;
 		// 	totalPages: Writable<number>;
@@ -39,9 +38,9 @@
 		// 	discardSelection: () => void;
 		// };
 		formsOptions: {
-			base: PartialCollectionFormOptions<C>;
-			create: PartialCollectionFormOptions<C>;
-			edit: PartialCollectionFormOptions<C>;
+			base: CollectionFormOptions<C>;
+			create: CollectionFormOptions<C>;
+			edit: CollectionFormOptions<C>;
 		};
 	};
 
@@ -68,7 +67,7 @@
 	import { onMount, setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { page } from '$app/stores';
-	import { pb } from '@/pocketbase';
+	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 
@@ -78,9 +77,9 @@
 
 	//
 
-	export let formOptions: PartialCollectionFormOptions<C> = {};
-	export let createFormOptions: PartialCollectionFormOptions<C> = {};
-	export let editFormOptions: PartialCollectionFormOptions<C> = {};
+	export let formOptions: CollectionFormOptions<C> = {};
+	export let createFormOptions: CollectionFormOptions<C> = {};
+	export let editFormOptions: CollectionFormOptions<C> = {};
 
 	//
 
@@ -103,7 +102,7 @@
 
 	/* Data load */
 
-	const fetchOptions = writable<FetchOptions>({ requestKey: null });
+	const fetchOptions = writable<FetchOptions>({});
 	$: $fetchOptions = createFetchOptions(filter, sort, expand, paginate, $page);
 
 	function createFetchOptions(
@@ -127,8 +126,6 @@
 
 	//
 
-	$: recordService = pb.collection(collection);
-
 	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
 
 	let records: T[] = [];
@@ -151,18 +148,27 @@
 		// 	});
 		// 	records = res;
 		// }
+		console.log('run');
 		try {
-			records = await recordService.getFullList<T>(fetchOptions);
+			records = await pb
+				.collection(collection)
+				.getFullList<T>({ requestKey: null, ...fetchOptions });
 		} catch (e) {
 			error = e as ClientResponseError;
 		}
 	}
 
-	onMount(() => {
-		const collections = Array.dedupe([...subscribe, collection]);
-		collections.forEach((c) => pb.collection(c).subscribe('*', () => loadRecords($fetchOptions)));
-		return () => collections.forEach((c) => pb.collection(c).unsubscribe());
-	});
+	function reloadRecords() {
+		loadRecords($fetchOptions);
+	}
+
+	/* Subscriptions */
+
+	// TODO - Link subscribe to expand
+	const subscriptionCollections = Array.dedupe([...subscribe, collection]);
+	for (const c of subscriptionCollections) {
+		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptions));
+	}
 
 	/* Record selection */
 
@@ -189,7 +195,7 @@
 
 	setContext<RecordsManagerContext<C>>(RECORDS_MANAGER_KEY, {
 		collection,
-		recordService,
+		reloadRecords,
 		// dataManager: {
 		// 	recordService,
 		// 	loadRecords,
