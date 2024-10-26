@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 The Forkbomb Company
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-<script lang="ts">
+<!-- <script lang="ts">
 	import { getRecordsManagerContext } from '../collectionManager.svelte';
 
 	export let field: string;
@@ -25,7 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	function handleClick() {
 		$queryParams.sort = isSortDesc ? field : `-${field}`;
 	}
-</script>
+</script> -->
 
 <!-- <TableHeadCell>
 	<div role="columnheader" tabindex="0" on:click={handleClick} class="cursor-pointer select-none">

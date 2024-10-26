@@ -32,7 +32,7 @@
 	}
 </script>
 
-<Sheet.Root bind:open={isOpen}>
+<Sheet.Root bind:open={isOpen} portal="body">
 	<Sheet.Trigger asChild let:builder>
 		<slot name="trigger" {builder} {open}>
 			<Button builders={[builder]} class="shrink-0" variant="outline">

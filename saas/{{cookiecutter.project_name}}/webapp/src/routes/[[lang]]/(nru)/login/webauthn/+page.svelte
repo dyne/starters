@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$lib/i18n';
-	import { loginUser } from '$lib/webauthn/index';
+	import { loginUser } from '@/webauthn/index';
 	import { z } from 'zod';
 
 	import { Form, createForm, FormError, SubmitButton } from '@/forms';

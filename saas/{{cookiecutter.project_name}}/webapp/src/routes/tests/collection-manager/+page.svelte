@@ -4,20 +4,16 @@
 
 <CollectionManager
 	collection="z_test_collection"
-	expand={['relation_field']}
+	fetchOptions={{
+		expand: ['relation_field'],
+		perPage: 6
+	}}
 	let:records
-	let:selectedRecords
-	let:Pagination
-	perPage={4}
 >
 	<div class="space-y-4">
-		<pre>{JSON.stringify(selectedRecords)}</pre>
-
 		<div class="flex justify-end gap-2">
 			<RecordCreate />
 		</div>
-
-		<Pagination />
 
 		<div class="space-y-2">
 			{#each records as record}

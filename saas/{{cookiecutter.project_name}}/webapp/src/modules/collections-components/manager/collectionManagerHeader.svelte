@@ -1,9 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
+<!-- 
 <script lang="ts">
 	import { getRecordsManagerContext } from './collectionManager.svelte';
 	import { Trash, X } from 'lucide-svelte';
@@ -56,7 +51,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 						showDeleteModal = true;
 					}}
 				>
-					<!-- TODO - improve here -->
 					<Trash size="20" />
 					<span class="ml-1">Delete</span>
 				</Button>
@@ -89,4 +83,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 			</div>
 		</div>
 	</Dialog>
-</PortalWrapper>
+</PortalWrapper> -->

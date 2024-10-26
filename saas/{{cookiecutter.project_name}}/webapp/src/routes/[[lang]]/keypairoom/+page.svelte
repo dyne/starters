@@ -4,19 +4,19 @@
 		userChallenges,
 		type UserChallenges,
 		formatAnswersForZenroom
-	} from '$lib/keypairoom/userQuestions.js';
+	} from '@/keypairoom/userQuestions.js';
 	import {
 		generateKeypair,
 		getHMAC,
 		matchPublicAndPrivateKeys,
 		saveKeyringToLocalStorage
-	} from '$lib/keypairoom/keypair';
+	} from '@/keypairoom/keypair';
 	import {
 		getPublicKeysFromKeypair,
 		saveUserPublicKeys,
 		getUserPublicKeys,
 		RegenerateKeyringSession
-	} from '$lib/keypairoom/utils.js';
+	} from '@/keypairoom/utils.js';
 	import { currentUser, pb } from '@/pocketbase';
 	import { z } from 'zod';
 	import { featureFlags } from '$lib/features';

@@ -21,7 +21,7 @@
 
 	//
 
-	const { selection } = getRecordsManagerContext();
+	const { selectionContext: selection } = getRecordsManagerContext();
 	const { selectedRecords } = selection;
 
 	$: classes = cn({

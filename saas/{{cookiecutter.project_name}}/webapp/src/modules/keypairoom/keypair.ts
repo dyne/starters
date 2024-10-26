@@ -4,9 +4,9 @@
 
 import type { UserChallenges } from './userQuestions';
 import { zencode_exec } from 'zenroom';
-import keypairoomClient from '../../../zenflows-crypto/src/keypairoomClient-8-9-10-11-12.zen?raw';
-import keypairoomClientRecreateKeys from '../../../zenflows-crypto/src/keypairoomClientRecreateKeys.zen?raw';
-import matchKeys from '../../../client_zencode/keypairoom/match_pubkeys_secretkeys.zen?raw';
+import keypairoomClient from '$zencode/keypairoom/keypairoomClient-8-9-10-11-12.zen?raw';
+import keypairoomClientRecreateKeys from '$zencode/keypairoom/keypairoomClientRecreateKeys.zen?raw';
+import matchKeys from '$zencode/keypairoom/match_pubkeys_secretkeys.zen?raw';
 import { pb } from '@/pocketbase';
 import { browser } from '$app/environment';
 import _ from 'lodash';

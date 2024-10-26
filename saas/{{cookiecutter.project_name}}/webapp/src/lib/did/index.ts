@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getUserPublicKeys } from '$lib/keypairoom/utils';
+import { getUserPublicKeys } from '@/keypairoom/utils';
 
 export async function getUserDidUrl(userId: string | undefined = undefined) {
 	const publicKeys = await getUserPublicKeys(userId);

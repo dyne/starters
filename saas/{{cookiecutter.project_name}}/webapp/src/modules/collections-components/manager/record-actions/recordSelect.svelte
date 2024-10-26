@@ -7,7 +7,7 @@
 
 	export let record: CollectionResponses[C];
 
-	let { selection } = getRecordsManagerContext();
+	let { selectionContext: selection } = getRecordsManagerContext();
 	let { selectedRecords } = selection;
 
 	$: checked = $selectedRecords.includes(record.id);

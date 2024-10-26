@@ -8,8 +8,8 @@ import { error } from '@sveltejs/kit';
 
 import { browser } from '$app/environment';
 import { redirect } from '$lib/i18n';
-import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '$lib/keypairoom/keypair';
-import { getUserPublicKeys, RegenerateKeyringSession } from '$lib/keypairoom/utils';
+import { getKeyringFromLocalStorage, matchPublicAndPrivateKeys } from '@/keypairoom/keypair';
+import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 
 import { OrganizationInviteSession } from '$lib/organizations/invites/index.js';
 

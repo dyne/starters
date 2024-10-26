@@ -20,7 +20,7 @@
 	export let contentClass = '';
 </script>
 
-<Dialog.Root bind:open {...omit($$restProps, 'title')}>
+<Dialog.Root bind:open {...omit($$restProps, 'title')} portal="body">
 	<Dialog.Trigger asChild let:builder>
 		<slot name="trigger" {builder}></slot>
 	</Dialog.Trigger>

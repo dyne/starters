@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CopyButton from '$lib/components/copyButton.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils/strings';
-	import type { PublicKeys } from '$lib/keypairoom/utils';
+	import type { PublicKeys } from '@/keypairoom/utils';
 	import Button from '@/components/ui/button/button.svelte';
 	import T from '@/components/custom/t.svelte';
 	import { m } from '$lib/i18n';

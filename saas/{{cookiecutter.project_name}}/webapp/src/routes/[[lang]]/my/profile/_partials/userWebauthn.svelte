@@ -1,11 +1,7 @@
 <script lang="ts">
-	import {
-		registerUser,
-		isWebauthnSupported,
-		isPlatformAuthenticatorAvailable
-	} from '$lib/webauthn';
+	import { registerUser, isWebauthnSupported, isPlatformAuthenticatorAvailable } from '@/webauthn';
 	import { currentUser } from '@/pocketbase';
-	import { CollectionManager, DeleteRecord, EditRecord } from '@/collections-components/manager';
+	import { CollectionManager, RecordDelete, RecordEdit } from '@/collections-components/manager';
 	import T from '@/components/custom/t.svelte';
 	import { m } from '$lib/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
@@ -39,7 +35,7 @@
 	<CollectionManager
 		collection="webauthnCredentials"
 		let:records
-		editFormOptions={{ exclude: ['user', 'credential'] }}
+		editFormFieldsOptions={{ exclude: ['user', 'credential'] }}
 	>
 		<div class="space-y-2 py-4">
 			{#each records as record}
@@ -50,8 +46,8 @@
 							<T>{label}</T>
 						</div>
 						<div class="flex gap-2">
-							<EditRecord {record} />
-							<DeleteRecord {record} />
+							<RecordEdit {record} />
+							<RecordDelete {record} />
 						</div>
 					</div>
 				</Card>

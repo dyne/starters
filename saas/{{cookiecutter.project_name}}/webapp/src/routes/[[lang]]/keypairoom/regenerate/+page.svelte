@@ -5,7 +5,7 @@
 		regenerateKeypair,
 		saveKeyringToLocalStorage,
 		type Keyring
-	} from '$lib/keypairoom/keypair';
+	} from '@/keypairoom/keypair';
 	import { currentUser, pb } from '@/pocketbase';
 
 	import { z } from 'zod';
@@ -14,7 +14,7 @@
 	import Card from '$lib/components/card.svelte';
 	import { featureFlags } from '$lib/features';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { getUserPublicKeys, RegenerateKeyringSession } from '$lib/keypairoom/utils';
+	import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 	import { m } from '$lib/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
 	import { log } from '$lib/utils/devLog';

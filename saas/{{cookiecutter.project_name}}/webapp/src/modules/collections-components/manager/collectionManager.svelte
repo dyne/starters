@@ -8,34 +8,34 @@
 
 	//
 
-	const PAGE_PARAM = 'page';
+	type FetchOptions<
+		C extends CollectionName,
+		Expand extends ExpandProp<C> = never,
+		InverseExpand extends InverseExpandProp = never
+	> = {
+		subscribe: CollectionName[];
+		expand: Expand;
+		inverseExpand: InverseExpand;
+		filter: string;
+		sort: string;
+		perPage: number | false;
+	};
 
-	type FetchOptions = RecordFullListOptions | RecordListOptions;
+	type PaginationContext = {
+		currentPage: Writable<number | undefined>;
+		totalItems: Writable<number | undefined>;
+	};
 
-	// type PaginationData = {
-	// 	currentPage: number
-	// 	totalPages:number
-	// 	totalItems:number
-	// }
-
-	export type RecordsManagerContext<C extends CollectionName> = {
+	export type RecordsManagerContext<
+		C extends CollectionName,
+		Expand extends ExpandProp<C> = never,
+		InverseExpand extends InverseExpandProp = never
+	> = {
 		collection: CollectionName;
 		recordService: RecordService;
-		// fetchOptions: FetchOptions & {
-		// 	PAGE_PARAM: string;
-		// };
-		// paginationData: Writable<PaginationData>
-		// dataManager: {
-		// 	perPage: Writable<number>;
-		// 	currentPage: Writable<string>;
-		// 	totalPages: Writable<number>;
-		// 	totalItems: Writable<number>;
-		// 	queryParams: Writable<RecordFullListOptions>;
-		// };
-		pagination: {
-			perPage: number | false;
-		};
-		selection: {
+		fetchOptions: Writable<Partial<FetchOptions<C, Expand, InverseExpand>>>;
+		paginationContext: PaginationContext;
+		selectionContext: {
 			selectedRecords: Writable<RecordIdString[]>;
 			areAllRecordsSelected: (selectedRecords: RecordIdString[]) => boolean;
 			toggleSelectAllRecords: () => void;
@@ -66,26 +66,22 @@
 	lang="ts"
 	generics="C extends CollectionName, Expand extends ExpandProp<C> = never, InverseExpand extends InverseExpandProp = never"
 >
+	import { ensureArray } from '@/utils/other';
 	import { FolderIcon } from 'lucide-svelte';
-
 	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
-	import { Array } from 'effect';
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
 	import { m } from '$lib/i18n';
-	import type { Page } from '@sveltejs/kit';
 	import { setContext } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
-	import { page } from '$app/stores';
 	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import type { RecordIdString } from '@/pocketbase/types';
+	import { Array as A } from 'effect';
 
 	//
 
 	export let collection: C;
-
-	//
 
 	export let formOptions: CollectionFormOptions = {};
 	export let createFormOptions: CollectionFormOptions = {};
@@ -95,78 +91,54 @@
 	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 
-	//
-
-	export let subscribe: CollectionName[] = [];
-	export let expand: Expand | undefined = undefined;
-	export let inverseExpand: InverseExpand | undefined = undefined;
-
-	export let filter: string | undefined = undefined;
-	export let sort: string | undefined = '-created';
-
-	export let perPage: number | false = false;
-
 	export let hide: ('emptyState' | 'pagination')[] = [];
-	// export let hideEmptyState = false;
 
-	// export let initialQueryParams: RecordFullListOptions = {};
-
-	// export let perPage = 25;
-	// export let disablePagination = false;
-
-	/* Data load */
-
-	const fetchOptions = writable<FetchOptions>({});
-	$: $fetchOptions = createFetchOptions(filter, sort, expand, perPage, $page);
-
-	function createFetchOptions(
-		f: typeof filter,
-		s: typeof sort,
-		e: typeof expand,
-		p: typeof perPage,
-		page: Page
-	): FetchOptions {
-		inverseExpand; // TODO: use here
-		const options: typeof $fetchOptions = {};
-		if (f) options.filter = f;
-		if (s) options.sort = s;
-		// if (typeof p == 'number') {
-		// 	options.perPage = p;
-		// 	const pageNumber = Number(page.url.searchParams.get(PAGE_PARAM));
-		// 	options.page = Boolean(pageNumber) ? pageNumber : 1;
-		// }
-		if (e && e.length > 0) options.expand = e.join(', ');
-		return options;
-	}
+	export let fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {};
 
 	//
 
-	let recordService = pb.collection(collection);
+	const fetchOptionsStore = writable<typeof fetchOptions>(fetchOptions);
+	$: $fetchOptionsStore = { ...$fetchOptionsStore, ...fetchOptions };
 
-	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
+	const currentPage = writable<number | undefined>(undefined);
+	const totalItems = writable<number | undefined>(undefined);
 
 	let records: T[] = [];
+	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
 
 	let error: ClientResponseError | undefined = undefined;
 
-	// let totalPages = writable(0);
-	$: loadRecords($fetchOptions);
-	async function loadRecords(fetchOptions: FetchOptions) {
-		// if (paginate) {
-		// 	const res = await recordService.getList<ExpandableResponse<C, Expand>[]>(Number($currentPage), $fetchOptions.perPage, {
-		// 		...$fetchOptions
-		// 	});
-		// 	records = res.items;
-		// 	totalPages.set(res.totalPages);
-		// 	totalItems.set(res.totalItems);
-		// } else {
-		// 	const res = await recordService.getFullList<RecordGeneric>({
-		// 		...$fetchOptions
-		// 	});
-		// 	records = res;
-		// }
+	let recordService = pb.collection(collection);
+
+	$: loadRecords($fetchOptionsStore, $currentPage);
+
+	async function loadRecords(
+		fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {},
+		currentPage: number | undefined = undefined
+	) {
+		const { expand, filter, inverseExpand, sort, perPage } = fetchOptions;
+		const options: RecordFullListOptions | RecordListOptions = {
+			requestKey: null
+		};
+		if (expand) options.expand = expand.join(',');
+		if (filter) options.filter = filter;
+		if (sort) options.sort = fetchOptions.sort;
+		if (inverseExpand) {
+			const expand = Object.entries(inverseExpand)
+				.map(([k, v]) => `${k}_via_${v}`)
+				.join(',');
+			if (options.expand) options.expand = options.expand + ',' + expand;
+			else options.expand = expand;
+		}
+
 		try {
-			records = await recordService.getFullList<T>({ requestKey: null, ...fetchOptions });
+			if (perPage) {
+				const result = await recordService.getList<T>(currentPage, perPage, options);
+				totalItems.set(result.totalItems);
+				records = result.items;
+			} else {
+				records = await recordService.getFullList<T>(options);
+			}
 		} catch (e) {
 			error = e as ClientResponseError;
 		}
@@ -174,11 +146,15 @@
 
 	/* Subscriptions */
 
-	// TODO - Link subscribe to expand
+	// TODO - Use `expand` field instead of `subscribe`
 	// TODO - When "authorizations" is added, `records` update, but not when it's removed
-	const subscriptionCollections: CollectionName[] = [...subscribe, collection, 'authorizations'];
-	for (const c of Array.dedupe(subscriptionCollections)) {
-		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptions));
+	const subscriptionCollections: CollectionName[] = [
+		...ensureArray($fetchOptionsStore.subscribe),
+		collection,
+		'authorizations'
+	];
+	for (const c of A.dedupe(subscriptionCollections)) {
+		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptionsStore, $currentPage));
 	}
 
 	/* Record selection */
@@ -202,26 +178,17 @@
 		$selectedRecords = [];
 	}
 
-	function isRecordSelected(recordId: RecordIdString) {
-		return $selectedRecords.includes(recordId);
-	}
-
 	/* Context */
 
-	setContext<RecordsManagerContext<C>>(RECORDS_MANAGER_KEY, {
+	setContext<RecordsManagerContext<C, Expand, InverseExpand>>(RECORDS_MANAGER_KEY, {
 		collection,
 		recordService,
-		// dataManager: {
-		// 	recordService,
-		// 	loadRecords,
-		// 	queryParams: fetchOptions,
-		// 	perPage: writable(perPage),
-		// 	currentPage,
-		// 	totalPages,
-		// 	totalItems
-		// },
-		pagination: { perPage },
-		selection: {
+		paginationContext: {
+			currentPage,
+			totalItems
+		},
+		fetchOptions: fetchOptionsStore,
+		selectionContext: {
 			selectedRecords,
 			areAllRecordsSelected,
 			toggleSelectAllRecords,
