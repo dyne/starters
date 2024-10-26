@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import CollectionManager from './collectionManager.svelte';
-export { CollectionManager };
+import RecordCard from './record-components/recordCard.svelte';
+export { CollectionManager, RecordCard };
 
 export * from './record-actions';

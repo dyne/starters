@@ -32,7 +32,7 @@ type BaseCollectionFieldOptions<C extends CollectionName> = CollectionFieldOptio
 	ExpandProp<C>
 >;
 
-function defaultFieldsOptions<C extends CollectionName>(): FieldsOptions<C> {
+export function defaultFieldsOptions<C extends CollectionName>(): FieldsOptions<C> {
 	return {
 		order: [],
 		exclude: [],
@@ -66,19 +66,15 @@ function defaultUIOptions(): UIOptions {
 
 /* Wrapper type */
 
-export type CollectionFormOptions<C extends CollectionName> = {
+export type CollectionFormOptions = {
 	superform?: SuperformOptions;
-	fields?: FieldsOptions<C>;
 	ui?: UIOptions;
 };
 
-export function defaultFormOptions<C extends CollectionName>(
-	options: CollectionFormOptions<C> = {}
-): CollectionFormOptions<C> {
+export function defaultFormOptions(options: CollectionFormOptions = {}): CollectionFormOptions {
 	return merge(
 		{
 			superform: {},
-			fields: defaultFieldsOptions<C>(),
 			ui: defaultUIOptions()
 		},
 		options

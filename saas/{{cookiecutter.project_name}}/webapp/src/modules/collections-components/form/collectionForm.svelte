@@ -16,7 +16,8 @@
 		defaultFormOptions,
 		type OnCollectionFormSuccess,
 		type CollectionFormOptions,
-		type FieldsOptions
+		type FieldsOptions,
+		defaultFieldsOptions
 	} from './formOptions';
 
 	//
@@ -28,13 +29,15 @@
 	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
 	export let onCancel: () => MaybePromise<void> = () => {};
 
-	export let options: CollectionFormOptions<C> = defaultFormOptions<C>();
+	export let fieldsOptions: Partial<FieldsOptions<C>> = defaultFieldsOptions<C>();
+	export let options: CollectionFormOptions = defaultFormOptions();
 
 	/* */
 
 	let form: SuperForm<CollectionRecords[C]>;
 	$: form = setupCollectionForm<C>({
 		collection,
+		fieldsOptions,
 		recordId,
 		onSuccess,
 		options,
@@ -44,9 +47,9 @@
 	/* Sorting fields */
 
 	let fieldsConfigs: AnyFieldConfig[] = getCollectionModel(collection)
-		.schema.sort(createFieldConfigSorter(options.fields?.order))
+		.schema.sort(createFieldConfigSorter(fieldsOptions?.order))
 		.filter(
-			(config) => !options.fields?.exclude.includes(config.name as KeyOf<CollectionRecords[C]>)
+			(config) => !fieldsOptions?.exclude?.includes(config.name as KeyOf<CollectionRecords[C]>)
 		);
 
 	function createFieldConfigSorter(order: string[] = []) {
@@ -98,12 +101,12 @@
 	>
 		{#each fieldsConfigs as fieldSchema}
 			{@const name = getFieldConfigName(fieldSchema)}
-			{@const hidden = Object.keys(options.fields?.hide ?? {}).includes(name)}
-			{@const label = c(options.fields?.labels?.[name] ?? name)}
-			{@const component = options.fields?.components?.[name]}
-			{@const collectionFieldOptions = getRelationsOptions(options.fields?.relations ?? {}, name)}
-			{@const description = options.fields?.descriptions?.[name]}
-			{@const placeholder = options.fields?.placeholders?.[name]}
+			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
+			{@const label = c(fieldsOptions?.labels?.[name] ?? name)}
+			{@const component = fieldsOptions?.components?.[name]}
+			{@const collectionFieldOptions = getRelationsOptions(fieldsOptions?.relations ?? {}, name)}
+			{@const description = fieldsOptions?.descriptions?.[name]}
+			{@const placeholder = fieldsOptions?.placeholders?.[name]}
 			<FieldSchemaToInput
 				{description}
 				{label}
@@ -119,11 +122,17 @@
 
 		<FormError />
 
-		<div class="flex justify-end gap-2">
-			{#if options.ui?.showCancelButton}
-				<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
-			{/if}
-			<SubmitButton>{submitButtonText}</SubmitButton>
+		<div class="flex justify-between gap-2">
+			<div>
+				<slot name="footer-left"></slot>
+			</div>
+			<div class="flex gap-2">
+				<slot name="footer-right"></slot>
+				{#if options.ui?.showCancelButton}
+					<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
+				{/if}
+				<SubmitButton>{submitButtonText}</SubmitButton>
+			</div>
 		</div>
 	</Form>
 {/key}

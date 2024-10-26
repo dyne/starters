@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
-	import type { CollectionFormOptions } from '../form/formOptions';
+	import type { CollectionFormOptions, FieldsOptions } from '../form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import { getContext, onDestroy } from 'svelte';
+	import { getContext } from 'svelte';
 	import type { RecordService } from 'pocketbase';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
+	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 
 	//
 
@@ -19,7 +20,7 @@
 
 	export type RecordsManagerContext<C extends CollectionName> = {
 		collection: CollectionName;
-		reloadRecords: () => void;
+		recordService: RecordService;
 		// fetchOptions: FetchOptions & {
 		// 	PAGE_PARAM: string;
 		// };
@@ -31,16 +32,24 @@
 		// 	totalItems: Writable<number>;
 		// 	queryParams: Writable<RecordFullListOptions>;
 		// };
-		// selection: {
-		// 	records: Writable<string[]>;
-		// 	allRecordsSelected: (selectedRecords: string[]) => boolean;
-		// 	toggleSelectAllRecords: () => void;
-		// 	discardSelection: () => void;
-		// };
+		pagination: {
+			perPage: number | false;
+		};
+		selection: {
+			selectedRecords: Writable<RecordIdString[]>;
+			areAllRecordsSelected: (selectedRecords: RecordIdString[]) => boolean;
+			toggleSelectAllRecords: () => void;
+			discardSelection: () => void;
+		};
 		formsOptions: {
-			base: CollectionFormOptions<C>;
-			create: CollectionFormOptions<C>;
-			edit: CollectionFormOptions<C>;
+			base: CollectionFormOptions;
+			create: CollectionFormOptions;
+			edit: CollectionFormOptions;
+		};
+		formFieldsOptions: {
+			base: Partial<FieldsOptions<C>>;
+			create: Partial<FieldsOptions<C>>;
+			edit: Partial<FieldsOptions<C>>;
 		};
 	};
 
@@ -64,12 +73,13 @@
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
 	import { m } from '$lib/i18n';
 	import type { Page } from '@sveltejs/kit';
-	import { onMount, setContext } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { setContext } from 'svelte';
+	import { writable, type Writable } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
+	import type { RecordIdString } from '@/pocketbase/types';
 
 	//
 
@@ -77,20 +87,24 @@
 
 	//
 
-	export let formOptions: CollectionFormOptions<C> = {};
-	export let createFormOptions: CollectionFormOptions<C> = {};
-	export let editFormOptions: CollectionFormOptions<C> = {};
+	export let formOptions: CollectionFormOptions = {};
+	export let createFormOptions: CollectionFormOptions = {};
+	export let editFormOptions: CollectionFormOptions = {};
+
+	export let formFieldsOptions: Partial<FieldsOptions<C>> = {};
+	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
+	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 
 	//
 
 	export let subscribe: CollectionName[] = [];
 	export let expand: Expand | undefined = undefined;
 	export let inverseExpand: InverseExpand | undefined = undefined;
-	inverseExpand;
 
 	export let filter: string | undefined = undefined;
 	export let sort: string | undefined = '-created';
-	export let paginate: number | false = false;
+
+	export let perPage: number | false = false;
 
 	export let hide: ('emptyState' | 'pagination')[] = [];
 	// export let hideEmptyState = false;
@@ -103,15 +117,16 @@
 	/* Data load */
 
 	const fetchOptions = writable<FetchOptions>({});
-	$: $fetchOptions = createFetchOptions(filter, sort, expand, paginate, $page);
+	$: $fetchOptions = createFetchOptions(filter, sort, expand, perPage, $page);
 
 	function createFetchOptions(
 		f: typeof filter,
 		s: typeof sort,
 		e: typeof expand,
-		p: typeof paginate,
+		p: typeof perPage,
 		page: Page
 	): FetchOptions {
+		inverseExpand; // TODO: use here
 		const options: typeof $fetchOptions = {};
 		if (f) options.filter = f;
 		if (s) options.sort = s;
@@ -125,6 +140,8 @@
 	}
 
 	//
+
+	let recordService = pb.collection(collection);
 
 	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
 
@@ -148,25 +165,19 @@
 		// 	});
 		// 	records = res;
 		// }
-		console.log('run');
 		try {
-			records = await pb
-				.collection(collection)
-				.getFullList<T>({ requestKey: null, ...fetchOptions });
+			records = await recordService.getFullList<T>({ requestKey: null, ...fetchOptions });
 		} catch (e) {
 			error = e as ClientResponseError;
 		}
 	}
 
-	function reloadRecords() {
-		loadRecords($fetchOptions);
-	}
-
 	/* Subscriptions */
 
 	// TODO - Link subscribe to expand
-	const subscriptionCollections = Array.dedupe([...subscribe, collection]);
-	for (const c of subscriptionCollections) {
+	// TODO - When "authorizations" is added, `records` update, but not when it's removed
+	const subscriptionCollections: CollectionName[] = [...subscribe, collection, 'authorizations'];
+	for (const c of Array.dedupe(subscriptionCollections)) {
 		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptions));
 	}
 
@@ -174,12 +185,12 @@
 
 	const selectedRecords = writable<string[]>([]);
 
-	function allRecordsSelected(selectedRecords: string[] = []) {
+	function areAllRecordsSelected(selectedRecords: RecordIdString[]) {
 		return records.every((r) => selectedRecords.includes(r.id));
 	}
 
 	function toggleSelectAllRecords() {
-		const allSelected = allRecordsSelected($selectedRecords);
+		const allSelected = areAllRecordsSelected($selectedRecords);
 		if (allSelected) {
 			$selectedRecords = [];
 		} else {
@@ -191,11 +202,15 @@
 		$selectedRecords = [];
 	}
 
+	function isRecordSelected(recordId: RecordIdString) {
+		return $selectedRecords.includes(recordId);
+	}
+
 	/* Context */
 
 	setContext<RecordsManagerContext<C>>(RECORDS_MANAGER_KEY, {
 		collection,
-		reloadRecords,
+		recordService,
 		// dataManager: {
 		// 	recordService,
 		// 	loadRecords,
@@ -205,16 +220,22 @@
 		// 	totalPages,
 		// 	totalItems
 		// },
-		// selectionManager: {
-		// 	selectedRecords,
-		// 	allRecordsSelected,
-		// 	toggleSelectAllRecords,
-		// 	discardSelection
-		// },
+		pagination: { perPage },
+		selection: {
+			selectedRecords,
+			areAllRecordsSelected,
+			toggleSelectAllRecords,
+			discardSelection
+		},
 		formsOptions: {
 			base: formOptions,
 			create: createFormOptions,
 			edit: editFormOptions
+		},
+		formFieldsOptions: {
+			base: formFieldsOptions,
+			create: createFormFieldsOptions,
+			edit: editFormFieldsOptions
 		}
 	});
 </script>
@@ -226,7 +247,13 @@
 		icon={MessageCircleWarning}
 	/>
 {:else if records.length > 0}
-	<slot {records} />
+	<slot {records} selectedRecords={$selectedRecords} Pagination={CollectionManagerPagination} />
+
+	{#if !hide.includes('pagination')}
+		<div class="mt-6">
+			<CollectionManagerPagination />
+		</div>
+	{/if}
 {:else}
 	<slot name="emptyState">
 		{#if !hide.includes('emptyState')}

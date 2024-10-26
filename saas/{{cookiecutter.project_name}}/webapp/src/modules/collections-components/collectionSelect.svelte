@@ -63,7 +63,10 @@
 
 	//
 
-	setupComponentPbSubscriptions(collection, () => loadRecords(exclude, filter, expand));
+	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
+	for (const c of subscriptionCollections) {
+		setupComponentPbSubscriptions(c, () => loadRecords(exclude, filter, expand));
+	}
 	$: loadRecords(exclude, filter);
 
 	//

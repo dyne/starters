@@ -3,6 +3,7 @@
 	import { Footer } from '@/components/ui/dialog';
 	import type { DialogProps } from 'bits-ui';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import { omit } from 'lodash';
 
 	//
 
@@ -11,18 +12,20 @@
 		description?: string;
 		open: boolean;
 		class?: string;
+		contentClass?: string;
 	};
 	$: props = $$props as $$Props;
 
 	export let open: $$Props['open'] = false;
-
-	let className = '';
-	export { className as class };
+	export let contentClass = '';
 </script>
 
-<Dialog.Root bind:open {...$$restProps}>
-	<Dialog.Trigger />
-	<Dialog.Content class={className}>
+<Dialog.Root bind:open {...omit($$restProps, 'title')}>
+	<Dialog.Trigger asChild let:builder>
+		<slot name="trigger" {builder}></slot>
+	</Dialog.Trigger>
+
+	<Dialog.Content class={contentClass}>
 		{#if props.title || props.description}
 			<Dialog.Header class="!text-left">
 				{#if props.title}
@@ -34,8 +37,8 @@
 					</Dialog.Description>
 				{/if}
 			</Dialog.Header>
+			<Separator></Separator>
 		{/if}
-		<Separator></Separator>
 
 		<slot {Footer} />
 	</Dialog.Content>

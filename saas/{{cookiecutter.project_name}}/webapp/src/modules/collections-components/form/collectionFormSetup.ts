@@ -1,6 +1,6 @@
 import type { FieldConfig, CollectionName, FieldType } from '@/pocketbase/collections-models/types';
 import { pipe, Record, String } from 'effect';
-import type { CollectionFormMode, CollectionFormOptions } from './formOptions';
+import type { CollectionFormMode, CollectionFormOptions, FieldsOptions } from './formOptions';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
@@ -20,15 +20,17 @@ import { toast } from 'svelte-sonner';
 
 type SetupCollectionFormProps<C extends CollectionName> = {
 	collection: C;
+	fieldsOptions: Partial<FieldsOptions<C>>;
 	initialData: Partial<CollectionRecords[C]>;
 	recordId?: RecordIdString;
-	options?: CollectionFormOptions<C>;
+	options?: CollectionFormOptions;
 	onSuccess?: (record: CollectionResponses[C], mode: CollectionFormMode) => MaybePromise<void>;
 };
 
 export function setupCollectionForm<C extends CollectionName>({
 	collection,
 	recordId = undefined,
+	fieldsOptions = {},
 	options = {},
 	initialData = {},
 	onSuccess = () => {}
@@ -39,7 +41,7 @@ export function setupCollectionForm<C extends CollectionName>({
 
 	const baseSchema = createCollectionZodSchema(collection) as z.AnyZodObject;
 	const schema = baseSchema.omit(
-		Object.fromEntries((options.fields?.exclude ?? []).map((key) => [key, true]))
+		Object.fromEntries((fieldsOptions?.exclude ?? []).map((key) => [key, true]))
 	);
 
 	/* Initial data processing */
@@ -66,7 +68,7 @@ export function setupCollectionForm<C extends CollectionName>({
 	 */
 
 	const processedInitialData = pipe(
-		merge(cloneDeep(initialData), options.fields?.defaults, options.fields?.hide), // Seeding data
+		merge(cloneDeep(initialData), fieldsOptions?.defaults, fieldsOptions?.hide), // Seeding data
 		(data) => removeExcessProperties(data, collectionModel),
 		(data) => mockInitialDataFiles(data, collectionModel),
 		(data) => stringifyJsonFields(data, collectionModel),

@@ -25,14 +25,13 @@ export function createCollectionZodSchema<C extends CollectionName>(
 			// Array type handling
 			(zodType) => {
 				if (isArrayField(fieldConfig)) {
+					let s = z.array(zodType);
 					const { minSelect, maxSelect } = z
 						.object({
-							minSelect: z.number().optional(),
-							maxSelect: z.number().optional()
+							minSelect: z.number().nullish(),
+							maxSelect: z.number().nullish()
 						})
 						.parse(fieldConfig.options);
-
-					let s = z.array(zodType);
 					if (minSelect) s = s.min(minSelect as number);
 					if (maxSelect) s = s.max(maxSelect as number);
 					return s;

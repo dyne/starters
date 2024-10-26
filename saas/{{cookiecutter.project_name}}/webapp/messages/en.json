@@ -414,5 +414,17 @@
 	"Start_by_adding_a_record_to_this_collection_": "Start by adding a record to this collection.",
 	"Record_created_successfully": "Record created successfully!",
 	"Update_record": "Update record",
-	"Record_updated_successfully": "Record updated successfully!"
+	"Record_updated_successfully": "Record updated successfully!",
+	"Delete_record": "Delete record",
+	"Are_you_sure_you_want_to_delete_this_record": "Are you sure you want to delete this record?",
+	"Record_deleted_successfully": "Record deleted successfully",
+	"Share_record": "Share record",
+	"Share": "Share",
+	"Record_shared_successfully": "Record shared successfully",
+	"Remove_access": "Remove access",
+	"Are_you_sure_you_want_to_remove_access_to_the_record": "Are you sure you want to remove all access to the record?",
+	"Record_authorization_removed_successfully": "Record authorization removed successfully",
+	"Update_authorizations": "Update authorizations",
+	"Select_all_records": "Select all records",
+	"Deselect_all_records": "Deselect all records"
 }
