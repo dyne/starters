@@ -27,7 +27,7 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "pnpx pocketbase-typegen --db ../admin/pb_data/data.db --out src/modules/pocketbase/types/index.generated.ts && pnpm types-extra",
 		"types-extra": "vite-node --options.transformMode.ssr='/.*/' --script src/modules/pocketbase/types/generate-extra.ts",
-		"features": "node ./src/lib/features/generateFeaturesList.mjs",
+		"features": "vite-node --options.transformMode.ssr='/.*/' --script src/modules/features/generate-features-list.ts",
 		"roles": "node ./src/lib/organizations/generateRolesList.mjs",
 		"definitions": "pnpm types && pnpm export-pocketbase-collections-models && pnpm features && pnpm roles",
 		"serve": "pnpm build && pnpm preview --host",

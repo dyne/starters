@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Features } from './list';
+import { Features } from './features-list.generated';
 import { pb } from '@/pocketbase';
 import { Collections, type FeaturesResponse } from '@/pocketbase/types';
 import { writable } from 'svelte/store';
@@ -31,4 +31,4 @@ export async function loadFeatureFlags(fetchFn = fetch): Promise<FeatureFlags> {
 	return flags as FeatureFlags;
 }
 
-export * from './list';
+export * from './features-list.generated';
