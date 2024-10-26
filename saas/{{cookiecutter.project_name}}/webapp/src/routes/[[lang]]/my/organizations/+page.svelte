@@ -16,6 +16,7 @@
 	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
 	import { capitalize } from '@/utils/other';
 	import A from '@/components/custom/a.svelte';
+	import { toast } from 'svelte-sonner';
 
 	//
 
@@ -29,7 +30,14 @@
 			body: {
 				inviteId
 			}
-		});
+		})
+			.then(() => {
+				if (action == 'accept') toast.success(m.Invite_accepted_succesfully());
+				else if (action == 'decline') toast.info(m.Invitation_declined());
+			})
+			.catch(() => {
+				toast.error(m.An_error_occurred_while_processing_your_request());
+			});
 	}
 
 	/* Org membership requests */

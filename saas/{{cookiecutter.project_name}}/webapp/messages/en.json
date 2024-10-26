@@ -432,5 +432,8 @@
 	"Not_Found": "Not Found",
 	"Internal_Error": "Internal Error",
 	"Come_back_home": "Come back home!",
-	"Membership_request_declined_successfully": "Membership request declined successfully"
+	"Membership_request_declined_successfully": "Membership request declined successfully",
+	"Invite_accepted_succesfully": "Invite accepted succesfully!",
+	"Invitation_declined": "Invitation declined",
+	"An_error_occurred_while_processing_your_request": "An error occurred while processing your request"
 }
