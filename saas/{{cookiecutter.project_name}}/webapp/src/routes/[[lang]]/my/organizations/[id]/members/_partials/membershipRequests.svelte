@@ -9,7 +9,7 @@
 	} from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import { UserPlus, CircleOffIcon } from 'lucide-svelte';
-	import PlainCard from '$lib/components/itemCard.svelte';
+	import PlainCard from '@/components/custom/itemCard.svelte';
 	import { getUserDisplayName } from '@/pocketbase/utils';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import Icon from '@/components/custom/icon.svelte';

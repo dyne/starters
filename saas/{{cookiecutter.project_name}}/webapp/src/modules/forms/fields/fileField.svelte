@@ -137,7 +137,7 @@
 				{...options}
 				placeholder="Upload a file"
 				type="file"
-				class="hover:bg-primary/10 file:bg-primary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
+				class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
 				on:change={(e) => {
 					const fileList = e.currentTarget.files;
 					if (fileList) addFiles([...fileList]);

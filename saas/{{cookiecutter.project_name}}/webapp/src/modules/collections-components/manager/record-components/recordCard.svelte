@@ -2,7 +2,7 @@
 	import { cn } from '@/components/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import ItemCard from '$lib/components/itemCard.svelte';
+	import ItemCard from '@/components/custom/itemCard.svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import {
 		RecordShare,

@@ -4,7 +4,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '@/i18n';
 	import EmptyState from '@/components/custom/emptyState.svelte';
-	import PlainCard from '$lib/components/itemCard.svelte';
+	import PlainCard from '@/components/custom/itemCard.svelte';
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 	import { Button } from '@/components/ui/button';
 	import { Badge } from '@/components/ui/badge';

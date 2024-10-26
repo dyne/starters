@@ -7,7 +7,7 @@
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import PageCard from '@/components/layout/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import PlainCard from '$lib/components/itemCard.svelte';
+	import PlainCard from '@/components/custom/itemCard.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
