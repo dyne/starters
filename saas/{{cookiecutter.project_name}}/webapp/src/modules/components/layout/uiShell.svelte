@@ -48,7 +48,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 	}
 
 	function toggleSidebar() {
-		if ($sidebarMode == 'drawer') showSidebar.toggle();
+		if ($sidebarMode == 'drawer') $showSidebar = false;
 	}
 
 	setContext<UIShellContext>(UI_SHELL_KEY, {
