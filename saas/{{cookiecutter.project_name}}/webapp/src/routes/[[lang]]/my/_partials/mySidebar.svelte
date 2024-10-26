@@ -174,7 +174,7 @@
 		</div>
 
 		<div class=" flex border-t px-6 py-3">
-			<T tag="small" class="text-primary/50 text-wrap font-mono text-xs">
+			<T tag="small" class="text-secondary-foreground/50 text-wrap font-mono text-xs">
 				{appTitle} – Version {version}
 			</T>
 		</div>

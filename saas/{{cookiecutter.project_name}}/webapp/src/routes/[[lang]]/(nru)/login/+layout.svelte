@@ -29,10 +29,16 @@
 {#if $featureFlags.WEBAUTHN}
 	<div class="space-y-2">
 		<T tag="small" class="text-gray-500">{m.Choose_your_authentication_method()}</T>
-		<div class="flex items-center gap-2">
+		<div class="flex items-center overflow-hidden rounded-md border">
 			{#each modes as { href, text }}
 				{@const isActive = $page.url.pathname === href}
-				<Button variant={isActive ? 'default' : 'outline'} {href} class="grow">{text}</Button>
+				<Button
+					variant={isActive ? 'secondary' : 'outline'}
+					{href}
+					class="grow rounded-none border-none"
+				>
+					{text}
+				</Button>
 			{/each}
 		</div>
 	</div>

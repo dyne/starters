@@ -79,7 +79,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <T tag="h4">Create an account</T>
 
-<Form {form} submitButtonText={m.Create_an_account()}>
+<Form {form} submitButtonText={m.Create_an_account()} hideRequiredIndicator>
 	<Field
 		{form}
 		name="email"

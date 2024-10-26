@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Terminal from 'lucide-svelte/icons/terminal';
 	import * as Alert from '@/components/ui/alert/index.js';
 	import Icon from './icon.svelte';
 	import type { ComponentProps } from 'svelte';
 	import type { IconComponent } from '@/components/types';
+	import { cn } from '../utils';
 
 	type $$Props = ComponentProps<Alert.Root> & { icon?: IconComponent };
 	$: props = $$props as $$Props;
 </script>
 
-<Alert.Root {...$$props}>
+<Alert.Root {...$$props} class="{$$props.class} {cn({ '!p-4': !Boolean($$props.icon) })}">
 	{#if props.icon}
 		<Icon src={props.icon} size={16}></Icon>
 	{/if}

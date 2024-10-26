@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { goto } from '@/i18n';
+	import { goto, m } from '@/i18n';
 	import { pb } from '@/pocketbase';
-	import { Collections } from '@/pocketbase/types';
-	import { Form, createForm, FormError, SubmitButton } from '@/forms';
+	import { Form, createForm } from '@/forms';
 	import { Field } from '@/forms/fields';
 	import { z } from 'zod';
 	import { currentEmail } from './+layout.svelte';
@@ -30,14 +29,13 @@
 	$: $currentEmail = $formData.email;
 </script>
 
-<Form {form} submitButtonText="Log in">
+<Form {form} submitButtonText={m.Log_in()}>
 	<Field
 		{form}
 		name="email"
 		options={{
-			id: 'email',
 			type: 'email',
-			label: 'Your email',
+			label: m.Your_email(),
 			placeholder: 'name@foundation.org'
 		}}
 	/>
@@ -46,9 +44,8 @@
 		{form}
 		name="password"
 		options={{
-			id: 'password',
 			type: 'password',
-			label: 'Your password',
+			label: m.Your_password(),
 			placeholder: '•••••'
 		}}
 	/>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '@/i18n';
+	import { goto, m } from '@/i18n';
 	import { loginUser } from '@/webauthn/index';
 	import { z } from 'zod';
 
@@ -28,21 +28,15 @@
 	$: $currentEmail = $formData.email;
 </script>
 
-<Form {form}>
+<Form {form} submitButtonText={m.Log_in_with_webauthn()}>
 	<Field
 		{form}
 		name="email"
 		options={{
 			id: 'email',
 			type: 'email',
-			label: 'Your email',
+			label: m.Your_email(),
 			placeholder: 'name@foundation.org'
 		}}
 	/>
-
-	<FormError />
-
-	<div class="flex justify-end">
-		<SubmitButton>Log in with webauthn</SubmitButton>
-	</div>
 </Form>

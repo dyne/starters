@@ -1,22 +1,18 @@
 <script lang="ts">
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
 	import { appTitle } from '@/utils/strings';
-	import Card from '@/components/custom/card.svelte';
 	import A from '@/components/custom/a.svelte';
-
-	// TODO - Fix
+	import PageCard from '@/components/layout/pageCard.svelte';
 </script>
 
-<div class="grid h-screen place-items-center">
-	<div class="max-w-[500px]">
+<div class="flex h-screen items-center justify-center">
+	<div class="max-w-[500px] space-y-4">
 		<A href="/">
 			<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
 		</A>
-		<Card>
-			<div class="space-y-4 p-6 sm:p-8 md:space-y-6">
-				<slot />
-			</div>
-		</Card>
+		<PageCard>
+			<slot />
+		</PageCard>
 	</div>
 </div>
 

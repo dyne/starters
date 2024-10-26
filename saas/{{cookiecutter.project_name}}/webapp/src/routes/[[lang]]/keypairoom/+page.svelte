@@ -35,9 +35,9 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import T from '@/components/custom/t.svelte';
 	import Alert from '@/components/custom/alert.svelte';
-	import Icon from '@/components/custom/icon.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { PageCard } from '@/components/layout';
+	import A from '@/components/custom/a.svelte';
 
 	//
 
@@ -109,10 +109,9 @@
 		<T tag="h4">{m.Generate_your_keys()}</T>
 
 		{#if WelcomeSession.isActive()}
-			<Alert color="blue">
+			<Alert variant="blue" icon={HelpCircle}>
 				<span class="sr-only">{m.Info()}</span>
 				<span class="text mb-2 flex items-center font-bold">
-					<Icon src={HelpCircle} mr />
 					{m.Important_information()}
 				</span>
 				<ul class="list-disc space-y-1 pl-4 pt-1">
@@ -151,15 +150,15 @@
 
 		<Separator />
 
-		<a class="text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</a>
+		<A class="block text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</A>
 	</PageCard>
 {:else}
 	<PageCard>
 		<T tag="h4">{m.Keypair_creation_successful()}</T>
-		<T tag="small" class="text-gray-400 dark:text-gray-600">
+		<T class="text-sm">
 			{m.Please_store_this_in_a_safe_place_to_recover_your_account_in_the_future_this_passphrase_will_be_shown_only_one_time()}
 		</T>
-		<Alert color="blue">
+		<Alert variant="blue">
 			<span class="font-mono">
 				{seed}
 				<div class="flex flex-col items-end pt-4">
@@ -167,6 +166,8 @@
 				</div>
 			</span>
 		</Alert>
-		<Button href="/my">{m.Go_to_Dashboard()}</Button>
+		<div class="flex justify-end">
+			<Button href="/my">{m.Go_to_Dashboard()}</Button>
+		</div>
 	</PageCard>
 {/if}

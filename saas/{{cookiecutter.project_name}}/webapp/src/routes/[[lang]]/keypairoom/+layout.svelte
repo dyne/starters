@@ -17,7 +17,7 @@
 					Hello, <span class="font-semibold">{$currentUser?.email}</span>
 				</span>
 			</div>
-			<div class="shrink-0">
+			<div class="shrink-2 ml-4">
 				<DIDButton />
 			</div>
 		{:else}
@@ -26,7 +26,7 @@
 	</div>
 	<div slot="right" class="flex items-center gap-4">
 		{#if $featureFlags.AUTH}
-			<Button data-sveltekit-preload-data="off" href="/logout" size="sm" color="alternative">
+			<Button data-sveltekit-preload-data="off" href="/logout" size="sm" variant="outline">
 				{m.Sign_out()}
 			</Button>
 			<UserAvatar />

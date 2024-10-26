@@ -21,6 +21,7 @@
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { PageCard } from '@/components/layout';
+	import A from '@/components/custom/a.svelte';
 
 	//
 
@@ -95,7 +96,7 @@
 			<T>{m.Please_type_here_your_email_and_your_seed_to_restore_your_keyring_()}</T>
 		{/if}
 
-		<Form {form} submitButtonText={m.Regenerate_keys()}>
+		<Form {form} submitButtonText={m.Regenerate_keys()} hideRequiredIndicator>
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Field {form} name="email" options={{ label: m.User_email() }} />
@@ -110,13 +111,13 @@
 
 		<Separator />
 
-		<a href="/keypairoom" class="text-sm">{m.Forgot_the_seed_Regenerate_it()}</a>
+		<A href="/keypairoom" class="block text-sm">{m.Forgot_the_seed_Regenerate_it()}</A>
 	{:else}
 		<div class="flex flex-col space-y-4 p-6">
 			<T tag="h4">{m.Keys_regenerated()}</T>
 			<T>
 				{m.Your_keys_have_been_regenerated_You_can_now_go_back_to()}
-				<a href="/my">{m.your_profile()}</a>
+				<A href="/my">{m.your_profile()}</A>
 			</T>
 		</div>
 	{/if}
