@@ -37,7 +37,7 @@
 	import Alert from '@/components/custom/alert.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import { PageCard } from '@/components/layout';
 
 	//
 

@@ -3,7 +3,7 @@
 	import { CollectionForm } from '@/collections-components';
 	import { m } from '@/i18n';
 	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import PageCard from '@/components/layout/pageCard.svelte';
 	import T from '@/components/custom/t.svelte';
 
 	//

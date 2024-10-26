@@ -8,4 +8,8 @@ import UiShell from './uiShell.svelte';
 import HamburgerButton from './HamburgerButton.svelte';
 import Sidebar from './sidebar/sidebar.svelte';
 
-export { Logo, Topbar, UiShell, HamburgerButton, Sidebar };
+import PageContent from './pageContent.svelte';
+import PageTop from './pageTop.svelte';
+import PageCard from './pageCard.svelte';
+
+export { Logo, Topbar, UiShell, HamburgerButton, Sidebar, PageCard, PageContent, PageTop };

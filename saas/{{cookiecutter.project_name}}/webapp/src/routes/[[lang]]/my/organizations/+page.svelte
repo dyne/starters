@@ -3,20 +3,15 @@
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '@/i18n';
-	import PageContent from '$lib/components/pageContent.svelte';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/itemCard.svelte';
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
-
 	import { Button } from '@/components/ui/button';
 	import { Badge } from '@/components/ui/badge';
-
 	import Avatar from '@/components/custom/avatar.svelte';
 	import T from '@/components/custom/t.svelte';
-	import PageTop from '@/components/custom/pageTop.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import { PageTop, PageCard, PageContent } from '@/components/layout';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-
 	import Icon from '@/components/custom/icon.svelte';
 	import { Plus, UserPlus, Cog, Puzzle, Undo2, X, Check } from 'lucide-svelte';
 	import { capitalize } from '@/utils/other';

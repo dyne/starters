@@ -1,19 +1,12 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import { m } from '@/i18n';
-	import { Trash } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import { RecordDelete } from '@/collections-components/manager';
-	import IconButton from '$lib/components/iconButton.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import { PageCard } from '@/components/layout';
+	import IconButton from '@/components/custom/iconButton.svelte';
 
 	//
 
@@ -44,16 +37,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 								{invite.user_email}
 							</p>
 							{#if invite.failed_email_send}
-								<Badge color="red">{m.failed_email_send()}</Badge>
+								<Badge variant="destructive">{m.failed_email_send()}</Badge>
 							{/if}
 							{#if invite.declined}
-								<Badge color="red">{m.invite_declined()}</Badge>
+								<Badge variant="destructive">{m.invite_declined()}</Badge>
 							{/if}
 						</div>
 
 						<RecordDelete record={invite}>
-							<svelte:fragment slot="trigger" let:openModal>
-								<IconButton icon={Trash} on:click={openModal} />
+							<svelte:fragment slot="trigger" let:TrashIcon let:builder>
+								<IconButton variant="ghost" icon={TrashIcon} builders={[builder]} />
 							</svelte:fragment>
 						</RecordDelete>
 					</div>

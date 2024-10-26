@@ -14,6 +14,7 @@
 	import { Trash, X } from 'lucide-svelte';
 	import type { CollectionName } from '@/pocketbase/collections-models/types';
 	import type { CollectionResponses } from '@/pocketbase/types';
+	import IconButton from '@/components/custom/iconButton.svelte';
 
 	//
 
@@ -48,10 +49,8 @@
 
 <Dialog bind:open={$dialogState} title={dialogTitle}>
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" openModal={dialogState.on} {builder}>
-			<Button variant="outline" size="icon" builders={[builder]}>
-				<Icon src={Trash} />
-			</Button>
+		<slot name="trigger" openModal={dialogState.on} {builder} TrashIcon={Trash}>
+			<IconButton icon={Trash} builders={[builder]} />
 		</slot>
 	</svelte:fragment>
 

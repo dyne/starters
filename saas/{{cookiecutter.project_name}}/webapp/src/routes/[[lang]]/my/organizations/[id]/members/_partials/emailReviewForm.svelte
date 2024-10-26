@@ -1,9 +1,12 @@
 <script lang="ts">
-	import IconButton from '$lib/components/iconButton.svelte';
 	import { m } from '@/i18n';
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
 	import { Array as A } from 'effect';
+	import Button from '@/components/ui/button/button.svelte';
+	import { X } from 'lucide-svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import IconButton from '@/components/custom/iconButton.svelte';
 
 	//
 
@@ -33,7 +36,7 @@
 		{#each filterEmails(emails, filterText) as email}
 			<div class="flex items-center justify-between py-1 pl-4 pr-2">
 				<p class="text-sm">{email}</p>
-				<IconButton on:click={() => removeEmail(email)} />
+				<IconButton on:click={() => removeEmail(email)} size="sm" variant="ghost" />
 			</div>
 		{/each}
 	</div>

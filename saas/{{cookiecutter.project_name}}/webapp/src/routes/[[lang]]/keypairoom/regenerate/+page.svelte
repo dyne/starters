@@ -20,7 +20,7 @@
 	import { log } from '@/utils/other';
 	import T from '@/components/custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import { PageCard } from '@/components/layout';
 
 	//
 

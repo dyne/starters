@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { CollectionForm } from '@/collections-components';
 	import { m } from '@/i18n';
-	import PageContent from '$lib/components/pageContent.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
-	import PageTop from '@/components/custom/pageTop.svelte';
+	import { PageContent, PageCard, PageTop } from '@/components/layout';
 	import { ArrowLeft } from 'lucide-svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { Button } from '@/components/ui/button';

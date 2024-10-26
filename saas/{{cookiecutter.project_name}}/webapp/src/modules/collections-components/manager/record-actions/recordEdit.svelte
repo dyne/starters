@@ -14,6 +14,7 @@
 	import { CollectionForm } from '@/collections-components';
 	import Sheet from '@/components/custom/sheet.svelte';
 	import { merge } from 'lodash';
+	import IconButton from '@/components/custom/iconButton.svelte';
 
 	//
 
@@ -48,12 +49,8 @@
 
 <Sheet bind:open={$show} {title}>
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" {builder}>
-			<Button builders={[builder]} size="icon" variant="outline">
-				<slot>
-					<Icon src={Pencil} />
-				</slot>
-			</Button>
+		<slot name="trigger" {builder} icon={Pencil}>
+			<IconButton variant="outline" icon={Pencil} builders={[builder]} />
 		</slot>
 	</svelte:fragment>
 

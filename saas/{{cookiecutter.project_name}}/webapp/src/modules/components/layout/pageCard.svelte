@@ -7,6 +7,6 @@
 	export let contentClass = '';
 </script>
 
-<Card class="shadow-md ${className}" contentClass="space-y-8 {contentClass}">
+<Card class="shadow-md ${className}" contentClass="space-y-6 {contentClass}">
 	<slot />
 </Card>

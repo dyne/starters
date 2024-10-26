@@ -12,12 +12,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 		type OrganizationsResponse
 	} from '@/pocketbase/types';
 	import { m } from '@/i18n';
-	import PageTop from '@/components/custom/pageTop.svelte';
+	import PageTop from '@/components/layout/pageTop.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import PageContent from '$lib/components/pageContent.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import PageContent from '@/components/layout/pageContent.svelte';
+	import PageCard from '@/components/layout/pageCard.svelte';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import PlainCard from '$lib/components/itemCard.svelte';
 	import { CollectionManager } from '@/collections-components';

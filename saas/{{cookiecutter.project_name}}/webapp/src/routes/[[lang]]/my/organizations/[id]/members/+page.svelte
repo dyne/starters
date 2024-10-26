@@ -5,7 +5,7 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import { Pencil, Plus, X } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import PageCard from '@/components/layout/pageCard.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
 	import PlainCard from '$lib/components/itemCard.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
@@ -59,10 +59,22 @@
 		>
 			<SectionTitle title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
-					<Button variant="outline" on:click={showInviteModal.on}>
-						<Plus size="20" class="mr-2" />
-						{m.invite_members()}
-					</Button>
+					<Dialog bind:open={$showInviteModal} title={m.invite_members()}>
+						<svelte:fragment slot="trigger" let:builder>
+							<Button variant="outline" builders={[builder]}>
+								<Plus size="20" class="mr-2" />
+								{m.invite_members()}
+							</Button>
+						</svelte:fragment>
+
+						<svelte:fragment slot="content" let:closeDialog>
+							<InviteMembersForm
+								organizationId={organization.id}
+								onSuccess={closeDialog}
+								onCancel={closeDialog}
+							/>
+						</svelte:fragment>
+					</Dialog>
 				</ProtectedOrgUI>
 			</SectionTitle>
 
@@ -119,11 +131,3 @@
 		</CollectionManager>
 	</PageCard>
 </OrganizationLayout>
-
-<Dialog bind:open={$showInviteModal} title={m.invite_members()} description="ao">
-	<InviteMembersForm
-		organizationId={organization.id}
-		onSuccess={showInviteModal.off}
-		onCancel={showInviteModal.off}
-	/>
-</Dialog>

@@ -14,7 +14,7 @@
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import PageCard from '@/components/custom/pageCard.svelte';
+	import { PageCard } from '@/components/layout';
 	import { Button } from '@/components/ui/button';
 	import Dialog from '@/components/custom/dialog.svelte';
 	import { toast } from 'svelte-sonner';

@@ -7,6 +7,7 @@ import { getJsonDataSize } from '@/utils/other';
 import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
 import type { SetFieldType } from 'type-fest';
 import { m } from '@/i18n';
+import { zodFileSchema } from '@/utils/files';
 
 /* Field Config -> Zod Type */
 
@@ -37,15 +38,8 @@ export const fieldConfigToZodTypeMap = {
 
 	file: ({ options }) => {
 		const { mimeTypes, maxSize } = options;
-		let s = z.instanceof(File);
-		if (mimeTypes && mimeTypes.length > 0) {
-			const mimes = mimeTypes as readonly string[];
-			s = s.refine((file) => mimes.includes(file.type), `File type not: ${mimes.join(', ')}`);
-		}
-		if (maxSize) {
-			s.refine((file) => file.size < maxSize, `File size bigger than ${maxSize} bytes`);
-		}
-		return s;
+		const mimes = mimeTypes as string[] | undefined;
+		return zodFileSchema({ mimeTypes: mimes, maxSize });
 	},
 
 	date: ({ options }) => {
