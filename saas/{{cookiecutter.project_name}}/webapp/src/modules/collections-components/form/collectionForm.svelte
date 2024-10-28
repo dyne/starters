@@ -120,9 +120,9 @@
 				{placeholder}
 			/>
 		{/each}
-
-		<slot {form} />
 	{/key}
+
+	<slot {form} />
 
 	<FormError />
 
