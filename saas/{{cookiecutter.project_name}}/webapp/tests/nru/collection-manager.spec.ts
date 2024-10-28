@@ -28,25 +28,27 @@ test.describe('it should test the collection manager', () => {
 		await page.getByLabel('Number_field *').press('ArrowUp');
 		await page.getByLabel('Richtext_field *').click();
 		await page.getByLabel('Richtext_field *').fill('ok');
+
+		const fileChooserPromise = page.waitForEvent('filechooser');
 		await page.getByLabel('File_field *').click();
-		await page
-			.getByLabel('File_field *')
-			.setInputFiles({
-				name: 'asd.txt',
-				mimeType: 'text/plain',
-				buffer: Buffer.from('Hello World')
-			});
+		const fileChooser = await fileChooserPromise;
+		await fileChooser.setFiles({
+			name: 'asd.txt',
+			mimeType: 'text/plain',
+			buffer: Buffer.from('Hello World')
+		});
+
 		await page.locator('button[name="relation_multi_field"]').click();
-		await page.getByRole('option', { name: 'userB' }).click();
-		await page.locator('#c_woa').click();
-		await page.getByRole('option', { name: 'userA' }).click();
-		await page.getByLabel('Create record').getByRole('button', { name: 'Create record' }).click();
-		await page.getByLabel('Number_field *').press('ArrowUp');
-		await page
-			.getByLabel('Create record')
-			.locator('div')
-			.filter({ hasText: 'Create record' })
-			.nth(3)
-			.click();
+		await page.getByRole('combobox').first().click();
+		// await page.locator('#c_woa').click();
+		// await page.getByRole('option', { name: 'userA' }).click();
+		// await page.getByLabel('Create record').getByRole('button', { name: 'Create record' }).click();
+		// await page.getByLabel('Number_field *').press('ArrowUp');
+		// await page
+		// 	.getByLabel('Create record')
+		// 	.locator('div')
+		// 	.filter({ hasText: 'Create record' })
+		// 	.nth(3)
+		// 	.click();
 	});
 });

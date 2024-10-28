@@ -30,7 +30,10 @@ export async function login(page: Page, email: string, password: string) {
 	await page.locator('input[name="questions\\.nameMotherMaid"]').fill('p');
 
 	await page.getByRole('button', { name: 'Generate private keys' }).click();
-	await page.getByRole('button', { name: 'Go to Dashboard' }).click();
+
+	const dashboardButton = page.getByRole('link', { name: 'Go to Dashboard' });
+	await expect(dashboardButton).toBeVisible();
+	await dashboardButton.click();
 
 	await expect(page).toHaveURL(/my/);
 }

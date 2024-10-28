@@ -44,7 +44,7 @@
 		{/if}
 	</Select.Trigger>
 
-	<Select.Content>
+	<Select.Content sideOffset={0} class="!mt-0">
 		{#if props.items?.length}
 			{#each props.items as { label, value }}
 				<Select.Item {label} {value}>{label}</Select.Item>
