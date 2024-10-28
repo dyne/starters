@@ -76,72 +76,74 @@
 		</slot>
 	</svelte:fragment>
 
-	{#await authorizationPromise}
-		<div class="flex items-center justify-center self-stretch p-6">
-			<Spinner />
-		</div>
-	{:then authorization}
-		{#if formState == 'default'}
-			<CollectionForm
-				collection="authorizations"
-				onSuccess={handleSuccess}
-				initialData={authorization}
-				recordId={authorization?.id}
-				uiOptions={{
-					submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
-					triggerToast: true,
-					toastText: m.Record_shared_successfully()
-				}}
-				fieldsOptions={{
-					hide: {
-						record_id: record.id,
-						collection_id: record.collectionId,
-						owner: $currentUser?.id
-					},
-					relations: {
-						users: {
-							displayFields: ['name'],
-							exclude: [$currentUser?.id ?? '']
-						}
-					}
-				}}
-			>
-				<svelte:fragment slot="footer-left">
-					{#if authorization}
-						<Button variant="destructive" on:click={() => (formState = 'removeAccess')}>
-							<Icon src={Trash} mr />
-							{m.Remove_access()}
-						</Button>
-					{/if}
-				</svelte:fragment>
-			</CollectionForm>
-		{:else if formState == 'removeAccess' && authorization}
-			<T>{m.Are_you_sure_you_want_to_remove_access_to_the_record()}</T>
-
-			{#if error}
-				<Alert variant="destructive" let:Title let:Description>
-					<Title>{m.Error()}</Title>
-					<Description>{getExceptionMessage(error)}</Description>
-				</Alert>
-			{/if}
-
-			<div class="mt-4 flex justify-between">
-				<Button variant="outline" on:click={() => (formState = 'default')}>
-					<Icon src={ArrowLeft} mr />
-					{m.Back()}
-				</Button>
-				<Button variant="destructive" on:click={() => removeAuthorization(authorization.id)}>
-					<Icon src={Trash} mr />
-					{m.Yes_remove_access()}
-				</Button>
+	<svelte:fragment slot="content">
+		{#await authorizationPromise}
+			<div class="flex items-center justify-center self-stretch p-6">
+				<Spinner />
 			</div>
-		{/if}
-	{:catch error}
-		<Alert variant="destructive" let:Title let:Description>
-			<Title>{m.Error()}</Title>
-			<Description>{getExceptionMessage(error)}</Description>
-		</Alert>
-	{/await}
+		{:then authorization}
+			{#if formState == 'default'}
+				<CollectionForm
+					collection="authorizations"
+					onSuccess={handleSuccess}
+					initialData={authorization}
+					recordId={authorization?.id}
+					uiOptions={{
+						submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
+						triggerToast: true,
+						toastText: m.Record_shared_successfully()
+					}}
+					fieldsOptions={{
+						hide: {
+							record_id: record.id,
+							collection_id: record.collectionId,
+							owner: $currentUser?.id
+						},
+						relations: {
+							users: {
+								displayFields: ['name'],
+								exclude: [$currentUser?.id ?? '']
+							}
+						}
+					}}
+				>
+					<svelte:fragment slot="footer-left">
+						{#if authorization}
+							<Button variant="destructive" on:click={() => (formState = 'removeAccess')}>
+								<Icon src={Trash} mr />
+								{m.Remove_access()}
+							</Button>
+						{/if}
+					</svelte:fragment>
+				</CollectionForm>
+			{:else if formState == 'removeAccess' && authorization}
+				<T>{m.Are_you_sure_you_want_to_remove_access_to_the_record()}</T>
+
+				{#if error}
+					<Alert variant="destructive" let:Title let:Description>
+						<Title>{m.Error()}</Title>
+						<Description>{getExceptionMessage(error)}</Description>
+					</Alert>
+				{/if}
+
+				<div class="mt-4 flex justify-between">
+					<Button variant="outline" on:click={() => (formState = 'default')}>
+						<Icon src={ArrowLeft} mr />
+						{m.Back()}
+					</Button>
+					<Button variant="destructive" on:click={() => removeAuthorization(authorization.id)}>
+						<Icon src={Trash} mr />
+						{m.Yes_remove_access()}
+					</Button>
+				</div>
+			{/if}
+		{:catch error}
+			<Alert variant="destructive" let:Title let:Description>
+				<Title>{m.Error()}</Title>
+				<Description>{getExceptionMessage(error)}</Description>
+			</Alert>
+		{/await}
+	</svelte:fragment>
 </Dialog>
 
 {#if loadingState}

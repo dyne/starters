@@ -119,7 +119,7 @@
 				</ArrayOrItemManager>
 			{:else}
 				<ListItem hideButton class="h-10 !justify-center">
-					<T tag="small" class="text-primary/30">
+					<T tag="small" class="text-secondary-foreground/30 font-normal">
 						{m.No_items_selected()}
 					</T>
 				</ListItem>
