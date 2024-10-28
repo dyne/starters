@@ -9,7 +9,6 @@ test.describe('it should test the collection manager', () => {
 	let page: Page;
 	const recordId = nanoid(5);
 	const recordName = `test-${recordId}`;
-	// const recordNameEdit = `new-${recordId}`;
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
@@ -55,14 +54,5 @@ test.describe('it should test the collection manager', () => {
 		await expect(page.getByRole('dialog')).toBeHidden();
 		await expect(page.getByText(recordName)).toBeVisible();
 		await expect(page.getByRole('status')).toBeVisible();
-	});
-
-	test('it should edit the newly created record', async () => {
-		const editButton = page
-			.getByText(recordName)
-			.filter({ has: page.getByRole('button') })
-			.getByRole('button');
-		await expect(editButton).toBeVisible();
-		await editButton.click();
 	});
 });

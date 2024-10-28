@@ -75,9 +75,8 @@
 		const options: RecordFullListOptions | RecordListOptions = {
 			requestKey: null
 		};
-		if (expand) options.expand = expand.join(',');
 		if (filter) options.filter = filter;
-		if (sort) options.sort = fetchOptions.sort;
+		if (expand) options.expand = expand.join(',');
 		if (inverseExpand) {
 			const expand = Object.entries(inverseExpand)
 				.map(([k, v]) => `${k}_via_${v}`)
@@ -85,6 +84,7 @@
 			if (options.expand) options.expand = options.expand + ',' + expand;
 			else options.expand = expand;
 		}
+		options.sort = sort ? sort : '-created';
 
 		try {
 			if (perPage) {
