@@ -1,13 +1,7 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts">
 	import { pb } from '@/pocketbase';
 	import { goto, m } from '@/i18n';
-	import { z } from 'zod';
+	import z from 'zod';
 
 	import { Form, createForm } from '@/forms';
 	import { Field, CheckboxField } from '@/forms/fields';

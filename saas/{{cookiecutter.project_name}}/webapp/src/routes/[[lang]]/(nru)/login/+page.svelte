@@ -3,7 +3,7 @@
 	import { pb } from '@/pocketbase';
 	import { Form, createForm } from '@/forms';
 	import { Field } from '@/forms/fields';
-	import { z } from 'zod';
+	import z from 'zod';
 	import { currentEmail } from './+layout.svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
 

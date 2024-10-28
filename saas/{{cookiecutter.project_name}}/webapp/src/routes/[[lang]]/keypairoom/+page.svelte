@@ -18,7 +18,7 @@
 		RegenerateKeyringSession
 	} from '@/keypairoom/utils.js';
 	import { currentUser, pb } from '@/pocketbase';
-	import { z } from 'zod';
+	import z from 'zod';
 	import { featureFlags } from '@/features';
 
 	// Components

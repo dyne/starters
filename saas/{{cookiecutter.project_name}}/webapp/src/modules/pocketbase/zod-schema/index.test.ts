@@ -63,7 +63,7 @@ describe('generated collection zod schema', () => {
 	it('fails the regex test', () => {
 		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
-			text_field: 'abc 123'
+			text_with_regex: 'abc 123-24'
 		};
 		const parseResult = schema.safeParse(data);
 		expect(parseResult.success).toBe(false);

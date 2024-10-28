@@ -8,7 +8,7 @@
 	} from '@/keypairoom/keypair';
 	import { currentUser, pb } from '@/pocketbase';
 
-	import { z } from 'zod';
+	import z from 'zod';
 	import { Form, createForm } from '@/forms';
 	import { Field, TextareaField } from '@/forms/fields';
 	import Card from '@/components/custom/card.svelte';

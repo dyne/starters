@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import { verifyUser } from '@/auth/verifyUser';
 import { loadFeatureFlags } from '@/features';
 import { error } from '@sveltejs/kit';

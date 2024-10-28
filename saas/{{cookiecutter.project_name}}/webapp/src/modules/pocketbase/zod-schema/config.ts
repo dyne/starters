@@ -1,5 +1,5 @@
 import { pipe } from 'effect';
-import { z } from 'zod';
+import z from 'zod';
 
 import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-models/types';
 import { getJsonDataSize } from '@/utils/other';
@@ -18,12 +18,11 @@ export const fieldConfigToZodTypeMap = {
 		if (max) s = s.max(max);
 		if (min) s = s.min(min);
 		if (pattern) {
-			// Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
-			const maybeOptionalPattern = config.required ? pattern : `|${pattern}`;
-			s = s.regex(
-				new RegExp(maybeOptionalPattern),
-				m.Value_does_not_match_regex_pattern({ pattern })
-			);
+			console.log(config);
+			// // Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
+			// const maybeOptionalPattern = config.required ? pattern : `|${pattern}`;
+			// TODO - Check if it is needed still
+			s = s.regex(new RegExp(pattern), m.Value_does_not_match_regex_pattern({ pattern }));
 		}
 		return s;
 	},

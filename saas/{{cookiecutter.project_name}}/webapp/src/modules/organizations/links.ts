@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import type { OrganizationsResponse } from '@/pocketbase/types';
 import type { m as messages } from '@/i18n';
 import type { NavigationTab } from '@/components/custom/navigationTabs.svelte';

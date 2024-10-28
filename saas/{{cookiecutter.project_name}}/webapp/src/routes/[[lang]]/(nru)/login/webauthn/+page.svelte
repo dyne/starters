@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, m } from '@/i18n';
 	import { loginUser } from '@/webauthn/index';
-	import { z } from 'zod';
+	import z from 'zod';
 
 	import { Form, createForm, FormError, SubmitButton } from '@/forms';
 	import { Field } from '@/forms/fields';

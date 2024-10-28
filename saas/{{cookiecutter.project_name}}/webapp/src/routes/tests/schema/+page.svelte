@@ -2,7 +2,7 @@
 	import { pb } from '@/pocketbase';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import type { CollectionFormData } from '@/pocketbase/types';
-	import { z } from 'zod';
+	import z from 'zod';
 	import { createDummyFile } from '@/utils/other';
 
 	const x = z

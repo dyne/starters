@@ -5,7 +5,7 @@
 	import { readFileAsString, zodFileSchema } from '@/utils/files';
 	import { Array as A } from 'effect';
 	import { ArrowRight } from 'lucide-svelte';
-	import { z } from 'zod';
+	import z from 'zod';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import Alert from '@/components/custom/alert.svelte';
 	import { FileField, TextareaField } from '@/forms/fields';

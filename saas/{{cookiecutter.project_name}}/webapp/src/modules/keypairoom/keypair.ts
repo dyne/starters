@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 import type { UserChallenges } from './userQuestions';
 import { zencode_exec } from 'zenroom';
 import keypairoomClient from '$zencode/keypairoom/keypairoomClient-8-9-10-11-12.zen?raw';

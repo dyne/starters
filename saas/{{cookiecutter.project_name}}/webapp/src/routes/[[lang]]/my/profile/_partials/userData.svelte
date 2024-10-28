@@ -13,7 +13,7 @@
 	import { currentUser, pb } from '@/pocketbase';
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { z } from 'zod';
+	import z from 'zod';
 	import { createToggleStore } from '@/components/custom/utils';
 	import SubmitButton from '@/forms/components/submitButton.svelte';
 
