@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2024 The Forkbomb Company
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 <script lang="ts" context="module">
 	import type { CalcBreadcrumbsOptions } from './breadcrumbs';
 	export { type CalcBreadcrumbsOptions as BreadcrumbsOptions };
