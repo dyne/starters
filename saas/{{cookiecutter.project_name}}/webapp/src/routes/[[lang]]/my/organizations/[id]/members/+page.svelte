@@ -20,6 +20,7 @@
 	import Dialog from '@/components/custom/dialog.svelte';
 	import Icon from '@/components/custom/icon.svelte';
 	import { capitalize } from '@/utils/other';
+	import { CollectionForm } from '@/collections-components';
 
 	//
 
@@ -53,7 +54,7 @@
 				}
 			}}
 			editFormFieldsOptions={{
-				exclude: ['user']
+				exclude: ['user', 'organization']
 			}}
 			let:records
 		>
@@ -98,6 +99,15 @@
 									{/if}
 								</div>
 							</div>
+
+							<CollectionForm
+								collection="orgAuthorizations"
+								fieldsOptions={{
+									exclude: ['organization', 'user']
+								}}
+								recordId={record.id}
+								initialData={record}
+							></CollectionForm>
 
 							<svelte:fragment slot="right">
 								<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>

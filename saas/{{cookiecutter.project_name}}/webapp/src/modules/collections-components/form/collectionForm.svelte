@@ -96,12 +96,12 @@
 	}
 </script>
 
-{#key initialData}
-	<Form
-		{form}
-		hideRequiredIndicator={Boolean(uiOptions.hideRequiredIndicator)}
-		hide={['submitButton', 'error']}
-	>
+<Form
+	{form}
+	hideRequiredIndicator={Boolean(uiOptions.hideRequiredIndicator)}
+	hide={['submitButton', 'error']}
+>
+	{#key initialData}
 		{#each fieldsConfigs as fieldSchema}
 			{@const name = getFieldConfigName(fieldSchema)}
 			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
@@ -122,20 +122,20 @@
 		{/each}
 
 		<slot {form} />
+	{/key}
 
-		<FormError />
+	<FormError />
 
-		<div class="flex justify-between gap-2">
-			<div>
-				<slot name="footer-left"></slot>
-			</div>
-			<div class="flex gap-2">
-				<slot name="footer-right"></slot>
-				{#if uiOptions.showCancelButton}
-					<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
-				{/if}
-				<SubmitButton>{submitButtonText}</SubmitButton>
-			</div>
+	<div class="flex justify-between gap-2">
+		<div>
+			<slot name="footer-left"></slot>
 		</div>
-	</Form>
-{/key}
+		<div class="flex gap-2">
+			<slot name="footer-right"></slot>
+			{#if uiOptions.showCancelButton}
+				<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
+			{/if}
+			<SubmitButton>{submitButtonText}</SubmitButton>
+		</div>
+	</div>
+</Form>

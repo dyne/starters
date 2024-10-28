@@ -94,14 +94,12 @@ export function setupCollectionForm<C extends CollectionName>({
 					cleanFormDataFiles(form.data, initialData, collectionModel),
 					Record.map((v) => (v === undefined ? null : v)) // IMPORTANT!
 				);
+
+				let record: CollectionResponses[C];
 				if (recordId) {
-					const record = await pb
-						.collection(collection)
-						.update<CollectionResponses[C]>(recordId, data);
-					onSuccess(record, 'edit');
+					record = await pb.collection(collection).update<CollectionResponses[C]>(recordId, data);
 				} else {
-					const record = await pb.collection(collection).create<CollectionResponses[C]>(data);
-					onSuccess(record, 'create');
+					record = await pb.collection(collection).create<CollectionResponses[C]>(data);
 				}
 
 				if (uiOptions?.triggerToast) {
@@ -113,6 +111,8 @@ export function setupCollectionForm<C extends CollectionName>({
 
 					toast.success(toastText);
 				}
+
+				onSuccess(record, recordId ? 'edit' : 'create');
 			} catch (e) {
 				if (e instanceof ClientResponseError) {
 					const details = e.data.data as Record<

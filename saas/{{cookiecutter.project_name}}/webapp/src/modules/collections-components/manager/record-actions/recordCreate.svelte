@@ -34,7 +34,7 @@
 
 	const title = sheetTitle ?? m.Create_record();
 
-	const options: CollectionFormOptions<C> = merge(formsOptions.base, formsOptions.create, {
+	const options: CollectionFormOptions<C> = merge({}, formsOptions.base, formsOptions.create, {
 		uiOptions: { submitButtonText: title, triggerToast: true }
 	} as CollectionFormOptions<C>);
 

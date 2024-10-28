@@ -1,11 +1,15 @@
 import { test, expect, type Page } from '@playwright/test';
 import { userLogin } from '@utils/login';
 import { config } from 'dotenv';
+import { nanoid } from 'nanoid';
 
 config();
 
 test.describe('it should test the collection manager', () => {
 	let page: Page;
+	const recordId = nanoid(5);
+	const recordName = `test-${recordId}`;
+	// const recordNameEdit = `new-${recordId}`;
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
@@ -20,35 +24,45 @@ test.describe('it should test the collection manager', () => {
 	test('userA should login and visit the collection manager page', async ({ browser }) => {
 		page = await userLogin(browser, 'A');
 		await page.goto('/tests/collection-manager');
+	});
+
+	test('it should create a new record', async () => {
 		await page.getByRole('button', { name: 'Create record' }).click();
-		await page.getByPlaceholder('abc').fill('name');
+		await page.getByPlaceholder('abc').first().fill(recordName);
 		await page.getByLabel('Number_field *').click();
 		await page.getByLabel('Number_field *').press('ArrowUp');
 		await page.getByLabel('Number_field *').press('ArrowUp');
-		await page.getByLabel('Number_field *').press('ArrowUp');
 		await page.getByLabel('Richtext_field *').click();
-		await page.getByLabel('Richtext_field *').fill('ok');
+		await page.getByLabel('Richtext_field *').fill('okok');
+		await page.getByRole('combobox').nth(2).click();
+		await page.getByRole('option').nth(0).click();
+		await page.getByRole('combobox').nth(3).click();
+		await page.getByRole('option').nth(0).click();
 
-		const fileChooserPromise = page.waitForEvent('filechooser');
-		await page.getByLabel('File_field *').click();
-		const fileChooser = await fileChooserPromise;
-		await fileChooser.setFiles({
-			name: 'asd.txt',
-			mimeType: 'text/plain',
-			buffer: Buffer.from('Hello World')
-		});
+		// const fileChooserPromise = page.waitForEvent('filechooser');
+		// await page.getByLabel('File_field *').click();
+		// const fileChooser = await fileChooserPromise;
+		// await fileChooser.setFiles({
+		// 	name: 'test.txt',
+		// 	mimeType: 'text/plain',
+		// 	buffer: Buffer.from('text content')
+		// });
 
-		await page.locator('button[name="relation_multi_field"]').click();
-		await page.getByRole('combobox').first().click();
-		// await page.locator('#c_woa').click();
-		// await page.getByRole('option', { name: 'userA' }).click();
-		// await page.getByLabel('Create record').getByRole('button', { name: 'Create record' }).click();
-		// await page.getByLabel('Number_field *').press('ArrowUp');
-		// await page
-		// 	.getByLabel('Create record')
-		// 	.locator('div')
-		// 	.filter({ hasText: 'Create record' })
-		// 	.nth(3)
-		// 	.click();
+		const submitButton = page.getByRole('dialog').getByRole('button', { name: 'Create record' });
+		await expect(submitButton).toBeEnabled();
+		await submitButton.click();
+
+		await expect(page.getByRole('dialog')).toBeHidden();
+		await expect(page.getByText(recordName)).toBeVisible();
+		await expect(page.getByRole('status')).toBeVisible();
+	});
+
+	test('it should edit the newly created record', async () => {
+		const editButton = page
+			.getByText(recordName)
+			.filter({ has: page.getByRole('button') })
+			.getByRole('button');
+		await expect(editButton).toBeVisible();
+		await editButton.click();
 	});
 });

@@ -20,7 +20,10 @@ export const fieldConfigToZodTypeMap = {
 		if (pattern) {
 			// Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
 			const maybeOptionalPattern = config.required ? pattern : `|${pattern}`;
-			s = s.regex(new RegExp(maybeOptionalPattern));
+			s = s.regex(
+				new RegExp(maybeOptionalPattern),
+				m.Value_does_not_match_regex_pattern({ pattern })
+			);
 		}
 		return s;
 	},
