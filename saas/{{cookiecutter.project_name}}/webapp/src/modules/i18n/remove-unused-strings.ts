@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { availableLanguageTags } from './paraglide/runtime';
 
 /**
  * Helper function to recursively find all files in a directory
@@ -77,4 +78,5 @@ function main(searchFolder: string, exclude: string[], jsonFilePath: string) {
 //   process.exit(1);
 // }
 
-main('./src/', ['src/modules/i18n/paraglide'], './messages/en.json');
+// TODO - Optimize also for other languages
+main('./src/', ['src/modules/i18n/paraglide'], `./messages/en.json`);
