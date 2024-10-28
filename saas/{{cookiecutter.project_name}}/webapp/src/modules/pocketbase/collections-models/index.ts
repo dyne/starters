@@ -1,5 +1,5 @@
 import type { CollectionModel, CollectionName } from './types';
-import collectionsModels from './export/collections-models.generated';
+import collectionsModels from './collections-models.generated';
 import { Array, Option, pipe } from 'effect';
 import type { WritableDeep, SimplifyDeep } from 'type-fest';
 

@@ -1,5 +1,5 @@
 import { pb } from '@/pocketbase';
-import type { OrgRole } from './roles';
+import type { OrgRole } from '.';
 import { type OrgAuthorizationsResponse, type OrgRolesResponse } from '@/pocketbase/types';
 import { Option as O } from 'effect';
 

@@ -8,7 +8,7 @@ import type { NavigationTab } from '@/components/custom/navigationTabs.svelte';
 import { Cog, Home, Users } from 'lucide-svelte';
 import type { SidebarItemProps } from '@/components/layout/sidebar/types';
 import { pb } from '@/pocketbase';
-import type { OrgRole } from './roles';
+import type { OrgRole } from '.';
 
 export function createOrganizationLinks(
 	organizationId: string,

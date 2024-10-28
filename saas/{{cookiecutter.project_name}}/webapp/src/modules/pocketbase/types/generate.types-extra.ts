@@ -1,13 +1,13 @@
-import CollectionsModels from '@/pocketbase/collections-models/export/collections-models.generated';
+import CollectionsModels from '@/pocketbase/collections-models/collections-models.generated';
 import type { AnyCollectionModel } from '@/pocketbase/collections-models/types';
 import { isArrayField } from '@/pocketbase/collections-models/utils';
 import { camelCase } from 'lodash';
 import { capitalize } from 'effect/String';
-import prettier from 'prettier';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import _ from 'lodash';
 import assert from 'node:assert';
+import { formatCode, GENERATED, logCodegenResult } from '@/utils/codegen';
 
 /* CONSTS */
 
@@ -62,10 +62,10 @@ async function main() {
 		relatedCollectionsIndexType
 	].join('\n\n');
 
-	const formatOptions = await prettier.resolveConfig(import.meta.url, { editorconfig: true });
-	const formattedCode = await prettier.format(code, { ...formatOptions, parser: 'typescript' });
-
-	await fs.writeFile(path.join(import.meta.dirname, 'extra.generated.ts'), formattedCode);
+	const formattedCode = await formatCode(code);
+	const filePath = path.join(import.meta.dirname, `extra.${GENERATED}.ts`);
+	await fs.writeFile(filePath, formattedCode);
+	logCodegenResult('extra types', filePath);
 }
 
 //

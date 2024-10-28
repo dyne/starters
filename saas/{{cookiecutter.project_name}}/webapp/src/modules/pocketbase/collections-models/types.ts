@@ -1,4 +1,4 @@
-import collectionsModels from '@/pocketbase/collections-models/export/collections-models.generated';
+import collectionsModels from '@/pocketbase/collections-models/collections-models.generated';
 
 //
 

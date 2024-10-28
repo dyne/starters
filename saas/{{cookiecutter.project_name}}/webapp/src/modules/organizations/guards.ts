@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { verifyUserMembership, verifyUserRole } from './verify-authorizations';
-import type { OrgRole } from './roles';
+import type { OrgRole } from '.';
 
 export async function blockNonMembers(organizationId: string, fetchFn = fetch) {
 	const { isMember } = await verifyUserMembership(organizationId, fetchFn);

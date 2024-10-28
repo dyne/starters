@@ -1,20 +1,10 @@
-// SPDX-FileCopyrightText: 2024 The Forkbomb Company
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-// @ts-check
-
 import fs from 'node:fs';
 import path from 'node:path';
 
 /**
  * Helper function to recursively find all files in a directory
- * @param {string} dirPath
- * @param {string[]} [exclude=[]]
- * @param {string[]} arrayOfFiles
- * @returns
  */
-function getAllFilesInFolder(dirPath, exclude = [], arrayOfFiles = []) {
+function getAllFilesInFolder(dirPath: string, exclude: string[] = [], arrayOfFiles: string[] = []) {
 	const files = fs.readdirSync(dirPath);
 
 	files.forEach(function (file) {
@@ -32,11 +22,8 @@ function getAllFilesInFolder(dirPath, exclude = [], arrayOfFiles = []) {
 
 /**
  * Extract used keys from the files based on the "m." pattern
- * @param {string[]} files
- * @param {string[]} keys
- * @returns {string[]}
- */
-function getKeysInFiles(files, keys) {
+ * */
+function getKeysInFiles(files: string[], keys: string[]) {
 	const usedKeys = new Set();
 
 	files.forEach((file) => {
@@ -44,18 +31,14 @@ function getKeysInFiles(files, keys) {
 		keys.filter((k) => fileContent.includes(k)).forEach((k) => usedKeys.add(k));
 	});
 
-	return Array.from(usedKeys);
+	return Array.from(usedKeys) as string[];
 }
 
 /**
  * Filter the JSON file by removing keys not present in the valid keys list
- * @param {Record<string,string>} json
- * @param {string[]} validKeys
- * @returns {Record<string,string>}
  */
-function filterJsonByKeys(json, validKeys) {
-	/** @type {Record<string,string>}  */
-	const newJson = {};
+function filterJsonByKeys(json: Record<string, string>, validKeys: string[]) {
+	const newJson: Record<string, string> = {};
 
 	const SCHEMA_KEY = '$schema';
 	if (SCHEMA_KEY in json) {
@@ -73,17 +56,15 @@ function filterJsonByKeys(json, validKeys) {
 
 /**
  * Main function to extract keys and filter the JSON
- * @param {string} searchFolder
- * @param {string[]} exclude
- * @param {string} jsonFilePath
  */
-function main(searchFolder, exclude, jsonFilePath) {
+function main(searchFolder: string, exclude: string[], jsonFilePath: string) {
 	const allFiles = getAllFilesInFolder(searchFolder, exclude);
-	const json = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
+	const json = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8')) as Record<string, string>;
 	const keys = Object.keys(json);
 	const validKeys = getKeysInFiles(allFiles, keys);
 	const filteredJson = filterJsonByKeys(json, validKeys);
 	fs.writeFileSync(jsonFilePath, JSON.stringify(filteredJson, null, 2));
+	console.log();
 	console.log(`Removed unused strings ✨`);
 }
 
@@ -96,4 +77,4 @@ function main(searchFolder, exclude, jsonFilePath) {
 //   process.exit(1);
 // }
 
-main('./src/', ['src/paraglide'], './messages/en.json');
+main('./src/', ['src/modules/i18n/paraglide'], './messages/en.json');
