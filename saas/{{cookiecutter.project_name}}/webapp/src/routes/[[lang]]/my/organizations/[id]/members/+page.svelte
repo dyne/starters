@@ -100,15 +100,6 @@
 								</div>
 							</div>
 
-							<CollectionForm
-								collection="orgAuthorizations"
-								fieldsOptions={{
-									exclude: ['organization', 'user']
-								}}
-								recordId={record.id}
-								initialData={record}
-							></CollectionForm>
-
 							<svelte:fragment slot="right">
 								<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
 									<div class="space-x-1">
