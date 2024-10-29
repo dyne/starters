@@ -58,7 +58,7 @@
 			}}
 			let:records
 		>
-			<SectionTitle title={m.Members()} description={m.members_description()}>
+			<SectionTitle slot="top" title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
 					<Dialog bind:open={$showInviteModal} title={m.invite_members()}>
 						<svelte:fragment slot="trigger" let:builder>

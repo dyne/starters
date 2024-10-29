@@ -10,18 +10,18 @@
 	}}
 	let:records
 >
-	<div class="space-y-4">
-		<div class="flex justify-end gap-2">
+	<svelte:fragment slot="top">
+		<div class="mb-4 flex justify-end gap-2">
 			<RecordCreate />
 		</div>
+	</svelte:fragment>
 
-		<div class="space-y-2">
-			{#each records as record}
-				<RecordCard {record} let:Title let:Description>
-					<Title>{record.text_field}</Title>
-					<Description>{record.expand?.relation_field?.email}</Description>
-				</RecordCard>
-			{/each}
-		</div>
+	<div class="space-y-2">
+		{#each records as record}
+			<RecordCard {record} let:Title let:Description>
+				<Title>{record.text_field}</Title>
+				<Description>{record.expand?.relation_field?.email}</Description>
+			</RecordCard>
+		{/each}
 	</div>
 </CollectionManager>

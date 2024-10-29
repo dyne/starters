@@ -169,6 +169,8 @@
 	});
 </script>
 
+<slot name="top" />
+
 {#if error}
 	<EmptyState
 		title={m.Error()}
