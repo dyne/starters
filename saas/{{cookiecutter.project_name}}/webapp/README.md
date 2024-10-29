@@ -161,7 +161,7 @@ Retrieves the actual value of the token type for the specified owner
 
 Copyleft 🄯 {% now 'local', '%Y' %} by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
 
-Designed, written and maintained by {{cookiecutter.full_name}}
+Designed, written and maintained by {{cookiecutter.author_full_name}}
 
 **[🔝 back to top](#toc)**
 
@@ -185,7 +185,7 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 ## 💼 License
 
     {{cookiecutter.project_name}} - {{cookiecutter.project_description}}
-    Copyleft 🄯 {% now 'local', '%Y' %} {{cookiecutter.full_name}} <{{cookiecutter.email}}>
+    Copyleft 🄯 {% now 'local', '%Y' %} {{cookiecutter.author_full_name}} <{{cookiecutter.author_email}}>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as

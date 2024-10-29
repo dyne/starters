@@ -1,5 +1,5 @@
 <script lang="ts">
-	import OrganizationLayout from '$lib/components/organizationLayout.svelte';
+	import OrganizationLayout from '@/organizations/components/organizationLayout.svelte';
 
 	export let data;
 	const { organization } = data;

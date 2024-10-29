@@ -1,4 +1,4 @@
-import { getUserPublicKeys, type PublicKeys } from '$lib/keypairoom/utils';
+import { getUserPublicKeys, type PublicKeys } from '@/keypairoom/utils';
 
 export const load = async () => {
 	const publicKeysResponse = await getUserPublicKeys();

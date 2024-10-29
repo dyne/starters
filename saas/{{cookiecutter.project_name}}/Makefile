@@ -14,7 +14,6 @@ PB			= $(ADMIN)/pb
 DATA		= $(ADMIN)/pb_data
 
 WEBAPP	= $(ROOT_DIR)/webapp
-WZC			= $(WEBAPP)/zenflows-crypto
 WCZ			= $(WEBAPP)/client_zencode
 
 BIN		= $(ROOT_DIR)/.bin
@@ -102,10 +101,6 @@ $(AZC): .git
 	@rm -rf $@
 	@cd $(ADMIN) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zencode/zenflows-crypto && git submodule update --remote --init
 
-$(WZC): .git
-	@rm -rf $@
-	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/interfacerproject/zenflows-crypto zenflows-crypto && git submodule update --remote --init
-
 $(WCZ): .git
 	@rm -rf $@
 	@cd $(WEBAPP) && git submodule --quiet add -f https://github.com/ForkbombEu/client_zencode client_zencode && git submodule update --remote --init
@@ -126,7 +121,7 @@ setup_frontend: $(WEBAPP)/.env
 	@echo "📦 Setup the frontend"
 	cd $(WEBAPP) && pnpm i
 
-setup: $(AZC) $(WZC) $(WCZ) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 Setup the project
+setup: $(AZC) $(WCZ) $(ZENROOM) $(ZENCODE) $(PB) setup_frontend ## 📦 Setup the project
 
 # - Running - #
 
@@ -159,17 +154,15 @@ doc: ## 📚 Serve documentation on localhost
 	npx -p docsify-cli docsify serve ./docs
 
 definitions: ## ⚙️ Generate type definitions and schema
-	cd webapp && pnpm definitions
+	cd webapp && pnpm generate:definitions
 
 # - Cleaning - #
 
 clean: ## 🧹 Clean the project
-	@rm -rf $(AZC) $(WZC) $(WCZ) $(BIN) $(PB)
+	@rm -rf $(AZC) $(WCZ) $(BIN) $(PB)
 	@rm -fr webapp/node_modules
-	@rm -f webapp/src/lib/pocketbase/types.ts
-	@rm -f webapp/src/lib/pocketbase/schema/db_schema.json
-	@rm -f webapp/src/lib/rbac/roles.ts
-	@rm -f webapp/src/lib/features/list.ts
+	@rm -fr webapp/.svelte-kit
+	@find . -type f -name "*.generated.*" -delete
 	@echo "The project is ✨ cleaned"
 
 purge: ## ⛔ Purge the database

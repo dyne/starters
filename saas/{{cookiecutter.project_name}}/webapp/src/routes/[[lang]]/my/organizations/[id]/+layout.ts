@@ -1,5 +1,5 @@
-import { pb } from '$lib/pocketbase';
-import { blockNonMembers } from '$lib/organizations';
+import { pb } from '@/pocketbase';
+import { blockNonMembers } from '@/organizations';
 
 export const load = async ({ params, fetch }) => {
 	const organizationId = params.id;

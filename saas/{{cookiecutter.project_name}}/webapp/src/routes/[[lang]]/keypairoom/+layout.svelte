@@ -1,11 +1,11 @@
 <script>
-	import { Logo, Topbar } from '$lib/layout';
-	import { currentUser } from '$lib/pocketbase';
-	import DIDButton from '$lib/components/DIDButton.svelte';
-	import UserAvatar from '$lib/components/userAvatar.svelte';
-	import { Button } from 'flowbite-svelte';
-	import { m } from '$lib/i18n';
-	import { featureFlags } from '$lib/features';
+	import { Logo, Topbar } from '@/components/layout';
+	import { currentUser } from '@/pocketbase';
+	import DIDButton from '@/did/DIDButton.svelte';
+	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import { m } from '@/i18n';
+	import { featureFlags } from '@/features';
+	import { Button } from '@/components/ui/button';
 </script>
 
 <Topbar>
@@ -17,7 +17,7 @@
 					Hello, <span class="font-semibold">{$currentUser?.email}</span>
 				</span>
 			</div>
-			<div class="shrink-0">
+			<div class="shrink-2 ml-4">
 				<DIDButton />
 			</div>
 		{:else}
@@ -26,7 +26,7 @@
 	</div>
 	<div slot="right" class="flex items-center gap-4">
 		{#if $featureFlags.AUTH}
-			<Button data-sveltekit-preload-data="false" href="/logout" size="xs" color="alternative">
+			<Button data-sveltekit-preload-data="off" href="/logout" size="sm" variant="outline">
 				{m.Sign_out()}
 			</Button>
 			<UserAvatar />

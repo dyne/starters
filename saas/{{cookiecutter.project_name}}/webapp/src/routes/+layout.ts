@@ -1,7 +1,7 @@
-import { loadFeatureFlags } from '$lib/features';
+import { loadFeatureFlags } from '@/features';
 
 export const ssr = false;
 
-export const load = async () => {
-	await loadFeatureFlags();
+export const load = async ({ fetch }) => {
+	await loadFeatureFlags(fetch);
 };
