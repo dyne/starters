@@ -1,4 +1,4 @@
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionName } from '@/pocketbase/collections-models';
 import type { CollectionExpands, CollectionRecords, CollectionResponses } from '@/pocketbase/types';
 import type { KeyOf } from '@/utils/types';
 import type { Simplify } from 'type-fest';

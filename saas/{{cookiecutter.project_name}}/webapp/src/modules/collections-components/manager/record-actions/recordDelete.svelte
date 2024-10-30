@@ -12,7 +12,7 @@
 	import { onDestroy } from 'svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Trash, X } from 'lucide-svelte';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import IconButton from '@/components/custom/iconButton.svelte';
 

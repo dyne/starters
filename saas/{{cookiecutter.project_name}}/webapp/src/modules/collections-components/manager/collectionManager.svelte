@@ -16,7 +16,7 @@
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { ExpandProp, InverseExpandProp } from '../types';
 	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';

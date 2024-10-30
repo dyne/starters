@@ -2,7 +2,7 @@ import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 import PocketBase, { type RecordSubscription } from 'pocketbase';
 import { writable } from 'svelte/store';
 import type { CollectionResponses, TypedPocketBase, UsersResponse } from '@/pocketbase/types';
-import type { CollectionName } from './collections-models/types';
+import type { CollectionName } from './collections-models';
 import { onMount } from 'svelte';
 import type { MaybePromise } from '@/utils/types';
 

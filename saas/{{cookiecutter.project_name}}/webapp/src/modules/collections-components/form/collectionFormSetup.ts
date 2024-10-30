@@ -1,4 +1,8 @@
-import type { FieldConfig, CollectionName, FieldType } from '@/pocketbase/collections-models/types';
+import type {
+	CollectionName,
+	FileSchemaField,
+	SchemaFields
+} from '@/pocketbase/collections-models';
 import { pipe, Record, String } from 'effect';
 import type { CollectionFormMode, FieldsOptions, UIOptions } from './formOptions';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
@@ -164,7 +168,7 @@ function mockInitialDataFiles(recordData: GenericRecord, collectionModel: Collec
 	);
 }
 
-function mockFile(filename: string, fileFieldConfig: FieldConfig<'file'>) {
+function mockFile(filename: string, fileFieldConfig: FileSchemaField) {
 	let fileOptions: FilePropertyBag | undefined = undefined;
 	const mimeTypes = fileFieldConfig.options.mimeTypes;
 	if (Array.isArray(mimeTypes) && mimeTypes.length > 0) {
@@ -236,11 +240,11 @@ export function cleanFormDataFiles(
 
 class FieldConfigNotFound extends Error {}
 
-function mapRecordDataByFieldType<T extends FieldType = never>(
+function mapRecordDataByFieldType<T extends keyof SchemaFields>(
 	recordData: GenericRecord,
 	model: CollectionModel,
 	fieldType: T,
-	handler: (value: unknown, fieldConfig: FieldConfig<T>) => unknown
+	handler: (value: unknown, fieldConfig: SchemaFields[T]) => unknown
 ) {
 	return pipe(
 		recordData,
@@ -248,7 +252,7 @@ function mapRecordDataByFieldType<T extends FieldType = never>(
 			const fieldConfig = model.schema.find((field) => field.name == fieldName);
 			if (!fieldConfig) throw new FieldConfigNotFound();
 			if (fieldConfig.type != fieldType) return fieldValue;
-			return handler(fieldValue, fieldConfig as FieldConfig<T>);
+			return handler(fieldValue, fieldConfig as SchemaFields[T]);
 		})
 	);
 }

@@ -1,15 +1,16 @@
 <script lang="ts" generics="C extends CollectionName">
+	import type { SchemaField } from 'pocketbase';
+
 	import { capitalize } from '@/utils/other';
 
 	import type { SuperForm } from 'sveltekit-superforms';
 
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { AnySchemaField, CollectionName } from '@/pocketbase/collections-models';
 	import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
 	import { m } from '@/i18n';
-	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
 	import { Form, FormError, SubmitButton, type FormOptions } from '@/forms';
 	import { setupCollectionForm } from './collectionFormSetup';
 	import FieldSchemaToInput from './fieldConfigToField.svelte';
@@ -49,14 +50,14 @@
 
 	/* Sorting fields */
 
-	let fieldsConfigs: AnyFieldConfig[] = getCollectionModel(collection)
+	let fieldsConfigs = getCollectionModel(collection)
 		.schema.sort(createFieldConfigSorter(fieldsOptions?.order))
 		.filter(
 			(config) => !fieldsOptions?.exclude?.includes(config.name as KeyOf<CollectionRecords[C]>)
 		);
 
 	function createFieldConfigSorter(order: string[] = []) {
-		return (a: AnyFieldConfig, b: AnyFieldConfig) => {
+		return (a: SchemaField, b: SchemaField) => {
 			const aIndex = order.indexOf(a.name);
 			const bIndex = order.indexOf(b.name);
 			if (aIndex === -1 && bIndex === -1) {
@@ -83,7 +84,7 @@
 
 	/* ts helpers */
 
-	function getFieldConfigName(fieldConfig: AnyFieldConfig) {
+	function getFieldConfigName(fieldConfig: SchemaField) {
 		return fieldConfig.name as KeyOf<CollectionRecords[C]>;
 	}
 

@@ -1,13 +1,15 @@
-import CollectionsModels from '@/pocketbase/collections-models/collections-models.generated';
-import type { AnyCollectionModel } from '@/pocketbase/collections-models/types';
-import { isArrayField } from '@/pocketbase/collections-models/utils';
+import {
+	CollectionsModels,
+	isArrayField,
+	type AnyCollectionModel
+} from '@/pocketbase/collections-models';
 import { camelCase } from 'lodash';
 import { capitalize } from 'effect/String';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import _ from 'lodash';
 import assert from 'node:assert';
-import { formatCode, GENERATED, logCodegenResult } from '@/utils/codegen';
+import { EXPORT_TYPE, formatCode, GENERATED, logCodegenResult, SEPARATOR } from '@/utils/codegen';
 
 /* CONSTS */
 
@@ -18,9 +20,6 @@ const FORM_DATA = 'FormData';
 const EXPAND = 'Expand';
 const ZOD_RAW_SHAPE = 'ZodRawShape';
 const RELATED_COLLECTIONS = 'RelatedCollections';
-
-const EXPORT_TYPE = 'export type ';
-const SEPARATOR = '/* ------------------ */';
 
 const IMPORT_STATEMENTS = `
 import type { ${COLLECTION_RESPONSES} } from '@/pocketbase/types/index.generated'
@@ -84,9 +83,10 @@ function createCollectionFormDataType(model: AnyCollectionModel): GeneratedColle
 		else if (f.type == 'file') type = 'File';
 		else if (f.type == 'json') type = 'unknown';
 		else if (f.type == 'relation') type = 'string';
-		else if (f.type == 'select') type = f.options.values.map((v) => `"${v}"`).join(' | ');
 		else if (f.type == 'text') type = 'string';
 		else if (f.type == 'url') type = 'string';
+		else if (f.type == 'select' && f.options.values)
+			type = f.options.values.map((v) => `"${v}"`).join(' | ');
 		else throw new UnhandledFieldTypeError();
 		if (isArrayField(f)) type = `(${type})[]`;
 		const optionalQuestionMark = f.required ? '' : '?';
@@ -141,11 +141,12 @@ function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionT
 	const expands = model.schema
 		.filter((field) => field.type == 'relation')
 		.map((field) => {
-			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
+			const options = field.options;
+			const model = CollectionsModels.find((m) => m.id == options.collectionId);
 			assert(model, 'missing model');
 			const modelName = model.name;
 			const optionalQuestionMark = field.required ? '' : '?';
-			const optionalArray = field.options.maxSelect == 1 ? '' : '[]';
+			const optionalArray = options.maxSelect == 1 ? '' : '[]';
 			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${modelName}"])${optionalArray}`;
 		});
 
@@ -167,7 +168,8 @@ function createCollectionRelatedCollections(
 	const relatedCollections = model.schema
 		.filter((field) => field.type == 'relation')
 		.map((field) => {
-			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
+			const options = field.options;
+			const model = CollectionsModels.find((m) => m.id == options.collectionId);
 			assert(model, 'missing model');
 			return `${field.name} : "${model.name}"`;
 		});

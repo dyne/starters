@@ -1,5 +1,5 @@
 import { getCollectionModel, getCollectionNameFromId } from '@/pocketbase/collections-models';
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionName } from '@/pocketbase/collections-models';
 import { String } from 'effect';
 import type { CollectionResponses } from '@/pocketbase/types';
 import type { GenericRecord } from '@/utils/types';

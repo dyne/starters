@@ -1,5 +1,5 @@
 import type { CollectionFormOptions } from '@/collections-components/form';
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionName } from '@/pocketbase/collections-models';
 import type { RecordService } from 'pocketbase';
 import type { InverseExpandProp, ExpandProp } from '../types';
 import type { Writable } from 'svelte/store';

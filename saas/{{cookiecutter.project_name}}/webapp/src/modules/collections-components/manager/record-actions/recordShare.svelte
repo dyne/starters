@@ -12,7 +12,7 @@
 	import { CollectionForm } from '@/collections-components';
 	import { currentUser, pb } from '@/pocketbase';
 	import { ArrowLeft, Share, Trash } from 'lucide-svelte';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import Alert from '@/components/custom/alert.svelte';
 	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
 
