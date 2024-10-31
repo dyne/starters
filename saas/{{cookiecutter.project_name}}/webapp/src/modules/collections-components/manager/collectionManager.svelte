@@ -13,7 +13,12 @@
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 
-	import type { CollectionName } from '@/pocketbase/collections-models';
+	import {
+		getCollectionModel,
+		getCollectionNameFromId,
+		type CollectionName,
+		type RelationSchemaField
+	} from '@/pocketbase/collections-models';
 	import type { ExpandProp } from '../types';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
 	import type { ExpandableResponse } from '../types';
@@ -105,12 +110,23 @@
 		const collections = ensureArray(fetchOptions.expand).map((expandString) => {
 			const INVERSE_KEY = '_via_';
 			if (expandString.includes(INVERSE_KEY)) return expandString.split(INVERSE_KEY)[0];
-			else return expandString;
+			else return getCollectionNameFromRelationFieldName(collection, expandString);
 		}) as CollectionName[];
 		subscriptionCollections.push(...collections);
 	}
 	for (const c of A.dedupe(subscriptionCollections)) {
 		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptionsStore, $currentPage));
+	}
+
+	function getCollectionNameFromRelationFieldName<C extends CollectionName>(
+		collection: C,
+		fieldName: string
+	) {
+		// TODO - port `filter` function here
+		const field = getCollectionModel(collection).schema.find(
+			(f) => f.name == fieldName && f.type == 'relation'
+		) as RelationSchemaField | undefined;
+		return getCollectionNameFromId(field?.options.collectionId ?? '');
 	}
 
 	/* Record selection */
