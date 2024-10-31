@@ -77,12 +77,14 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	// Options
 
 	get filterOption(): Option.Option<string> {
-		const filter = [this.baseFilter, this.excludeFilter, this.searchFilter]
+		const filters = [this.baseFilter, this.excludeFilter, this.searchFilter]
 			.filter(Option.isSome)
 			.map(Option.getOrThrow)
-			.map((filter) => `( ${filter} )`)
-			.join(' && ');
-		return String.isNonEmpty(filter) ? Option.some(filter) : Option.none();
+			.filter(String.isNonEmpty);
+		if (filters.length == 0) return Option.none();
+
+		const filter = filters.map((filter) => `( ${filter} )`).join(' && ');
+		return Option.some(filter);
 	}
 
 	get expandOption(): Option.Option<string> {
@@ -90,13 +92,19 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	}
 
 	get pocketbaseListOptions(): PocketbaseListOptions {
-		const { sort = '-created', fetch: fetchFn = fetch, requestKey = null, perPage } = this.options;
+		const {
+			sort = '-created',
+			fetch: fetchFn = fetch,
+			requestKey = null,
+			perPage = null
+		} = this.options;
+		// Important! Pocketbase wants `null`, not `undefined`!
 
 		return {
 			requestKey,
 			sort,
-			expand: this.expandOption.pipe(Option.getOrUndefined),
-			filter: this.filterOption.pipe(Option.getOrUndefined),
+			expand: this.expandOption.pipe(Option.getOrNull),
+			filter: this.filterOption.pipe(Option.getOrNull),
 			fetch: fetchFn,
 			perPage
 		};
