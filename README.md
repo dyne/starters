@@ -88,7 +88,7 @@ cruft update
 </a>
 
 
-Copyleft 🄯 2023 by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
+Copyright (c) 2023-2024 by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
 
 This repo takes inspiration from https://github.com/spinspire/recipes but in place of
 `degitting` everywhere sometimes more inclined to ease the project creation with
@@ -116,7 +116,7 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 ***
 ## 💼 License
     Starters - We like reinvent the wheel... But smarter!
-    Copyleft 🄯 2023 Dyne.org foundation, Amsterdam
+    Copyright (c) 2023-2024 Dyne.org foundation, Amsterdam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
