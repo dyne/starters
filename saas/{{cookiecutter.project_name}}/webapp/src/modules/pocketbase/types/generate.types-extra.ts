@@ -1,7 +1,9 @@
 import {
 	CollectionsModels,
 	isArrayField,
-	type AnyCollectionModel
+	type AnyCollectionModel,
+	type AnySchemaField,
+	type RelationSchemaField
 } from '@/pocketbase/collections-models';
 import { camelCase } from 'lodash';
 import { capitalize } from 'effect/String';
@@ -20,6 +22,8 @@ const FORM_DATA = 'FormData';
 const EXPAND = 'Expand';
 const ZOD_RAW_SHAPE = 'ZodRawShape';
 const RELATED_COLLECTIONS = 'RelatedCollections';
+
+const RECORD_NEVER = 'Record<string, never>';
 
 const IMPORT_STATEMENTS = `
 import type { ${COLLECTION_RESPONSES} } from '@/pocketbase/types/index.generated'
@@ -48,17 +52,17 @@ async function main() {
 	const code = [
 		IMPORT_STATEMENTS,
 		SEPARATOR,
-		...formDataTypes.map((t) => t.type),
 		formDataIndexType,
+		...formDataTypes.map((t) => t.code),
 		SEPARATOR,
-		...zodTypes.map((t) => t.type),
 		zodIndexType,
+		...zodTypes.map((t) => t.code),
 		SEPARATOR,
-		...expandTypes.map((t) => t.type),
 		expandIndexType,
+		...expandTypes.map((t) => t.code),
 		SEPARATOR,
-		...relatedCollectionTypes.map((t) => t.type),
-		relatedCollectionsIndexType
+		relatedCollectionsIndexType,
+		...relatedCollectionTypes.map((t) => t.code)
 	].join('\n\n');
 
 	const formattedCode = await formatCode(code);
@@ -94,7 +98,7 @@ function createCollectionFormDataType(model: AnyCollectionModel): GeneratedColle
 	});
 
 	return {
-		type: `${EXPORT_TYPE} ${typeName} = { ${fields.join('\n')} }`,
+		code: `${EXPORT_TYPE} ${typeName} = { ${fields.join('\n')} }`,
 		typeName,
 		collectionName
 	};
@@ -126,7 +130,7 @@ function createCollectionZodRawType(model: AnyCollectionModel): GeneratedCollect
 	});
 
 	return {
-		type: `${EXPORT_TYPE} ${typeName} = { ${fields.join('\n')} }`,
+		code: `${EXPORT_TYPE} ${typeName} = { ${fields.join('\n')} }`,
 		typeName,
 		collectionName
 	};
@@ -138,26 +142,49 @@ function createCollectionExpand(model: AnyCollectionModel): GeneratedCollectionT
 	const collectionName = model.name;
 	const typeName = capitalize(camelCase(model.name)) + EXPAND;
 
-	const expands = model.schema
-		.filter((field) => field.type == 'relation')
-		.map((field) => {
-			const options = field.options;
-			const model = CollectionsModels.find((m) => m.id == options.collectionId);
-			assert(model, 'missing model');
-			const modelName = model.name;
-			const optionalQuestionMark = field.required ? '' : '?';
-			const optionalArray = options.maxSelect == 1 ? '' : '[]';
-			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${modelName}"])${optionalArray}`;
-		});
+	const expands = [
+		...createCollectionExpandItems(model),
+		...createCollectionInverseExpandItems(model)
+	];
 
-	const expandType = expands.length == 0 ? 'never' : `{ ${expands.join('\n')} }`;
+	const expandCode = expands.length == 0 ? RECORD_NEVER : `{ ${expands.join('\n')} }`;
 
 	return {
-		type: `${EXPORT_TYPE} ${typeName} = ${expandType}`,
+		code: `${EXPORT_TYPE} ${typeName} = ${expandCode}`,
 		typeName,
 		collectionName
 	};
 }
+
+function createCollectionExpandItems(model: AnyCollectionModel): string[] {
+	return model.schema
+		.filter((field) => field.type == 'relation')
+		.map((field) => {
+			const model = CollectionsModels.find((m) => m.id == field.options.collectionId);
+			assert(model, 'Missing model');
+			const optionalQuestionMark = field.required ? '' : '?';
+			const optionalArray = field.options.maxSelect == 1 ? '' : '[]';
+			return `${field.name}${optionalQuestionMark} : (${COLLECTION_RESPONSES}["${model.name}"])${optionalArray}`;
+		});
+}
+
+function createCollectionInverseExpandItems(model: AnyCollectionModel): string[] {
+	function isInverseRelationField(field: AnySchemaField): field is RelationSchemaField {
+		return field.type == 'relation' && field.options.collectionId == model.id;
+	}
+
+	const inverseRelatedCollections = CollectionsModels.filter((c) =>
+		c.schema.some(isInverseRelationField)
+	);
+
+	return inverseRelatedCollections.flatMap((c) =>
+		c.schema
+			.filter(isInverseRelationField)
+			.map((f) => `${c.name}_via_${f.name}?: ${COLLECTION_RESPONSES}["${c.name}"][]`)
+	);
+}
+
+//
 
 function createCollectionRelatedCollections(
 	model: AnyCollectionModel
@@ -175,10 +202,10 @@ function createCollectionRelatedCollections(
 		});
 
 	const relatedType =
-		relatedCollections.length == 0 ? 'never' : `{ ${relatedCollections.join('\n')} }`;
+		relatedCollections.length == 0 ? RECORD_NEVER : `{ ${relatedCollections.join('\n')} }`;
 
 	return {
-		type: `${EXPORT_TYPE} ${typeName} = ${relatedType}`,
+		code: `${EXPORT_TYPE} ${typeName} = ${relatedType}`,
 		typeName,
 		collectionName
 	};
@@ -197,7 +224,7 @@ function createIndexType(data: GeneratedCollectionTypeData[], category: string, 
 class UnhandledFieldTypeError extends Error {}
 
 type GeneratedCollectionTypeData = {
-	type: string;
+	code: string;
 	collectionName: string;
 	typeName: string;
 };

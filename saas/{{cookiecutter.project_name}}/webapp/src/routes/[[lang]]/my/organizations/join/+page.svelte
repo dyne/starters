@@ -47,10 +47,8 @@
 			collection="organizations"
 			fetchOptions={{
 				filter: `(id = orgAuthorizations_via_organization.organization.id && orgAuthorizations_via_organization.user.id != '${$currentUser?.id}')`,
-				inverseExpand: {
-					orgJoinRequests: 'organization'
-				},
-				subscribe: ['orgJoinRequests'],
+				expand: ['orgJoinRequests_via_organization'],
+				subscribe: 'expand-collections',
 				perPage: 20
 			}}
 			let:records
