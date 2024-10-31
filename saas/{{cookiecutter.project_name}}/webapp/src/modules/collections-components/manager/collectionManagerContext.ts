@@ -5,6 +5,7 @@ import type { ExpandProp } from '../types';
 import type { Writable } from 'svelte/store';
 import type { RecordIdString } from '@/pocketbase/types';
 import { getContext } from 'svelte';
+import type { PocketbaseQuery } from '@/pocketbase/query';
 
 //
 
@@ -14,7 +15,7 @@ export type CollectionManagerContext<
 > = {
 	collection: CollectionName;
 	recordService: RecordService;
-	fetchOptions: Writable<Partial<FetchOptions<C, Expand>>>;
+	pocketbaseQuery: Writable<PocketbaseQuery<C, Expand>>;
 	paginationContext: PaginationContext;
 	selectionContext: {
 		selectedRecords: Writable<RecordIdString[]>;
@@ -34,14 +35,6 @@ export function getCollectionManagerContext<
 }
 
 //
-
-export type FetchOptions<C extends CollectionName, Expand extends ExpandProp<C> = never> = {
-	subscribe?: 'off' | 'expand-collections' | CollectionName[];
-	expand: Expand;
-	filter: string;
-	sort: string;
-	perPage: number | false;
-};
 
 type PaginationContext = {
 	currentPage: Writable<number | undefined>;

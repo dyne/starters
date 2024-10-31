@@ -6,7 +6,7 @@ import PocketBase, {
 	type RecordFullListOptions,
 	type RecordListOptions
 } from 'pocketbase';
-import { pb } from '.';
+import { pb } from '@/pocketbase';
 import type { Simplify } from 'type-fest';
 import { Option, String } from 'effect';
 
@@ -14,28 +14,32 @@ import { Option, String } from 'effect';
 
 export type ExpandQueryOption<C extends CollectionName> = KeyOf<CollectionExpands[C]>[];
 
-export type ResolveExpandOption<C extends CollectionName, E extends ExpandQueryOption<C>> = Partial<
+type ResolveExpandOption<C extends CollectionName, E extends ExpandQueryOption<C>> = Partial<
 	Pick<CollectionExpands[C], E[number]>
 >;
 
 export type QueryResponse<
 	C extends CollectionName,
 	Expand extends ExpandQueryOption<C> = never
-> = CollectionResponses[C] & {
-	expand?: ResolveExpandOption<C, Expand>;
-};
+> = CollectionResponses[C] &
+	Simplify<{
+		expand?: ResolveExpandOption<C, Expand>;
+	}>;
 
-type PocketbaseListOptions = Simplify<RecordFullListOptions | RecordListOptions>;
-// type PocketbaseListOptions = Omit<RecordFullListOptions | RecordListOptions, "filter" | "expand" |"sort" | "search" >
+type PocketbaseListOptions = Simplify<
+	Omit<RecordFullListOptions | RecordListOptions, 'perPage' | 'page'>
+>;
 
-type PocketbaseQueryOptions<C extends CollectionName, E extends ExpandQueryOption<C>> = {
-	filter: string;
+export type PocketbaseQueryOptions<C extends CollectionName, E extends ExpandQueryOption<C>> = {
 	expand: E;
+	filter: string;
 	exclude: RecordIdString[];
 	search: string;
 	sort: string;
+	perPage: number;
+	requestKey: string | null;
+	fetch: typeof fetch;
 	pocketbase: PocketBase;
-	pocketbaseListOptions: PocketbaseListOptions;
 };
 
 export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOption<C>> {
@@ -86,14 +90,15 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	}
 
 	get pocketbaseListOptions(): PocketbaseListOptions {
-		const { sort = '-created', pocketbaseListOptions = {} } = this.options;
+		const { sort = '-created', fetch: fetchFn = fetch, requestKey = null, perPage } = this.options;
 
 		return {
-			requestKey: null,
+			requestKey,
 			sort,
 			expand: this.expandOption.pipe(Option.getOrUndefined),
 			filter: this.filterOption.pipe(Option.getOrUndefined),
-			...pocketbaseListOptions
+			fetch: fetchFn,
+			perPage
 		};
 	}
 
@@ -103,7 +108,8 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 		return pb.collection(this.collection).getFullList(this.pocketbaseListOptions);
 	}
 
-	getList(currentPage: number, perPage: number): Promise<ListResult<QueryResponse<C, E>>> {
+	getList(currentPage: number): Promise<ListResult<QueryResponse<C, E>>> {
+		const { perPage } = this.options;
 		return pb.collection(this.collection).getList(currentPage, perPage, this.pocketbaseListOptions);
 	}
 }

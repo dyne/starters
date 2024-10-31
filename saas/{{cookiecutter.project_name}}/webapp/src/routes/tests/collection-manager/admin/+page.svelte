@@ -18,16 +18,16 @@
 {#await pbPromise then pb}
 	<CollectionManager
 		collection="users"
-		fetchOptions={{
+		queryOptions={{
 			perPage: 6,
 			expand: [
 				'users_public_keys_via_owner',
 				'webauthnCredentials_via_user',
 				'orgAuthorizations_via_user'
-			]
+			],
+			pocketbase: pb
 		}}
 		let:records
-		{pb}
 	>
 		<List>
 			{#each records as r}
@@ -42,12 +42,12 @@
 
 	<CollectionManager
 		collection="orgAuthorizations"
-		fetchOptions={{
+		queryOptions={{
 			perPage: 6,
-			expand: ['role']
+			expand: ['role'],
+			pocketbase: pb
 		}}
 		let:records
-		{pb}
 	>
 		<List>
 			{#each records as r}

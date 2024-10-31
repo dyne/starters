@@ -42,7 +42,7 @@
 	<PageCard>
 		<CollectionManager
 			collection="orgAuthorizations"
-			fetchOptions={{
+			queryOptions={{
 				expand: ['user', 'role'],
 				filter: `organization.id="${organization.id}"`
 			}}

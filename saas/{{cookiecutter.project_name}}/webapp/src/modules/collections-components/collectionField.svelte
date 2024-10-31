@@ -1,13 +1,17 @@
 <script context="module" lang="ts">
 	import type { GenericRecord } from '@/utils/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import type { ExpandProp, ExpandableResponse } from './types';
+	import type {
+		ExpandQueryOption,
+		QueryResponse,
+		PocketbaseQueryOptions
+	} from '@/pocketbase/query';
 
-	export type CollectionFieldOptions<C extends CollectionName, Expand extends ExpandProp<C>> = {
-		expand?: Expand;
-		filter?: string;
-		exclude?: RecordIdString[];
-		displayFn?: RecordPresenter<ExpandableResponse<C, Expand>>;
+	export type CollectionFieldOptions<
+		C extends CollectionName,
+		Expand extends ExpandQueryOption<C>
+	> = Partial<PocketbaseQueryOptions<C, Expand>> & {
+		displayFn?: RecordPresenter<QueryResponse<C, Expand>>;
 		displayFields?: (keyof CollectionRecords[C])[];
 		mode?: 'search' | 'select';
 		multiple?: boolean;
@@ -16,7 +20,7 @@
 
 <script
 	lang="ts"
-	generics="Data extends GenericRecord, C extends CollectionName, Expand extends ExpandProp<C> = never"
+	generics="Data extends GenericRecord, C extends CollectionName, Expand extends ExpandQueryOption<C> = never"
 >
 	import { m } from '@/i18n';
 	import { ensureArray } from '@/utils/other';
@@ -41,7 +45,6 @@
 	export let form: SuperForm<Data>;
 	export let name: FormPath<Data>;
 	export let collection: C;
-	export let expand: Expand | undefined = undefined;
 	export let options: Partial<FieldOptions> & CollectionFieldOptions<C, Expand> = {};
 
 	let {
@@ -55,7 +58,7 @@
 
 	const valueProxy = fieldProxy(form, name) as Writable<string | string[] | undefined>;
 
-	function fetchRecord(collection: C, id: string): Promise<ExpandableResponse<C, Expand>> {
+	function fetchRecord(collection: C, id: string): Promise<QueryResponse<C, Expand>> {
 		return pb.collection(collection).getOne(id, { requestKey: null });
 	}
 
@@ -83,9 +86,7 @@
 		{#if mode == 'search'}
 			<CollectionSearch
 				{collection}
-				{expand}
-				exclude={[...exclude, ...ensureArray($valueProxy)]}
-				filter={options.filter}
+				queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
 				displayFn={options.displayFn}
 				displayFields={options.displayFields}
 				onSelect={(record) => {
@@ -95,9 +96,7 @@
 		{:else if mode == 'select'}
 			<CollectionSelect
 				{collection}
-				{expand}
-				exclude={[...exclude, ...ensureArray($valueProxy)]}
-				filter={options.filter}
+				queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
 				displayFn={options.displayFn}
 				displayFields={options.displayFields}
 				onSelect={(record) => {

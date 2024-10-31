@@ -1,4 +1,10 @@
-<script lang="ts" generics="C extends CollectionName, Expand extends ExpandProp<C> = never">
+<script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
+	import {
+		PocketbaseQuery,
+		type ExpandQueryOption,
+		type PocketbaseQueryOptions,
+		type QueryResponse
+	} from '@/pocketbase/query';
 	import type { SimplifyDeep } from 'type-fest';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { ensureArray } from '@/utils/other';
@@ -7,25 +13,20 @@
 	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { pb as pocketbase, setupComponentPbSubscriptions } from '@/pocketbase';
+	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
-
 	import {
 		getCollectionModel,
 		getCollectionNameFromId,
 		type CollectionName,
 		type RelationSchemaField
 	} from '@/pocketbase/collections-models';
-	import type { ExpandProp } from '../types';
-	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
-	import type { ExpandableResponse } from '../types';
 	import {
 		COLLECTION_MANAGER_KEY,
-		type CollectionManagerContext,
-		type FetchOptions
+		type CollectionManagerContext
 	} from './collectionManagerContext';
 	import type { UIOptions as CollectionFormUIOptions, FieldsOptions } from '../form/formOptions';
 	import type { FormOptions as SuperformsOptions } from '@/forms';
@@ -33,9 +34,10 @@
 	//
 
 	export let collection: C;
+	export let queryOptions: Partial<PocketbaseQueryOptions<C, Expand>> = {};
+	export let subscribe: 'off' | 'expand-collections' | CollectionName[] = 'expand-collections';
 
 	export let hide: ('emptyState' | 'pagination')[] = [];
-	export let fetchOptions: Partial<FetchOptions<C, Expand>> = {};
 
 	//
 
@@ -51,48 +53,32 @@
 	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 
-	export let pb = pocketbase;
+	/* Record loading */
 
-	//
-
-	const fetchOptionsStore = writable<typeof fetchOptions>(fetchOptions);
-	$: $fetchOptionsStore = {
-		subscribe: 'expand-collections',
-		...$fetchOptionsStore,
-		...fetchOptions
-	};
+	const pocketbaseQuery = writable(new PocketbaseQuery(collection, queryOptions));
+	$: $pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
 
 	const currentPage = writable<number | undefined>(undefined);
 	const totalItems = writable<number | undefined>(undefined);
 
-	let records: T[] = [];
-	type T = SimplifyDeep<ExpandableResponse<C, Expand>>;
+	//
 
+	let records: QueryResponse<C, Expand>[] = [];
 	let error: ClientResponseError | undefined = undefined;
 
-	let recordService = pb.collection(collection);
-
-	$: loadRecords($fetchOptionsStore, $currentPage);
+	$: loadRecords($pocketbaseQuery, $currentPage);
 
 	async function loadRecords(
-		fetchOptions: Partial<FetchOptions<C, Expand>> = {},
+		pocketbaseQuery: PocketbaseQuery<C, Expand>,
 		currentPage: number | undefined = undefined
 	) {
-		const { expand, filter, sort, perPage } = fetchOptions;
-		const options: RecordFullListOptions | RecordListOptions = {
-			requestKey: null
-		};
-		if (filter) options.filter = filter;
-		if (expand) options.expand = expand.join(',');
-		options.sort = sort ? sort : '-created';
-
 		try {
-			if (perPage) {
-				const result = await recordService.getList<T>(currentPage, perPage, options);
-				totalItems.set(result.totalItems);
+			if (pocketbaseQuery.options.perPage) {
+				const result = await pocketbaseQuery.getList(currentPage ?? 0);
+				$totalItems = result.totalItems;
 				records = result.items;
 			} else {
-				records = await recordService.getFullList<T>(options);
+				records = await pocketbaseQuery.getFullList();
 			}
 		} catch (e) {
 			error = e as ClientResponseError;
@@ -104,10 +90,10 @@
 	// TODO - Make reactive
 	// TODO - When "authorizations" is added, `records` update, but not when it's removed
 	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
-	if (Array.isArray(fetchOptions.subscribe)) {
-		subscriptionCollections.push(...fetchOptions.subscribe);
-	} else if (fetchOptions.subscribe == 'expand-collections') {
-		const collections = ensureArray(fetchOptions.expand).map((expandString) => {
+	if (Array.isArray(subscribe)) {
+		subscriptionCollections.push(...subscribe);
+	} else if (subscribe == 'expand-collections') {
+		const collections = ensureArray($pocketbaseQuery.options.expand).map((expandString) => {
 			const INVERSE_KEY = '_via_';
 			if (expandString.includes(INVERSE_KEY)) return expandString.split(INVERSE_KEY)[0];
 			else return getCollectionNameFromRelationFieldName(collection, expandString);
@@ -115,7 +101,7 @@
 		subscriptionCollections.push(...collections);
 	}
 	for (const c of A.dedupe(subscriptionCollections)) {
-		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptionsStore, $currentPage));
+		setupComponentPbSubscriptions(c, () => loadRecords($pocketbaseQuery, $currentPage));
 	}
 
 	function getCollectionNameFromRelationFieldName<C extends CollectionName>(
@@ -154,12 +140,12 @@
 
 	setContext<CollectionManagerContext<C, Expand>>(COLLECTION_MANAGER_KEY, {
 		collection,
-		recordService,
+		recordService: pb.collection(collection),
 		paginationContext: {
 			currentPage,
 			totalItems
 		},
-		fetchOptions: fetchOptionsStore,
+		pocketbaseQuery,
 		selectionContext: {
 			selectedRecords,
 			areAllRecordsSelected,

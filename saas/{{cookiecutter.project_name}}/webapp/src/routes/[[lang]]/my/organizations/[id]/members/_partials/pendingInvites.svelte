@@ -15,7 +15,7 @@
 
 <CollectionManager
 	collection="org_invites"
-	fetchOptions={{
+	queryOptions={{
 		filter: `organization.id = "${organization.id}"`
 	}}
 	let:records
