@@ -1,17 +1,16 @@
 import type { CollectionFormOptions } from '@/collections-components/form';
 import type { CollectionName } from '@/pocketbase/collections-models';
 import type { RecordService } from 'pocketbase';
-import type { ExpandProp } from '../types';
 import type { Writable } from 'svelte/store';
 import type { RecordIdString } from '@/pocketbase/types';
 import { getContext } from 'svelte';
-import type { PocketbaseQuery } from '@/pocketbase/query';
+import type { PocketbaseQuery, ExpandQueryOption } from '@/pocketbase/query';
 
 //
 
 export type CollectionManagerContext<
 	C extends CollectionName,
-	Expand extends ExpandProp<C> = never
+	Expand extends ExpandQueryOption<C> = never
 > = {
 	collection: CollectionName;
 	recordService: RecordService;

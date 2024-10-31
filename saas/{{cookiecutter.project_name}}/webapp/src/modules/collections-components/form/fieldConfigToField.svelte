@@ -1,6 +1,6 @@
 <script lang="ts" generics="C extends CollectionName">
 	import type { CollectionName, AnySchemaField } from '@/pocketbase/collections-models';
-	import type { ExpandProp } from '../types';
+	import type { ExpandQueryOption } from '@/pocketbase/query';
 	import { getFormContext } from '@/forms';
 	import { CheckboxField, FileField, Field, SelectField, TextareaField } from '@/forms/fields';
 	import CollectionField, { type CollectionFieldOptions } from '../collectionField.svelte';
@@ -19,7 +19,7 @@
 	export let hidden = false;
 
 	export let collectionFieldOptions: Omit<
-		CollectionFieldOptions<C, ExpandProp<C>>,
+		CollectionFieldOptions<C, ExpandQueryOption<C>>,
 		'collection'
 	> = {};
 
