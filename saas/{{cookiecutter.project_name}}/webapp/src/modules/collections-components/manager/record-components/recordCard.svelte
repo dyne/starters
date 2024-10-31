@@ -1,7 +1,7 @@
 <script lang="ts" generics="C extends CollectionName">
 	import { cn } from '@/components/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import ItemCard from '@/components/custom/itemCard.svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import {

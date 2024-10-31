@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	import type { GenericRecord } from '@/utils/types';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { ExpandProp, ExpandableResponse } from './types';
 
 	export type CollectionFieldOptions<C extends CollectionName, Expand extends ExpandProp<C>> = {

@@ -1,6 +1,6 @@
 import type { CollectionFieldOptions } from '@/collections-components/collectionField.svelte';
 import type { FieldComponentProp } from './fieldComponent';
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionName } from '@/pocketbase/collections-models';
 import type {
 	CollectionRecords,
 	CollectionResponses,

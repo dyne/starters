@@ -1,7 +1,7 @@
 import type { CollectionFormOptions } from '@/collections-components/form';
-import type { CollectionName } from '@/pocketbase/collections-models/types';
+import type { CollectionName } from '@/pocketbase/collections-models';
 import type { RecordService } from 'pocketbase';
-import type { InverseExpandProp, ExpandProp } from '../types';
+import type { ExpandProp } from '../types';
 import type { Writable } from 'svelte/store';
 import type { RecordIdString } from '@/pocketbase/types';
 import { getContext } from 'svelte';
@@ -10,12 +10,11 @@ import { getContext } from 'svelte';
 
 export type CollectionManagerContext<
 	C extends CollectionName,
-	Expand extends ExpandProp<C> = never,
-	InverseExpand extends InverseExpandProp = never
+	Expand extends ExpandProp<C> = never
 > = {
 	collection: CollectionName;
 	recordService: RecordService;
-	fetchOptions: Writable<Partial<FetchOptions<C, Expand, InverseExpand>>>;
+	fetchOptions: Writable<Partial<FetchOptions<C, Expand>>>;
 	paginationContext: PaginationContext;
 	selectionContext: {
 		selectedRecords: Writable<RecordIdString[]>;
@@ -36,14 +35,9 @@ export function getCollectionManagerContext<
 
 //
 
-export type FetchOptions<
-	C extends CollectionName,
-	Expand extends ExpandProp<C> = never,
-	InverseExpand extends InverseExpandProp = never
-> = {
-	subscribe: CollectionName[];
+export type FetchOptions<C extends CollectionName, Expand extends ExpandProp<C> = never> = {
+	subscribe?: 'off' | 'expand-collections' | CollectionName[];
 	expand: Expand;
-	inverseExpand: InverseExpand;
 	filter: string;
 	sort: string;
 	perPage: number | false;

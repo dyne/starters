@@ -1,5 +1,5 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandProp<C> = never">
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import { searchTextFilter, excludeIdsFilter, mergeFilters, createRecordDisplay } from './utils';
 	import Search from '@/components/custom/search.svelte';
 	import type { SearchFunction } from '@/components/custom/search.svelte';

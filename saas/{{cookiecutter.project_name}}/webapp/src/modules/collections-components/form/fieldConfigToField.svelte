@@ -1,21 +1,17 @@
-<script lang="ts" context="module">
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import type { ExpandProp } from '../types';
-</script>
-
 <script lang="ts" generics="C extends CollectionName">
-	import type { AnyFieldConfig } from '@/pocketbase/collections-models/types';
+	import type { CollectionName, AnySchemaField } from '@/pocketbase/collections-models';
+	import type { ExpandProp } from '../types';
 	import { getFormContext } from '@/forms';
 	import { CheckboxField, FileField, Field, SelectField, TextareaField } from '@/forms/fields';
 	import CollectionField, { type CollectionFieldOptions } from '../collectionField.svelte';
 	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
-	import { isArrayField } from '@/pocketbase/collections-models/utils';
+	import { isArrayField } from '@/pocketbase/collections-models';
 	import type { Selected } from '@/components/custom/selectInput.svelte';
 	import type { FieldComponentProp } from './fieldComponent';
 
 	//
 
-	export let fieldConfig: AnyFieldConfig;
+	export let fieldConfig: AnySchemaField;
 
 	export let label = fieldConfig.name as string;
 	export let description: string | undefined = undefined;
@@ -38,21 +34,21 @@
 	/* Select */
 
 	let items: Selected<string>[] = [];
-	if (fieldConfig.type == 'select') {
+	if (fieldConfig.type == 'select' && fieldConfig.options.values) {
 		items = fieldConfig.options.values.map((v) => ({ label: v, value: v }));
 	}
 
 	/* File */
 
 	let accept: string;
-	if (fieldConfig.type == 'file') {
+	if (fieldConfig.type == 'file' && fieldConfig.options.mimeTypes) {
 		accept = fieldConfig.options.mimeTypes.join(',');
 	}
 
 	/* Relation */
 
 	let collectionName: C;
-	if (fieldConfig.type == 'relation') {
+	if (fieldConfig.type == 'relation' && fieldConfig.options.collectionId) {
 		const collectionId = fieldConfig.options.collectionId;
 		collectionName = getCollectionNameFromId(collectionId) as C;
 	}

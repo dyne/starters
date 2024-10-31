@@ -1,24 +1,25 @@
-<script
-	lang="ts"
-	generics="C extends CollectionName, Expand extends ExpandProp<C> = never, InverseExpand extends InverseExpandProp = never"
->
+<script lang="ts" generics="C extends CollectionName, Expand extends ExpandProp<C> = never">
+	import type { SimplifyDeep } from 'type-fest';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
-
 	import { ensureArray } from '@/utils/other';
 	import { FolderIcon } from 'lucide-svelte';
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
 	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
+	import { pb as pocketbase, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
-	import type { ExpandProp, InverseExpandProp } from '../types';
-	import type { SimplifyDeep } from 'type-fest/source/simplify-deep';
+	import {
+		getCollectionModel,
+		getCollectionNameFromId,
+		type CollectionName,
+		type RelationSchemaField
+	} from '@/pocketbase/collections-models';
+	import type { ExpandProp } from '../types';
 	import type { RecordFullListOptions, RecordListOptions } from 'pocketbase';
 	import type { ExpandableResponse } from '../types';
 	import {
@@ -34,7 +35,7 @@
 	export let collection: C;
 
 	export let hide: ('emptyState' | 'pagination')[] = [];
-	export let fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {};
+	export let fetchOptions: Partial<FetchOptions<C, Expand>> = {};
 
 	//
 
@@ -50,16 +51,22 @@
 	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
 
+	export let pb = pocketbase;
+
 	//
 
 	const fetchOptionsStore = writable<typeof fetchOptions>(fetchOptions);
-	$: $fetchOptionsStore = { ...$fetchOptionsStore, ...fetchOptions };
+	$: $fetchOptionsStore = {
+		subscribe: 'expand-collections',
+		...$fetchOptionsStore,
+		...fetchOptions
+	};
 
 	const currentPage = writable<number | undefined>(undefined);
 	const totalItems = writable<number | undefined>(undefined);
 
 	let records: T[] = [];
-	type T = SimplifyDeep<ExpandableResponse<C, Expand, InverseExpand>>;
+	type T = SimplifyDeep<ExpandableResponse<C, Expand>>;
 
 	let error: ClientResponseError | undefined = undefined;
 
@@ -68,22 +75,15 @@
 	$: loadRecords($fetchOptionsStore, $currentPage);
 
 	async function loadRecords(
-		fetchOptions: Partial<FetchOptions<C, Expand, InverseExpand>> = {},
+		fetchOptions: Partial<FetchOptions<C, Expand>> = {},
 		currentPage: number | undefined = undefined
 	) {
-		const { expand, filter, inverseExpand, sort, perPage } = fetchOptions;
+		const { expand, filter, sort, perPage } = fetchOptions;
 		const options: RecordFullListOptions | RecordListOptions = {
 			requestKey: null
 		};
 		if (filter) options.filter = filter;
 		if (expand) options.expand = expand.join(',');
-		if (inverseExpand) {
-			const expand = Object.entries(inverseExpand)
-				.map(([k, v]) => `${k}_via_${v}`)
-				.join(',');
-			if (options.expand) options.expand = options.expand + ',' + expand;
-			else options.expand = expand;
-		}
 		options.sort = sort ? sort : '-created';
 
 		try {
@@ -101,15 +101,32 @@
 
 	/* Subscriptions */
 
-	// TODO - Use `expand` field instead of `subscribe`
+	// TODO - Make reactive
 	// TODO - When "authorizations" is added, `records` update, but not when it's removed
-	const subscriptionCollections: CollectionName[] = [
-		...ensureArray($fetchOptionsStore.subscribe),
-		collection,
-		'authorizations'
-	];
+	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
+	if (Array.isArray(fetchOptions.subscribe)) {
+		subscriptionCollections.push(...fetchOptions.subscribe);
+	} else if (fetchOptions.subscribe == 'expand-collections') {
+		const collections = ensureArray(fetchOptions.expand).map((expandString) => {
+			const INVERSE_KEY = '_via_';
+			if (expandString.includes(INVERSE_KEY)) return expandString.split(INVERSE_KEY)[0];
+			else return getCollectionNameFromRelationFieldName(collection, expandString);
+		}) as CollectionName[];
+		subscriptionCollections.push(...collections);
+	}
 	for (const c of A.dedupe(subscriptionCollections)) {
 		setupComponentPbSubscriptions(c, () => loadRecords($fetchOptionsStore, $currentPage));
+	}
+
+	function getCollectionNameFromRelationFieldName<C extends CollectionName>(
+		collection: C,
+		fieldName: string
+	) {
+		// TODO - port `filter` function here
+		const field = getCollectionModel(collection).schema.find(
+			(f) => f.name == fieldName && f.type == 'relation'
+		) as RelationSchemaField | undefined;
+		return getCollectionNameFromId(field?.options.collectionId ?? '');
 	}
 
 	/* Record selection */
@@ -135,7 +152,7 @@
 
 	/* Context */
 
-	setContext<CollectionManagerContext<C, Expand, InverseExpand>>(COLLECTION_MANAGER_KEY, {
+	setContext<CollectionManagerContext<C, Expand>>(COLLECTION_MANAGER_KEY, {
 		collection,
 		recordService,
 		paginationContext: {

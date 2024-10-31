@@ -69,8 +69,16 @@ describe('generated collection zod schema', () => {
 		expect(parseResult.success).toBe(false);
 	});
 
+	// JSON Field Checks
+
+	const jsonField = getCollectionModel('z_test_collection').schema.find(
+		(schemaField) => schemaField.type == 'json'
+	);
+	if (!jsonField) throw new Error('field not found');
+	const { maxSize: jsonMaxSize } = jsonField.options;
+	if (!jsonMaxSize) throw new Error('missing json max size');
+
 	it('fails the json size check with a large JSON object', () => {
-		const jsonMaxSize = getCollectionModel('z_test_collection').schema[12].options.maxSize;
 		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,
 			json_field: generateLargeJSONObject(jsonMaxSize * 1.5)
@@ -92,8 +100,16 @@ describe('generated collection zod schema', () => {
 		expect(parseResult.success).toBe(true);
 	});
 
+	// Date checks
+
+	const dateField = getCollectionModel('z_test_collection').schema.find(
+		(schemaField) => schemaField.type == 'date'
+	);
+	if (!dateField) throw new Error('field not found');
+	const { max: maxDate, min: minDate } = dateField.options;
+	if (!maxDate || !minDate) throw new Error('missing min and max date');
+
 	it('fails the date check with a date earlier than minimum', () => {
-		const minDate = getCollectionModel('z_test_collection').schema[6].options.min;
 		const earlierDate = subYears(minDate, 10);
 
 		const data: CollectionFormData['z_test_collection'] = {
@@ -105,7 +121,6 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('fails the date check with a date later than maximum', () => {
-		const maxDate = getCollectionModel('z_test_collection').schema[6].options.max;
 		const laterDate = addYears(maxDate, 10);
 
 		const data: CollectionFormData['z_test_collection'] = {
@@ -117,11 +132,10 @@ describe('generated collection zod schema', () => {
 	});
 
 	it('passes the date check with a date in between', () => {
-		const { min, max } = getCollectionModel('z_test_collection').schema[6].options;
-		const difference = differenceInMilliseconds(max, min);
-		const betweenDate = addMilliseconds(min, difference / 2);
+		const difference = differenceInMilliseconds(maxDate, minDate);
+		const betweenDate = addMilliseconds(minDate, difference / 2);
 
-		console.log(min, betweenDate.toISOString(), max);
+		console.log(minDate, betweenDate.toISOString(), maxDate);
 
 		const data: CollectionFormData['z_test_collection'] = {
 			...baseData,

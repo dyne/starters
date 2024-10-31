@@ -1,5 +1,5 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandProp<C> = never">
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { ControlAttrs } from 'formsnap';
 	import type { ExpandableResponse, ExpandProp } from './types';
 	import { onDestroy, onMount } from 'svelte';

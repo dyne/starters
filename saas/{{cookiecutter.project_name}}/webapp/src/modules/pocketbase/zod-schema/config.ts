@@ -1,17 +1,18 @@
 import { pipe } from 'effect';
 import z from 'zod';
-
-import type { FieldType, FieldConfig, AnyFieldConfig } from '@/pocketbase/collections-models/types';
+import type { SchemaFields } from '@/pocketbase/collections-models';
 import { getJsonDataSize } from '@/utils/other';
-
 import { isBefore, isAfter, isValid, parseISO } from 'date-fns';
-import type { SetFieldType } from 'type-fest';
 import { m } from '@/i18n';
 import { zodFileSchema } from '@/utils/files';
 
 /* Field Config -> Zod Type */
 
-export const fieldConfigToZodTypeMap = {
+type SchemaFieldToZodTypeMap = {
+	[Type in keyof SchemaFields]: (fieldSchema: SchemaFields[Type]) => z.ZodTypeAny;
+};
+
+export const schemaFieldToZodTypeMap: SchemaFieldToZodTypeMap = {
 	text: (config) => {
 		const { max, min, pattern } = config.options;
 		let s = z.string();
@@ -85,7 +86,8 @@ export const fieldConfigToZodTypeMap = {
 
 	select: ({ options }) => {
 		const { values } = options;
-		return z.string().refine((s) => (values as readonly string[]).includes(s));
+		if (!values) throw new SelectSchemaFieldNoOptionsError();
+		return z.string().refine((s) => values.includes(s));
 	},
 
 	editor: () => {
@@ -96,15 +98,9 @@ export const fieldConfigToZodTypeMap = {
 		const { exceptDomains, onlyDomains } = options;
 		return pipe(z.string().url(), (zodUrl) => validateDomains(zodUrl, exceptDomains, onlyDomains));
 	}
-} as const satisfies FieldConfigToZodTypeMapRequirement;
-
-type FieldConfigToZodTypeMapRequirement = {
-	[Type in FieldType]: FieldConfigToZodType<FieldConfig<Type>>;
 };
 
-export type FieldConfigToZodType<Config extends AnyFieldConfig = AnyFieldConfig> = (
-	config: SetFieldType<Config, 'options', Partial<Config['options']>> // We are not sure that those options exist
-) => z.ZodTypeAny;
+class SelectSchemaFieldNoOptionsError extends Error {}
 
 //
 

@@ -7,6 +7,10 @@ import prettier from 'prettier';
 //
 
 export const GENERATED = 'generated';
+export const EXPORT_TYPE = 'export type ';
+export const SEPARATOR = '/* ------------------ */';
+
+//
 
 export async function initAdminPocketbase() {
 	const { PB_ADMIN_USER, PB_ADMIN_PASS, PUBLIC_POCKETBASE_URL } = process.env;

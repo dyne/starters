@@ -3,7 +3,7 @@
 	import { Array } from 'effect';
 	import { Checkbox } from '@/components/ui/checkbox';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
-	import type { CollectionName } from '@/pocketbase/collections-models/types';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 
 	export let record: CollectionResponses[C];
 
