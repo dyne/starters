@@ -51,7 +51,11 @@
 	//
 
 	const fetchOptionsStore = writable<typeof fetchOptions>(fetchOptions);
-	$: $fetchOptionsStore = { ...$fetchOptionsStore, ...fetchOptions };
+	$: $fetchOptionsStore = {
+		subscribe: 'expand-collections',
+		...$fetchOptionsStore,
+		...fetchOptions
+	};
 
 	const currentPage = writable<number | undefined>(undefined);
 	const totalItems = writable<number | undefined>(undefined);

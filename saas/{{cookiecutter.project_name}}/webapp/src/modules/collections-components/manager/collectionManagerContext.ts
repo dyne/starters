@@ -36,7 +36,7 @@ export function getCollectionManagerContext<
 //
 
 export type FetchOptions<C extends CollectionName, Expand extends ExpandProp<C> = never> = {
-	subscribe?: 'expand-collections' | CollectionName[];
+	subscribe?: 'off' | 'expand-collections' | CollectionName[];
 	expand: Expand;
 	filter: string;
 	sort: string;
