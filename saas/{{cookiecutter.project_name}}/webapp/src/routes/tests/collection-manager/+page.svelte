@@ -4,7 +4,7 @@
 
 <CollectionManager
 	collection="z_test_collection"
-	fetchOptions={{
+	queryOptions={{
 		expand: ['relation_field'],
 		perPage: 6
 	}}

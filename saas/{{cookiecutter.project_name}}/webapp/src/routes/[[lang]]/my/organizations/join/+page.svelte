@@ -45,12 +45,12 @@
 	<PageCard>
 		<CollectionManager
 			collection="organizations"
-			fetchOptions={{
+			queryOptions={{
 				filter: `(id = orgAuthorizations_via_organization.organization.id && orgAuthorizations_via_organization.user.id != '${$currentUser?.id}')`,
 				expand: ['orgJoinRequests_via_organization'],
-				subscribe: 'expand-collections',
 				perPage: 20
 			}}
+			subscribe="expand-collections"
 			let:records
 			hide={['emptyState']}
 		>

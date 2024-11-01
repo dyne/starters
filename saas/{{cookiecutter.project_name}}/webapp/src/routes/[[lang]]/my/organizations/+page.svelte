@@ -59,7 +59,7 @@
 <PageContent>
 	<CollectionManager
 		collection="org_invites"
-		fetchOptions={{
+		queryOptions={{
 			expand: ['organization'],
 			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`
 		}}
@@ -89,7 +89,7 @@
 
 	<CollectionManager
 		collection="orgJoinRequests"
-		fetchOptions={{
+		queryOptions={{
 			expand: ['organization'],
 			filter: `user.id = "${$currentUser?.id}"`
 		}}
@@ -147,7 +147,7 @@
 
 		<CollectionManager
 			collection="orgAuthorizations"
-			fetchOptions={{
+			queryOptions={{
 				expand: ['organization', 'role'],
 				filter: `user.id = "${$currentUser?.id}"`
 			}}

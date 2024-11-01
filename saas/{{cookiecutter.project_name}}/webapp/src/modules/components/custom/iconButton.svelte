@@ -6,11 +6,13 @@
 	import Icon from './icon.svelte';
 	import { Record } from 'effect';
 
-	type $$Props = Omit<ButtonProps, 'size'> & { icon?: IconComponent; size?: 'md' | 'sm' | 'lg' };
+	type ButtonSize = 'md' | 'sm' | 'lg';
+
+	type $$Props = ButtonProps & { icon?: IconComponent; size?: ButtonSize };
 	type $$Events = ButtonEvents;
 
 	export let icon: $$Props['icon'] = X;
-	export let size: $$Props['size'] = 'md';
+	export let size: ButtonSize = 'md';
 
 	//
 
@@ -19,7 +21,7 @@
 		sizeClass: string;
 	};
 
-	const sizes: Record<NonNullable<$$Props['size']>, ButtonConfig> = {
+	const sizes: Record<ButtonSize, ButtonConfig> = {
 		sm: {
 			iconSize: 16,
 			sizeClass: 'size-8'

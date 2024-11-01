@@ -6,7 +6,7 @@ import type {
 	CollectionResponses,
 	CollectionRelatedCollections as Related
 } from '@/pocketbase/types';
-import type { ExpandProp } from '../types';
+import type { ExpandQueryOption } from '@/pocketbase/query';
 import type { KeyOf, MaybePromise } from '@/utils/types';
 import type { ComponentProps } from 'svelte';
 import type { CollectionForm } from '.';
@@ -29,7 +29,7 @@ export type FieldsOptions<C extends CollectionName, R = CollectionRecords[C]> = 
 
 type BaseCollectionFieldOptions<C extends CollectionName> = CollectionFieldOptions<
 	C,
-	ExpandProp<C>
+	ExpandQueryOption<C>
 >;
 
 export function defaultFieldsOptions<C extends CollectionName>(): FieldsOptions<C> {

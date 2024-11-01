@@ -19,7 +19,6 @@ export const schemaFieldToZodTypeMap: SchemaFieldToZodTypeMap = {
 		if (max) s = s.max(max);
 		if (min) s = s.min(min);
 		if (pattern) {
-			console.log(config);
 			// // Add a "|" pipe to the regex to allow for empty string (Ciscoheat suggestion)
 			// const maybeOptionalPattern = config.required ? pattern : `|${pattern}`;
 			// TODO - Check if it is needed still

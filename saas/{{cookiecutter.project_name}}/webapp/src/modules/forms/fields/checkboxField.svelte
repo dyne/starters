@@ -33,7 +33,9 @@
 			<Checkbox {...attrs} bind:checked={$value} />
 
 			<Form.Label>
-				{options.label ?? capitalize(name)}
+				<slot>
+					{options.label ?? capitalize(name)}
+				</slot>
 				<RequiredIndicator field={name} />
 			</Form.Label>
 		</div>

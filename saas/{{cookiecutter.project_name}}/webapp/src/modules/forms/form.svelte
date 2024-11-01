@@ -38,7 +38,17 @@
 
 	//
 
+	type Enctype =
+		| 'text/plain'
+		| 'application/x-www-form-urlencoded'
+		| 'multipart/form-data'
+		| null
+		| undefined;
+
+	let enctype: Enctype = undefined;
 	$: enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
+
+	//
 
 	const { enhance, delayed } = form;
 	setContext<FormContext<T>>(FORM_KEY, { form, hideRequiredIndicator });

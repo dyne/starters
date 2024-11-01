@@ -5,16 +5,17 @@
 	let className = '';
 	export { className as class };
 
-	const { paginationContext, fetchOptions } = getCollectionManagerContext();
+	const { paginationContext, pocketbaseQuery } = getCollectionManagerContext();
 	const { currentPage: currentPageStore, totalItems } = paginationContext;
 
-	$: show = typeof $fetchOptions.perPage == 'number' && ($totalItems ?? 0) > $fetchOptions.perPage;
+	$: perPage = $pocketbaseQuery.options.perPage;
+	$: show = perPage && ($totalItems ?? 0) > perPage;
 </script>
 
-{#if show && $fetchOptions.perPage}
+{#if show && perPage}
 	<Pagination.Root
 		count={$totalItems ?? 0}
-		perPage={$fetchOptions.perPage}
+		{perPage}
 		bind:page={$currentPageStore}
 		let:pages
 		let:currentPage

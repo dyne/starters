@@ -41,7 +41,7 @@
 
 <CollectionManager
 	collection="orgJoinRequests"
-	fetchOptions={{
+	queryOptions={{
 		filter: `organization.id = "${organization.id}" && status = "${pending}"`,
 		expand: ['user']
 	}}
