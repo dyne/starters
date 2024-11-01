@@ -13,7 +13,7 @@
 	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
+	import { pb, pb as pocketbase, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';

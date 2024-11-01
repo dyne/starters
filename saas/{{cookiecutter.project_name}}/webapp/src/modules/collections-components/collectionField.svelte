@@ -30,7 +30,7 @@
 	import type { Writable } from 'svelte/store';
 	import { CollectionSelect } from '.';
 	import { createDefaultRecordPresenter, type RecordPresenter } from './utils';
-	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
+	import type { CollectionRecords } from '@/pocketbase/types';
 	import * as Form from '@/components/ui/form';
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy } from 'sveltekit-superforms/client';

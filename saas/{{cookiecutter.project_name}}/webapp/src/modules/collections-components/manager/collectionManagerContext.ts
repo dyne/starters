@@ -25,6 +25,15 @@ export type CollectionManagerContext<
 	formsOptions: Record<FormPropType, CollectionFormOptions<C>>;
 };
 
+type PaginationContext = {
+	currentPage: Writable<number | undefined>;
+	totalItems: Writable<number | undefined>;
+};
+
+type FormPropType = 'base' | 'create' | 'edit';
+
+//
+
 export const COLLECTION_MANAGER_KEY = Symbol('cmk');
 
 export function getCollectionManagerContext<
@@ -32,12 +41,3 @@ export function getCollectionManagerContext<
 >(): CollectionManagerContext<C> {
 	return getContext(COLLECTION_MANAGER_KEY);
 }
-
-//
-
-type PaginationContext = {
-	currentPage: Writable<number | undefined>;
-	totalItems: Writable<number | undefined>;
-};
-
-type FormPropType = 'base' | 'create' | 'edit';
