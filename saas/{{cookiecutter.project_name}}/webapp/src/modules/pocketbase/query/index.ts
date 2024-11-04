@@ -8,7 +8,7 @@ import PocketBase, {
 } from 'pocketbase';
 import { pb } from '@/pocketbase';
 import type { Simplify } from 'type-fest';
-import { Option, String } from 'effect';
+import { Option, String, Array } from 'effect';
 
 //
 
@@ -26,23 +26,31 @@ export type QueryResponse<
 		expand?: ResolveExpandOption<C, Expand>;
 	}>;
 
+//
+
+type SortOption = [string, SortOrder];
+type SortOrder = 'ASC' | 'DESC';
+export const DEFAULT_SORT_ORDER: SortOrder = 'ASC';
+
 type PocketbaseListOptions = Simplify<RecordFullListOptions & RecordListOptions>;
+
+//
 
 export type PocketbaseQueryOptions<C extends CollectionName, E extends ExpandQueryOption<C>> = {
 	expand: E;
 	filter: string;
 	exclude: RecordIdString[];
 	search: string;
-	sort: SortOption; // TODO - Improve type safety with keyof CollectionResponses[C] (currently it does not work cause of svelte issue)
+	sort: SortOption;
+	// TODO - Improve type safety with keyof CollectionResponses[C] (currently it does not work cause of svelte issue)
+	// TODO - Improve to handle multiple sorts
 	perPage: number;
 	requestKey: string | null;
 	fetch: typeof fetch;
 	pocketbase: PocketBase;
 };
 
-type SortOption = [string, SortOrder];
-export type SortOrder = 'ASC' | 'DESC';
-export const DEFAULT_SORT_ORDER: SortOrder = 'ASC';
+//
 
 export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOption<C>> {
 	constructor(
@@ -80,8 +88,7 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 
 	get sortOption(): SortOption {
 		const { sort } = this.options;
-		console.log(sort);
-		return sort ?? ['created', DEFAULT_SORT_ORDER];
+		return sort ?? ['created', 'DESC'];
 	}
 
 	// Options
@@ -102,7 +109,7 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	}
 
 	get sortPbOption(): string {
-		return this.sortOption.reverse().join('').replace('ASC', '+').replace('DESC', '-');
+		return Array.reverse(this.sortOption).join('').replace('ASC', '+').replace('DESC', '-');
 	}
 
 	get pocketbaseListOptions(): PocketbaseListOptions {
@@ -134,12 +141,10 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 
 	// Utils
 
-	// TODO - Improve to handle multiple sorts
-
-	flipSort() {
-		this.options.sort = [
+	getFlippedSort() {
+		return [
 			this.sortOption[0],
 			this.sortOption[1] == DEFAULT_SORT_ORDER ? 'DESC' : 'ASC'
-		];
+		] as SortOption;
 	}
 }
