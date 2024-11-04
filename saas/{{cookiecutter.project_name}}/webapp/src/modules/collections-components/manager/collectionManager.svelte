@@ -7,7 +7,7 @@
 	} from '@/pocketbase/query';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { ensureArray } from '@/utils/other';
-	import { FolderIcon } from 'lucide-svelte';
+	import { FolderIcon, Search } from 'lucide-svelte';
 	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
 	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
@@ -17,6 +17,7 @@
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
+	import CollectionManagerSearch from './collectionManagerSearch.svelte';
 	import {
 		getCollectionModel,
 		getCollectionNameFromId,
@@ -171,7 +172,7 @@
 	});
 </script>
 
-<slot name="top" />
+<slot name="top" Search={CollectionManagerSearch} />
 
 {#if error}
 	<EmptyState
@@ -185,6 +186,8 @@
 	{#if !hide.includes('pagination')}
 		<CollectionManagerPagination class="mt-6" />
 	{/if}
+{:else if $pocketbaseQuery.options.search}
+	<EmptyState title={m.No_records_found()} icon={Search} />
 {:else}
 	<slot name="emptyState">
 		{#if !hide.includes('emptyState')}
