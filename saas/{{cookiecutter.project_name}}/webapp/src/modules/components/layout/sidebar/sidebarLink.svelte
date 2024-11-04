@@ -14,7 +14,7 @@
 <SidebarButton {...props} {isActive}>
 	<svelte:fragment slot="right">
 		{#if props.badge}
-			<Badge>{props.badge}</Badge>
+			<Badge variant="secondary">{props.badge}</Badge>
 		{/if}
 	</svelte:fragment>
 </SidebarButton>

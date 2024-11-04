@@ -169,7 +169,7 @@
 										<A href={`/my/organizations/${org.id}`}>{org.name}</A>
 									</Title>
 									{#if role.name == ADMIN || role.name == OWNER}
-										<Badge color="dark">{capitalize(role.name)}</Badge>
+										<Badge variant="secondary">{capitalize(role.name)}</Badge>
 									{/if}
 								</div>
 								{#if org.description}
