@@ -54,6 +54,10 @@
 			let:records
 			hide={['emptyState']}
 		>
+			<svelte:fragment slot="top" let:Search>
+				<Search />
+			</svelte:fragment>
+
 			<svelte:fragment slot="emptyState">
 				<EmptyState title={m.No_available_organizations_found()} icon={Users} />
 			</svelte:fragment>
