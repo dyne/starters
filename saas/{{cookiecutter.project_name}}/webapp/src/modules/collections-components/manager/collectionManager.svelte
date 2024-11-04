@@ -5,7 +5,6 @@
 		type PocketbaseQueryOptions,
 		type QueryResponse
 	} from '@/pocketbase/query';
-	import type { SimplifyDeep } from 'type-fest';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { ensureArray } from '@/utils/other';
 	import { FolderIcon } from 'lucide-svelte';
@@ -13,7 +12,7 @@
 	import { m } from '@/i18n';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import { pb, pb as pocketbase, setupComponentPbSubscriptions } from '@/pocketbase';
+	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';
