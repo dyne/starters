@@ -42,6 +42,7 @@
 	{...$$restProps}
 	size="icon"
 	class="{sizes[size ?? 'md'].sizeClass} {$$restProps.class}"
+	on:click
 >
 	<Icon src={icon ?? X} size={sizes[size ?? 'md'].iconSize} />
 </Button>

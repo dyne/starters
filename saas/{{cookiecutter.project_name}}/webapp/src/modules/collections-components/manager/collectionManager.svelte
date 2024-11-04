@@ -17,6 +17,7 @@
 	import EmptyState from '@/components/custom/emptyState.svelte';
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
+	import CollectionManagerSearch from './collectionManagerSearch.svelte';
 	import {
 		getCollectionModel,
 		getCollectionNameFromId,
@@ -171,7 +172,7 @@
 	});
 </script>
 
-<slot name="top" />
+<slot name="top" Search={CollectionManagerSearch} />
 
 {#if error}
 	<EmptyState

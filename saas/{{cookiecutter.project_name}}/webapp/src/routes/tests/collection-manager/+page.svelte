@@ -10,9 +10,12 @@
 	}}
 	let:records
 >
-	<svelte:fragment slot="top">
+	<svelte:fragment slot="top" let:Search>
 		<div class="mb-4 flex justify-end gap-2">
 			<RecordCreate />
+		</div>
+		<div class="mb-4">
+			<Search />
 		</div>
 	</svelte:fragment>
 
