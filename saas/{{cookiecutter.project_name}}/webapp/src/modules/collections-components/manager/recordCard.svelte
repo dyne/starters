@@ -3,14 +3,14 @@
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import ItemCard from '@/components/custom/itemCard.svelte';
-	import { getCollectionManagerContext } from '../collectionManagerContext';
+	import { getCollectionManagerContext } from './collectionManagerContext';
 	import {
 		RecordShare,
 		RecordSelect,
 		RecordEdit,
 		RecordDelete,
 		type ItemAction
-	} from '../record-actions';
+	} from './record-actions';
 
 	//
 
