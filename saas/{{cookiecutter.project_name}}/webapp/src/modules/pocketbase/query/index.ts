@@ -77,7 +77,16 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	get searchFilter(): Option.Option<string> {
 		return Option.fromNullable(this.options.search).pipe(
 			Option.map((searchText) => {
-				const fieldNames = getCollectionModel(this.collection).schema.map((field) => field.name);
+				const fieldNames = getCollectionModel(this.collection)
+					.schema.filter(
+						(field) =>
+							field.type == 'text' ||
+							field.type == 'editor' ||
+							field.type == 'select' ||
+							field.type == 'email' ||
+							field.type == 'url'
+					)
+					.map((field) => field.name);
 				if (this.collection == 'users') fieldNames.push('email');
 				return fieldNames.map((f) => `${f} ~ "${searchText}"`).join(' || ');
 			})
