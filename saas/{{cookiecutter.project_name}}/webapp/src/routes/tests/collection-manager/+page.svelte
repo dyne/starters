@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { CollectionManager, RecordCreate, RecordCard } from '@/collections-components/manager';
+	import {
+		CollectionManager,
+		RecordCreate,
+		RecordCard,
+		CollectionManagerTable
+	} from '@/collections-components/manager';
 </script>
 
 <CollectionManager
@@ -27,4 +32,7 @@
 			</RecordCard>
 		{/each}
 	</div>
+
+	<CollectionManagerTable {records} fields={['id', 'text_field', 'relation_field', 'created']}
+	></CollectionManagerTable>
 </CollectionManager>

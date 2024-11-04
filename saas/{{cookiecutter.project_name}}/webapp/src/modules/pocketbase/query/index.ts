@@ -26,21 +26,23 @@ export type QueryResponse<
 		expand?: ResolveExpandOption<C, Expand>;
 	}>;
 
-type PocketbaseListOptions = Simplify<
-	Omit<RecordFullListOptions | RecordListOptions, 'perPage' | 'page'>
->;
+type PocketbaseListOptions = Simplify<RecordFullListOptions & RecordListOptions>;
 
 export type PocketbaseQueryOptions<C extends CollectionName, E extends ExpandQueryOption<C>> = {
 	expand: E;
 	filter: string;
 	exclude: RecordIdString[];
 	search: string;
-	sort: string;
+	sort: SortOption; // TODO - Improve type safety with keyof CollectionResponses[C] (currently it does not work cause of svelte issue)
 	perPage: number;
 	requestKey: string | null;
 	fetch: typeof fetch;
 	pocketbase: PocketBase;
 };
+
+type SortOption = [string, SortOrder];
+export type SortOrder = 'ASC' | 'DESC';
+export const DEFAULT_SORT_ORDER: SortOrder = 'ASC';
 
 export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOption<C>> {
 	constructor(
@@ -74,9 +76,17 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 		);
 	}
 
+	// Sort
+
+	get sortOption(): SortOption {
+		const { sort } = this.options;
+		console.log(sort);
+		return sort ?? ['created', DEFAULT_SORT_ORDER];
+	}
+
 	// Options
 
-	get filterOption(): Option.Option<string> {
+	get filterPbOption(): Option.Option<string> {
 		const filters = [this.baseFilter, this.excludeFilter, this.searchFilter]
 			.filter(Option.isSome)
 			.map(Option.getOrThrow)
@@ -87,27 +97,28 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 		return Option.some(filter);
 	}
 
-	get expandOption(): Option.Option<string> {
+	get expandPbOption(): Option.Option<string> {
 		return Option.fromNullable(this.options.expand).pipe(Option.map((expand) => expand.join(', ')));
 	}
 
-	get pocketbaseListOptions(): PocketbaseListOptions {
-		const {
-			sort = '-created',
-			fetch: fetchFn = fetch,
-			requestKey = null,
-			perPage = null
-		} = this.options;
-		// Important! Pocketbase wants `null`, not `undefined`!
+	get sortPbOption(): string {
+		return this.sortOption.reverse().join('').replace('ASC', '+').replace('DESC', '-');
+	}
 
-		return {
+	get pocketbaseListOptions(): PocketbaseListOptions {
+		const { fetch: fetchFn = fetch, requestKey = null, perPage } = this.options;
+
+		const options: PocketbaseListOptions = {
 			requestKey,
-			sort,
-			expand: this.expandOption.pipe(Option.getOrNull),
-			filter: this.filterOption.pipe(Option.getOrNull),
-			fetch: fetchFn,
-			perPage
+			sort: this.sortPbOption,
+			fetch: fetchFn
 		};
+
+		if (Option.isSome(this.expandPbOption)) options.expand = this.expandPbOption.value;
+		if (Option.isSome(this.filterPbOption)) options.filter = this.filterPbOption.value;
+		if (perPage) options.perPage = perPage;
+
+		return options;
 	}
 
 	//
@@ -119,5 +130,16 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	getList(currentPage: number): Promise<ListResult<QueryResponse<C, E>>> {
 		const { perPage } = this.options;
 		return pb.collection(this.collection).getList(currentPage, perPage, this.pocketbaseListOptions);
+	}
+
+	// Utils
+
+	// TODO - Improve to handle multiple sorts
+
+	flipSort() {
+		this.options.sort = [
+			this.sortOption[0],
+			this.sortOption[1] == DEFAULT_SORT_ORDER ? 'DESC' : 'ASC'
+		];
 	}
 }

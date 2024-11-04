@@ -1,5 +1,6 @@
 import CollectionManager from './collectionManager.svelte';
 import RecordCard from './recordCard.svelte';
-export { CollectionManager, RecordCard };
+import CollectionManagerTable from './table/collectionManagerTable.svelte';
+export { CollectionManager, RecordCard, CollectionManagerTable };
 
 export * from './record-actions';
