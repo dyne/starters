@@ -52,7 +52,7 @@ test.describe('it should test the collection manager', () => {
 		await submitButton.click();
 
 		await expect(page.getByRole('dialog')).toBeHidden();
-		await expect(page.getByText(recordName)).toBeVisible();
+		await expect(page.getByText(recordName).first()).toBeVisible();
 		await expect(page.getByRole('status')).toBeVisible();
 	});
 });
