@@ -64,9 +64,8 @@
 			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`
 		}}
 		hide={['emptyState']}
-		let:records
 	>
-		{#if records.length > 0}
+		<svelte:fragment slot="records" let:records>
 			<PageCard>
 				<SectionTitle title={m.organization_invites()} />
 
@@ -84,7 +83,7 @@
 					</PlainCard>
 				{/each}
 			</PageCard>
-		{/if}
+		</svelte:fragment>
 	</CollectionManager>
 
 	<CollectionManager
@@ -94,9 +93,8 @@
 			filter: `user.id = "${$currentUser?.id}"`
 		}}
 		hide={['emptyState']}
-		let:records
 	>
-		{#if records.length}
+		<svelte:fragment slot="records" let:records>
 			<PageCard>
 				<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
 
@@ -128,7 +126,7 @@
 					{/each}
 				</div>
 			</PageCard>
-		{/if}
+		</svelte:fragment>
 	</CollectionManager>
 
 	<PageCard>
@@ -151,13 +149,12 @@
 				expand: ['organization', 'role'],
 				filter: `user.id = "${$currentUser?.id}"`
 			}}
-			let:records
 		>
 			<svelte:fragment slot="emptyState">
 				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={Puzzle} />
 			</svelte:fragment>
 
-			{#if records.length > 0}
+			<svelte:fragment slot="records" let:records>
 				<div class="space-y-2">
 					{#each records as a}
 						{@const org = a.expand?.organization}
@@ -193,7 +190,7 @@
 						{/if}
 					{/each}
 				</div>
-			{/if}
+			</svelte:fragment>
 		</CollectionManager>
 	</PageCard>
 </PageContent>

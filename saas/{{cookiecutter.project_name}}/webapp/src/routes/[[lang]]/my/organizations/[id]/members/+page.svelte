@@ -56,7 +56,6 @@
 			editFormFieldsOptions={{
 				exclude: ['user', 'organization']
 			}}
-			let:records
 		>
 			<SectionTitle slot="top" title={m.Members()} description={m.members_description()}>
 				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
@@ -79,56 +78,58 @@
 				</ProtectedOrgUI>
 			</SectionTitle>
 
-			<div class="space-y-2">
-				{#each records as record}
-					{@const user = record.expand?.user}
-					{@const role = record.expand?.role}
-					{#if user && role && userRole}
-						<PlainCard>
-							<div class="flex items-center gap-4">
-								<UserAvatar {user}></UserAvatar>
-								<p>
-									{getUserDisplayName(user)}
-								</p>
-								<div class="flex gap-1">
-									{#if user.id == $currentUser?.id}
-										<Badge>{m.You()}</Badge>
-									{/if}
-									{#if role.name != OrgRoles.MEMBER}
-										<Badge variant="secondary">{capitalize(role.name)}</Badge>
-									{/if}
-								</div>
-							</div>
-
-							<svelte:fragment slot="right">
-								<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
-									<div class="space-x-1">
-										{#if userRole.level < role.level}
-											<RecordEdit {record}>
-												<svelte:fragment slot="trigger" let:builder>
-													<Button variant="outline" size="sm" builders={[builder]}>
-														{m.Edit_role()}
-														<Icon src={Pencil} ml />
-													</Button>
-												</svelte:fragment>
-											</RecordEdit>
-
-											<RecordDelete {record}>
-												<svelte:fragment slot="trigger" let:builder>
-													<Button variant="outline" size="sm" builders={[builder]}>
-														{m.Remove()}
-														<Icon src={X} ml />
-													</Button>
-												</svelte:fragment>
-											</RecordDelete>
+			<svelte:fragment slot="records" let:records>
+				<div class="space-y-2">
+					{#each records as record}
+						{@const user = record.expand?.user}
+						{@const role = record.expand?.role}
+						{#if user && role && userRole}
+							<PlainCard>
+								<div class="flex items-center gap-4">
+									<UserAvatar {user}></UserAvatar>
+									<p>
+										{getUserDisplayName(user)}
+									</p>
+									<div class="flex gap-1">
+										{#if user.id == $currentUser?.id}
+											<Badge>{m.You()}</Badge>
+										{/if}
+										{#if role.name != OrgRoles.MEMBER}
+											<Badge variant="secondary">{capitalize(role.name)}</Badge>
 										{/if}
 									</div>
-								</ProtectedOrgUI>
-							</svelte:fragment>
-						</PlainCard>
-					{/if}
-				{/each}
-			</div>
+								</div>
+
+								<svelte:fragment slot="right">
+									<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
+										<div class="space-x-1">
+											{#if userRole.level < role.level}
+												<RecordEdit {record}>
+													<svelte:fragment slot="trigger" let:builder>
+														<Button variant="outline" size="sm" builders={[builder]}>
+															{m.Edit_role()}
+															<Icon src={Pencil} ml />
+														</Button>
+													</svelte:fragment>
+												</RecordEdit>
+
+												<RecordDelete {record}>
+													<svelte:fragment slot="trigger" let:builder>
+														<Button variant="outline" size="sm" builders={[builder]}>
+															{m.Remove()}
+															<Icon src={X} ml />
+														</Button>
+													</svelte:fragment>
+												</RecordDelete>
+											{/if}
+										</div>
+									</ProtectedOrgUI>
+								</svelte:fragment>
+							</PlainCard>
+						{/if}
+					{/each}
+				</div>
+			</svelte:fragment>
 		</CollectionManager>
 	</PageCard>
 </OrganizationLayout>

@@ -18,10 +18,9 @@
 	queryOptions={{
 		filter: `organization.id = "${organization.id}"`
 	}}
-	let:records
 	hide={['emptyState']}
 >
-	{#if records.length}
+	<svelte:fragment slot="records" let:records>
 		<PageCard class="!space-y-6">
 			<SectionTitle
 				tag="h4"
@@ -45,13 +44,13 @@
 						</div>
 
 						<RecordDelete record={invite}>
-							<svelte:fragment slot="trigger" let:TrashIcon let:builder>
-								<IconButton variant="ghost" icon={TrashIcon} builders={[builder]} />
+							<svelte:fragment slot="trigger" let:icon let:builder>
+								<IconButton variant="ghost" {icon} builders={[builder]} />
 							</svelte:fragment>
 						</RecordDelete>
 					</div>
 				{/each}
 			</div>
 		</PageCard>
-	{/if}
+	</svelte:fragment>
 </CollectionManager>

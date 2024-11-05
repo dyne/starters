@@ -27,15 +27,16 @@
 			],
 			pocketbase: pb
 		}}
-		let:records
 	>
-		<List>
-			{#each records as r}
-				<ListItem>
-					<pre>{JSON.stringify(r, null, 2)}</pre>
-				</ListItem>
-			{/each}
-		</List>
+		<svelte:fragment slot="records" let:records>
+			<List>
+				{#each records as r}
+					<ListItem>
+						<pre>{JSON.stringify(r, null, 2)}</pre>
+					</ListItem>
+				{/each}
+			</List>
+		</svelte:fragment>
 	</CollectionManager>
 
 	<!--  -->
@@ -47,14 +48,15 @@
 			expand: ['role'],
 			pocketbase: pb
 		}}
-		let:records
 	>
-		<List>
-			{#each records as r}
-				<ListItem>
-					<pre>{JSON.stringify(r.expand?.role, null, 2)}</pre>
-				</ListItem>
-			{/each}
-		</List>
+		<svelte:fragment slot="records" let:records>
+			<List>
+				{#each records as r}
+					<ListItem>
+						<pre>{JSON.stringify(r.expand?.role, null, 2)}</pre>
+					</ListItem>
+				{/each}
+			</List>
+		</svelte:fragment>
 	</CollectionManager>
 {/await}

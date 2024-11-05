@@ -34,25 +34,28 @@
 
 	<CollectionManager
 		collection="webauthnCredentials"
-		let:records
 		editFormFieldsOptions={{ exclude: ['user', 'credential'] }}
 	>
-		<div class="space-y-2 py-4">
-			{#each records as record}
-				{@const label = Boolean(record.description) ? record.description : getCredentialId(record)}
-				<Card>
-					<div class="flex items-center justify-between gap-4">
-						<div class="w-0 grow overflow-hidden">
-							<T>{label}</T>
+		<svelte:fragment slot="records" let:records>
+			<div class="space-y-2 py-4">
+				{#each records as record}
+					{@const label = Boolean(record.description)
+						? record.description
+						: getCredentialId(record)}
+					<Card>
+						<div class="flex items-center justify-between gap-4">
+							<div class="w-0 grow overflow-hidden">
+								<T>{label}</T>
+							</div>
+							<div class="flex gap-2">
+								<RecordEdit {record} />
+								<RecordDelete {record} />
+							</div>
 						</div>
-						<div class="flex gap-2">
-							<RecordEdit {record} />
-							<RecordDelete {record} />
-						</div>
-					</div>
-				</Card>
-			{/each}
-		</div>
+					</Card>
+				{/each}
+			</div>
+		</svelte:fragment>
 	</CollectionManager>
 
 	{#await platformAuthenticatorAvailable}

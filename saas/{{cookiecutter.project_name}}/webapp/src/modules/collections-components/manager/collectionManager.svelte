@@ -1,4 +1,8 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
+	import RecordCard from './recordCard.svelte';
+
+	import CollectionTable from './table/collectionTable.svelte';
+
 	import {
 		PocketbaseQuery,
 		type ExpandQueryOption,
@@ -18,6 +22,7 @@
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 	import CollectionManagerSearch from './collectionManagerSearch.svelte';
+	import CollectionManagerHeader from './collectionManagerHeader.svelte';
 	import {
 		getCollectionModel,
 		getCollectionNameFromId,
@@ -172,7 +177,7 @@
 	});
 </script>
 
-<slot name="top" Search={CollectionManagerSearch} />
+<slot name="top" Search={CollectionManagerSearch} Header={CollectionManagerHeader} />
 
 {#if error}
 	<EmptyState
@@ -181,7 +186,14 @@
 		icon={MessageCircleWarning}
 	/>
 {:else if records.length > 0}
-	<slot {records} selectedRecords={$selectedRecords} Pagination={CollectionManagerPagination} />
+	<slot
+		name="records"
+		{records}
+		selectedRecords={$selectedRecords}
+		Pagination={CollectionManagerPagination}
+		Table={CollectionTable}
+		Card={RecordCard}
+	/>
 
 	{#if !hide.includes('pagination')}
 		<CollectionManagerPagination class="mt-6" />

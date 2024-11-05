@@ -45,10 +45,9 @@
 		filter: `organization.id = "${organization.id}" && status = "${pending}"`,
 		expand: ['user']
 	}}
-	let:records
 	hide={['emptyState']}
 >
-	{#if records.length}
+	<svelte:fragment slot="records" let:records>
 		<PageCard>
 			<SectionTitle
 				tag="h4"
@@ -115,5 +114,5 @@
 				{/each}
 			</div>
 		</PageCard>
-	{/if}
+	</svelte:fragment>
 </CollectionManager>
