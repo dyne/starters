@@ -51,7 +51,6 @@
 				perPage: 20
 			}}
 			subscribe="expand-collections"
-			let:records
 			hide={['emptyState']}
 		>
 			<svelte:fragment slot="top" let:Search>
@@ -62,55 +61,57 @@
 				<EmptyState title={m.No_available_organizations_found()} icon={Users} />
 			</svelte:fragment>
 
-			<div class="space-y-2">
-				{#each records as org}
-					{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
+			<svelte:fragment slot="records" let:records>
+				<div class="space-y-2">
+					{#each records as org}
+						{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
 
-					<PlainCard let:Title let:Description>
-						<svelte:fragment slot="left">
-							<OrganizationAvatar organization={org} />
-						</svelte:fragment>
+						<PlainCard let:Title let:Description>
+							<svelte:fragment slot="left">
+								<OrganizationAvatar organization={org} />
+							</svelte:fragment>
 
-						<div>
-							<Title>{org.name}</Title>
-							{#if org.description}
-								<Description>
-									<span class="line-clamp-2">
-										{@html org.description}
-									</span>
-								</Description>
-							{/if}
-						</div>
+							<div>
+								<Title>{org.name}</Title>
+								{#if org.description}
+									<Description>
+										<span class="line-clamp-2">
+											{@html org.description}
+										</span>
+									</Description>
+								{/if}
+							</div>
 
-						<div slot="right" class="shrink-0 self-start pl-8">
-							{#if !sentMembershipRequest}
-								<Dialog title={`${m.Send_a_request_to()} ${org.name}`}>
-									<svelte:fragment slot="trigger" let:builder>
-										<Button variant="outline" builders={[builder]}>
-											{m.Join()}
-											<Icon src={UserPlus} ml></Icon>
-										</Button>
-									</svelte:fragment>
-
-									<svelte:fragment slot="content" let:closeDialog>
-										<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
-										<div class="flex items-center justify-center gap-2 pt-4">
-											<Button variant="outline" on:click={closeDialog}>
-												{m.Cancel()}
+							<div slot="right" class="shrink-0 self-start pl-8">
+								{#if !sentMembershipRequest}
+									<Dialog title={`${m.Send_a_request_to()} ${org.name}`}>
+										<svelte:fragment slot="trigger" let:builder>
+											<Button variant="outline" builders={[builder]}>
+												{m.Join()}
+												<Icon src={UserPlus} ml></Icon>
 											</Button>
-											<Button on:click={() => sendJoinRequest(org).then(closeDialog)}>
-												{m.Send_join_request()}
-											</Button>
-										</div>
-									</svelte:fragment>
-								</Dialog>
-							{:else}
-								<Button variant="outline" disabled>{m.Request_sent()}</Button>
-							{/if}
-						</div>
-					</PlainCard>
-				{/each}
-			</div>
+										</svelte:fragment>
+
+										<svelte:fragment slot="content" let:closeDialog>
+											<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
+											<div class="flex items-center justify-center gap-2 pt-4">
+												<Button variant="outline" on:click={closeDialog}>
+													{m.Cancel()}
+												</Button>
+												<Button on:click={() => sendJoinRequest(org).then(closeDialog)}>
+													{m.Send_join_request()}
+												</Button>
+											</div>
+										</svelte:fragment>
+									</Dialog>
+								{:else}
+									<Button variant="outline" disabled>{m.Request_sent()}</Button>
+								{/if}
+							</div>
+						</PlainCard>
+					{/each}
+				</div>
+			</svelte:fragment>
 		</CollectionManager>
 	</PageCard>
 </PageContent>

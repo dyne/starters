@@ -1,10 +1,5 @@
 <script lang="ts">
-	import {
-		CollectionManager,
-		RecordCreate,
-		RecordCard,
-		CollectionTable
-	} from '@/collections-components/manager';
+	import { CollectionManager } from '@/collections-components/manager';
 </script>
 
 <CollectionManager
@@ -13,26 +8,25 @@
 		expand: ['relation_field'],
 		perPage: 6
 	}}
-	let:records
 >
-	<svelte:fragment slot="top" let:Search>
-		<div class="mb-4 flex justify-end gap-2">
-			<RecordCreate />
-		</div>
-		<div class="mb-4">
+	<svelte:fragment slot="top" let:Search let:Header>
+		<Header />
+
+		<div class="mb-4 mt-4">
 			<Search />
 		</div>
 	</svelte:fragment>
 
-	<CollectionTable {records} fields={['id', 'text_field', 'relation_field', 'created']}
-	></CollectionTable>
+	<svelte:fragment slot="records" let:records let:Table let:Card>
+		<Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table>
 
-	<div class="mt-4 space-y-2">
-		{#each records as record}
-			<RecordCard {record} let:Title let:Description>
-				<Title>{record.text_field}</Title>
-				<Description>{record.expand?.relation_field?.email}</Description>
-			</RecordCard>
-		{/each}
-	</div>
+		<div class="mt-4 space-y-2">
+			{#each records as record}
+				<Card {record} let:Title let:Description>
+					<Title>{record.text_field}</Title>
+					<Description>{record.expand?.relation_field?.email}</Description>
+				</Card>
+			{/each}
+		</div>
+	</svelte:fragment>
 </CollectionManager>
