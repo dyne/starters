@@ -5,17 +5,17 @@
 	import ItemCard from '@/components/custom/itemCard.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import {
-		RecordShare,
 		RecordSelect,
+		type RecordAction,
 		RecordEdit,
-		RecordDelete,
-		type ItemAction
+		RecordShare,
+		RecordDelete
 	} from './record-actions';
 
 	//
 
 	export let record: CollectionResponses[C];
-	export let hide: Array<ItemAction> = [];
+	export let hide: Array<RecordAction> = [];
 
 	let className = '';
 	export { className as class };
@@ -41,6 +41,7 @@
 
 	<svelte:fragment slot="right">
 		<slot name="right" {record} />
+
 		{#if !hide.includes('edit')}
 			<RecordEdit {record} />
 		{/if}

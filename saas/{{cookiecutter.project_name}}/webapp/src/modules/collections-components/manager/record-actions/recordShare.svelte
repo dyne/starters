@@ -1,4 +1,5 @@
 <script lang="ts" generics="C extends CollectionName">
+	import IconButton from '@/components/custom/iconButton.svelte';
 	import { toast } from 'svelte-sonner';
 	import { getExceptionMessage } from '@/utils/errors';
 	import { m } from '@/i18n';
@@ -69,10 +70,8 @@
 
 <Dialog bind:open={$dialogState} title={dialogTitle} contentClass="my-0">
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" open={dialogState.on} {builder}>
-			<Button variant="outline" size="icon" builders={[builder]}>
-				<Icon src={Share} />
-			</Button>
+		<slot name="trigger" open={dialogState.on} {builder} icon={Share}>
+			<IconButton variant="outline" icon={Share} builders={[builder]} />
 		</slot>
 	</svelte:fragment>
 

@@ -437,5 +437,6 @@
 	"Invitation_declined": "Invitation declined",
 	"An_error_occurred_while_processing_your_request": "An error occurred while processing your request",
 	"Value_does_not_match_regex_pattern": "Value does not match regex pattern {pattern}",
-	"No_records_found": "No records found"
+	"No_records_found": "No records found",
+	"Actions": "Actions"
 }
