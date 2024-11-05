@@ -49,7 +49,7 @@
 
 <Sheet bind:open={$show} {title}>
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" {builder} icon={Pencil}>
+		<slot name="trigger" open={show.on} {builder} icon={Pencil}>
 			<IconButton variant="outline" icon={Pencil} builders={[builder]} />
 		</slot>
 	</svelte:fragment>

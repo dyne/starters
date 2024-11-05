@@ -49,7 +49,7 @@
 
 <Dialog bind:open={$dialogState} title={dialogTitle}>
 	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" openModal={dialogState.on} {builder} TrashIcon={Trash}>
+		<slot name="trigger" openModal={dialogState.on} {builder} icon={Trash}>
 			<IconButton icon={Trash} builders={[builder]} />
 		</slot>
 	</svelte:fragment>

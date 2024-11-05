@@ -8,7 +8,7 @@
 	import { capitalize } from 'lodash';
 	import { ArrowUp, ArrowDown } from 'lucide-svelte';
 
-	export let field: KeyOf<T> | string;
+	export let field: KeyOf<T>;
 	export let label: string | undefined = undefined;
 
 	const { pocketbaseQuery } = getCollectionManagerContext();

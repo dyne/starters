@@ -3,7 +3,7 @@
 		CollectionManager,
 		RecordCreate,
 		RecordCard,
-		CollectionManagerTable
+		CollectionTable
 	} from '@/collections-components/manager';
 </script>
 
@@ -24,7 +24,10 @@
 		</div>
 	</svelte:fragment>
 
-	<div class="space-y-2">
+	<CollectionTable {records} fields={['id', 'text_field', 'relation_field', 'created']}
+	></CollectionTable>
+
+	<div class="mt-4 space-y-2">
 		{#each records as record}
 			<RecordCard {record} let:Title let:Description>
 				<Title>{record.text_field}</Title>
@@ -32,7 +35,4 @@
 			</RecordCard>
 		{/each}
 	</div>
-
-	<CollectionManagerTable {records} fields={['id', 'text_field', 'relation_field', 'created']}
-	></CollectionManagerTable>
 </CollectionManager>

@@ -1,4 +1,8 @@
-import { getCollectionModel, type CollectionName } from '@/pocketbase/collections-models';
+import {
+	getCollectionModel,
+	type CollectionName,
+	type SchemaFieldType
+} from '@/pocketbase/collections-models';
 import type { CollectionExpands, CollectionResponses, RecordIdString } from '@/pocketbase/types';
 import type { KeyOf } from '@/utils/types';
 import PocketBase, {
@@ -77,15 +81,9 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 	get searchFilter(): Option.Option<string> {
 		return Option.fromNullable(this.options.search).pipe(
 			Option.map((searchText) => {
+				const allowedFieldTypes: SchemaFieldType[] = ['text', 'editor', 'select', 'email', 'url'];
 				const fieldNames = getCollectionModel(this.collection)
-					.schema.filter(
-						(field) =>
-							field.type == 'text' ||
-							field.type == 'editor' ||
-							field.type == 'select' ||
-							field.type == 'email' ||
-							field.type == 'url'
-					)
+					.schema.filter((field) => allowedFieldTypes.includes(field.type))
 					.map((field) => field.name);
 				if (this.collection == 'users') fieldNames.push('email');
 				return fieldNames.map((f) => `${f} ~ "${searchText}"`).join(' || ');
