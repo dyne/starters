@@ -1,21 +1,16 @@
 <script lang="ts">
 	import Title from './itemCardTitle.svelte';
 	import Description from './itemCardDescription.svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		class?: string;
-		left?: import('svelte').Snippet;
-		children?: import('svelte').Snippet<[any]>;
-		right?: import('svelte').Snippet;
+		left?: Snippet;
+		children?: Snippet<[{ Title: typeof Title; Description: typeof Description }]>;
+		right?: Snippet;
 	}
 
-	let {
-		class: className = '',
-		left,
-		children,
-		right
-	}: Props = $props();
-	
+	let { class: className = '', left, children, right }: Props = $props();
 </script>
 
 <div class="flex items-center gap-4 rounded-lg border p-4 {className}">
@@ -26,7 +21,7 @@
 	{/if}
 
 	<div class="w-0 grow overflow-hidden">
-		{@render children?.({ Title, Description, })}
+		{@render children?.({ Title, Description })}
 	</div>
 
 	{#if right}

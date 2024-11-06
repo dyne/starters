@@ -16,8 +16,6 @@
 	import { capitalize } from 'effect/String';
 	import RequiredIndicator from '../components/requiredIndicator.svelte';
 
-	
-
 	interface Props {
 		//
 		form: SuperForm<Data, any>;
@@ -26,12 +24,7 @@
 		children?: import('svelte').Snippet;
 	}
 
-	let {
-		form,
-		name,
-		options = {},
-		children
-	}: Props = $props();
+	let { form, name, options = {}, children }: Props = $props();
 
 	//
 
@@ -39,20 +32,18 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control >
-		{#snippet children({ attrs })}
-				<div class="flex items-center gap-2">
-				<Checkbox {...attrs} bind:checked={$value} />
+	<Form.Control let:attrs>
+		<div class="flex items-center gap-2">
+			<Checkbox {...attrs} bind:checked={$value} />
 
-				<Form.Label>
-					{#if children}{@render children()}{:else}
-						{options.label ?? capitalize(name)}
-					{/if}
-					<RequiredIndicator field={name} />
-				</Form.Label>
-			</div>
-					{/snippet}
-		</Form.Control>
+			<Form.Label>
+				{#if children}{@render children()}{:else}
+					{options.label ?? capitalize(name)}
+				{/if}
+				<RequiredIndicator field={name} />
+			</Form.Label>
+		</div>
+	</Form.Control>
 
 	{#if options.description}
 		<Form.Description>{options.description}</Form.Description>

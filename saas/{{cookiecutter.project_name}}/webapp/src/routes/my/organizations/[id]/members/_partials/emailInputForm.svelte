@@ -104,7 +104,7 @@
 
 	{#if isFormTainted($tainted) && emails.length == 0}
 		<Alert variant="warning">
-			{#snippet children({ Title, Description })}
+			{#snippet content({ Title, Description })}
 				<Title>{m.Warning()}</Title>
 				<Description>
 					{m.We_havent_found_any_emails_in_the_provided_documents_please_upload_a_new_file_or_paste_new_content_()}
@@ -115,7 +115,7 @@
 
 	{#if emails.length}
 		<Alert variant="success" class="!p-4">
-			{#snippet children({ Title })}
+			{#snippet content({ Title })}
 				<div class="flex items-center justify-between gap-2">
 					<Title><span class="mr-1">✅</span> {emails.length} {m.Emails_found()}</Title>
 					<!-- <SubmitButton variant="default">

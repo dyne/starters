@@ -11,13 +11,11 @@
 	collection="z_test_collection"
 	recordId={data.record.id}
 	initialData={data.record}
-	
 	onSuccess={(record) => {
 		toast.success(JSON.stringify(record));
 		invalidateAll();
 	}}
+	let:form
 >
-	{#snippet children({ form })}
-		<FormDebug {form} />
-	{/snippet}
+	<FormDebug {form} />
 </CollectionForm>

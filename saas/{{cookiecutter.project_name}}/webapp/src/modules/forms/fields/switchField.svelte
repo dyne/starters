@@ -15,8 +15,6 @@
 
 	import { capitalize } from 'effect/String';
 
-	
-
 	interface Props {
 		//
 		form: SuperForm<Data, any>;
@@ -32,14 +30,12 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control >
-		{#snippet children({ attrs })}
-				<div class="flex items-center gap-2">
-				<Switch {...attrs} includeInput bind:checked={$value} />
-				<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
-			</div>
-					{/snippet}
-		</Form.Control>
+	<Form.Control let:attrs>
+		<div class="flex items-center gap-2">
+			<Switch {...attrs} includeInput bind:checked={$value} />
+			<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
+		</div>
+	</Form.Control>
 
 	{#if options.description}
 		<Form.Description>{options.description}</Form.Description>

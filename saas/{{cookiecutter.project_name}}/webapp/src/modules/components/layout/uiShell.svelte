@@ -37,14 +37,9 @@
 		children?: import('svelte').Snippet;
 	}
 
-	let {
-		sidebarLayoutBreakpoint = undefined,
-		top,
-		sidebar,
-		children
-	}: Props = $props();
+	let { sidebarLayoutBreakpoint = undefined, top, sidebar, children }: Props = $props();
 
-	let windowWidth: number = $state();
+	let windowWidth = $state(0);
 
 	const showSidebar = createToggleStore(false);
 	const sidebarMode = writable<SidebarMode>('default');
@@ -78,7 +73,7 @@
 
 <Resizable.PaneGroup direction="vertical" class="!h-screen !w-screen">
 	<div class="shrink-0">
-		{@render top?.({ sidebarMode: $sidebarMode, toggleSidebar, })}
+		{@render top?.({ sidebarMode: $sidebarMode, toggleSidebar })}
 	</div>
 
 	<Resizable.PaneGroup direction="horizontal">

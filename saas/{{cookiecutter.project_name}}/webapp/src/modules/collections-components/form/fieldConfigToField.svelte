@@ -9,11 +9,6 @@
 	import type { Selected } from '@/components/custom/selectInput.svelte';
 	import type { FieldComponentProp } from './fieldComponent';
 
-	
-
-
-
-
 	interface Props {
 		//
 		fieldConfig: AnySchemaField;
@@ -21,10 +16,7 @@
 		description?: string | undefined;
 		placeholder?: string | undefined;
 		hidden?: boolean;
-		collectionFieldOptions?: Omit<
-		CollectionFieldOptions<C, ExpandQueryOption<C>>,
-		'collection'
-	>;
+		collectionFieldOptions?: Omit<CollectionFieldOptions<C, ExpandQueryOption<C>>, 'collection'>;
 		component?: FieldComponentProp | undefined;
 	}
 
@@ -46,21 +38,21 @@
 
 	/* Select */
 
-	let items: Selected<string>[] = $state([]);
+	let items: Selected<string>[] = [];
 	if (fieldConfig.type == 'select' && fieldConfig.options.values) {
 		items = fieldConfig.options.values.map((v) => ({ label: v, value: v }));
 	}
 
 	/* File */
 
-	let accept: string = $state();
+	let accept: string | undefined = undefined;
 	if (fieldConfig.type == 'file' && fieldConfig.options.mimeTypes) {
 		accept = fieldConfig.options.mimeTypes.join(',');
 	}
 
 	/* Relation */
 
-	let collectionName: C = $state();
+	let collectionName: C | undefined = undefined;
 	if (fieldConfig.type == 'relation' && fieldConfig.options.collectionId) {
 		const collectionId = fieldConfig.options.collectionId;
 		collectionName = getCollectionNameFromId(collectionId) as C;
@@ -91,7 +83,7 @@
 	<SelectField {form} {name} options={{ label, items, multiple, description, placeholder }} />
 {:else if fieldConfig.type == 'editor'}
 	<TextareaField {form} {name} options={{ label, description, placeholder }} />
-{:else if fieldConfig.type == 'relation'}
+{:else if fieldConfig.type == 'relation' && collectionName}
 	<CollectionField
 		{form}
 		{name}

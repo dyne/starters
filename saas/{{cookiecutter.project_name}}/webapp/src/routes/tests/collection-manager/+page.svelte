@@ -9,30 +9,26 @@
 		perPage: 6
 	}}
 >
-	{#snippet top({ Search, Header })}
-	
-			<Header />
+	<svelte:fragment slot="top" let:Search let:Header>
+		<Header />
 
-			<div class="mb-4 mt-4">
-				<Search />
-			</div>
-		
-	{/snippet}
+		<div class="mb-4 mt-4">
+			<Search />
+		</div>
+	</svelte:fragment>
 
-	{#snippet records({ records, Table, Card })}
-	
-			<Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table>
+	<svelte:fragment slot="records" let:records let:Table let:Card>
+		<Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table>
 
-			<div class="mt-4 space-y-2">
-				{#each records as record}
-					<Card {record}  >
-						{#snippet children({ Title, Description })}
-										<Title>{record.text_field}</Title>
-							<Description>{record.expand?.relation_field?.email}</Description>
-															{/snippet}
-								</Card>
-				{/each}
-			</div>
-		
-	{/snippet}
+		<div class="mt-4 space-y-2">
+			{#each records as record}
+				<Card {record}>
+					{#snippet children({ Title, Description })}
+						<Title>{record.text_field}</Title>
+						<Description>{record.expand?.relation_field?.email}</Description>
+					{/snippet}
+				</Card>
+			{/each}
+		</div>
+	</svelte:fragment>
 </CollectionManager>

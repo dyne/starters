@@ -12,9 +12,9 @@
 </script>
 
 {#if error}
-	<Alert variant="destructive" icon={TriangleAlert}  >
-		{#snippet children({ Title, Description })}
-				<Title>{m.Error()}</Title>
+	<Alert variant="destructive" icon={TriangleAlert}>
+		{#snippet content({ Title, Description })}
+			<Title>{m.Error()}</Title>
 			<Description>
 				{#if error.messages.length > 0}
 					{#each error.messages as message}
@@ -22,6 +22,6 @@
 					{/each}
 				{/if}
 			</Description>
-					{/snippet}
-		</Alert>
+		{/snippet}
+	</Alert>
 {/if}

@@ -1,11 +1,11 @@
 <script lang="ts" module>
-	import clsx from 'clsx';
 	import type { NavigationTabProps as NavigationTab } from './navigationTab.svelte';
 	export { type NavigationTab };
 </script>
 
 <script lang="ts">
 	import NavigationTabComponent from './navigationTab.svelte';
+	import { cn } from '@/components/utils';
 
 	interface Props {
 		tabs?: NavigationTab[];
@@ -14,10 +14,12 @@
 
 	let { tabs = [], overflow = 'scroll' }: Props = $props();
 
-	let classes = $derived(clsx('flex gap-1', {
-		'overflow-x-auto': overflow == 'scroll',
-		'flex-wrap': overflow == 'wrap'
-	}));
+	let classes = $derived(
+		cn('flex gap-1', {
+			'overflow-x-auto': overflow == 'scroll',
+			'flex-wrap': overflow == 'wrap'
+		})
+	);
 </script>
 
 <ul class={classes}>

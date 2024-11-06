@@ -6,14 +6,12 @@
 
 <CollectionForm
 	collection="z_test_collection"
-	
 	onSuccess={(record) => {
 		toast.success(JSON.stringify(record));
 	}}
+	let:form
 >
-	{#snippet children({ form })}
-		<FormDebug {form} />
-	{/snippet}
+	<FormDebug {form} />
 </CollectionForm>
 
 <!-- 

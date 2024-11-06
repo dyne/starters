@@ -1,23 +1,21 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n';
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-	import { i18n } from '@/i18n';
-
+	import '../app.css';
+	import { appTitle } from '@/utils/strings';
 	import { Toaster } from '@/components/ui/sonner';
 
-	import '../app.postcss';
-	import { version } from '$app/environment';
-	import { appTitle } from '@/utils/strings';
-	interface Props {
-		children?: import('svelte').Snippet;
-	}
-
-	let { children }: Props = $props();
-
-	console.info(`${appTitle} version: 🔖 ${version}`);
+	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>
+		{appTitle}
+	</title>
+</svelte:head>
+
 <ParaglideJS {i18n}>
-	{@render children?.()}
+	{@render children()}
 </ParaglideJS>
 
 <Toaster richColors closeButton />

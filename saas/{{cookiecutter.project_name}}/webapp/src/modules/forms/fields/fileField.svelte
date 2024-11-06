@@ -1,11 +1,7 @@
-<script module lang="ts">
-	import type { GenericRecord, If, IsArray } from '@/utils/types';
-</script>
-
 <script lang="ts" generics="Data extends GenericRecord">
+	import type { GenericRecord, If, IsArray } from '@/utils/types';
 	import type { SuperForm, FormPath } from 'sveltekit-superforms';
 	import { fieldProxy } from 'sveltekit-superforms';
-
 	import * as Form from '@/components/ui/form';
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import FileManager, {
@@ -13,13 +9,10 @@
 		type RejectedFile
 	} from '@/components/custom/fileManager.svelte';
 	import Input from '@/components/ui/input/input.svelte';
-	import { buttonVariants } from '@/components/ui/button';
 	import type { FieldOptions } from './types';
 	import type { Writable } from 'svelte/store';
 	import type { ComponentProps } from 'svelte';
 	import { pipe, Tuple } from 'effect';
-
-	
 
 	interface Props {
 		//
@@ -135,25 +128,23 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} >
+	<FieldWrapper field={name} {options}>
 		{#snippet children({ attrs })}
-				<FileManager bind:data={$valueProxy} {validator} {multiple} >
-				{#snippet children({ addFiles })}
-						<Input
-						{...attrs}
-						{...options}
-						placeholder="Upload a file"
-						type="file"
-						class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
-						on:change={(e) => {
-							const fileList = e.currentTarget.files;
-							if (fileList) addFiles([...fileList]);
-							e.currentTarget.value = '';
-						}}
-					/>
-					<!-- e.currentTarget.value = '' is needed to clear the file input -->
-									{/snippet}
-				</FileManager>
-					{/snippet}
-		</FieldWrapper>
+			<FileManager bind:data={$valueProxy} {validator} {multiple} let:addFiles>
+				<Input
+					{...attrs}
+					{...options}
+					placeholder="Upload a file"
+					type="file"
+					class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
+					on:change={(e) => {
+						const fileList = e.currentTarget.files;
+						if (fileList) addFiles([...fileList]);
+						e.currentTarget.value = '';
+					}}
+				/>
+				<!-- e.currentTarget.value = '' is needed to clear the file input -->
+			</FileManager>
+		{/snippet}
+	</FieldWrapper>
 </Form.Field>

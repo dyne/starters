@@ -1,7 +1,15 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
-export const storageState = 'playwright/.auth/user.json';
+import { defineConfig } from '@playwright/test';
 
-const config: PlaywrightTestConfig = {
+export const storageState = 'test-results/.auth/user.json';
+
+export default defineConfig({
+	webServer: {
+		command: 'pnpm build && pnpm preview',
+		port: 4173
+	},
+
+	testDir: 'e2e',
+
 	projects: [
 		{ name: 'setup', testMatch: /.*\.setup\.ts/ },
 		{
@@ -20,13 +28,5 @@ const config: PlaywrightTestConfig = {
 			},
 			dependencies: ['setup']
 		}
-	],
-	webServer: {
-		command: 'npm run preview',
-		port: 4173,
-		reuseExistingServer: true
-	},
-	testDir: 'tests'
-};
-
-export default config;
+	]
+});

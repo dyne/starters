@@ -11,66 +11,61 @@
 		RecordShare,
 		RecordDelete
 	} from './record-actions';
-
-	
-
+	import type { Snippet } from 'svelte';
+	import type ItemCardTitle from '@/components/custom/itemCardTitle.svelte';
+	import type ItemCardDescription from '@/components/custom/itemCardDescription.svelte';
 
 	interface Props {
 		//
 		record: CollectionResponses[C];
 		hide?: Array<RecordAction>;
 		class?: string;
-		children?: import('svelte').Snippet<[any]>;
-		right?: import('svelte').Snippet<[any]>;
+		children?: Snippet<[{ Title: typeof ItemCardTitle; Description: typeof ItemCardDescription }]>;
+		right?: Snippet<[{ record: CollectionResponses[C] }]>;
 	}
 
 	let {
 		record,
 		hide = [],
 		class: className = '',
-		children,
-		right
+		children: children_render,
+		right: right_render
 	}: Props = $props();
-	
 
 	//
 
 	const { selectionContext: selection } = getCollectionManagerContext();
 	const { selectedRecords } = selection;
 
-	let classes = $derived(cn(className, {
-		'border-primary': $selectedRecords.includes(record.id)
-	}));
-
-	const right_render = $derived(right);
+	let classes = $derived(
+		cn(className, {
+			'border-primary': $selectedRecords.includes(record.id)
+		})
+	);
 </script>
 
-<ItemCard class="{classes} "  >
+<ItemCard class="{classes} ">
 	{#snippet left()}
-	
-			{#if !hide.includes('select')}
-				<RecordSelect {record} />
-			{/if}
-		
+		{#if !hide.includes('select')}
+			<RecordSelect {record} />
+		{/if}
 	{/snippet}
 
 	{#snippet children({ Title, Description })}
-		{@render children?.({ Title, Description, })}
+		{@render children_render?.({ Title, Description })}
+	{/snippet}
 
-		{/snippet}
 	{#snippet right()}
-	
-			{@render right_render?.({ record, })}
+		{@render right_render?.({ record })}
 
-			{#if !hide.includes('edit')}
-				<RecordEdit {record} />
-			{/if}
-			{#if !hide.includes('share')}
-				<RecordShare {record} />
-			{/if}
-			{#if !hide.includes('delete')}
-				<RecordDelete {record} />
-			{/if}
-		
+		{#if !hide.includes('edit')}
+			<RecordEdit {record} />
+		{/if}
+		{#if !hide.includes('share')}
+			<RecordShare {record} />
+		{/if}
+		{#if !hide.includes('delete')}
+			<RecordDelete {record} />
+		{/if}
 	{/snippet}
 </ItemCard>

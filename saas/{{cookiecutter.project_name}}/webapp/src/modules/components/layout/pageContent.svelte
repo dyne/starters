@@ -1,8 +1,5 @@
 <script lang="ts">
-	import clsx from 'clsx';
-
-	
-
+	import { cn } from '../utils';
 
 	interface Props {
 		//
@@ -12,14 +9,15 @@
 	}
 
 	let { layout = 'vertical', class: className = '', children }: Props = $props();
-	
 
 	//
 
-	let classes = $derived(clsx('px-10 py-8', className, {
-		'flex items-start gap-8': layout == 'horizontal',
-		'space-y-8': layout == 'vertical'
-	}));
+	let classes = $derived(
+		cn('px-10 py-8', className, {
+			'flex items-start gap-8': layout == 'horizontal',
+			'space-y-8': layout == 'vertical'
+		})
+	);
 </script>
 
 <div class={classes}>

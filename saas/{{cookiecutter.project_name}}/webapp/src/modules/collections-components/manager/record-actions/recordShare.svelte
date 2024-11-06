@@ -17,8 +17,6 @@
 	import Alert from '@/components/custom/alert.svelte';
 	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
 
-	
-
 	interface Props {
 		//
 		record: CollectionResponses[C];
@@ -42,7 +40,6 @@
 	const loadingState = createToggleStore(false);
 
 	let formState: 'default' | 'removeAccess' = $state('default');
-
 
 	async function loadAuthorization(recordId: RecordIdString) {
 		const records = await pb
@@ -84,87 +81,87 @@
 
 <Dialog bind:open={$dialogState} title={dialogTitle} contentClass="my-0">
 	{#snippet trigger({ builder })}
-	
-			{#if trigger_render}{@render trigger_render({ open: dialogState.on, builder, icon: Share, })}{:else}
-				<IconButton variant="outline" icon={Share} builders={[builder]} />
-			{/if}
-		
+		{#if trigger_render}{@render trigger_render({
+				open: dialogState.on,
+				builder,
+				icon: Share
+			})}{:else}
+			<IconButton variant="outline" icon={Share} builders={[builder]} />
+		{/if}
 	{/snippet}
 
 	{#snippet content()}
-	
-			{#await authorizationPromise}
-				<div class="flex items-center justify-center self-stretch p-6">
-					<Spinner />
-				</div>
-			{:then authorization}
-				{#if formState == 'default'}
-					<CollectionForm
-						collection="authorizations"
-						onSuccess={handleSuccess}
-						initialData={authorization}
-						recordId={authorization?.id}
-						uiOptions={{
-							submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
-							triggerToast: true,
-							toastText: m.Record_shared_successfully()
-						}}
-						fieldsOptions={{
-							hide: {
-								record_id: record.id,
-								collection_id: record.collectionId,
-								owner: $currentUser?.id
-							},
-							relations: {
-								users: {
-									displayFields: ['name'],
-									exclude: [$currentUser?.id ?? '']
-								}
+		{#await authorizationPromise}
+			<div class="flex items-center justify-center self-stretch p-6">
+				<Spinner />
+			</div>
+		{:then authorization}
+			{#if formState == 'default'}
+				<CollectionForm
+					collection="authorizations"
+					onSuccess={handleSuccess}
+					initialData={authorization}
+					recordId={authorization?.id}
+					uiOptions={{
+						submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
+						triggerToast: true,
+						toastText: m.Record_shared_successfully()
+					}}
+					fieldsOptions={{
+						hide: {
+							record_id: record.id,
+							collection_id: record.collectionId,
+							owner: $currentUser?.id
+						},
+						relations: {
+							users: {
+								displayFields: ['name'],
+								exclude: [$currentUser?.id ?? '']
 							}
-						}}
-					>
-						<!-- @migration-task: migrate this slot by hand, `footer-left` is an invalid identifier -->
-	<svelte:fragment slot="footer-left">
-							{#if authorization}
-								<Button variant="destructive" on:click={() => (formState = 'removeAccess')}>
-									<Icon src={Trash} mr />
-									{m.Remove_access()}
-								</Button>
-							{/if}
-						</svelte:fragment>
-					</CollectionForm>
-				{:else if formState == 'removeAccess' && authorization}
-					<T>{m.Are_you_sure_you_want_to_remove_access_to_the_record()}</T>
+						}
+					}}
+				>
+					<!-- @migration-task: migrate this slot by hand, `footer-left` is an invalid identifier -->
+					<svelte:fragment slot="footer-left">
+						{#if authorization}
+							<Button variant="destructive" on:click={() => (formState = 'removeAccess')}>
+								<Icon src={Trash} mr />
+								{m.Remove_access()}
+							</Button>
+						{/if}
+					</svelte:fragment>
+				</CollectionForm>
+			{:else if formState == 'removeAccess' && authorization}
+				<T>{m.Are_you_sure_you_want_to_remove_access_to_the_record()}</T>
 
-					{#if error}
-						<Alert variant="destructive"  >
-							{#snippet children({ Title, Description })}
-														<Title>{m.Error()}</Title>
-								<Description>{getExceptionMessage(error)}</Description>
-																				{/snippet}
-												</Alert>
-					{/if}
-
-					<div class="mt-4 flex justify-between">
-						<Button variant="outline" on:click={() => (formState = 'default')}>
-							<Icon src={ArrowLeft} mr />
-							{m.Back()}
-						</Button>
-						<Button variant="destructive" on:click={() => removeAuthorization(authorization.id)}>
-							<Icon src={Trash} mr />
-							{m.Yes_remove_access()}
-						</Button>
-					</div>
+				{#if error}
+					<Alert variant="destructive">
+						{#snippet content({ Title, Description })}
+							<Title>{m.Error()}</Title>
+							<Description>{getExceptionMessage(error)}</Description>
+						{/snippet}
+					</Alert>
 				{/if}
-			{:catch error}
-				<Alert variant="destructive"  >
-					{#snippet children({ Title, Description })}
-								<Title>{m.Error()}</Title>
-						<Description>{getExceptionMessage(error)}</Description>
-												{/snippet}
-						</Alert>
-			{/await}
-		
+
+				<div class="mt-4 flex justify-between">
+					<Button variant="outline" on:click={() => (formState = 'default')}>
+						<Icon src={ArrowLeft} mr />
+						{m.Back()}
+					</Button>
+					<Button variant="destructive" on:click={() => removeAuthorization(authorization.id)}>
+						<Icon src={Trash} mr />
+						{m.Yes_remove_access()}
+					</Button>
+				</div>
+			{/if}
+		{:catch error}
+			<Alert variant="destructive">
+				{#snippet content({ Title, Description })}
+					<Title>{m.Error()}</Title>
+					<Description>{getExceptionMessage(error)}</Description>
+				{/snippet}
+			</Alert>
+		{/await}
 	{/snippet}
 </Dialog>
 

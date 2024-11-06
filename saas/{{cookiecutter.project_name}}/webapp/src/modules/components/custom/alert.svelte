@@ -1,24 +1,22 @@
 <script lang="ts">
 	import * as Alert from '@/components/ui/alert/index.js';
 	import Icon from './icon.svelte';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import type { IconComponent } from '@/components/types';
 	import { cn } from '../utils';
-	interface Props {
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
-	}
 
-	let { ...props_1 }: Props = $props();
+	type Props = ComponentProps<typeof Alert.Root> & {
+		content?: Snippet<[{ Title: typeof Alert.Title; Description: typeof Alert.Description }]>;
+		icon?: IconComponent;
+	};
 
-	type $$Props = ComponentProps<Alert.Root> & { icon?: IconComponent };
-	let props = $derived(props_1 as $$Props);
+	let { content, icon, ...alertProps }: Props = $props();
 </script>
 
-<Alert.Root {...props_1} class="{props_1.class} {cn({ '!p-4': !Boolean(props_1.icon) })}">
-	{#if props.icon}
-		<Icon src={props.icon} size={16}></Icon>
+<Alert.Root {...alertProps} class="{alertProps.class} {cn({ '!p-4': !icon })}">
+	{#if icon}
+		<Icon src={icon} size={16} />
 	{/if}
 
-	{@render props_1.children?.({ Title: Alert.Title, Description: Alert.Description, })}
+	{@render content?.({ Title: Alert.Title, Description: Alert.Description })}
 </Alert.Root>

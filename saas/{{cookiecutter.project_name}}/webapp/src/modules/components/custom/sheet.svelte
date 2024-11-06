@@ -9,12 +9,6 @@
 
 	type SheetSide = ComponentProps<Sheet.Content>['side'];
 
-
-
-	
-
-	
-
 	interface Props {
 		side?: SheetSide;
 		title?: string | undefined;
@@ -49,15 +43,13 @@
 </script>
 
 <Sheet.Root bind:open={isOpen} portal="body">
-	<Sheet.Trigger asChild >
-		{#snippet children({ builder })}
-				{#if trigger}{@render trigger({ builder, open, })}{:else}
-				<Button builders={[builder]} class="shrink-0" variant="outline">
-					{@render children?.()}
-				</Button>
-			{/if}
-					{/snippet}
-		</Sheet.Trigger>
+	<Sheet.Trigger asChild let:builder>
+		{#if trigger}{@render trigger({ builder, open })}{:else}
+			<Button builders={[builder]} class="shrink-0" variant="outline">
+				{@render children?.()}
+			</Button>
+		{/if}
+	</Sheet.Trigger>
 
 	<Sheet.Content
 		side="right"
@@ -71,7 +63,7 @@
 		{/if}
 
 		<div class="overflow-y-auto overflow-x-visible px-6 {contentClass}">
-			{@render content?.({ close, })}
+			{@render content?.({ close })}
 		</div>
 	</Sheet.Content>
 </Sheet.Root>
