@@ -201,7 +201,7 @@
 {:else if $pocketbaseQuery.options.search}
 	<EmptyState title={m.No_records_found()} icon={Search} />
 {:else}
-	<slot name="emptyState">
+	<slot name="emptyState" {EmptyState}>
 		{#if !hide.includes('emptyState')}
 			<EmptyState
 				title={m.No_items_here()}
