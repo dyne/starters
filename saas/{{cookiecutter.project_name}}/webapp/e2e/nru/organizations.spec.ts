@@ -17,7 +17,7 @@ test.describe('it should test organizations and members', () => {
 	});
 
 	test.afterAll(async ({ browser }) => {
-		browser.close;
+		await browser.close();
 	});
 
 	test('userA should create an organization', async ({ browser }) => {
