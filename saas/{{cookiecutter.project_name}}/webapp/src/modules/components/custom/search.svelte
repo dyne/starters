@@ -14,7 +14,7 @@
 
 <script lang="ts" generics="T">
 	import { m } from '@/i18n';
-	import { createCombobox, melt } from '@melt-ui/svelte';
+	import { createCombobox } from '@melt-ui/svelte';
 	import { Check, ChevronDown, ChevronUp } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 	import Spinner from './spinner.svelte';
@@ -78,7 +78,8 @@
 		<!-- svelte-ignore a11y-label-has-associated-control - $label contains the 'for' attribute -->
 		<label
 			class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-			use:melt={$labelBuilder}
+			{...$labelBuilder}
+			use:$labelBuilder.action
 		>
 			<span class="text-sm font-medium text-gray-900">{label}</span>
 		</label>
@@ -87,7 +88,8 @@
 	<div class="relative">
 		<!-- classes copied from webapp/src/modules/components/ui/input/input.svelte -->
 		<input
-			use:melt={$input}
+			{...$input}
+			use:$input.action
 			class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 			{placeholder}
 			{disabled}
@@ -102,7 +104,8 @@
 {#if $open}
 	<ul
 		class=" z-10 flex max-h-[300px] flex-col overflow-hidden rounded-md border shadow-lg"
-		use:melt={$menu}
+		{...$menu}
+		use:$menu.action
 		transition:fly={{ duration: 150, y: -5 }}
 	>
 		<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -117,12 +120,15 @@
 			{:then results}
 				{#each results as result, index (index)}
 					{@const item = result.value}
+					{@const opt = $option({
+						value: result,
+						label: result.label,
+						disabled: result.disabled
+					})}
+
 					<li
-						use:melt={$option({
-							value: result,
-							label: result.label,
-							disabled: result.disabled
-						})}
+						{...opt}
+						use:opt.action
 						class="relative cursor-pointer scroll-my-2 rounded-md py-2 pl-4 pr-4 data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 data-[disabled]:opacity-50"
 					>
 						{#if $isSelected(result)}
