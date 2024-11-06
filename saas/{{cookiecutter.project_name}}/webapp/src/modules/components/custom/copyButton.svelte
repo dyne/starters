@@ -12,10 +12,16 @@
 		textToCopy: string;
 	};
 
-	export let textToCopy: $$Props['textToCopy'];
-	export let delay: $$Props['delay'] = 2000;
+	interface Props {
+		textToCopy: $$Props['textToCopy'];
+		delay?: $$Props['delay'];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
 
-	let isCopied = false;
+	let { textToCopy, delay = 2000, children, ...rest }: Props = $props();
+
+	let isCopied = $state(false);
 
 	function copyText() {
 		navigator.clipboard.writeText(textToCopy);
@@ -26,10 +32,10 @@
 	}
 </script>
 
-<Button variant="outline" on:click={copyText} {...$$restProps}>
+<Button variant="outline" on:click={copyText} {...rest}>
 	{#if !isCopied}
-		<slot />
-		<Icon src={ClipboardPlus} ml={Boolean($$slots.default)} />
+		{@render children?.()}
+		<Icon src={ClipboardPlus} ml={Boolean(children)} />
 	{:else}
 		<span class="whitespace-nowrap">✅ {m.Copied()}</span>
 	{/if}

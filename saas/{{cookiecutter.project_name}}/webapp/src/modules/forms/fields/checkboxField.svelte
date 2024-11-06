@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { GenericRecord } from '@/utils/types';
 </script>
 
@@ -16,11 +16,22 @@
 	import { capitalize } from 'effect/String';
 	import RequiredIndicator from '../components/requiredIndicator.svelte';
 
-	//
+	
 
-	export let form: SuperForm<Data, any>;
-	export let name: FormPathLeaves<Data, boolean>;
-	export let options: Partial<FieldOptions> & ComponentProps<Checkbox> = {};
+	interface Props {
+		//
+		form: SuperForm<Data, any>;
+		name: FormPathLeaves<Data, boolean>;
+		options?: Partial<FieldOptions> & ComponentProps<Checkbox>;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		form,
+		name,
+		options = {},
+		children
+	}: Props = $props();
 
 	//
 
@@ -28,18 +39,20 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control let:attrs>
-		<div class="flex items-center gap-2">
-			<Checkbox {...attrs} bind:checked={$value} />
+	<Form.Control >
+		{#snippet children({ attrs })}
+				<div class="flex items-center gap-2">
+				<Checkbox {...attrs} bind:checked={$value} />
 
-			<Form.Label>
-				<slot>
-					{options.label ?? capitalize(name)}
-				</slot>
-				<RequiredIndicator field={name} />
-			</Form.Label>
-		</div>
-	</Form.Control>
+				<Form.Label>
+					{#if children}{@render children()}{:else}
+						{options.label ?? capitalize(name)}
+					{/if}
+					<RequiredIndicator field={name} />
+				</Form.Label>
+			</div>
+					{/snippet}
+		</Form.Control>
 
 	{#if options.description}
 		<Form.Description>{options.description}</Form.Description>

@@ -65,25 +65,29 @@
 		}}
 		hide={['emptyState']}
 	>
-		<svelte:fragment slot="records" let:records>
-			<PageCard>
-				<SectionTitle title={m.organization_invites()} />
+		{#snippet records({ records })}
+			
+				<PageCard>
+					<SectionTitle title={m.organization_invites()} />
 
-				{#each records as record}
-					<PlainCard>
-						{record.expand?.organization?.name}
-						<svelte:fragment slot="right">
-							<Button variant="outline" on:click={() => updateInvite(record.id, 'accept')}>
-								{m.accept_invite()}<Icon src={Check} ml />
-							</Button>
-							<Button variant="outline" on:click={() => updateInvite(record.id, 'decline')}>
-								{m.decline_invite()}<Icon src={X} ml />
-							</Button>
-						</svelte:fragment>
-					</PlainCard>
-				{/each}
-			</PageCard>
-		</svelte:fragment>
+					{#each records as record}
+						<PlainCard>
+							{record.expand?.organization?.name}
+							{#snippet right()}
+											
+									<Button variant="outline" on:click={() => updateInvite(record.id, 'accept')}>
+										{m.accept_invite()}<Icon src={Check} ml />
+									</Button>
+									<Button variant="outline" on:click={() => updateInvite(record.id, 'decline')}>
+										{m.decline_invite()}<Icon src={X} ml />
+									</Button>
+								
+											{/snippet}
+						</PlainCard>
+					{/each}
+				</PageCard>
+			
+			{/snippet}
 	</CollectionManager>
 
 	<CollectionManager
@@ -94,53 +98,61 @@
 		}}
 		hide={['emptyState']}
 	>
-		<svelte:fragment slot="records" let:records>
-			<PageCard>
-				<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
+		{#snippet records({ records })}
+			
+				<PageCard>
+					<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
 
-				<div class="space-y-4">
-					{#each records as request}
-						{@const organization = request.expand?.organization}
-						{#if organization}
-							{@const avatarUrl = pb.files.getUrl(organization, organization.avatar)}
-							<PlainCard>
-								<Avatar slot="left" src={avatarUrl}></Avatar>
+					<div class="space-y-4">
+						{#each records as request}
+							{@const organization = request.expand?.organization}
+							{#if organization}
+								{@const avatarUrl = pb.files.getUrl(organization, organization.avatar)}
+								<PlainCard>
+									{#snippet left()}
+																<Avatar  src={avatarUrl}></Avatar>
+															{/snippet}
 
-								<div class="flex items-center space-x-2">
-									<T>{request.expand?.organization?.name}</T>
-									<Badge variant="default">{m.Pending()}</Badge>
-								</div>
+									<div class="flex items-center space-x-2">
+										<T>{request.expand?.organization?.name}</T>
+										<Badge variant="default">{m.Pending()}</Badge>
+									</div>
 
-								<Button
-									slot="right"
-									variant="outline"
-									on:click={() => {
-										deleteJoinRequest(request.id);
-									}}
-								>
-									{m.Undo_request()}
-									<Icon src={Undo2} ml></Icon>
-								</Button>
-							</PlainCard>
-						{/if}
-					{/each}
-				</div>
-			</PageCard>
-		</svelte:fragment>
+									{#snippet right()}
+																<Button
+											
+											variant="outline"
+											on:click={() => {
+												deleteJoinRequest(request.id);
+											}}
+										>
+											{m.Undo_request()}
+											<Icon src={Undo2} ml></Icon>
+										</Button>
+															{/snippet}
+								</PlainCard>
+							{/if}
+						{/each}
+					</div>
+				</PageCard>
+			
+			{/snippet}
 	</CollectionManager>
 
 	<PageCard>
 		<SectionTitle title={m.Your_organizations()}>
-			<svelte:fragment slot="right">
-				<Button size="sm" variant="outline" class="shrink-0 !px-4" href="/my/organizations/join">
-					<span class="ml-1"> {m.Join_an_organization()} </span>
-					<Icon src={UserPlus} ml />
-				</Button>
-				<Button size="sm" class="shrink-0 !px-4" href="/my/organizations/create">
-					<span class="ml-1"> {m.Create_a_new_organization()} </span>
-					<Icon src={Plus} ml />
-				</Button>
-			</svelte:fragment>
+			{#snippet right()}
+					
+					<Button size="sm" variant="outline" class="shrink-0 !px-4" href="/my/organizations/join">
+						<span class="ml-1"> {m.Join_an_organization()} </span>
+						<Icon src={UserPlus} ml />
+					</Button>
+					<Button size="sm" class="shrink-0 !px-4" href="/my/organizations/create">
+						<span class="ml-1"> {m.Create_a_new_organization()} </span>
+						<Icon src={Plus} ml />
+					</Button>
+				
+					{/snippet}
 		</SectionTitle>
 
 		<CollectionManager
@@ -150,47 +162,55 @@
 				filter: `user.id = "${$currentUser?.id}"`
 			}}
 		>
-			<svelte:fragment slot="emptyState">
-				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={Puzzle} />
-			</svelte:fragment>
+			{#snippet emptyState()}
+					
+					<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={Puzzle} />
+				
+					{/snippet}
 
-			<svelte:fragment slot="records" let:records>
-				<div class="space-y-2">
-					{#each records as a}
-						{@const org = a.expand?.organization}
-						{@const role = a.expand?.role}
-						{#if org && role}
-							<PlainCard let:Title let:Description>
-								<div class="flex items-center gap-2">
-									<Title>
-										<A href={`/my/organizations/${org.id}`}>{org.name}</A>
-									</Title>
-									{#if role.name == ADMIN || role.name == OWNER}
-										<Badge variant="secondary">{capitalize(role.name)}</Badge>
-									{/if}
-								</div>
-								{#if org.description}
-									<Description>{org.description}</Description>
-								{/if}
+			{#snippet records({ records })}
+					
+					<div class="space-y-2">
+						{#each records as a}
+							{@const org = a.expand?.organization}
+							{@const role = a.expand?.role}
+							{#if org && role}
+								<PlainCard  >
+									{#snippet children({ Title, Description })}
+																<div class="flex items-center gap-2">
+											<Title>
+												<A href={`/my/organizations/${org.id}`}>{org.name}</A>
+											</Title>
+											{#if role.name == ADMIN || role.name == OWNER}
+												<Badge variant="secondary">{capitalize(role.name)}</Badge>
+											{/if}
+										</div>
+										{#if org.description}
+											<Description>{org.description}</Description>
+										{/if}
 
-								<svelte:fragment slot="right">
-									{#if role.name == OWNER}
-										<Button
-											data-testid={`${org.name} link`}
-											size="sm"
-											variant="outline"
-											href={`/my/organizations/${org.id}/settings`}
-										>
-											{m.Settings()}
-											<Icon src={Cog} ml></Icon>
-										</Button>
-									{/if}
-								</svelte:fragment>
-							</PlainCard>
-						{/if}
-					{/each}
-				</div>
-			</svelte:fragment>
+										{/snippet}
+															{#snippet right()}
+															
+											{#if role.name == OWNER}
+												<Button
+													data-testid={`${org.name} link`}
+													size="sm"
+													variant="outline"
+													href={`/my/organizations/${org.id}/settings`}
+												>
+													{m.Settings()}
+													<Icon src={Cog} ml></Icon>
+												</Button>
+											{/if}
+										
+															{/snippet}
+								</PlainCard>
+							{/if}
+						{/each}
+					</div>
+				
+					{/snippet}
 		</CollectionManager>
 	</PageCard>
 </PageContent>

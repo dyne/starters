@@ -1,9 +1,11 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { CalcBreadcrumbsOptions } from './breadcrumbs';
 	export { type CalcBreadcrumbsOptions as BreadcrumbsOptions };
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { page } from '$app/stores';
 	import { calcBreadcrumbs } from './breadcrumbs';
 	import type { Link } from '@/components/types';
@@ -14,13 +16,20 @@
 	//
 
 	// export let items: Link[] = [];
-	// export let homeIcon: any = undefined;
-	export let options: Partial<CalcBreadcrumbsOptions> = {};
+	
+	interface Props {
+		// export let homeIcon: any = undefined;
+		options?: Partial<CalcBreadcrumbsOptions>;
+	}
+
+	let { options = {} }: Props = $props();
 
 	//
 
-	let breadcrumbs: Link[] = [];
-	$: calcBreadcrumbs($page, options).then((newBreadcrumbs) => (breadcrumbs = newBreadcrumbs));
+	let breadcrumbs: Link[] = $state([]);
+	run(() => {
+		calcBreadcrumbs($page, options).then((newBreadcrumbs) => (breadcrumbs = newBreadcrumbs));
+	});
 </script>
 
 <Breadcrumb.Root>

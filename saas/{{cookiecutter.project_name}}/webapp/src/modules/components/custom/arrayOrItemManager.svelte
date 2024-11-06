@@ -1,7 +1,13 @@
 <script lang="ts" generics="T">
 	import { Array as A } from 'effect';
+	import type { Snippet } from 'svelte';
 
-	export let data: T | T[] | undefined = undefined;
+	interface Props {
+		data?: T | T[] | undefined;
+		children?: Snippet<[{ item: T; removeItem: () => void }]>;
+	}
+
+	let { data = $bindable(undefined), children }: Props = $props();
 
 	function removeItemFromArray(item: T) {
 		if (!Array.isArray(data)) return;
@@ -20,8 +26,8 @@
 
 {#if Array.isArray(data)}
 	{#each data as item (item)}
-		<slot {item} removeItem={() => removeItemFromArray(item)} />
+		{@render children?.({ item, removeItem: () => removeItemFromArray(item) })}
 	{/each}
 {:else if data}
-	<slot item={typeCast(data)} {removeItem} />
+	{@render children?.({ item: typeCast(data), removeItem })}
 {/if}

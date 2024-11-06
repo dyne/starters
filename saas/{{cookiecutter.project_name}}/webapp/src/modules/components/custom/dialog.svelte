@@ -3,49 +3,61 @@
 	import { Footer } from '@/components/ui/dialog';
 	import type { DialogProps } from 'bits-ui';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import { omit } from 'lodash';
+	import type { Snippet } from 'svelte';
+	import type { Builder } from 'bits-ui';
 
 	//
 
-	type $$Props = DialogProps & {
+	type Props = DialogProps & {
 		title?: string;
 		description?: string;
 		open?: boolean;
 		class?: string;
 		contentClass?: string;
+		trigger?: Snippet<[{ builder: Builder; openDialog: () => void }]>;
+		content?: Snippet<[{ Footer: typeof Footer; closeDialog: () => void }]>;
 	};
-	$: props = $$props as $$Props;
 
-	export let open: $$Props['open'] = false;
-	export let contentClass = '';
+	let {
+		title,
+		description,
+		trigger,
+		content,
+		open = $bindable(false),
+		class: className = '',
+		contentClass = '',
+		...rest
+	}: Props = $props();
+
+	function openDialog() {
+		open = true;
+	}
+
+	function closeDialog() {
+		open = false;
+	}
 </script>
 
-<Dialog.Root bind:open {...omit($$restProps, 'title')} portal="body">
+<Dialog.Root bind:open {...rest} portal="body">
 	<Dialog.Trigger asChild let:builder>
-		<slot
-			name="trigger"
-			{builder}
-			openDialog={() => {
-				open = true;
-			}}
-		/>
+		{@render trigger?.({ builder, openDialog })}
 	</Dialog.Trigger>
 
 	<Dialog.Content class={contentClass}>
-		{#if props.title || props.description}
+		{#if title || description}
 			<Dialog.Header class="!text-left">
-				{#if props.title}
-					<Dialog.Title>{props.title}</Dialog.Title>
+				{#if title}
+					<Dialog.Title>{title}</Dialog.Title>
 				{/if}
-				{#if props.description}
+				{#if description}
 					<Dialog.Description>
-						{props.description}
+						{description}
 					</Dialog.Description>
 				{/if}
 			</Dialog.Header>
 			<Separator></Separator>
 		{/if}
 
-		<slot name="content" {Footer} closeDialog={() => (open = false)} />
+		{@render content?.({ Footer, closeDialog })}
 	</Dialog.Content>
 </Dialog.Root>

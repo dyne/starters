@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { writable } from 'svelte/store';
 	export const currentEmail = writable('');
 </script>
@@ -12,6 +12,11 @@
 	import { Button } from '@/components/ui/button';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import A from '@/components/custom/a.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	const modes: Link[] = [
 		{
@@ -45,7 +50,7 @@
 {/if}
 
 <div class="pt-4">
-	<slot />
+	{@render children?.()}
 </div>
 
 <div class="flex flex-col gap-4 space-y-2">

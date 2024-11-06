@@ -3,11 +3,17 @@
 
 	type $$Props = HTMLAnchorAttributes & { href: string };
 
-	export let href: $$Props['href'];
+	interface Props {
+		href: $$Props['href'];
+		children?: import('svelte').Snippet;
+		[key: string]: any
+	}
+
+	let { href, children, ...rest }: Props = $props();
 </script>
 
-<a {href} {...$$restProps}>
-	<slot />
+<a {href} {...rest}>
+	{@render children?.()}
 </a>
 
 <style lang="postcss">

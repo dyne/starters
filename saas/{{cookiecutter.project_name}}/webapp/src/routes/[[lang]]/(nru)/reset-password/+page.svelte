@@ -6,9 +6,9 @@
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
 
-	export let form;
+	let { form } = $props();
 
-	// TODO - rebuild
+	
 </script>
 
 {#if !form}

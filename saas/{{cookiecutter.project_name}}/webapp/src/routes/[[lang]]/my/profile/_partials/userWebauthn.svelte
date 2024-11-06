@@ -36,26 +36,28 @@
 		collection="webauthnCredentials"
 		editFormFieldsOptions={{ exclude: ['user', 'credential'] }}
 	>
-		<svelte:fragment slot="records" let:records>
-			<div class="space-y-2 py-4">
-				{#each records as record}
-					{@const label = Boolean(record.description)
-						? record.description
-						: getCredentialId(record)}
-					<Card>
-						<div class="flex items-center justify-between gap-4">
-							<div class="w-0 grow overflow-hidden">
-								<T>{label}</T>
+		{#snippet records({ records })}
+			
+				<div class="space-y-2 py-4">
+					{#each records as record}
+						{@const label = Boolean(record.description)
+							? record.description
+							: getCredentialId(record)}
+						<Card>
+							<div class="flex items-center justify-between gap-4">
+								<div class="w-0 grow overflow-hidden">
+									<T>{label}</T>
+								</div>
+								<div class="flex gap-2">
+									<RecordEdit {record} />
+									<RecordDelete {record} />
+								</div>
 							</div>
-							<div class="flex gap-2">
-								<RecordEdit {record} />
-								<RecordDelete {record} />
-							</div>
-						</div>
-					</Card>
-				{/each}
-			</div>
-		</svelte:fragment>
+						</Card>
+					{/each}
+				</div>
+			
+			{/snippet}
 	</CollectionManager>
 
 	{#await platformAuthenticatorAvailable}
@@ -65,11 +67,13 @@
 		</div>
 	{:then response}
 		{#if !response || !isWebauthnSupported()}
-			<Alert variant="warning" icon={Info} let:Description>
-				<Description>
-					{m.Your_device_does_not_have_integrated_Webauthn_support_An_external_authenticator_is_required_()}
-				</Description>
-			</Alert>
+			<Alert variant="warning" icon={Info} >
+				{#snippet children({ Description })}
+								<Description>
+						{m.Your_device_does_not_have_integrated_Webauthn_support_An_external_authenticator_is_required_()}
+					</Description>
+											{/snippet}
+						</Alert>
 		{/if}
 	{/await}
 

@@ -9,18 +9,21 @@
 	import { m } from '@/i18n';
 	import { pb } from '@/pocketbase';
 
-	//
+	interface Props {
+		//
+		organizationId: string;
+		onSuccess?: (emails: string[]) => void;
+		onCancel?: any;
+	}
 
-	export let organizationId: string;
-	export let onSuccess: (emails: string[]) => void = () => {};
-	export let onCancel = () => {};
+	let { organizationId, onSuccess = () => {}, onCancel = () => {} }: Props = $props();
 
-	let state: 'input' | 'review' = 'input';
-	let emails: string[] = [];
+	let formState = $state<'input' | 'review'>('input');
+	let emails: string[] = $state([]);
 
 	function handleInputFormSuccess(inputEmails: string[]) {
 		emails = inputEmails;
-		state = 'review';
+		formState = 'review';
 	}
 
 	function handleSuccess(emails: string[]) {
@@ -35,13 +38,14 @@
 	}
 </script>
 
-{#if state == 'input'}
+{#if formState == 'input'}
 	<EmailInputForm onSuccess={handleInputFormSuccess} />
-{:else if state == 'review'}
+{:else if formState == 'review'}
 	<div>
 		<EmailReviewForm bind:emails />
+
 		<div class="flex items-center justify-between gap-4 pt-6">
-			<Button variant="outline" on:click={() => (state = 'input')}>
+			<Button variant="outline" on:click={() => (formState = 'input')}>
 				<Icon src={ArrowLeft} size={16} mr />{m.Back()}
 			</Button>
 			<div class="flex items-center gap-2">

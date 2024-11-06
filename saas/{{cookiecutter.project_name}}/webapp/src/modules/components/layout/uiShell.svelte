@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { Writable } from 'svelte/store';
 	import { getContext } from 'svelte';
 
@@ -20,6 +20,8 @@
 </script>
 
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import * as Sheet from '@/components/ui/sheet';
 	import * as Resizable from '@/components/ui/resizable';
 
@@ -28,18 +30,32 @@
 	import { createToggleStore } from '@/components/custom/utils';
 	import { onNavigate } from '$app/navigation';
 
-	export let sidebarLayoutBreakpoint: number | undefined = undefined;
+	interface Props {
+		sidebarLayoutBreakpoint?: number | undefined;
+		top?: import('svelte').Snippet<[any]>;
+		sidebar?: import('svelte').Snippet;
+		children?: import('svelte').Snippet;
+	}
 
-	let windowWidth: number;
+	let {
+		sidebarLayoutBreakpoint = undefined,
+		top,
+		sidebar,
+		children
+	}: Props = $props();
+
+	let windowWidth: number = $state();
 
 	const showSidebar = createToggleStore(false);
 	const sidebarMode = writable<SidebarMode>('default');
 
-	$: if (sidebarLayoutBreakpoint && windowWidth && windowWidth >= sidebarLayoutBreakpoint) {
-		$sidebarMode = 'default';
-	} else {
-		$sidebarMode = 'drawer';
-	}
+	run(() => {
+		if (sidebarLayoutBreakpoint && windowWidth && windowWidth >= sidebarLayoutBreakpoint) {
+			$sidebarMode = 'default';
+		} else {
+			$sidebarMode = 'drawer';
+		}
+	});
 
 	function toggleSidebar() {
 		if ($sidebarMode == 'drawer') showSidebar.toggle();
@@ -62,26 +78,26 @@
 
 <Resizable.PaneGroup direction="vertical" class="!h-screen !w-screen">
 	<div class="shrink-0">
-		<slot name="top" sidebarMode={$sidebarMode} {toggleSidebar} />
+		{@render top?.({ sidebarMode: $sidebarMode, toggleSidebar, })}
 	</div>
 
 	<Resizable.PaneGroup direction="horizontal">
 		{#if $sidebarMode == 'drawer'}
 			<Sheet.Root bind:open={$showSidebar}>
 				<Sheet.Content side="left" class="!p-0">
-					<slot name="sidebar" />
+					{@render sidebar?.()}
 				</Sheet.Content>
 			</Sheet.Root>
 		{/if}
 
 		{#if $sidebarMode == 'default'}
 			<div class="h-full w-60 overflow-hidden border-r">
-				<slot name="sidebar" />
+				{@render sidebar?.()}
 			</div>
 		{/if}
 
 		<Resizable.Pane>
-			<main class="h-full overflow-scroll"><slot /></main>
+			<main class="h-full overflow-scroll">{@render children?.()}</main>
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
 </Resizable.PaneGroup>

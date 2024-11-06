@@ -8,18 +8,20 @@
 	const { form } = getFormContext();
 	const { allErrors } = form;
 
-	$: error = $allErrors.find((e) => e.path == FORM_ERROR_PATH);
+	let error = $derived($allErrors.find((e) => e.path == FORM_ERROR_PATH));
 </script>
 
 {#if error}
-	<Alert variant="destructive" icon={TriangleAlert} let:Title let:Description>
-		<Title>{m.Error()}</Title>
-		<Description>
-			{#if error.messages.length > 0}
-				{#each error.messages as message}
-					{message}
-				{/each}
-			{/if}
-		</Description>
-	</Alert>
+	<Alert variant="destructive" icon={TriangleAlert}  >
+		{#snippet children({ Title, Description })}
+				<Title>{m.Error()}</Title>
+			<Description>
+				{#if error.messages.length > 0}
+					{#each error.messages as message}
+						{message}
+					{/each}
+				{/if}
+			</Description>
+					{/snippet}
+		</Alert>
 {/if}

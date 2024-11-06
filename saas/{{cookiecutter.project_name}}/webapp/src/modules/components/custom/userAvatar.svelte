@@ -6,11 +6,16 @@
 	import { m } from '@/i18n';
 
 	type $$Props = AvatarProps & { user?: UsersResponse };
-	export let user: $$Props['user'] = pb.authStore.model as UsersResponse;
+	interface Props {
+		user?: $$Props['user'];
+		[key: string]: any
+	}
+
+	let { user = pb.authStore.model as UsersResponse, ...rest }: Props = $props();
 	if (!user) throw new Error('missing user');
 
-	$: src = pb.files.getUrl(user, user?.avatar);
-	$: fallback = user.name.slice(0, 2);
+	let src = $derived(pb.files.getUrl(user, user?.avatar));
+	let fallback = $derived(user.name.slice(0, 2));
 </script>
 
-<Avatar {...$$restProps} {src} {fallback} alt="{m.Avatar()} {user.name}" />
+<Avatar {...rest} {src} {fallback} alt="{m.Avatar()} {user.name}" />

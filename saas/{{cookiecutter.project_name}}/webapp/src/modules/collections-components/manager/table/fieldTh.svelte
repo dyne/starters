@@ -8,13 +8,17 @@
 	import { capitalize } from 'lodash';
 	import { ArrowUp, ArrowDown } from 'lucide-svelte';
 
-	export let field: KeyOf<T>;
-	export let label: string | undefined = undefined;
+	interface Props {
+		field: KeyOf<T>;
+		label?: string | undefined;
+	}
+
+	let { field, label = undefined }: Props = $props();
 
 	const { pocketbaseQuery } = getCollectionManagerContext();
 
-	$: sortState = $pocketbaseQuery.sortOption;
-	$: isSortField = sortState[0] == field;
+	let sortState = $derived($pocketbaseQuery.sortOption);
+	let isSortField = $derived(sortState[0] == field);
 
 	async function handleClick() {
 		if (!isSortField) {

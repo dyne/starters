@@ -4,23 +4,34 @@
 	import { X } from 'lucide-svelte';
 	import T from './t.svelte';
 
-	export let label: string | undefined = undefined;
-	export let hideButton = false;
 
-	let className = '';
-	export { className as class };
-	export let contentClass = '';
+	
+	interface Props {
+		label?: string | undefined;
+		hideButton?: boolean;
+		class?: string;
+		contentClass?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		label = undefined,
+		hideButton = false,
+		class: className = '',
+		contentClass = '',
+		children
+	}: Props = $props();
 </script>
 
 <div class="flex items-center justify-between gap-6 px-1 py-1 pl-3 {className}">
 	<div class="w-0 grow overflow-hidden {contentClass}">
-		<slot>
+		{#if children}{@render children()}{:else}
 			{#if label}
 				<T tag="p">
 					{label}
 				</T>
 			{/if}
-		</slot>
+		{/if}
 	</div>
 
 	{#if !hideButton}

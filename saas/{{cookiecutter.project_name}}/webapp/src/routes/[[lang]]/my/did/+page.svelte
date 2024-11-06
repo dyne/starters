@@ -1,7 +1,7 @@
 <script lang="ts">
 	import T from '@/components/custom/t.svelte';
 
-	export let data;
+	let { data } = $props();
 	const did = JSON.stringify(data.did, null, 2);
 </script>
 

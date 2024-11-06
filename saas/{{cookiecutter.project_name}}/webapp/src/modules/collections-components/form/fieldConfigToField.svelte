@@ -9,21 +9,34 @@
 	import type { Selected } from '@/components/custom/selectInput.svelte';
 	import type { FieldComponentProp } from './fieldComponent';
 
-	//
+	
 
-	export let fieldConfig: AnySchemaField;
 
-	export let label = fieldConfig.name as string;
-	export let description: string | undefined = undefined;
-	export let placeholder: string | undefined = undefined;
-	export let hidden = false;
 
-	export let collectionFieldOptions: Omit<
+
+	interface Props {
+		//
+		fieldConfig: AnySchemaField;
+		label?: any;
+		description?: string | undefined;
+		placeholder?: string | undefined;
+		hidden?: boolean;
+		collectionFieldOptions?: Omit<
 		CollectionFieldOptions<C, ExpandQueryOption<C>>,
 		'collection'
-	> = {};
+	>;
+		component?: FieldComponentProp | undefined;
+	}
 
-	export let component: FieldComponentProp | undefined = undefined;
+	let {
+		fieldConfig,
+		label = fieldConfig.name as string,
+		description = undefined,
+		placeholder = undefined,
+		hidden = false,
+		collectionFieldOptions = {},
+		component = undefined
+	}: Props = $props();
 
 	//
 
@@ -33,21 +46,21 @@
 
 	/* Select */
 
-	let items: Selected<string>[] = [];
+	let items: Selected<string>[] = $state([]);
 	if (fieldConfig.type == 'select' && fieldConfig.options.values) {
 		items = fieldConfig.options.values.map((v) => ({ label: v, value: v }));
 	}
 
 	/* File */
 
-	let accept: string;
+	let accept: string = $state();
 	if (fieldConfig.type == 'file' && fieldConfig.options.mimeTypes) {
 		accept = fieldConfig.options.mimeTypes.join(',');
 	}
 
 	/* Relation */
 
-	let collectionName: C;
+	let collectionName: C = $state();
 	if (fieldConfig.type == 'relation' && fieldConfig.options.collectionId) {
 		const collectionId = fieldConfig.options.collectionId;
 		collectionName = getCollectionNameFromId(collectionId) as C;
@@ -57,8 +70,7 @@
 {#if hidden}
 	<!-- Nothing -->
 {:else if component}
-	<svelte:component
-		this={component.component}
+	<component.component
 		{form}
 		field={fieldConfig.name}
 		{label}

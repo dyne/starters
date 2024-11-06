@@ -53,65 +53,81 @@
 			subscribe="expand-collections"
 			hide={['emptyState']}
 		>
-			<svelte:fragment slot="top" let:Search>
-				<Search />
-			</svelte:fragment>
+			{#snippet top({ Search })}
+					
+					<Search />
+				
+					{/snippet}
 
-			<svelte:fragment slot="emptyState">
-				<EmptyState title={m.No_available_organizations_found()} icon={Users} />
-			</svelte:fragment>
+			{#snippet emptyState()}
+					
+					<EmptyState title={m.No_available_organizations_found()} icon={Users} />
+				
+					{/snippet}
 
-			<svelte:fragment slot="records" let:records>
-				<div class="space-y-2">
-					{#each records as org}
-						{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
+			{#snippet records({ records })}
+					
+					<div class="space-y-2">
+						{#each records as org}
+							{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
 
-						<PlainCard let:Title let:Description>
-							<svelte:fragment slot="left">
-								<OrganizationAvatar organization={org} />
-							</svelte:fragment>
+							<PlainCard  >
+								{#snippet left()}
+													
+										<OrganizationAvatar organization={org} />
+									
+													{/snippet}
 
-							<div>
-								<Title>{org.name}</Title>
-								{#if org.description}
-									<Description>
-										<span class="line-clamp-2">
-											{@html org.description}
-										</span>
-									</Description>
-								{/if}
-							</div>
+								{#snippet children({ Title, Description })}
+														<div>
+										<Title>{org.name}</Title>
+										{#if org.description}
+											<Description>
+												<span class="line-clamp-2">
+													{@html org.description}
+												</span>
+											</Description>
+										{/if}
+									</div>
 
-							<div slot="right" class="shrink-0 self-start pl-8">
-								{#if !sentMembershipRequest}
-									<Dialog title={`${m.Send_a_request_to()} ${org.name}`}>
-										<svelte:fragment slot="trigger" let:builder>
-											<Button variant="outline" builders={[builder]}>
-												{m.Join()}
-												<Icon src={UserPlus} ml></Icon>
-											</Button>
-										</svelte:fragment>
+									{/snippet}
+													{#snippet right()}
+														<div  class="shrink-0 self-start pl-8">
+										{#if !sentMembershipRequest}
+											<Dialog title={`${m.Send_a_request_to()} ${org.name}`}>
+												{#snippet trigger({ builder })}
+																			
+														<Button variant="outline" builders={[builder]}>
+															{m.Join()}
+															<Icon src={UserPlus} ml></Icon>
+														</Button>
+													
+																			{/snippet}
 
-										<svelte:fragment slot="content" let:closeDialog>
-											<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
-											<div class="flex items-center justify-center gap-2 pt-4">
-												<Button variant="outline" on:click={closeDialog}>
-													{m.Cancel()}
-												</Button>
-												<Button on:click={() => sendJoinRequest(org).then(closeDialog)}>
-													{m.Send_join_request()}
-												</Button>
-											</div>
-										</svelte:fragment>
-									</Dialog>
-								{:else}
-									<Button variant="outline" disabled>{m.Request_sent()}</Button>
-								{/if}
-							</div>
-						</PlainCard>
-					{/each}
-				</div>
-			</svelte:fragment>
+												{#snippet content({ closeDialog })}
+																			
+														<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
+														<div class="flex items-center justify-center gap-2 pt-4">
+															<Button variant="outline" on:click={closeDialog}>
+																{m.Cancel()}
+															</Button>
+															<Button on:click={() => sendJoinRequest(org).then(closeDialog)}>
+																{m.Send_join_request()}
+															</Button>
+														</div>
+													
+																			{/snippet}
+											</Dialog>
+										{:else}
+											<Button variant="outline" disabled>{m.Request_sent()}</Button>
+										{/if}
+									</div>
+													{/snippet}
+							</PlainCard>
+						{/each}
+					</div>
+				
+					{/snippet}
 		</CollectionManager>
 	</PageCard>
 </PageContent>

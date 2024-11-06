@@ -6,7 +6,7 @@
 	import { featureFlags } from '@/features';
 	import Card from '@/components/custom/card.svelte';
 
-	export let data;
+	let { data } = $props();
 	let { publicKeys } = data;
 </script>
 

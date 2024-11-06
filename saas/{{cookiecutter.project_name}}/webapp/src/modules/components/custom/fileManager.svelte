@@ -12,7 +12,6 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import T from './t.svelte';
 	import { X } from 'lucide-svelte';
-	import Icon from './icon.svelte';
 	import _ from 'lodash';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import { m } from '@/i18n';
@@ -72,10 +71,11 @@
 	{#if (Array.isArray(data) && data.length > 0) || (!multiple && Boolean(data))}
 		<List>
 			<ListHeader label={m.Files()} />
-			<ArrayOrItemManager bind:data let:item let:removeItem>
-				{@const isNew = isNewFile(item)}
-				<ListItem on:click={removeItem}>
-					<slot name="file" file={item} {isNew}>
+
+			<ArrayOrItemManager bind:data>
+				{#snippet children({ item, removeItem })}
+					{@const isNew = isNewFile(item)}
+					<ListItem on:click={removeItem}>
 						<div class="flex items-center gap-2">
 							<T tag="p">
 								{item.name}
@@ -84,8 +84,8 @@
 								<Badge variant="secondary">{m.New()}</Badge>
 							{/if}
 						</div>
-					</slot>
-				</ListItem>
+					</ListItem>
+				{/snippet}
 			</ArrayOrItemManager>
 		</List>
 	{/if}

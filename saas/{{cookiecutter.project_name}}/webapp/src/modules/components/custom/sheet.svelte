@@ -9,17 +9,33 @@
 
 	type SheetSide = ComponentProps<Sheet.Content>['side'];
 
-	export let side: SheetSide = 'right';
 
-	export let title: string | undefined = undefined;
 
-	let isOpen: boolean;
-	export { isOpen as open };
+	
 
-	let className = '';
-	export { className as class };
+	
 
-	export let contentClass = '';
+	interface Props {
+		side?: SheetSide;
+		title?: string | undefined;
+		open: boolean;
+		class?: string;
+		contentClass?: string;
+		trigger?: import('svelte').Snippet<[any]>;
+		children?: import('svelte').Snippet;
+		content?: import('svelte').Snippet<[any]>;
+	}
+
+	let {
+		side = 'right',
+		title = undefined,
+		open: isOpen = $bindable(),
+		class: className = '',
+		contentClass = '',
+		trigger,
+		children,
+		content
+	}: Props = $props();
 
 	//
 
@@ -33,13 +49,15 @@
 </script>
 
 <Sheet.Root bind:open={isOpen} portal="body">
-	<Sheet.Trigger asChild let:builder>
-		<slot name="trigger" {builder} {open}>
-			<Button builders={[builder]} class="shrink-0" variant="outline">
-				<slot></slot>
-			</Button>
-		</slot>
-	</Sheet.Trigger>
+	<Sheet.Trigger asChild >
+		{#snippet children({ builder })}
+				{#if trigger}{@render trigger({ builder, open, })}{:else}
+				<Button builders={[builder]} class="shrink-0" variant="outline">
+					{@render children?.()}
+				</Button>
+			{/if}
+					{/snippet}
+		</Sheet.Trigger>
 
 	<Sheet.Content
 		side="right"
@@ -53,7 +71,7 @@
 		{/if}
 
 		<div class="overflow-y-auto overflow-x-visible px-6 {contentClass}">
-			<slot name="content" {close} />
+			{@render content?.({ close, })}
 		</div>
 	</Sheet.Content>
 </Sheet.Root>

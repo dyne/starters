@@ -50,7 +50,7 @@
 		return pb.collection('organizations').getOne(id, { requestKey: null });
 	}
 
-	$: disableEmail = $featureFlags.ORGANIZATIONS && OrganizationInviteSession.isActive();
+	let disableEmail = $derived($featureFlags.ORGANIZATIONS && OrganizationInviteSession.isActive());
 </script>
 
 {#if $featureFlags.ORGANIZATIONS}

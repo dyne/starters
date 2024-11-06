@@ -15,15 +15,22 @@
 	import Sheet from '@/components/custom/sheet.svelte';
 	import { merge } from 'lodash';
 
-	//
+	interface Props {
+		//
+		collection?: C | undefined;
+		initialData?: Partial<CollectionRecords[C]> | undefined;
+		sheetTitle?: string | undefined;
+		onSuccess?: OnCollectionFormSuccess<C>;
+		children?: import('svelte').Snippet;
+	}
 
-	export let collection: C | undefined = undefined;
-	collection;
-
-	export let initialData: Partial<CollectionRecords[C]> | undefined = undefined;
-	export let sheetTitle: string | undefined = undefined;
-
-	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
+	let {
+		collection = undefined,
+		initialData = undefined,
+		sheetTitle = undefined,
+		onSuccess = () => {},
+		children
+	}: Props = $props();
 
 	//
 
@@ -45,21 +52,21 @@
 </script>
 
 <Sheet bind:open={$show} {title}>
-	<svelte:fragment slot="trigger" let:builder>
+	{#snippet trigger({ builder })}
 		<Button builders={[builder]} class="shrink-0">
 			<Icon src={Plus} mr />
-			<slot>
+			{#if children}{@render children()}{:else}
 				{title}
-			</slot>
+			{/if}
 		</Button>
-	</svelte:fragment>
+	{/snippet}
 
-	<svelte:fragment slot="content">
+	{#snippet content()}
 		<CollectionForm
 			{initialData}
 			collection={collectionName}
 			{...options}
 			onSuccess={handleSuccess}
 		/>
-	</svelte:fragment>
+	{/snippet}
 </Sheet>

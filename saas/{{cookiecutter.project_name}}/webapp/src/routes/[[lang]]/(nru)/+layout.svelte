@@ -3,6 +3,11 @@
 	import { appTitle } from '@/utils/strings';
 	import A from '@/components/custom/a.svelte';
 	import PageCard from '@/components/layout/pageCard.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <div class="flex h-screen items-center justify-center">
@@ -11,7 +16,7 @@
 			<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
 		</A>
 		<PageCard>
-			<slot />
+			{@render children?.()}
 		</PageCard>
 	</div>
 </div>

@@ -25,7 +25,7 @@
 
 	//
 
-	let success = false;
+	let success = $state(false);
 
 	const schema = z.object({
 		email: z.string().email(),

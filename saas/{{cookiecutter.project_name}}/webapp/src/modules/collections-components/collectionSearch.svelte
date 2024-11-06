@@ -12,24 +12,34 @@
 	import type { CollectionRecords } from '@/pocketbase/types';
 	import type { RecordPresenter } from './utils';
 
-	//
+	
 
-	export let collection: C;
-	export let queryOptions: Partial<PocketbaseQueryOptions<C, Expand>> = {};
 
-	export let disabled = false;
-	export let label: string | undefined = undefined;
-	export let placeholder: string | undefined = undefined;
 
-	export let onSelect: (record: QueryResponse<C, Expand>) => void = () => {};
 
-	export let displayFields: (keyof CollectionRecords[C])[] | undefined = undefined;
-	export let displayFn: RecordPresenter<QueryResponse<C, Expand>> | undefined = undefined;
+	interface Props {
+		//
+		collection: C;
+		queryOptions?: Partial<PocketbaseQueryOptions<C, Expand>>;
+		disabled?: boolean;
+		label?: string | undefined;
+		placeholder?: string | undefined;
+		onSelect?: (record: QueryResponse<C, Expand>) => void;
+		displayFields?: (keyof CollectionRecords[C])[] | undefined;
+		displayFn?: RecordPresenter<QueryResponse<C, Expand>> | undefined;
+	}
 
-	//
+	let {
+		collection,
+		queryOptions = {},
+		disabled = false,
+		label = undefined,
+		placeholder = undefined,
+		onSelect = () => {},
+		displayFields = undefined,
+		displayFn = undefined
+	}: Props = $props();
 
-	$: pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
-	$: searchFunction = createSearchFunction(pocketbaseQuery);
 
 	function createSearchFunction(
 		pocketbaseQuery: PocketbaseQuery<C, Expand>
@@ -51,6 +61,10 @@
 	// function typeCaster(value: unknown): CollectionRecords[C] {
 	// 	return value as CollectionRecords[C];
 	// }
+	//
+
+	let pocketbaseQuery = $derived(new PocketbaseQuery(collection, queryOptions));
+	let searchFunction = $derived(createSearchFunction(pocketbaseQuery));
 </script>
 
 <Search searchFn={searchFunction} {onSelect} {label} {placeholder} {disabled} />

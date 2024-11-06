@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { getContext } from 'svelte';
 	import { type SuperForm } from 'sveltekit-superforms/client';
 	import type { GenericRecord } from '@/utils/types';
@@ -18,6 +18,8 @@
 </script>
 
 <script lang="ts" generics="T extends GenericRecord">
+	import { run } from 'svelte/legacy';
+
 	import { m } from '@/i18n';
 
 	import { setContext } from 'svelte';
@@ -25,16 +27,30 @@
 	import SubmitButton from './components/submitButton.svelte';
 	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
 
-	//
+	
 
-	export let form: SuperForm<T, any>;
-	export let hideRequiredIndicator = false;
-	export let loadingText: string | undefined = m.Please_wait();
-	export let submitButtonText: string | undefined = m.Submit();
-	export let hide: ('error' | 'submitButton' | 'loading')[] = [];
 
-	let className = 'space-y-6';
-	export { className as class };
+	interface Props {
+		//
+		form: SuperForm<T, any>;
+		hideRequiredIndicator?: boolean;
+		loadingText?: string | undefined;
+		submitButtonText?: string | undefined;
+		hide?: ('error' | 'submitButton' | 'loading')[];
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		form,
+		hideRequiredIndicator = false,
+		loadingText = m.Please_wait(),
+		submitButtonText = m.Submit(),
+		hide = [],
+		class: className = 'space-y-6',
+		children
+	}: Props = $props();
+	
 
 	//
 
@@ -45,8 +61,10 @@
 		| null
 		| undefined;
 
-	let enctype: Enctype = undefined;
-	$: enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
+	let enctype: Enctype = $state(undefined);
+	run(() => {
+		enctype = form.options.dataType == 'form' ? 'multipart/form-data' : undefined;
+	});
 
 	//
 
@@ -55,7 +73,7 @@
 </script>
 
 <form class={className} method="post" use:enhance {enctype}>
-	<slot />
+	{@render children?.()}
 
 	{#if !hide.includes('error')}
 		<FormError></FormError>

@@ -26,7 +26,7 @@
 		emailVisibility: z.boolean()
 	});
 
-	$: form = createForm({
+	let form = $derived(createForm({
 		adapter: zod(schema),
 		onSubmit: async ({ form }) => {
 			$currentUser = await pb.collection('users').update($currentUser?.id!, form.data);
@@ -40,7 +40,7 @@
 		options: {
 			dataType: 'form'
 		}
-	});
+	}));
 </script>
 
 <div class="space-y-6">

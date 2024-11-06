@@ -21,9 +21,14 @@
 	import Trash from 'lucide-svelte/icons/trash';
 	import X from 'lucide-svelte/icons/x';
 
-	//
+	
 
-	export let organization: OrganizationsResponse;
+	interface Props {
+		//
+		organization: OrganizationsResponse;
+	}
+
+	let { organization }: Props = $props();
 
 	//
 
@@ -47,72 +52,82 @@
 	}}
 	hide={['emptyState']}
 >
-	<svelte:fragment slot="records" let:records>
-		<PageCard>
-			<SectionTitle
-				tag="h4"
-				title={m.Pending_membership_requests()}
-				description={m.pending_membership_requests_description()}
-			/>
+	{#snippet records({ records })}
+	
+			<PageCard>
+				<SectionTitle
+					tag="h4"
+					title={m.Pending_membership_requests()}
+					description={m.pending_membership_requests_description()}
+				/>
 
-			<div class="space-y-2">
-				{#each records as request}
-					{@const user = request.expand?.user}
-					{#if user}
-						<PlainCard>
-							<UserAvatar slot="left" {user} />
+				<div class="space-y-2">
+					{#each records as request}
+						{@const user = request.expand?.user}
+						{#if user}
+							<PlainCard>
+								{#snippet left()}
+														<UserAvatar  {user} />
+													{/snippet}
 
-							{getUserDisplayName(user)}
+								{getUserDisplayName(user)}
 
-							<svelte:fragment slot="right">
-								<div class="space-x-1">
-									<Button
-										variant="outline"
-										on:click={() =>
-											updateRequestStatus(request, accepted)
-												.then(() => toast.success(m.Request_accepted_sucessfully()))
-												.catch(() =>
-													toast.error(m.An_error_occurred_while_handling_membership_request())
-												)}
-									>
-										{m.Accept()}
-										<Icon src={UserPlus} ml />
-									</Button>
-
-									<Dialog title={m.Warning()}>
-										<svelte:fragment slot="trigger" let:builder>
-											<Button variant="outline" builders={[builder]}>
-												{m.Decline()}
-												<Icon src={CircleOffIcon} ml />
+								{#snippet right()}
+													
+										<div class="space-x-1">
+											<Button
+												variant="outline"
+												on:click={() =>
+													updateRequestStatus(request, accepted)
+														.then(() => toast.success(m.Request_accepted_sucessfully()))
+														.catch(() =>
+															toast.error(m.An_error_occurred_while_handling_membership_request())
+														)}
+											>
+												{m.Accept()}
+												<Icon src={UserPlus} ml />
 											</Button>
-										</svelte:fragment>
 
-										<svelte:fragment slot="content" let:closeDialog>
-											<p>{m.decline_membership_request_warning()}</p>
-											<div class="flex items-center justify-center gap-2">
-												<Button variant="outline" on:click={closeDialog}>
-													{m.Cancel()}
-													<Icon src={X} ml />
-												</Button>
-												<Button
-													variant="destructive"
-													on:click={() =>
-														updateRequestStatus(request, rejected)
-															.then(closeDialog)
-															.then(() => toast.info(m.Membership_request_declined_successfully()))}
-												>
-													{m.decline_membership_request()}
-													<Icon src={Trash} ml />
-												</Button>
-											</div>
-										</svelte:fragment>
-									</Dialog>
-								</div>
-							</svelte:fragment>
-						</PlainCard>
-					{/if}
-				{/each}
-			</div>
-		</PageCard>
-	</svelte:fragment>
+											<Dialog title={m.Warning()}>
+												{#snippet trigger({ builder })}
+																			
+														<Button variant="outline" builders={[builder]}>
+															{m.Decline()}
+															<Icon src={CircleOffIcon} ml />
+														</Button>
+													
+																			{/snippet}
+
+												{#snippet content({ closeDialog })}
+																			
+														<p>{m.decline_membership_request_warning()}</p>
+														<div class="flex items-center justify-center gap-2">
+															<Button variant="outline" on:click={closeDialog}>
+																{m.Cancel()}
+																<Icon src={X} ml />
+															</Button>
+															<Button
+																variant="destructive"
+																on:click={() =>
+																	updateRequestStatus(request, rejected)
+																		.then(closeDialog)
+																		.then(() => toast.info(m.Membership_request_declined_successfully()))}
+															>
+																{m.decline_membership_request()}
+																<Icon src={Trash} ml />
+															</Button>
+														</div>
+													
+																			{/snippet}
+											</Dialog>
+										</div>
+									
+													{/snippet}
+							</PlainCard>
+						{/if}
+					{/each}
+				</div>
+			</PageCard>
+		
+	{/snippet}
 </CollectionManager>

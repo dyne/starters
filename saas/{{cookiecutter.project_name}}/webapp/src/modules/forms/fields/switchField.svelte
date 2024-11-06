@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { GenericRecord } from '@/utils/types';
 </script>
 
@@ -15,11 +15,16 @@
 
 	import { capitalize } from 'effect/String';
 
-	//
+	
 
-	export let form: SuperForm<Data, any>;
-	export let name: FormPathLeaves<Data, boolean>;
-	export let options: Partial<FieldOptions> & ComponentProps<Switch> = {};
+	interface Props {
+		//
+		form: SuperForm<Data, any>;
+		name: FormPathLeaves<Data, boolean>;
+		options?: Partial<FieldOptions> & ComponentProps<Switch>;
+	}
+
+	let { form, name, options = {} }: Props = $props();
 
 	//
 
@@ -27,12 +32,14 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control let:attrs>
-		<div class="flex items-center gap-2">
-			<Switch {...attrs} includeInput bind:checked={$value} />
-			<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
-		</div>
-	</Form.Control>
+	<Form.Control >
+		{#snippet children({ attrs })}
+				<div class="flex items-center gap-2">
+				<Switch {...attrs} includeInput bind:checked={$value} />
+				<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
+			</div>
+					{/snippet}
+		</Form.Control>
 
 	{#if options.description}
 		<Form.Description>{options.description}</Form.Description>

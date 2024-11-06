@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { GenericRecord } from '@/utils/types';
 </script>
 
@@ -11,11 +11,16 @@
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import type { FieldOptions } from './types';
 
-	//
+	
 
-	export let form: SuperForm<Data>;
-	export let name: FormPathLeaves<Data, string | number>;
-	export let options: Partial<FieldOptions> & ComponentProps<Textarea> = {};
+	interface Props {
+		//
+		form: SuperForm<Data>;
+		name: FormPathLeaves<Data, string | number>;
+		options?: Partial<FieldOptions> & ComponentProps<Textarea>;
+	}
+
+	let { form, name, options = {} }: Props = $props();
 
 	//
 
@@ -25,7 +30,9 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} let:attrs>
-		<Textarea {...attrs} {...options} bind:value={$valueProxy} />
-	</FieldWrapper>
+	<FieldWrapper field={name} {options} >
+		{#snippet children({ attrs })}
+				<Textarea {...attrs} {...options} bind:value={$valueProxy} />
+					{/snippet}
+		</FieldWrapper>
 </Form.Field>

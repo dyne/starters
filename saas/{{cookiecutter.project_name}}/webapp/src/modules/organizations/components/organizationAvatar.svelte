@@ -3,10 +3,14 @@
 	import { pb } from '@/pocketbase';
 	import type { OrganizationsRecord } from '@/pocketbase/types';
 
-	export let organization: OrganizationsRecord;
+	interface Props {
+		organization: OrganizationsRecord;
+	}
 
-	$: src = pb.files.getUrl(organization, organization.avatar ?? '');
-	$: fallback = organization.name.slice(0, 2);
+	let { organization }: Props = $props();
+
+	let src = $derived(pb.files.getUrl(organization, organization.avatar ?? ''));
+	let fallback = $derived(organization.name.slice(0, 2));
 </script>
 
 <Avatar {src} {fallback} class="rounded-sm" />

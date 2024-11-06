@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts" generics="C extends CollectionName">
 	import type { SchemaField } from 'pocketbase';
 

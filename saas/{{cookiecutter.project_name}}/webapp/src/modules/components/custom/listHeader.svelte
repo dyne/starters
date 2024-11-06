@@ -1,16 +1,21 @@
 <script lang="ts">
 	import T from './t.svelte';
 
-	export let label: string | undefined = undefined;
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		label?: string | undefined;
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { label = undefined, class: className = '', children }: Props = $props();
+	
 </script>
 
 <div class="bg-primary-foreground pl-3 {className}">
-	<slot>
+	{#if children}{@render children()}{:else}
 		{#if label}
 			<T tag="small">{label}</T>
 		{/if}
-	</slot>
+	{/if}
 </div>

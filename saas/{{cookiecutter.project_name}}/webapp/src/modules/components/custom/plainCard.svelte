@@ -1,8 +1,13 @@
 <script lang="ts">
-	let className = '';
-	export { className as class };
+	interface Props {
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { class: className = '', children }: Props = $props();
+	
 </script>
 
 <div class="rounded-md border px-4 py-3 text-sm {className}">
-	<slot />
+	{@render children?.()}
 </div>

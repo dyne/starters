@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { GenericRecord } from '@/utils/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type {
@@ -40,12 +40,22 @@
 	import List from '@/components/custom/list.svelte';
 	import T from '@/components/custom/t.svelte';
 
-	//
+	
 
-	export let form: SuperForm<Data>;
-	export let name: FormPath<Data>;
-	export let collection: C;
-	export let options: Partial<FieldOptions> & CollectionFieldOptions<C, Expand> = {};
+	interface Props {
+		//
+		form: SuperForm<Data>;
+		name: FormPath<Data>;
+		collection: C;
+		options?: Partial<FieldOptions> & CollectionFieldOptions<C, Expand>;
+	}
+
+	let {
+		form,
+		name,
+		collection,
+		options = {}
+	}: Props = $props();
 
 	let {
 		mode = 'select',
@@ -82,47 +92,51 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} let:attrs>
-		{#if mode == 'search'}
-			<CollectionSearch
-				{collection}
-				queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
-				displayFn={options.displayFn}
-				displayFields={options.displayFields}
-				onSelect={(record) => {
-					addItem(valueProxy, record.id, multiple);
-				}}
-			/>
-		{:else if mode == 'select'}
-			<CollectionSelect
-				{collection}
-				queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
-				displayFn={options.displayFn}
-				displayFields={options.displayFields}
-				onSelect={(record) => {
-					if (record) addItem(valueProxy, record.id, multiple);
-				}}
-				clearValueOnSelect
-				{attrs}
-			/>
-		{/if}
-
-		<List class="min-h-[42px]">
-			{#if valueExists($valueProxy)}
-				<ArrayOrItemManager bind:data={$valueProxy} let:item let:removeItem>
-					<ListItem on:click={removeItem}>
-						{#await fetchRecord(collection, item) then record}
-							{presenter(record)}
-						{/await}
-					</ListItem>
-				</ArrayOrItemManager>
-			{:else}
-				<ListItem hideButton class="h-10 !justify-center">
-					<T tag="small" class="text-secondary-foreground/30 font-normal">
-						{m.No_items_selected()}
-					</T>
-				</ListItem>
+	<FieldWrapper field={name} {options} >
+		{#snippet children({ attrs })}
+				{#if mode == 'search'}
+				<CollectionSearch
+					{collection}
+					queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
+					displayFn={options.displayFn}
+					displayFields={options.displayFields}
+					onSelect={(record) => {
+						addItem(valueProxy, record.id, multiple);
+					}}
+				/>
+			{:else if mode == 'select'}
+				<CollectionSelect
+					{collection}
+					queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
+					displayFn={options.displayFn}
+					displayFields={options.displayFields}
+					onSelect={(record) => {
+						if (record) addItem(valueProxy, record.id, multiple);
+					}}
+					clearValueOnSelect
+					{attrs}
+				/>
 			{/if}
-		</List>
-	</FieldWrapper>
+
+			<List class="min-h-[42px]">
+				{#if valueExists($valueProxy)}
+					<ArrayOrItemManager bind:data={$valueProxy}  >
+						{#snippet children({ item, removeItem })}
+										<ListItem on:click={removeItem}>
+								{#await fetchRecord(collection, item) then record}
+									{presenter(record)}
+								{/await}
+							</ListItem>
+															{/snippet}
+								</ArrayOrItemManager>
+				{:else}
+					<ListItem hideButton class="h-10 !justify-center">
+						<T tag="small" class="text-secondary-foreground/30 font-normal">
+							{m.No_items_selected()}
+						</T>
+					</ListItem>
+				{/if}
+			</List>
+					{/snippet}
+		</FieldWrapper>
 </Form.Field>

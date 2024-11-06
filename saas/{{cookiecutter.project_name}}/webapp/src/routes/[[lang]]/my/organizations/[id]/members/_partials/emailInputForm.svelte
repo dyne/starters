@@ -11,10 +11,13 @@
 	import { FileField, TextareaField } from '@/forms/fields';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import T from '@/components/custom/t.svelte';
+	import { Button } from '@/components/ui/button';
 
-	//
+	interface Props {
+		onSuccess?: (emails: string[]) => void;
+	}
 
-	export let onSuccess: (emails: string[]) => void = () => {};
+	let { onSuccess = () => {} }: Props = $props();
 
 	/* Input form */
 
@@ -48,12 +51,9 @@
 	});
 	const { form: formData, tainted } = form;
 
-	$: getEmailsFromFormData($formData);
-
 	//
 
-	let emails: string[] = [];
-	$: getEmailsFromFormData($formData).then((res) => (emails = res));
+	let emails: string[] = $state([]);
 
 	async function getEmailsFromFormData(data: typeof $formData) {
 		let sources: string[] = [];
@@ -71,6 +71,14 @@
 	function isFormTainted(t: typeof $tainted) {
 		return Object.values(t ?? {}).some((s) => s);
 	}
+
+	$effect(() => {
+		getEmailsFromFormData($formData);
+	});
+
+	$effect(() => {
+		getEmailsFromFormData($formData).then((res) => (emails = res));
+	});
 </script>
 
 <!--  -->
@@ -95,23 +103,35 @@
 	<TextareaField {form} name="text_source" options={{ label: m.Paste_email_addresses_here() }} />
 
 	{#if isFormTainted($tainted) && emails.length == 0}
-		<Alert variant="warning" let:Title let:Description>
-			<Title>{m.Warning()}</Title>
-			<Description>
-				{m.We_havent_found_any_emails_in_the_provided_documents_please_upload_a_new_file_or_paste_new_content_()}
-			</Description>
+		<Alert variant="warning">
+			{#snippet children({ Title, Description })}
+				<Title>{m.Warning()}</Title>
+				<Description>
+					{m.We_havent_found_any_emails_in_the_provided_documents_please_upload_a_new_file_or_paste_new_content_()}
+				</Description>
+			{/snippet}
 		</Alert>
 	{/if}
 
 	{#if emails.length}
-		<Alert variant="success" let:Title class="!p-4">
-			<div class="flex items-center justify-between gap-2">
-				<Title><span class="mr-1">✅</span> {emails.length} {m.Emails_found()}</Title>
-				<SubmitButton variant="default">
-					<Icon src={ArrowRight} mr></Icon>
-					{m.Review_and_confirm()}
-				</SubmitButton>
-			</div>
+		<Alert variant="success" class="!p-4">
+			{#snippet children({ Title })}
+				<div class="flex items-center justify-between gap-2">
+					<Title><span class="mr-1">✅</span> {emails.length} {m.Emails_found()}</Title>
+					<!-- <SubmitButton variant="default">
+						<Icon src={ArrowRight} mr></Icon>
+						{m.Review_and_confirm()}
+						</SubmitButton> -->
+					<Button
+						on:click={() => {
+							onSuccess(emails);
+						}}
+					>
+						<Icon src={ArrowRight} mr></Icon>
+						{m.Review_and_confirm()}
+					</Button>
+				</div>
+			{/snippet}
 		</Alert>
 	{/if}
 </Form>

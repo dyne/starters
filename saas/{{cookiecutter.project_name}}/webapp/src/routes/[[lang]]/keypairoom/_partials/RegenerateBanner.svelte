@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { m } from '@/i18n';
 	import Alert from '@/components/custom/alert.svelte';
 	import { TriangleAlert } from 'lucide-svelte';

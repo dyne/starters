@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { goto, m } from '@/i18n';
 	import { loginUser } from '@/webauthn/index';
 	import z from 'zod';
@@ -25,7 +27,9 @@
 
 	const { form: formData } = form;
 
-	$: $currentEmail = $formData.email;
+	run(() => {
+		$currentEmail = $formData.email;
+	});
 </script>
 
 <Form {form} submitButtonText={m.Log_in_with_webauthn()}>

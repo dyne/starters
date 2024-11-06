@@ -1,14 +1,18 @@
 <script lang="ts">
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import T from './t.svelte';
 
-	export let title: string;
-	export let tag: ComponentProps<T>['tag'] = 'h4';
-	export let description: string | undefined = undefined;
-	export let hideLine = false;
+	interface Props {
+		title: string;
+		tag?: ComponentProps<typeof T>['tag'];
+		description?: string;
+		hideLine?: boolean;
+		right?: Snippet;
+		bottom?: Snippet;
+	}
 
-	$: hasDescription = $$slots.description || description;
+	const { title, tag = 'h4', description, hideLine = false, right, bottom }: Props = $props();
 </script>
 
 <div class="space-y-2">
@@ -17,7 +21,7 @@
 			<T {tag}>{title}</T>
 		</div>
 		<div class="flex flex-wrap justify-end gap-2">
-			<slot name="right" />
+			{@render right?.()}
 		</div>
 	</div>
 
@@ -25,9 +29,9 @@
 		<Separator />
 	{/if}
 
-	{#if hasDescription}
-		<slot name="description">
-			<T class="text-sm text-gray-500">{description}</T>
-		</slot>
+	{#if description}
+		<T class="text-sm text-gray-500">{description}</T>
 	{/if}
+
+	{@render bottom?.()}
 </div>

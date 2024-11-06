@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { GenericRecord, If, IsArray } from '@/utils/types';
 </script>
 
@@ -19,13 +19,18 @@
 	import type { ComponentProps } from 'svelte';
 	import { pipe, Tuple } from 'effect';
 
-	//
+	
 
-	export let form: SuperForm<Data>;
-	export let name: FormPath<Data>;
-	export let options: Partial<FieldOptions & Omit<ComponentProps<Input>, 'type' | 'value'>> = {};
+	interface Props {
+		//
+		form: SuperForm<Data>;
+		name: FormPath<Data>;
+		options?: Partial<FieldOptions & Omit<ComponentProps<Input>, 'type' | 'value'>>;
+	}
 
-	$: multiple = options.multiple ?? false;
+	let { form, name, options = {} }: Props = $props();
+
+	let multiple = $derived(options.multiple ?? false);
 
 	//
 
@@ -130,21 +135,25 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} let:attrs>
-		<FileManager bind:data={$valueProxy} {validator} {multiple} let:addFiles>
-			<Input
-				{...attrs}
-				{...options}
-				placeholder="Upload a file"
-				type="file"
-				class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
-				on:change={(e) => {
-					const fileList = e.currentTarget.files;
-					if (fileList) addFiles([...fileList]);
-					e.currentTarget.value = '';
-				}}
-			/>
-			<!-- e.currentTarget.value = '' is needed to clear the file input -->
-		</FileManager>
-	</FieldWrapper>
+	<FieldWrapper field={name} {options} >
+		{#snippet children({ attrs })}
+				<FileManager bind:data={$valueProxy} {validator} {multiple} >
+				{#snippet children({ addFiles })}
+						<Input
+						{...attrs}
+						{...options}
+						placeholder="Upload a file"
+						type="file"
+						class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
+						on:change={(e) => {
+							const fileList = e.currentTarget.files;
+							if (fileList) addFiles([...fileList]);
+							e.currentTarget.value = '';
+						}}
+					/>
+					<!-- e.currentTarget.value = '' is needed to clear the file input -->
+									{/snippet}
+				</FileManager>
+					{/snippet}
+		</FieldWrapper>
 </Form.Field>

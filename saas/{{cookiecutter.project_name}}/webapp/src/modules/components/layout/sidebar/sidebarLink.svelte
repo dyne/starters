@@ -4,17 +4,24 @@
 	import type { SidebarLinkProps } from './types.ts';
 	import { isLinkActive } from '@/utils/other.js';
 	import SidebarButton from './sidebarButton.svelte';
+	interface Props {
+		[key: string]: any
+	}
+
+	let { ...props_1 }: Props = $props();
 
 	type $$Props = SidebarLinkProps;
-	$: props = $$props as $$Props;
+	let props = $derived(props_1 as $$Props);
 
-	$: isActive = isLinkActive(props.href, $page);
+	let isActive = $derived(isLinkActive(props.href, $page));
 </script>
 
 <SidebarButton {...props} {isActive}>
-	<svelte:fragment slot="right">
-		{#if props.badge}
-			<Badge variant="secondary">{props.badge}</Badge>
-		{/if}
-	</svelte:fragment>
+	{#snippet right()}
+	
+			{#if props.badge}
+				<Badge variant="secondary">{props.badge}</Badge>
+			{/if}
+		
+	{/snippet}
 </SidebarButton>

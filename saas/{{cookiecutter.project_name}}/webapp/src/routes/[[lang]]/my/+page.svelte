@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { featureFlags } from '@/features';
 	import { WelcomeSession } from '@/auth/welcome';
 	import A from '@/components/custom/a.svelte';

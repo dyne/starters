@@ -16,17 +16,24 @@
 	import { merge } from 'lodash';
 	import IconButton from '@/components/custom/iconButton.svelte';
 
-	//
+	interface Props {
+		//
+		collection?: C | undefined;
+		record: CollectionResponses[C];
+		initialData?: Partial<CollectionRecords[C]>;
+		sheetTitle?: string | undefined;
+		onSuccess?: OnCollectionFormSuccess<C>;
+		trigger?: import('svelte').Snippet<[any]>;
+	}
 
-	export let collection: C | undefined = undefined;
-	collection;
-
-	export let record: CollectionResponses[C];
-	export let initialData: Partial<CollectionRecords[C]> = {};
-
-	export let sheetTitle: string | undefined = undefined;
-
-	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
+	let {
+		collection = undefined,
+		record,
+		initialData = {},
+		sheetTitle = undefined,
+		onSuccess = () => {},
+		trigger
+	}: Props = $props();
 
 	//
 
@@ -45,16 +52,18 @@
 		show.off();
 		onSuccess(record, 'edit');
 	};
+
+	const trigger_render = $derived(trigger);
 </script>
 
 <Sheet bind:open={$show} {title}>
-	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" open={show.on} {builder} icon={Pencil}>
+	{#snippet trigger({ builder })}
+		{#if trigger_render}{@render trigger_render({ open: show.on, builder, icon: Pencil })}{:else}
 			<IconButton variant="outline" icon={Pencil} builders={[builder]} />
-		</slot>
-	</svelte:fragment>
+		{/if}
+	{/snippet}
 
-	<svelte:fragment slot="content">
+	{#snippet content()}
 		<CollectionForm
 			recordId={record.id}
 			initialData={{ ...record, ...initialData }}
@@ -62,5 +71,5 @@
 			{...options}
 			onSuccess={handleSuccess}
 		/>
-	</svelte:fragment>
+	{/snippet}
 </Sheet>

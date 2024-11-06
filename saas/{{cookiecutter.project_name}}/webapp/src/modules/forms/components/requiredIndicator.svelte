@@ -3,11 +3,15 @@
 	import { getFormContext } from '../form.svelte';
 	import type { GenericRecord } from '@/utils/types';
 
-	export let field: string;
+	interface Props {
+		field: string;
+	}
+
+	let { field }: Props = $props();
 
 	const { hideRequiredIndicator, form } = getFormContext();
 	const { constraints } = formFieldProxy(form, field as FormPath<GenericRecord>);
-	$: isFieldRequired = $constraints?.required;
+	let isFieldRequired = $derived($constraints?.required);
 </script>
 
 {#if !hideRequiredIndicator && isFieldRequired}

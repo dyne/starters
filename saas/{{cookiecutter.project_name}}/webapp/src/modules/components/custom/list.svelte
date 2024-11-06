@@ -1,8 +1,13 @@
 <script lang="ts">
-	let className = '';
-	export { className as class };
+	interface Props {
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { class: className = '', children }: Props = $props();
+	
 </script>
 
 <div class="divide-y overflow-hidden rounded-md border {className}">
-	<slot></slot>
+	{@render children?.()}
 </div>

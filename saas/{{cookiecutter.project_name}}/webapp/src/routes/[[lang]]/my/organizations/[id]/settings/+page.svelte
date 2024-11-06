@@ -6,10 +6,15 @@
 	import PageCard from '@/components/layout/pageCard.svelte';
 	import T from '@/components/custom/t.svelte';
 
-	//
+	
 
-	export let data;
-	$: organization = data.organization;
+	interface Props {
+		//
+		data: any;
+	}
+
+	let { data }: Props = $props();
+	let organization = $derived(data.organization);
 </script>
 
 <OrganizationLayout org={organization}>

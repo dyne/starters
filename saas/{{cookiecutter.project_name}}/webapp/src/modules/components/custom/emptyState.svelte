@@ -4,9 +4,19 @@
 	import Icon from '@/components/custom/icon.svelte';
 	import T from './t.svelte';
 
-	export let title: string;
-	export let description: string | undefined = undefined;
-	export let icon: IconComponent = FolderOpen;
+	interface Props {
+		title: string;
+		description?: string | undefined;
+		icon?: IconComponent;
+		bottom?: import('svelte').Snippet;
+	}
+
+	let {
+		title,
+		description = undefined,
+		icon = FolderOpen,
+		bottom
+	}: Props = $props();
 </script>
 
 <div
@@ -26,5 +36,5 @@
 		<T>{description}</T>
 	{/if}
 
-	<slot name="bottom" />
+	{@render bottom?.()}
 </div>

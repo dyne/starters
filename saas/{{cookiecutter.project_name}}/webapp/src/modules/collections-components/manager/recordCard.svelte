@@ -12,44 +12,65 @@
 		RecordDelete
 	} from './record-actions';
 
-	//
+	
 
-	export let record: CollectionResponses[C];
-	export let hide: Array<RecordAction> = [];
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		//
+		record: CollectionResponses[C];
+		hide?: Array<RecordAction>;
+		class?: string;
+		children?: import('svelte').Snippet<[any]>;
+		right?: import('svelte').Snippet<[any]>;
+	}
+
+	let {
+		record,
+		hide = [],
+		class: className = '',
+		children,
+		right
+	}: Props = $props();
+	
 
 	//
 
 	const { selectionContext: selection } = getCollectionManagerContext();
 	const { selectedRecords } = selection;
 
-	$: classes = cn(className, {
+	let classes = $derived(cn(className, {
 		'border-primary': $selectedRecords.includes(record.id)
-	});
+	}));
+
+	const right_render = $derived(right);
 </script>
 
-<ItemCard class="{classes} " let:Title let:Description>
-	<svelte:fragment slot="left">
-		{#if !hide.includes('select')}
-			<RecordSelect {record} />
-		{/if}
-	</svelte:fragment>
+<ItemCard class="{classes} "  >
+	{#snippet left()}
+	
+			{#if !hide.includes('select')}
+				<RecordSelect {record} />
+			{/if}
+		
+	{/snippet}
 
-	<slot {Title} {Description} />
+	{#snippet children({ Title, Description })}
+		{@render children?.({ Title, Description, })}
 
-	<svelte:fragment slot="right">
-		<slot name="right" {record} />
+		{/snippet}
+	{#snippet right()}
+	
+			{@render right_render?.({ record, })}
 
-		{#if !hide.includes('edit')}
-			<RecordEdit {record} />
-		{/if}
-		{#if !hide.includes('share')}
-			<RecordShare {record} />
-		{/if}
-		{#if !hide.includes('delete')}
-			<RecordDelete {record} />
-		{/if}
-	</svelte:fragment>
+			{#if !hide.includes('edit')}
+				<RecordEdit {record} />
+			{/if}
+			{#if !hide.includes('share')}
+				<RecordShare {record} />
+			{/if}
+			{#if !hide.includes('delete')}
+				<RecordDelete {record} />
+			{/if}
+		
+	{/snippet}
 </ItemCard>

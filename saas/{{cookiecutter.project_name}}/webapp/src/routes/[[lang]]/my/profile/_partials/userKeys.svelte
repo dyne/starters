@@ -7,7 +7,11 @@
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { capitalize } from '@/utils/other';
 
-	export let keys: PublicKeys | undefined = undefined;
+	interface Props {
+		keys?: PublicKeys | undefined;
+	}
+
+	let { keys = undefined }: Props = $props();
 </script>
 
 <T tag="h4">{m.Your_keys()}</T>

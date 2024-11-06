@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { GenericRecord } from '@/utils/types';
 
 	// Copied from `bits-ui`
@@ -23,11 +23,16 @@
 	import type { ComponentProps } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
-	//
+	
 
-	export let form: SuperForm<Data>;
-	export let name: FormPath<Data>;
-	export let options: Partial<FieldOptions> & ComponentProps<SelectInput<T, Multiple>>;
+	interface Props {
+		//
+		form: SuperForm<Data>;
+		name: FormPath<Data>;
+		options: Partial<FieldOptions> & ComponentProps<SelectInput<T, Multiple>>;
+	}
+
+	let { form, name, options }: Props = $props();
 
 	//
 
@@ -64,14 +69,16 @@
 	<FieldWrapper
 		field={name}
 		options={{ label: options.label, description: options.description }}
-		let:attrs
+		
 	>
-		<SelectInput
-			items={options.items}
-			multiple={options.multiple}
-			{attrs}
-			selected={getSelectedFromValue($value)}
-			onSelectedChange={handleSelectedChange}
-		/>
-	</FieldWrapper>
+		{#snippet children({ attrs })}
+				<SelectInput
+				items={options.items}
+				multiple={options.multiple}
+				{attrs}
+				selected={getSelectedFromValue($value)}
+				onSelectedChange={handleSelectedChange}
+			/>
+					{/snippet}
+		</FieldWrapper>
 </Form.Field>

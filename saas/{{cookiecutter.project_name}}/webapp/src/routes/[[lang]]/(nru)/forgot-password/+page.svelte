@@ -5,9 +5,9 @@
 	import { Input } from '@/components/ui/input/index.js';
 	import Label from '@/components/ui/label/label.svelte';
 
-	export let form;
+	let { form } = $props();
 
-	// TODO - better form
+	
 	// TODO - Translations
 </script>
 

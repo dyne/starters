@@ -1,4 +1,6 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
+	import { run } from 'svelte/legacy';
+
 	import {
 		type PocketbaseQueryOptions,
 		type ExpandQueryOption,
@@ -14,28 +16,39 @@
 
 	//
 
-	// TODO - support two-way binding
+	
 
-	export let collection: C;
-	export let queryOptions: Partial<PocketbaseQueryOptions<C, Expand>> = {};
 
-	export let disabled = false;
-	export let placeholder: string | undefined = undefined;
-	export let clearValueOnSelect = false;
 
-	export let onSelect: (record: QueryResponse<C, Expand> | undefined) => void = () => {};
 
-	export let displayFields: (keyof CollectionRecords[C])[] | undefined = undefined;
-	export let displayFn: RecordPresenter<QueryResponse<C, Expand>> | undefined = undefined;
 
-	export let attrs: ControlAttrs | undefined = undefined;
+	interface Props {
+		// TODO - support two-way binding
+		collection: C;
+		queryOptions?: Partial<PocketbaseQueryOptions<C, Expand>>;
+		disabled?: boolean;
+		placeholder?: string | undefined;
+		clearValueOnSelect?: boolean;
+		onSelect?: (record: QueryResponse<C, Expand> | undefined) => void;
+		displayFields?: (keyof CollectionRecords[C])[] | undefined;
+		displayFn?: RecordPresenter<QueryResponse<C, Expand>> | undefined;
+		attrs?: ControlAttrs | undefined;
+	}
 
-	//
+	let {
+		collection,
+		queryOptions = {},
+		disabled = false,
+		placeholder = undefined,
+		clearValueOnSelect = false,
+		onSelect = () => {},
+		displayFields = undefined,
+		displayFn = undefined,
+		attrs = undefined
+	}: Props = $props();
 
-	$: pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
 
-	let selectOptions: Selected<QueryResponse<C, Expand>>[] = [];
-	$: loadRecords(pocketbaseQuery);
+	let selectOptions: Selected<QueryResponse<C, Expand>>[] = $state([]);
 
 	async function loadRecords(pocketbaseQuery: PocketbaseQuery<C, Expand>) {
 		const records = await pocketbaseQuery.getFullList();
@@ -54,11 +67,17 @@
 
 	//
 
-	let selected: Selected<QueryResponse<C, Expand>> | undefined = undefined;
-	$: {
+	let selected: Selected<QueryResponse<C, Expand>> | undefined = $state(undefined);
+	//
+
+	let pocketbaseQuery = $derived(new PocketbaseQuery(collection, queryOptions));
+	run(() => {
+		loadRecords(pocketbaseQuery);
+	});
+	run(() => {
 		onSelect(selected?.value);
 		if (clearValueOnSelect) selected = undefined;
-	}
+	});
 </script>
 
 <SelectInput {placeholder} {disabled} items={selectOptions} bind:selected {attrs} />

@@ -16,11 +16,22 @@
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import IconButton from '@/components/custom/iconButton.svelte';
 
-	//
+	
 
-	export let record: CollectionResponses[C];
-	export let dialogTitle = m.Delete_record();
-	export let beforeDelete: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
+	interface Props {
+		//
+		record: CollectionResponses[C];
+		dialogTitle?: any;
+		beforeDelete?: (record: CollectionResponses[C]) => MaybePromise<void>;
+		trigger?: import('svelte').Snippet<[any]>;
+	}
+
+	let {
+		record,
+		dialogTitle = m.Delete_record(),
+		beforeDelete = () => {},
+		trigger
+	}: Props = $props();
 
 	let { recordService } = getCollectionManagerContext<C>();
 
@@ -28,7 +39,7 @@
 
 	const dialogState = createToggleStore(false);
 
-	let error: string | undefined = undefined;
+	let error: string | undefined = $state(undefined);
 
 	async function deleteRecord(record: CollectionResponses[C]) {
 		error = undefined;
@@ -45,37 +56,43 @@
 	onDestroy(() => {
 		error = undefined;
 	});
+
+	const trigger_render = $derived(trigger);
 </script>
 
 <Dialog bind:open={$dialogState} title={dialogTitle}>
-	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" openModal={dialogState.on} {builder} icon={Trash}>
-			<IconButton icon={Trash} builders={[builder]} />
-		</slot>
-	</svelte:fragment>
-
-	<svelte:fragment slot="content">
-		<div class="space-y-6">
-			<T>{m.Are_you_sure_you_want_to_delete_this_record()}</T>
-
-			{#if error}
-				<Alert variant="destructive">
-					<p class="font-bold">{m.Error()}</p>
-					<p>{error}</p>
-				</Alert>
+	{#snippet trigger({ builder })}
+	
+			{#if trigger_render}{@render trigger_render({ openModal: dialogState.on, builder, icon: Trash, })}{:else}
+				<IconButton icon={Trash} builders={[builder]} />
 			{/if}
+		
+	{/snippet}
 
-			<div class="flex justify-center gap-2">
-				<Button variant="destructive" on:click={() => deleteRecord(record)}>
-					<Icon src={Trash} mr />
-					{m.Delete()}
-				</Button>
+	{#snippet content()}
+	
+			<div class="space-y-6">
+				<T>{m.Are_you_sure_you_want_to_delete_this_record()}</T>
 
-				<Button variant="outline" on:click={dialogState.off}>
-					<Icon src={X} mr />
-					{m.Cancel()}
-				</Button>
+				{#if error}
+					<Alert variant="destructive">
+						<p class="font-bold">{m.Error()}</p>
+						<p>{error}</p>
+					</Alert>
+				{/if}
+
+				<div class="flex justify-center gap-2">
+					<Button variant="destructive" on:click={() => deleteRecord(record)}>
+						<Icon src={Trash} mr />
+						{m.Delete()}
+					</Button>
+
+					<Button variant="outline" on:click={dialogState.off}>
+						<Icon src={X} mr />
+						{m.Cancel()}
+					</Button>
+				</div>
 			</div>
-		</div>
-	</svelte:fragment>
+		
+	{/snippet}
 </Dialog>

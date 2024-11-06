@@ -5,12 +5,16 @@
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 
-	export let record: CollectionResponses[C];
+	interface Props {
+		record: CollectionResponses[C];
+	}
+
+	let { record }: Props = $props();
 
 	let { selectionContext: selection } = getCollectionManagerContext();
 	let { selectedRecords } = selection;
 
-	$: checked = $selectedRecords.includes(record.id);
+	let checked = $derived($selectedRecords.includes(record.id));
 
 	function handleChecked(checked: boolean | 'indeterminate') {
 		if (checked == 'indeterminate') return;

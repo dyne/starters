@@ -3,7 +3,11 @@
 	import type { SidebarButtonProps } from './types';
 	import Icon from '@/components/custom/icon.svelte';
 
-	export let props: SidebarButtonProps;
+	interface Props {
+		props: SidebarButtonProps;
+	}
+
+	let { props }: Props = $props();
 	let { icon, text } = props;
 </script>
 

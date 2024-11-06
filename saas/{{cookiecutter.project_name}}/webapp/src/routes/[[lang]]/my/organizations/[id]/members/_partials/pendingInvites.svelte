@@ -8,9 +8,14 @@
 	import { PageCard } from '@/components/layout';
 	import IconButton from '@/components/custom/iconButton.svelte';
 
-	//
+	
 
-	export let organization: OrganizationsResponse;
+	interface Props {
+		//
+		organization: OrganizationsResponse;
+	}
+
+	let { organization }: Props = $props();
 </script>
 
 <CollectionManager
@@ -20,37 +25,41 @@
 	}}
 	hide={['emptyState']}
 >
-	<svelte:fragment slot="records" let:records>
-		<PageCard class="!space-y-6">
-			<SectionTitle
-				tag="h4"
-				title={m.Pending_invites()}
-				description={m.pending_invites_description()}
-			/>
+	{#snippet records({ records })}
+	
+			<PageCard class="!space-y-6">
+				<SectionTitle
+					tag="h4"
+					title={m.Pending_invites()}
+					description={m.pending_invites_description()}
+				/>
 
-			<div class="max-h-[400px] divide-y overflow-auto rounded-lg border">
-				{#each records as invite}
-					<div class="flex items-center justify-between px-2 py-1 pl-4">
-						<div class="flex items-center gap-2">
-							<p class="text-sm">
-								{invite.user_email}
-							</p>
-							{#if invite.failed_email_send}
-								<Badge variant="destructive">{m.failed_email_send()}</Badge>
-							{/if}
-							{#if invite.declined}
-								<Badge variant="destructive">{m.invite_declined()}</Badge>
-							{/if}
+				<div class="max-h-[400px] divide-y overflow-auto rounded-lg border">
+					{#each records as invite}
+						<div class="flex items-center justify-between px-2 py-1 pl-4">
+							<div class="flex items-center gap-2">
+								<p class="text-sm">
+									{invite.user_email}
+								</p>
+								{#if invite.failed_email_send}
+									<Badge variant="destructive">{m.failed_email_send()}</Badge>
+								{/if}
+								{#if invite.declined}
+									<Badge variant="destructive">{m.invite_declined()}</Badge>
+								{/if}
+							</div>
+
+							<RecordDelete record={invite}>
+								{#snippet trigger({ icon, builder })}
+													
+										<IconButton variant="ghost" {icon} builders={[builder]} />
+									
+													{/snippet}
+							</RecordDelete>
 						</div>
-
-						<RecordDelete record={invite}>
-							<svelte:fragment slot="trigger" let:icon let:builder>
-								<IconButton variant="ghost" {icon} builders={[builder]} />
-							</svelte:fragment>
-						</RecordDelete>
-					</div>
-				{/each}
-			</div>
-		</PageCard>
-	</svelte:fragment>
+					{/each}
+				</div>
+			</PageCard>
+		
+	{/snippet}
 </CollectionManager>

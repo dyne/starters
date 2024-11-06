@@ -5,16 +5,23 @@
 	import type { FieldOptions } from '../types';
 	import RequiredIndicator from '@/forms/components/requiredIndicator.svelte';
 
-	export let field: string;
-	export let options: Partial<FieldOptions> = {};
+	interface Props {
+		field: string;
+		options?: Partial<FieldOptions>;
+		children?: import('svelte').Snippet<[any]>;
+	}
+
+	let { field, options = {}, children }: Props = $props();
 </script>
 
-<Form.Control let:attrs>
-	<Form.Label>
-		{options.label ?? capitalize(field)}
-		<RequiredIndicator {field} />
-	</Form.Label>
-	<slot {attrs} />
+<Form.Control >
+	{#snippet children({ attrs })}
+		<Form.Label>
+			{options.label ?? capitalize(field)}
+			<RequiredIndicator {field} />
+		</Form.Label>
+		{@render children?.({ attrs, })}
+	{/snippet}
 </Form.Control>
 
 {#if options.description}

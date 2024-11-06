@@ -2,7 +2,12 @@
 	import * as AlertDialog from '@/components/ui/alert-dialog';
 	import Spinner from './spinner.svelte';
 
-	export let loading = false;
+	interface Props {
+		loading?: boolean;
+		children?: import('svelte').Snippet;
+	}
+
+	let { loading = $bindable(false), children }: Props = $props();
 </script>
 
 <AlertDialog.Root
@@ -17,7 +22,7 @@
 	>
 		<Spinner />
 		<AlertDialog.Description>
-			<slot></slot>
+			{@render children?.()}
 		</AlertDialog.Description>
 	</AlertDialog.Content>
 </AlertDialog.Root>

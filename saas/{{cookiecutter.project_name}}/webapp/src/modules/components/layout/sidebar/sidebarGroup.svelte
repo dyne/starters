@@ -9,11 +9,14 @@
 	import { buttonVariants } from '@/components/ui/button/index.js';
 	import { nanoid } from 'nanoid';
 	import SidebarIcon from './sidebarIcon.svelte';
+	interface Props {
+		[key: string]: any
+	}
+
+	let { ...props_1 }: Props = $props();
 
 	type $$Props = SidebarGroupProps;
-	$: props = $$props as $$Props;
 
-	$: isActive = isGroupActive(props);
 
 	function isGroupActive({ links }: SidebarGroupProps) {
 		return links.some((l) => isLinkActive(l.href, $page, true));
@@ -22,6 +25,8 @@
 	const name = nanoid(5);
 
 	// TODO - fix behavior of "organization home" link not working
+	let props = $derived(props_1 as $$Props);
+	let isActive = $derived(isGroupActive(props));
 </script>
 
 <Accordion.Root value={isActive ? name : ''}>

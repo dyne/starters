@@ -14,9 +14,23 @@
 	import FieldTh from './fieldTh.svelte';
 	import IconButton from '@/components/custom/iconButton.svelte';
 
-	export let records: T[];
-	export let fields: KeyOf<T>[] = ['id'] as KeyOf<T>[];
-	export let hide: Array<RecordAction> = [];
+	interface Props {
+		records: T[];
+		fields?: KeyOf<T>[];
+		hide?: Array<RecordAction>;
+		header?: import('svelte').Snippet<[any]>;
+		row?: import('svelte').Snippet<[any]>;
+		actions?: import('svelte').Snippet<[any]>;
+	}
+
+	let {
+		records,
+		fields = ['id'] as KeyOf<T>[],
+		hide = [],
+		header,
+		row,
+		actions
+	}: Props = $props();
 </script>
 
 <Table.Root>
@@ -30,7 +44,7 @@
 				<FieldTh {field} />
 			{/each}
 
-			<slot name="header" Th={Table.Head} />
+			{@render header?.({ Th: Table.Head, })}
 
 			<Table.Head>
 				{m.Actions()}
@@ -53,30 +67,36 @@
 					</Table.Cell>
 				{/each}
 
-				<slot name="row" {record} Td={Table.Cell} />
+				{@render row?.({ record, Td: Table.Cell, })}
 
 				<Table.Cell class="py-2">
-					<slot name="actions" {record} />
+					{@render actions?.({ record, })}
 
 					{#if !hide.includes('edit')}
 						<RecordEdit {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet trigger({ builder, icon })}
+													
+									<IconButton {icon} variant="ghost" builders={[builder]} />
+								
+													{/snippet}
 						</RecordEdit>
 					{/if}
 					{#if !hide.includes('share')}
 						<RecordShare {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet trigger({ builder, icon })}
+													
+									<IconButton {icon} variant="ghost" builders={[builder]} />
+								
+													{/snippet}
 						</RecordShare>
 					{/if}
 					{#if !hide.includes('delete')}
 						<RecordDelete {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet trigger({ builder, icon })}
+													
+									<IconButton {icon} variant="ghost" builders={[builder]} />
+								
+													{/snippet}
 						</RecordDelete>
 					{/if}
 				</Table.Cell>

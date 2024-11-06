@@ -41,7 +41,7 @@
 
 	//
 
-	let seed = '';
+	let seed = $state('');
 
 	const schema = z.object({
 		email: z.string().email(),

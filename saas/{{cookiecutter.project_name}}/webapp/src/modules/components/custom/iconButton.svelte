@@ -11,8 +11,13 @@
 	type $$Props = ButtonProps & { icon?: IconComponent; size?: ButtonSize };
 	type $$Events = ButtonEvents;
 
-	export let icon: $$Props['icon'] = X;
-	export let size: ButtonSize = 'md';
+	interface Props {
+		icon?: $$Props['icon'];
+		size?: ButtonSize;
+		[key: string]: any
+	}
+
+	let { icon = X, size = 'md', ...rest }: Props = $props();
 
 	//
 
@@ -39,9 +44,9 @@
 
 <Button
 	variant="outline"
-	{...$$restProps}
+	{...rest}
 	size="icon"
-	class="{sizes[size ?? 'md'].sizeClass} {$$restProps.class}"
+	class="{sizes[size ?? 'md'].sizeClass} {rest.class}"
 	on:click
 >
 	<Icon src={icon ?? X} size={sizes[size ?? 'md'].iconSize} />

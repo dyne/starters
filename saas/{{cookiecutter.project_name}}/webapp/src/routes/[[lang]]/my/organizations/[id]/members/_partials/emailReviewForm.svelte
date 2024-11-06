@@ -3,16 +3,15 @@
 	import { Input } from '@/components/ui/input';
 	import { Label } from '@/components/ui/label';
 	import { Array as A } from 'effect';
-	import Button from '@/components/ui/button/button.svelte';
-	import { X } from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
 	import IconButton from '@/components/custom/iconButton.svelte';
 
-	//
+	interface Props {
+		emails?: string[];
+	}
 
-	export let emails: string[] = [];
+	let { emails = $bindable([]) }: Props = $props();
 
-	let filterText: string | undefined = undefined;
+	let filterText: string | undefined = $state(undefined);
 
 	function filterEmails(emails: string[], text: string | undefined) {
 		if (!Boolean(text)) return emails;

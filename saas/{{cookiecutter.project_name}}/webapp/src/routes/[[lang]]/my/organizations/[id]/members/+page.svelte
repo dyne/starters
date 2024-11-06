@@ -22,15 +22,21 @@
 	import { capitalize } from '@/utils/other';
 	import { CollectionForm } from '@/collections-components';
 
-	//
+	interface Props {
+		//
+		data: any;
+	}
 
-	export let data;
-	$: organization = data.organization;
-	$: userRole = data.userRole;
+	let { data }: Props = $props();
+	let organization = $derived(data.organization);
+	let userRole = $derived(data.userRole);
 
 	//
 
 	const showInviteModal = createToggleStore(false);
+	$effect(() => {
+		console.log($showInviteModal);
+	});
 </script>
 
 <OrganizationLayout org={organization}>
@@ -57,26 +63,30 @@
 				exclude: ['user', 'organization']
 			}}
 		>
-			<SectionTitle slot="top" title={m.Members()} description={m.members_description()}>
-				<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']} slot="right">
-					<Dialog bind:open={$showInviteModal} title={m.invite_members()}>
-						<svelte:fragment slot="trigger" let:builder>
-							<Button variant="outline" builders={[builder]}>
-								<Plus size="20" class="mr-2" />
-								{m.invite_members()}
-							</Button>
-						</svelte:fragment>
+			<svelte:fragment slot="top">
+				<SectionTitle title={m.Members()} description={m.members_description()}>
+					{#snippet right()}
+						<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
+							<Dialog bind:open={$showInviteModal} title={m.invite_members()}>
+								{#snippet trigger({ builder })}
+									<Button variant="outline" builders={[builder]}>
+										<Plus size="20" class="mr-2" />
+										{m.invite_members()}
+									</Button>
+								{/snippet}
 
-						<svelte:fragment slot="content" let:closeDialog>
-							<InviteMembersForm
-								organizationId={organization.id}
-								onSuccess={closeDialog}
-								onCancel={closeDialog}
-							/>
-						</svelte:fragment>
-					</Dialog>
-				</ProtectedOrgUI>
-			</SectionTitle>
+								{#snippet content({ closeDialog })}
+									<InviteMembersForm
+										organizationId={organization.id}
+										onSuccess={closeDialog}
+										onCancel={closeDialog}
+									/>
+								{/snippet}
+							</Dialog>
+						</ProtectedOrgUI>
+					{/snippet}
+				</SectionTitle>
+			</svelte:fragment>
 
 			<svelte:fragment slot="records" let:records>
 				<div class="space-y-2">
@@ -100,31 +110,31 @@
 									</div>
 								</div>
 
-								<svelte:fragment slot="right">
+								{#snippet right()}
 									<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
 										<div class="space-x-1">
 											{#if userRole.level < role.level}
 												<RecordEdit {record}>
-													<svelte:fragment slot="trigger" let:builder>
+													{#snippet trigger({ builder })}
 														<Button variant="outline" size="sm" builders={[builder]}>
 															{m.Edit_role()}
 															<Icon src={Pencil} ml />
 														</Button>
-													</svelte:fragment>
+													{/snippet}
 												</RecordEdit>
 
 												<RecordDelete {record}>
-													<svelte:fragment slot="trigger" let:builder>
+													{#snippet trigger({ builder })}
 														<Button variant="outline" size="sm" builders={[builder]}>
 															{m.Remove()}
 															<Icon src={X} ml />
 														</Button>
-													</svelte:fragment>
+													{/snippet}
 												</RecordDelete>
 											{/if}
 										</div>
 									</ProtectedOrgUI>
-								</svelte:fragment>
+								{/snippet}
 							</PlainCard>
 						{/if}
 					{/each}

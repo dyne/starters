@@ -1,10 +1,14 @@
-<script>
+<script lang="ts">
 	import { appTitle } from '@/utils/strings';
 
-	/*
-	 * The url to navigate to when the logo is clicked.
-	 */
-	export let href = '/my';
+	interface Props {
+		/*
+		 * The url to navigate to when the logo is clicked.
+		 */
+		href?: string;
+	}
+
+	let { href = '/my' }: Props = $props();
 </script>
 
 <a {href}>

@@ -1,11 +1,15 @@
-<script>
+<script lang="ts">
 	import { m } from '@/i18n';
 	import { appTitle } from '@/utils/strings';
 	import Alert from '@/components/custom/alert.svelte';
 	import T from '@/components/custom/t.svelte';
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let { class: className = '', children }: Props = $props();
 </script>
 
 <Alert variant="warning" class="space-y-3 {className}">
@@ -13,5 +17,5 @@
 		{m.welcome_to_app({ appName: appTitle })}
 	</T>
 
-	<slot />
+	{@render children?.()}
 </Alert>

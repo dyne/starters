@@ -3,7 +3,11 @@
 	import SidebarLink from './sidebarLink.svelte';
 	import type { SidebarItemProps } from './types';
 
-	export let links: SidebarItemProps[];
+	interface Props {
+		links: SidebarItemProps[];
+	}
+
+	let { links }: Props = $props();
 </script>
 
 {#each links as link}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import OrganizationLayout from '@/organizations/components/organizationLayout.svelte';
 
-	export let data;
+	let { data } = $props();
 	const { organization } = data;
 </script>
 
