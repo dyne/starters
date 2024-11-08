@@ -1,13 +1,14 @@
 <script lang="ts">
 	import * as Sheet from '@/components/ui/sheet';
-	import type { ComponentProps } from 'svelte';
-	import { cn } from '../utils';
+	import type { ComponentProps, Snippet } from 'svelte';
+	import { cn } from '@/components/ui/utils';
 	import { Button } from '@/components/ui/button';
 	import { Separator } from '@/components/ui/separator';
+	import type { GenericRecord } from '@/utils/types';
 
 	//
 
-	type SheetSide = ComponentProps<Sheet.Content>['side'];
+	type SheetSide = ComponentProps<typeof Sheet.Content>['side'];
 
 	interface Props {
 		side?: SheetSide;
@@ -15,9 +16,9 @@
 		open: boolean;
 		class?: string;
 		contentClass?: string;
-		trigger?: import('svelte').Snippet<[any]>;
-		children?: import('svelte').Snippet;
-		content?: import('svelte').Snippet<[any]>;
+		trigger?: Snippet<[{ props: GenericRecord; open: () => void }]>;
+		children?: Snippet;
+		content?: Snippet<[any]>;
 	}
 
 	let {
@@ -42,13 +43,17 @@
 	}
 </script>
 
-<Sheet.Root bind:open={isOpen} portal="body">
-	<Sheet.Trigger asChild let:builder>
-		{#if trigger}{@render trigger({ builder, open })}{:else}
-			<Button builders={[builder]} class="shrink-0" variant="outline">
-				{@render children?.()}
-			</Button>
-		{/if}
+<Sheet.Root bind:open={isOpen}>
+	<Sheet.Trigger>
+		{#snippet child({ props })}
+			{#if trigger}
+				{@render trigger({ props, open })}
+			{:else}
+				<Button {...props} class="shrink-0" variant="outline">
+					{@render children?.()}
+				</Button>
+			{/if}
+		{/snippet}
 	</Sheet.Trigger>
 
 	<Sheet.Content

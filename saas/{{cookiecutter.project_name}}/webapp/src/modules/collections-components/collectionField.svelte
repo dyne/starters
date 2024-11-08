@@ -40,8 +40,6 @@
 	import List from '@/components/custom/list.svelte';
 	import T from '@/components/custom/t.svelte';
 
-	
-
 	interface Props {
 		//
 		form: SuperForm<Data>;
@@ -50,12 +48,7 @@
 		options?: Partial<FieldOptions> & CollectionFieldOptions<C, Expand>;
 	}
 
-	let {
-		form,
-		name,
-		collection,
-		options = {}
-	}: Props = $props();
+	let { form, name, collection, options = {} }: Props = $props();
 
 	let {
 		mode = 'select',
@@ -92,9 +85,9 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} >
-		{#snippet children({ attrs })}
-				{#if mode == 'search'}
+	<FieldWrapper field={name} {options}>
+		{#snippet children({ props })}
+			{#if mode == 'search'}
 				<CollectionSearch
 					{collection}
 					queryOptions={{ ...options, exclude: [...exclude, ...ensureArray($valueProxy)] }}
@@ -114,21 +107,21 @@
 						if (record) addItem(valueProxy, record.id, multiple);
 					}}
 					clearValueOnSelect
-					{attrs}
+					{...props}
 				/>
 			{/if}
 
 			<List class="min-h-[42px]">
 				{#if valueExists($valueProxy)}
-					<ArrayOrItemManager bind:data={$valueProxy}  >
+					<ArrayOrItemManager bind:data={$valueProxy}>
 						{#snippet children({ item, removeItem })}
-										<ListItem on:click={removeItem}>
+							<ListItem onclick={removeItem}>
 								{#await fetchRecord(collection, item) then record}
 									{presenter(record)}
 								{/await}
 							</ListItem>
-															{/snippet}
-								</ArrayOrItemManager>
+						{/snippet}
+					</ArrayOrItemManager>
 				{:else}
 					<ListItem hideButton class="h-10 !justify-center">
 						<T tag="small" class="text-secondary-foreground/30 font-normal">
@@ -137,6 +130,6 @@
 					</ListItem>
 				{/if}
 			</List>
-					{/snippet}
-		</FieldWrapper>
+		{/snippet}
+	</FieldWrapper>
 </Form.Field>

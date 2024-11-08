@@ -10,11 +10,11 @@
 
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Array test</h1>
 
-<ArrayOrItemManager bind:data={items}  >
+<ArrayOrItemManager bind:data={items}>
 	{#snippet children({ item, removeItem })}
 		<PlainCard class="flex items-center justify-between">
 			<p>{item}</p>
-			<Button on:click={removeItem}>ok</Button>
+			<Button onclick={removeItem}>ok</Button>
 		</PlainCard>
 	{/snippet}
 </ArrayOrItemManager>
@@ -23,11 +23,11 @@
 
 <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Item test</h1>
 
-<ArrayOrItemManager bind:data={item}  >
+<ArrayOrItemManager bind:data={item}>
 	{#snippet children({ item, removeItem })}
 		<PlainCard class="flex items-center justify-between">
 			<p>{item}</p>
-			<Button on:click={removeItem}>ok</Button>
+			<Button onclick={removeItem}>ok</Button>
 		</PlainCard>
 	{/snippet}
 </ArrayOrItemManager>

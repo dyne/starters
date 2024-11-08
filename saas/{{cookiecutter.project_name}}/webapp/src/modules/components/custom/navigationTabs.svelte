@@ -5,7 +5,7 @@
 
 <script lang="ts">
 	import NavigationTabComponent from './navigationTab.svelte';
-	import { cn } from '@/components/utils';
+	import { cn } from '@/components/ui/utils';
 
 	interface Props {
 		tabs?: NavigationTab[];

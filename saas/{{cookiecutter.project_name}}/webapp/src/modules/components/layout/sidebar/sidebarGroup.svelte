@@ -5,7 +5,7 @@
 
 	import * as Accordion from '@/components/ui/accordion';
 	import SidebarLink from './sidebarLink.svelte';
-	import { cn } from '@/components/utils.js';
+	import { cn } from '@/components/ui/utils';
 	import { buttonVariants } from '@/components/ui/button/index.js';
 	import { nanoid } from 'nanoid';
 	import SidebarIcon from './sidebarIcon.svelte';

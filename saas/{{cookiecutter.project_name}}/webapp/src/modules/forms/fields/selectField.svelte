@@ -23,8 +23,6 @@
 	import type { ComponentProps } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
-	
-
 	interface Props {
 		//
 		form: SuperForm<Data>;
@@ -51,21 +49,23 @@
 		}
 	}
 
-	type OnSelectedChange = NonNullable<(typeof options)['onSelectedChange']>;
+	type OnSelectedChange = NonNullable<(typeof options)['onValueChange']>;
 
-	const handleSelectedChange: OnSelectedChange = (
-		data: Selected<T> | Selected<T>[] | undefined
-	) => {
-		if (!data) return;
-		if (Array.isArray(data)) {
-			$value = data.map((selected) => selected.value);
-		} else {
-			$value = data.value;
-		}
-	};
+	// TODO - Select
+
+	// const handleSelectedChange: OnSelectedChange = (
+	// 	data: Selected<T> | Selected<T>[] | undefined
+	// ) => {
+	// 	if (!data) return;
+	// 	if (Array.isArray(data)) {
+	// 		$value = data.map((selected) => selected.value);
+	// 	} else {
+	// 		$value = data.value;
+	// 	}
+	// };
 </script>
 
-<Form.Field {form} {name}>
+<!-- <Form.Field {form} {name}>
 	<FieldWrapper
 		field={name}
 		options={{ label: options.label, description: options.description }}
@@ -81,4 +81,4 @@
 			/>
 					{/snippet}
 		</FieldWrapper>
-</Form.Field>
+</Form.Field> -->

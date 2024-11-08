@@ -3,7 +3,9 @@
 	import Icon from './icon.svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import type { IconComponent } from '@/components/types';
-	import { cn } from '../utils';
+	import { cn } from '@/components/ui/utils';
+
+	// TODO - Customize variants
 
 	type Props = ComponentProps<typeof Alert.Root> & {
 		content?: Snippet<[{ Title: typeof Alert.Title; Description: typeof Alert.Description }]>;

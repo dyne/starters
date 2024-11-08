@@ -73,7 +73,7 @@
 								<div class="space-x-1">
 									<Button
 										variant="outline"
-										on:click={() =>
+										onclick={() =>
 											updateRequestStatus(request, accepted)
 												.then(() => toast.success(m.Request_accepted_sucessfully()))
 												.catch(() =>
@@ -85,8 +85,8 @@
 									</Button>
 
 									<Dialog title={m.Warning()}>
-										{#snippet trigger({ builder })}
-											<Button variant="outline" builders={[builder]}>
+										{#snippet trigger({ props })}
+											<Button variant="outline" {...props}>
 												{m.Decline()}
 												<Icon src={CircleOffIcon} ml />
 											</Button>
@@ -95,13 +95,13 @@
 										{#snippet content({ closeDialog })}
 											<p>{m.decline_membership_request_warning()}</p>
 											<div class="flex items-center justify-center gap-2">
-												<Button variant="outline" on:click={closeDialog}>
+												<Button variant="outline" onclick={closeDialog}>
 													{m.Cancel()}
 													<Icon src={X} ml />
 												</Button>
 												<Button
 													variant="destructive"
-													on:click={() =>
+													onclick={() =>
 														updateRequestStatus(request, rejected)
 															.then(closeDialog)
 															.then(() => toast.info(m.Membership_request_declined_successfully()))}

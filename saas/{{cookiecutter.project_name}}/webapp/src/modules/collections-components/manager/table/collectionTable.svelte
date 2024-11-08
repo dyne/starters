@@ -23,14 +23,7 @@
 		actions?: import('svelte').Snippet<[any]>;
 	}
 
-	let {
-		records,
-		fields = ['id'] as KeyOf<T>[],
-		hide = [],
-		header,
-		row,
-		actions
-	}: Props = $props();
+	let { records, fields = ['id'] as KeyOf<T>[], hide = [], header, row, actions }: Props = $props();
 </script>
 
 <Table.Root>
@@ -44,7 +37,7 @@
 				<FieldTh {field} />
 			{/each}
 
-			{@render header?.({ Th: Table.Head, })}
+			{@render header?.({ Th: Table.Head })}
 
 			<Table.Head>
 				{m.Actions()}
@@ -67,36 +60,30 @@
 					</Table.Cell>
 				{/each}
 
-				{@render row?.({ record, Td: Table.Cell, })}
+				{@render row?.({ record, Td: Table.Cell })}
 
 				<Table.Cell class="py-2">
-					{@render actions?.({ record, })}
+					{@render actions?.({ record })}
 
 					{#if !hide.includes('edit')}
 						<RecordEdit {record}>
-							{#snippet trigger({ builder, icon })}
-													
-									<IconButton {icon} variant="ghost" builders={[builder]} />
-								
-													{/snippet}
+							{#snippet trigger({ props, icon })}
+								<IconButton {icon} variant="ghost" {...props} />
+							{/snippet}
 						</RecordEdit>
 					{/if}
 					{#if !hide.includes('share')}
 						<RecordShare {record}>
-							{#snippet trigger({ builder, icon })}
-													
-									<IconButton {icon} variant="ghost" builders={[builder]} />
-								
-													{/snippet}
+							{#snippet trigger({ props, icon })}
+								<IconButton {icon} variant="ghost" {...props} />
+							{/snippet}
 						</RecordShare>
 					{/if}
 					{#if !hide.includes('delete')}
 						<RecordDelete {record}>
-							{#snippet trigger({ builder, icon })}
-													
-									<IconButton {icon} variant="ghost" builders={[builder]} />
-								
-													{/snippet}
+							{#snippet trigger({ props, icon })}
+								<IconButton {icon} variant="ghost" {...props} />
+							{/snippet}
 						</RecordDelete>
 					{/if}
 				</Table.Cell>

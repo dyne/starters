@@ -133,23 +133,22 @@
 			/>
 
 			<LanguageSelect>
-				{#snippet trigger({ builder, icon, text })}
-					<SidebarButton builders={[builder]} {icon} {text} />
+				{#snippet trigger({ props, icon, text })}
+					<!-- TODO - Fix  -->
+					<SidebarButton {...props} {icon} {text} />
 				{/snippet}
 			</LanguageSelect>
 
 			{#if $currentUser}
 				{@const avatar = pb.getFileUrl($currentUser, 'avatar')}
 				<Popover.Root>
-					<Popover.Trigger asChild let:builder>
-						<SidebarButton
-							builders={[builder]}
-							icon={avatar}
-							text={getUserDisplayName($currentUser)}
-						/>
+					<Popover.Trigger>
+						{#snippet child({ props })}
+							<SidebarButton {...props} icon={avatar} text={getUserDisplayName($currentUser)} />
+						{/snippet}
 					</Popover.Trigger>
 
-					<Popover.Content class="space-y-1 p-2" sameWidth>
+					<Popover.Content class="space-y-1 p-2">
 						<SidebarButton text={m.My_profile()} icon={User} href="/my/profile" />
 
 						{#if $featureFlags.DID}

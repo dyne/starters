@@ -3,12 +3,7 @@
 	import type { SidebarButtonProps } from './types';
 	import Icon from '@/components/custom/icon.svelte';
 
-	interface Props {
-		props: SidebarButtonProps;
-	}
-
-	let { props }: Props = $props();
-	let { icon, text } = props;
+	let { icon, text }: SidebarButtonProps = $props();
 </script>
 
 {#if typeof icon == 'string'}

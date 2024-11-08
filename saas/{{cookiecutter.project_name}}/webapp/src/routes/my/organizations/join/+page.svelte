@@ -87,8 +87,8 @@
 								<div class="shrink-0 self-start pl-8">
 									{#if !sentMembershipRequest}
 										<Dialog title={`${m.Send_a_request_to()} ${org.name}`}>
-											{#snippet trigger({ builder })}
-												<Button variant="outline" builders={[builder]}>
+											{#snippet trigger({ props })}
+												<Button variant="outline" {...props}>
 													{m.Join()}
 													<Icon src={UserPlus} ml></Icon>
 												</Button>
@@ -97,10 +97,10 @@
 											{#snippet content({ closeDialog })}
 												<T>{m.Please_confirm_that_you_want_to_join_this_organization_()}</T>
 												<div class="flex items-center justify-center gap-2 pt-4">
-													<Button variant="outline" on:click={closeDialog}>
+													<Button variant="outline" onclick={closeDialog}>
 														{m.Cancel()}
 													</Button>
-													<Button on:click={() => sendJoinRequest(org).then(closeDialog)}>
+													<Button onclick={() => sendJoinRequest(org).then(closeDialog)}>
 														{m.Send_join_request()}
 													</Button>
 												</div>

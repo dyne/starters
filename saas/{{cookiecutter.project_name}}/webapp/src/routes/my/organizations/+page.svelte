@@ -73,10 +73,10 @@
 					<PlainCard>
 						{record.expand?.organization?.name}
 						{#snippet right()}
-							<Button variant="outline" on:click={() => updateInvite(record.id, 'accept')}>
+							<Button variant="outline" onclick={() => updateInvite(record.id, 'accept')}>
 								{m.accept_invite()}<Icon src={Check} ml />
 							</Button>
-							<Button variant="outline" on:click={() => updateInvite(record.id, 'decline')}>
+							<Button variant="outline" onclick={() => updateInvite(record.id, 'decline')}>
 								{m.decline_invite()}<Icon src={X} ml />
 							</Button>
 						{/snippet}
@@ -118,7 +118,7 @@
 								{#snippet right()}
 									<Button
 										variant="outline"
-										on:click={() => {
+										onclick={() => {
 											deleteJoinRequest(request.id);
 										}}
 									>

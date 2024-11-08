@@ -10,15 +10,12 @@
 	let { loading = $bindable(false), children }: Props = $props();
 </script>
 
-<AlertDialog.Root
-	bind:open={loading}
-	closeOnEscape={false}
-	closeOnOutsideClick={false}
-	portal="body"
->
+<AlertDialog.Root bind:open={loading}>
 	<AlertDialog.Content
 		class="flex !w-1/5 !min-w-[150px] flex-col items-center justify-center gap-2"
 		tabindex={null}
+		escapeKeydownBehavior="ignore"
+		interactOutsideBehavior="ignore"
 	>
 		<Spinner />
 		<AlertDialog.Description>

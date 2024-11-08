@@ -1,5 +1,5 @@
 <script lang="ts" generics="C extends CollectionName">
-	import { cn } from '@/components/utils';
+	import { cn } from '@/components/ui/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import ItemCard from '@/components/custom/itemCard.svelte';

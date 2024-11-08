@@ -47,8 +47,8 @@
 						</div>
 
 						<RecordDelete record={invite}>
-							{#snippet trigger({ icon, builder })}
-								<IconButton variant="ghost" {icon} builders={[builder]} />
+							{#snippet trigger({ icon, props })}
+								<IconButton variant="ghost" {icon} {...props} />
 							{/snippet}
 						</RecordDelete>
 					</div>

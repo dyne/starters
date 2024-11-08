@@ -45,15 +45,15 @@
 		<EmailReviewForm bind:emails />
 
 		<div class="flex items-center justify-between gap-4 pt-6">
-			<Button variant="outline" on:click={() => (formState = 'input')}>
+			<Button variant="outline" onclick={() => (formState = 'input')}>
 				<Icon src={ArrowLeft} size={16} mr />{m.Back()}
 			</Button>
 			<div class="flex items-center gap-2">
-				<Button variant="outline" on:click={onCancel}>
+				<Button variant="outline" onclick={onCancel}>
 					<Icon src={X} mr />
 					{m.Cancel()}
 				</Button>
-				<Button on:click={() => handleSuccess(emails)}>
+				<Button onclick={() => handleSuccess(emails)}>
 					<Icon src={Mail} mr />
 					{m.Send_invites()}
 				</Button>

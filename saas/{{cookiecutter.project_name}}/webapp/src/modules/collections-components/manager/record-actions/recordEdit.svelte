@@ -1,6 +1,5 @@
 <script lang="ts" generics="C extends CollectionName">
 	import Pencil from 'lucide-svelte/icons/pencil';
-	import Icon from '@/components/custom/icon.svelte';
 	import type { CollectionRecords, CollectionResponses } from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import type {
@@ -8,31 +7,33 @@
 		CollectionFormOptions
 	} from '@/collections-components/form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import { Button } from '@/components/ui/button';
 	import { createToggleStore } from '@/components/custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
 	import Sheet from '@/components/custom/sheet.svelte';
 	import { merge } from 'lodash';
 	import IconButton from '@/components/custom/iconButton.svelte';
+	import type { Snippet } from 'svelte';
+	import type { GenericRecord } from '@/utils/types';
+	import type { IconComponent } from '@/components/types';
+
+	//
 
 	interface Props {
-		//
 		collection?: C | undefined;
 		record: CollectionResponses[C];
 		initialData?: Partial<CollectionRecords[C]>;
 		sheetTitle?: string | undefined;
 		onSuccess?: OnCollectionFormSuccess<C>;
-		trigger?: import('svelte').Snippet<[any]>;
+		trigger?: Snippet<[{ open: () => void; props: GenericRecord; icon: IconComponent }]>;
 	}
 
 	let {
-		collection = undefined,
 		record,
 		initialData = {},
 		sheetTitle = undefined,
 		onSuccess = () => {},
-		trigger
+		trigger: triggerSnippet
 	}: Props = $props();
 
 	//
@@ -52,14 +53,14 @@
 		show.off();
 		onSuccess(record, 'edit');
 	};
-
-	const trigger_render = $derived(trigger);
 </script>
 
 <Sheet bind:open={$show} {title}>
-	{#snippet trigger({ builder })}
-		{#if trigger_render}{@render trigger_render({ open: show.on, builder, icon: Pencil })}{:else}
-			<IconButton variant="outline" icon={Pencil} builders={[builder]} />
+	{#snippet trigger({ props })}
+		{#if triggerSnippet}
+			{@render triggerSnippet({ open: show.on, props, icon: Pencil })}
+		{:else}
+			<IconButton variant="outline" icon={Pencil} {...props} />
 		{/if}
 	{/snippet}
 

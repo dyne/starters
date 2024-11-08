@@ -16,14 +16,18 @@
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import Alert from '@/components/custom/alert.svelte';
 	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
+	import type { Snippet } from 'svelte';
+	import type { GenericRecord } from '@/utils/types';
+	import type { IconComponent } from '@/components/types';
+
+	//
 
 	interface Props {
-		//
 		record: CollectionResponses[C];
 		dialogTitle?: any;
 		onAdd?: () => void;
 		onRemove?: () => void;
-		trigger?: import('svelte').Snippet<[any]>;
+		trigger?: Snippet<[{ openDialog: () => void; props: GenericRecord; icon: IconComponent }]>;
 	}
 
 	let {
@@ -31,7 +35,7 @@
 		dialogTitle = m.Share_record(),
 		onAdd = () => {},
 		onRemove = () => {},
-		trigger
+		trigger: triggerSnippet
 	}: Props = $props();
 
 	/* */
@@ -75,18 +79,18 @@
 	// TODO - Make a full refactor of how this works, also backend-side
 
 	let authorizationPromise = $derived(loadAuthorization(record.id));
-
-	const trigger_render = $derived(trigger);
 </script>
 
 <Dialog bind:open={$dialogState} title={dialogTitle} contentClass="my-0">
-	{#snippet trigger({ builder })}
-		{#if trigger_render}{@render trigger_render({
-				open: dialogState.on,
-				builder,
+	{#snippet trigger({ props })}
+		{#if triggerSnippet}
+			{@render triggerSnippet({
+				openDialog: dialogState.on,
+				props,
 				icon: Share
-			})}{:else}
-			<IconButton variant="outline" icon={Share} builders={[builder]} />
+			})}
+		{:else}
+			<IconButton variant="outline" icon={Share} {...props} />
 		{/if}
 	{/snippet}
 
@@ -124,7 +128,7 @@
 					<!-- @migration-task: migrate this slot by hand, `footer-left` is an invalid identifier -->
 					<svelte:fragment slot="footer-left">
 						{#if authorization}
-							<Button variant="destructive" on:click={() => (formState = 'removeAccess')}>
+							<Button variant="destructive" onclick={() => (formState = 'removeAccess')}>
 								<Icon src={Trash} mr />
 								{m.Remove_access()}
 							</Button>
@@ -144,11 +148,11 @@
 				{/if}
 
 				<div class="mt-4 flex justify-between">
-					<Button variant="outline" on:click={() => (formState = 'default')}>
+					<Button variant="outline" onclick={() => (formState = 'default')}>
 						<Icon src={ArrowLeft} mr />
 						{m.Back()}
 					</Button>
-					<Button variant="destructive" on:click={() => removeAuthorization(authorization.id)}>
+					<Button variant="destructive" onclick={() => removeAuthorization(authorization.id)}>
 						<Icon src={Trash} mr />
 						{m.Yes_remove_access()}
 					</Button>

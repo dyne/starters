@@ -26,21 +26,23 @@
 		emailVisibility: z.boolean()
 	});
 
-	let form = $derived(createForm({
-		adapter: zod(schema),
-		onSubmit: async ({ form }) => {
-			$currentUser = await pb.collection('users').update($currentUser?.id!, form.data);
-			showForm.off();
-		},
-		initialData: {
-			name: $currentUser?.name,
-			email: $currentUser?.email,
-			emailVisibility: $currentUser?.emailVisibility
-		},
-		options: {
-			dataType: 'form'
-		}
-	}));
+	let form = $derived(
+		createForm({
+			adapter: zod(schema),
+			onSubmit: async ({ form }) => {
+				$currentUser = await pb.collection('users').update($currentUser?.id!, form.data);
+				showForm.off();
+			},
+			initialData: {
+				name: $currentUser?.name,
+				email: $currentUser?.email,
+				emailVisibility: $currentUser?.emailVisibility
+			},
+			options: {
+				dataType: 'form'
+			}
+		})
+	);
 </script>
 
 <div class="space-y-6">
@@ -63,7 +65,7 @@
 		{#if $showForm}
 			<Separator />
 		{:else}
-			<Button variant="outline" on:click={showForm.on}>
+			<Button variant="outline" onclick={showForm.on}>
 				<Icon src={Pencil} mr />
 				{m.Edit_profile()}
 			</Button>
@@ -87,7 +89,7 @@
 			<FileField {form} name="avatar" />
 
 			<div class="flex items-center justify-end gap-2">
-				<Button variant="outline" on:click={showForm.off}><Icon src={X} mr />{m.Cancel()}</Button>
+				<Button variant="outline" onclick={showForm.off}><Icon src={X} mr />{m.Cancel()}</Button>
 				<SubmitButton><Icon src={Pencil} mr />{m.Update_profile()}</SubmitButton>
 			</div>
 		</Form>

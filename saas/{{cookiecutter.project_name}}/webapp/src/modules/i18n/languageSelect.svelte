@@ -8,15 +8,15 @@
 	import { Button } from '@/components/ui/button';
 	import { languageTag } from '.';
 	import type { Snippet } from 'svelte';
-	import type { Builder } from 'bits-ui';
 	import type { IconComponent } from '@/components/types';
 	import { Store } from 'runed';
+	import type { GenericRecord } from '@/utils/types';
 
 	interface Props {
 		trigger?: Snippet<
 			[
 				{
-					builder: Builder;
+					props: GenericRecord;
 					icon: IconComponent;
 					text: string;
 					languageData: LanguageData;
@@ -34,22 +34,24 @@
 </script>
 
 <Popover.Root>
-	<Popover.Trigger asChild let:builder>
-		{#if trigger}
-			{@render trigger({
-				builder,
-				icon: Languages,
-				text: m.Select_language(),
-				languageData: currentLanguage
-			})}
-		{:else}
-			<Button variant="outline" builders={[builder]}>
-				<Icon src={Languages} mr />{m.Select_language()}
-			</Button>
-		{/if}
+	<Popover.Trigger>
+		{#snippet child({ props })}
+			{#if trigger}
+				{@render trigger({
+					props,
+					icon: Languages,
+					text: m.Select_language(),
+					languageData: currentLanguage
+				})}
+			{:else}
+				<Button variant="outline" {...props}>
+					<Icon src={Languages} mr />{m.Select_language()}
+				</Button>
+			{/if}
+		{/snippet}
 	</Popover.Trigger>
 
-	<Popover.Content class="p-2" sameWidth>
+	<Popover.Content class="p-2">
 		{#each languagesData as languageData}
 			{#if language}
 				{@render language({ languageData })}

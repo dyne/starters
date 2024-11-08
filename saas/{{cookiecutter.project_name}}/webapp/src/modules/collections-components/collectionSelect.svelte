@@ -16,12 +16,6 @@
 
 	//
 
-	
-
-
-
-
-
 	interface Props {
 		// TODO - support two-way binding
 		collection: C;
@@ -47,7 +41,6 @@
 		attrs = undefined
 	}: Props = $props();
 
-
 	let selectOptions: Selected<QueryResponse<C, Expand>>[] = $state([]);
 
 	async function loadRecords(pocketbaseQuery: PocketbaseQuery<C, Expand>) {
@@ -70,14 +63,16 @@
 	let selected: Selected<QueryResponse<C, Expand>> | undefined = $state(undefined);
 	//
 
+	// TODO - FIX
+
 	let pocketbaseQuery = $derived(new PocketbaseQuery(collection, queryOptions));
-	run(() => {
-		loadRecords(pocketbaseQuery);
-	});
-	run(() => {
-		onSelect(selected?.value);
-		if (clearValueOnSelect) selected = undefined;
-	});
+	// run(() => {
+	// 	loadRecords(pocketbaseQuery);
+	// });
+	// run(() => {
+	// 	onSelect(selected?.value);
+	// 	if (clearValueOnSelect) selected = undefined;
+	// });
 </script>
 
-<SelectInput {placeholder} {disabled} items={selectOptions} bind:selected {attrs} />
+<!-- <SelectInput {placeholder} {disabled} items={selectOptions} bind:value {attrs} /> -->

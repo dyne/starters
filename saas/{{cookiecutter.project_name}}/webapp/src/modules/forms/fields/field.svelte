@@ -33,17 +33,17 @@
 		url: 'https://www.website.org'
 	};
 
-	let placeholder = $derived(Boolean(options.placeholder)
-		? options.placeholder
-		: defaultPlaceholders[options.type ?? 'text']);
+	let placeholder = $derived(
+		Boolean(options.placeholder) ? options.placeholder : defaultPlaceholders[options.type ?? 'text']
+	);
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} >
-		{#snippet children({ attrs })}
-				{#if valueProxy}
-				<Input {...options} {placeholder} {...attrs} bind:value={$valueProxy} />
+	<FieldWrapper field={name} {options}>
+		{#snippet children({ props })}
+			{#if valueProxy}
+				<Input {...options} {placeholder} {...props} bind:value={$valueProxy} />
 			{/if}
-					{/snippet}
-		</FieldWrapper>
+		{/snippet}
+	</FieldWrapper>
 </Form.Field>

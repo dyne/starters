@@ -1,18 +1,18 @@
-<!-- @migration-task Error while migrating Svelte code: $$props is used together with named props in a way that cannot be automatically migrated. -->
 <script lang="ts">
 	import type { IconComponent } from '@/components/types';
 	import type { IconProps } from 'lucide-svelte';
-	import { cn } from '@/components/utils';
+	import { cn } from '@/components/ui/utils';
 
-	type $$Props = IconProps & { src: IconComponent; ml?: boolean; mr?: boolean };
+	type Props = IconProps & { src: IconComponent; ml?: boolean; mr?: boolean };
 
-	export let src: $$Props['src'];
-	export let size: $$Props['size'] = 16;
+	const { src: Src, size = 16, mr, ml, ...rest }: Props = $props();
 
-	$: classes = cn($$props, {
-		'mr-2': $$props.mr,
-		'ml-2': $$props.ml
-	});
+	const classes = $derived(
+		cn(rest.class, rest.className, {
+			'mr-2': mr,
+			'ml-2': ml
+		})
+	);
 </script>
 
-<svelte:component this={src} {size} {...$$restProps} class="${$$props.class} ${classes}" />
+<Src {size} {...rest} class={classes} />

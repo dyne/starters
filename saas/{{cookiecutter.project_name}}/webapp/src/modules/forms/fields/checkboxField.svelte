@@ -20,11 +20,11 @@
 		//
 		form: SuperForm<Data, any>;
 		name: FormPathLeaves<Data, boolean>;
-		options?: Partial<FieldOptions> & ComponentProps<Checkbox>;
+		options?: Partial<FieldOptions> & ComponentProps<typeof Checkbox>;
 		children?: import('svelte').Snippet;
 	}
 
-	let { form, name, options = {}, children }: Props = $props();
+	let { form, name, options = {}, children: childrenSnippet }: Props = $props();
 
 	//
 
@@ -32,17 +32,21 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control let:attrs>
-		<div class="flex items-center gap-2">
-			<Checkbox {...attrs} bind:checked={$value} />
+	<Form.Control>
+		{#snippet children({ props })}
+			<div class="flex items-center gap-2">
+				<Checkbox {...props} bind:checked={$value} />
 
-			<Form.Label>
-				{#if children}{@render children()}{:else}
-					{options.label ?? capitalize(name)}
-				{/if}
-				<RequiredIndicator field={name} />
-			</Form.Label>
-		</div>
+				<Form.Label>
+					{#if childrenSnippet}
+						{@render childrenSnippet()}
+					{:else}
+						{options.label ?? capitalize(name)}
+					{/if}
+					<RequiredIndicator field={name} />
+				</Form.Label>
+			</div>
+		{/snippet}
 	</Form.Control>
 
 	{#if options.description}

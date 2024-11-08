@@ -1,31 +1,31 @@
 <script lang="ts">
 	import * as Dialog from '@/components/ui/dialog/index.js';
 	import { Footer } from '@/components/ui/dialog';
-	import type { DialogProps } from 'bits-ui';
+	import type { DialogRootProps } from 'bits-ui';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import type { Snippet } from 'svelte';
-	import type { Builder } from 'bits-ui';
+	import type { GenericRecord } from '@/utils/types';
 
 	//
 
-	type Props = DialogProps & {
+	type Props = DialogRootProps & {
 		title?: string;
 		description?: string;
 		open?: boolean;
 		class?: string;
 		contentClass?: string;
-		trigger?: Snippet<[{ builder: Builder; openDialog: () => void }]>;
+		trigger?: Snippet<[{ props: GenericRecord; openDialog: () => void }]>;
 		content?: Snippet<[{ Footer: typeof Footer; closeDialog: () => void }]>;
 	};
 
 	let {
 		title,
 		description,
-		trigger,
-		content,
 		open = $bindable(false),
 		class: className = '',
 		contentClass = '',
+		trigger,
+		content,
 		...rest
 	}: Props = $props();
 
@@ -38,9 +38,11 @@
 	}
 </script>
 
-<Dialog.Root bind:open {...rest} portal="body">
-	<Dialog.Trigger asChild let:builder>
-		{@render trigger?.({ builder, openDialog })}
+<Dialog.Root bind:open {...rest}>
+	<Dialog.Trigger>
+		{#snippet child({ props })}
+			{@render trigger?.({ props, openDialog })}
+		{/snippet}
 	</Dialog.Trigger>
 
 	<Dialog.Content class={contentClass}>

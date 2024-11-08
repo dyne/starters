@@ -135,7 +135,7 @@
 		<div class="flex gap-2">
 			<slot name="footer-right"></slot>
 			{#if uiOptions.showCancelButton}
-				<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
+				<Button variant="outline" onclick={onCancel}>{m.Cancel()}</Button>
 			{/if}
 			<SubmitButton>{submitButtonText}</SubmitButton>
 		</div>

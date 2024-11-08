@@ -9,7 +9,7 @@
 	import type { LinkWithIcon } from '@/components/types';
 	import { isLinkActive } from '@/utils/other';
 	import Icon from '@/components/custom/icon.svelte';
-	import { cn } from '@/components/utils';
+	import { cn } from '@/components/ui/utils';
 
 	interface Props {
 		props: NavigationTabProps;
@@ -22,13 +22,15 @@
 
 	let isActive = $derived(isLinkActive(href, $page, activeForSubpages));
 
-	let classes = $derived(cn(
-		'inline-block text-sm font-medium text-center p-4 py-3 border-b-2 flex items-center whitespace-nowrap',
-		{
-			'border-transparent hover:border-primary/20': !isActive,
-			'text-primary border-primary border-b-2': isActive
-		}
-	));
+	let classes = $derived(
+		cn(
+			'inline-block text-sm font-medium text-center p-4 py-3 border-b-2 flex items-center whitespace-nowrap',
+			{
+				'border-transparent hover:border-primary/20': !isActive,
+				'text-primary border-primary border-b-2': isActive
+			}
+		)
+	);
 </script>
 
 <a role="tab" class={classes} {href}>

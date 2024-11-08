@@ -7,6 +7,6 @@
 	const { toggleSidebar } = getUIShellContext();
 </script>
 
-<Button variant="outline" size="icon" on:click={toggleSidebar}>
+<Button variant="outline" size="icon" onclick={toggleSidebar}>
 	<Icon src={Menu} size={20} />
 </Button>
