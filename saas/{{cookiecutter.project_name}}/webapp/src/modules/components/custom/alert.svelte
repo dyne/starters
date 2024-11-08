@@ -8,11 +8,11 @@
 	// TODO - Customize variants
 
 	type Props = ComponentProps<typeof Alert.Root> & {
-		content?: Snippet<[{ Title: typeof Alert.Title; Description: typeof Alert.Description }]>;
+		children?: Snippet<[{ Title: typeof Alert.Title; Description: typeof Alert.Description }]>;
 		icon?: IconComponent;
 	};
 
-	let { content, icon, ...alertProps }: Props = $props();
+	let { children, icon, ...alertProps }: Props = $props();
 </script>
 
 <Alert.Root {...alertProps} class="{alertProps.class} {cn({ '!p-4': !icon })}">
@@ -20,5 +20,5 @@
 		<Icon src={icon} size={16} />
 	{/if}
 
-	{@render content?.({ Title: Alert.Title, Description: Alert.Description })}
+	{@render children?.({ Title: Alert.Title, Description: Alert.Description })}
 </Alert.Root>
