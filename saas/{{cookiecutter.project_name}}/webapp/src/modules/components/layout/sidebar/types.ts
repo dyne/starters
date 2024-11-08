@@ -2,7 +2,7 @@ import type { IconComponent } from '@/components/types';
 
 export type SidebarButtonProps = {
 	text: string;
-	icon?: IconComponent | string;
+	icon?: IconComponent;
 	disabled?: boolean;
 };
 
