@@ -1,26 +1,38 @@
 <script lang="ts">
-	import { currentUser } from '@/pocketbase';
-	import { Logo, Topbar, HamburgerButton, UiShell } from '@/components/layout';
-	import { m } from '@/i18n';
-	import { getUserDisplayName } from '@/pocketbase/utils';
 	import * as Sidebar from '@/components/ui/sidebar/index.js';
-
 	import MySidebar from './_partials/mySidebar.svelte';
+	import type { Snippet } from 'svelte';
+	import SidebarContext from '@/components/layout/sidebar/sidebarContext.svelte';
+	import Topbar from '@/components/layout/topbar.svelte';
+	import Logo from '@/components/layout/Logo.svelte';
 
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { children }: Props = $props();
-
-	let sidebarLayoutBreakpoint = 1024;
 </script>
 
 <Sidebar.Provider>
 	<MySidebar />
-	<main>
-		<Sidebar.Trigger />
+
+	<main class="grow">
+		<SidebarContext>
+			{#snippet content({ isMobile })}
+				{#if isMobile}
+					<Topbar>
+						{#snippet left()}
+							<div class="flex items-center gap-2">
+								<Sidebar.Trigger variant="outline" class="size-9" />
+								<Logo />
+							</div>
+						{/snippet}
+						{#snippet right()}{/snippet}
+					</Topbar>
+				{/if}
+			{/snippet}
+		</SidebarContext>
+
 		{@render children?.()}
 	</main>
-	<!-- TODO - Handle topbar -->
 </Sidebar.Provider>

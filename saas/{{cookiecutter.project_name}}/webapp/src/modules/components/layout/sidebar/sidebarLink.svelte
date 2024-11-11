@@ -1,27 +1,73 @@
 <script lang="ts">
+	import * as Sidebar from '@/components/ui/sidebar';
+	import { cn } from '@/components/ui/utils';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import SidebarItemIcon from './sidebarItemIcon.svelte';
+	import { Store } from 'runed';
 	import { page } from '$app/stores';
-	import Badge from '@/components/ui/badge/badge.svelte';
-	import type { SidebarLinkProps } from './types.ts';
-	import { isLinkActive } from '@/utils/other.js';
-	import SidebarButton from './sidebarButton.svelte';
-	interface Props {
-		[key: string]: any
-	}
+	import type { LinkWithIcon } from '@/components/types';
+	import type { Snippet } from 'svelte';
 
-	let { ...props_1 }: Props = $props();
+	type Props = HTMLAnchorAttributes &
+		LinkWithIcon & {
+			disabled?: boolean;
+			sub?: boolean;
+			isActive?: boolean;
+			left?: Snippet;
+		};
 
-	type $$Props = SidebarLinkProps;
-	let props = $derived(props_1 as $$Props);
+	const {
+		href,
+		title,
+		icon,
+		disabled = false,
+		left,
+		sub = false,
+		onclick,
+		...rest
+	}: Props = $props();
 
-	let isActive = $derived(isLinkActive(props.href, $page));
+	const Item = $derived(sub ? Sidebar.MenuSubItem : Sidebar.MenuItem);
+	const Button = $derived(sub ? Sidebar.MenuSubButton : Sidebar.MenuButton);
+
+	const pageState = new Store(page);
+	const isActive = $derived(pageState.current.url.pathname == href);
+
+	const sidebarContext = Sidebar.useSidebar();
 </script>
 
-<SidebarButton {...props} {isActive}>
-	{#snippet right()}
-	
-			{#if props.badge}
-				<Badge variant="secondary">{props.badge}</Badge>
+<Item class={cn({ 'cursor-not-allowed opacity-20': disabled })}>
+	<Button {isActive}>
+		{#snippet child({ props })}
+			{#if !disabled}
+				<a
+					{href}
+					{...props}
+					{...rest}
+					onclick={(e) => {
+						sidebarContext.setOpenMobile(false);
+						onclick?.(e);
+					}}
+				>
+					{@render content()}
+				</a>
+			{:else}
+				<p {...props}>
+					{@render content()}
+				</p>
 			{/if}
-		
-	{/snippet}
-</SidebarButton>
+		{/snippet}
+	</Button>
+</Item>
+
+{#snippet content()}
+	{#if left}
+		<SidebarItemIcon>
+			{@render left()}
+		</SidebarItemIcon>
+	{:else if icon}
+		<SidebarItemIcon src={icon} />
+	{/if}
+
+	<span>{title}</span>
+{/snippet}

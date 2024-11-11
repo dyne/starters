@@ -16,7 +16,7 @@
 	//
 
 	// export let items: Link[] = [];
-	
+
 	interface Props {
 		// export let homeIcon: any = undefined;
 		options?: Partial<CalcBreadcrumbsOptions>;
@@ -34,13 +34,13 @@
 
 <Breadcrumb.Root>
 	<Breadcrumb.List>
-		{#each breadcrumbs as { href, text }, i}
+		{#each breadcrumbs as { href, title }, i}
 			{@const isHome = i == 0}
 			{@const isLast = i == breadcrumbs.length - 1}
 
 			{#if !isHome}
 				<Breadcrumb.Item>
-					<Breadcrumb.Link {href}>{text}</Breadcrumb.Link>
+					<Breadcrumb.Link {href}>{title}</Breadcrumb.Link>
 				</Breadcrumb.Item>
 			{:else}
 				<Breadcrumb.Item>
