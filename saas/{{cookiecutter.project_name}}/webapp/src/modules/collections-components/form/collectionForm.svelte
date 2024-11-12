@@ -1,13 +1,10 @@
 <!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts" generics="C extends CollectionName">
 	import type { SchemaField } from 'pocketbase';
-
 	import { capitalize } from '@/utils/other';
-
 	import type { SuperForm } from 'sveltekit-superforms';
-
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { AnySchemaField, CollectionName } from '@/pocketbase/collections-models';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';

@@ -13,7 +13,9 @@ import type { FormPath, SuperForm } from 'sveltekit-superforms';
 
 //
 
-type FieldSnippet<T extends GenericRecord> = Snippet<[{ form: SuperForm<T>; field: FormPath<T> }]>;
+export type FieldSnippet<T, D extends GenericRecord = T & GenericRecord> = Snippet<
+	[{ form: SuperForm<D>; field: FormPath<D> }]
+>;
 
 /* Fields */
 

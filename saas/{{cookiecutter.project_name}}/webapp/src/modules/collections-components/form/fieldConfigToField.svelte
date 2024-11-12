@@ -9,6 +9,8 @@
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 	import type { GenericRecord } from '@/utils/types';
 	import type { Snippet } from 'svelte';
+	import type { FieldSnippet } from './formOptions';
+	import type { CollectionRecords } from '@/pocketbase/types';
 
 	//
 
@@ -19,7 +21,7 @@
 		placeholder?: string | undefined;
 		hidden?: boolean;
 		collectionFieldOptions?: Omit<CollectionFieldOptions<C, ExpandQueryOption<C>>, 'collection'>;
-		component?: Snippet<[{ form: SuperForm<GenericRecord>; field: FormPath<GenericRecord> }]>;
+		component?: FieldSnippet<CollectionRecords[C]>;
 	}
 
 	let {
