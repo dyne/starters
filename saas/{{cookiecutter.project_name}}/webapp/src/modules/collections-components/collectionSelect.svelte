@@ -1,33 +1,15 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
-	import { run } from 'svelte/legacy';
-
-	import {
-		type PocketbaseQueryOptions,
-		type ExpandQueryOption,
-		PocketbaseQuery,
-		type QueryResponse
-	} from '@/pocketbase/query';
+	import { type ExpandQueryOption, PocketbaseQuery, type QueryResponse } from '@/pocketbase/query';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import type { ControlAttrs } from 'formsnap';
 	import { setupComponentPbSubscriptions } from '@/pocketbase';
-	import type { CollectionRecords } from '@/pocketbase/types';
-	import { createRecordDisplay, type RecordPresenter } from './utils';
-	import SelectInput, { type Selected } from '@/components/custom/selectInput.svelte';
+	import type { RecordIdString } from '@/pocketbase/types';
+	import { createRecordDisplay } from './utils';
+	import SelectInput, { type SelectItem } from '@/components/custom/selectInput.svelte';
+	import type { CollectionSelectBaseProps } from './types';
 
 	//
 
-	interface Props {
-		// TODO - support two-way binding
-		collection: C;
-		queryOptions?: Partial<PocketbaseQueryOptions<C, Expand>>;
-		disabled?: boolean;
-		placeholder?: string | undefined;
-		clearValueOnSelect?: boolean;
-		onSelect?: (record: QueryResponse<C, Expand> | undefined) => void;
-		displayFields?: (keyof CollectionRecords[C])[] | undefined;
-		displayFn?: RecordPresenter<QueryResponse<C, Expand>> | undefined;
-		attrs?: ControlAttrs | undefined;
-	}
+	type Props = CollectionSelectBaseProps<C, Expand>;
 
 	let {
 		collection,
@@ -37,42 +19,55 @@
 		clearValueOnSelect = false,
 		onSelect = () => {},
 		displayFields = undefined,
-		displayFn = undefined,
-		attrs = undefined
+		displayFn = undefined
 	}: Props = $props();
 
-	let selectOptions: Selected<QueryResponse<C, Expand>>[] = $state([]);
-
-	async function loadRecords(pocketbaseQuery: PocketbaseQuery<C, Expand>) {
-		const records = await pocketbaseQuery.getFullList();
-		selectOptions = records.map((item) => ({
-			value: item,
-			label: createRecordDisplay(item, displayFields, displayFn)
-		}));
-	}
-
 	//
+
+	type Record = QueryResponse<C, Expand>;
+
+	let records = $state<Record[]>([]);
+	let recordId = $state<RecordIdString | undefined>();
+	const selectedRecord = $derived(records.find((r) => r.id == recordId));
+
+	const presentRecord = $derived(function (record: Record) {
+		return createRecordDisplay(record, displayFields, displayFn);
+	});
+
+	const selectItems: SelectItem[] = $derived.by(() => {
+		return records.map((r) => ({
+			value: r.id,
+			label: presentRecord(r)
+		}));
+	});
+
+	const loadRecords = $derived(function () {
+		const query = new PocketbaseQuery(collection, queryOptions);
+		query.getFullList().then((res) => (records = res));
+	});
+
+	$effect(() => {
+		loadRecords();
+	});
 
 	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
 	for (const c of subscriptionCollections) {
-		setupComponentPbSubscriptions(c, () => loadRecords(pocketbaseQuery));
+		setupComponentPbSubscriptions(c, () => loadRecords());
 	}
 
 	//
 
-	let selected: Selected<QueryResponse<C, Expand>> | undefined = $state(undefined);
-	//
-
-	// TODO - FIX
-
-	let pocketbaseQuery = $derived(new PocketbaseQuery(collection, queryOptions));
-	// run(() => {
-	// 	loadRecords(pocketbaseQuery);
-	// });
-	// run(() => {
-	// 	onSelect(selected?.value);
-	// 	if (clearValueOnSelect) selected = undefined;
-	// });
+	$effect(() => {
+		if (!selectedRecord) return;
+		onSelect($state.snapshot(selectedRecord) as Record);
+		if (clearValueOnSelect) recordId = undefined;
+	});
 </script>
 
-<!-- <SelectInput {placeholder} {disabled} items={selectOptions} bind:value {attrs} /> -->
+<SelectInput type="single" items={selectItems} bind:value={recordId} {placeholder} {disabled}>
+	{#snippet trigger()}
+		{#if selectedRecord}
+			{presentRecord(selectedRecord)}
+		{/if}
+	{/snippet}
+</SelectInput>

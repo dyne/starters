@@ -45,7 +45,7 @@ export function wait(ms: number) {
 
 //
 
-type MaybeArray<T> = T | T[] | undefined | null;
+export type MaybeArray<T> = T | T[] | undefined | null;
 
 export function ensureArray<T>(data: MaybeArray<T>): T[] {
 	if (Array.isArray(data)) return data;

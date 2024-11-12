@@ -6,18 +6,20 @@
 	import CollectionField, { type CollectionFieldOptions } from '../collectionField.svelte';
 	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
 	import { isArrayField } from '@/pocketbase/collections-models';
-	import type { Selected } from '@/components/custom/selectInput.svelte';
-	import type { FieldComponentProp } from './fieldComponent';
+	import type { FormPath, SuperForm } from 'sveltekit-superforms';
+	import type { GenericRecord } from '@/utils/types';
+	import type { Snippet } from 'svelte';
+
+	//
 
 	interface Props {
-		//
 		fieldConfig: AnySchemaField;
 		label?: any;
 		description?: string | undefined;
 		placeholder?: string | undefined;
 		hidden?: boolean;
 		collectionFieldOptions?: Omit<CollectionFieldOptions<C, ExpandQueryOption<C>>, 'collection'>;
-		component?: FieldComponentProp | undefined;
+		component?: Snippet<[{ form: SuperForm<GenericRecord>; field: FormPath<GenericRecord> }]>;
 	}
 
 	let {
@@ -27,7 +29,7 @@
 		placeholder = undefined,
 		hidden = false,
 		collectionFieldOptions = {},
-		component = undefined
+		component
 	}: Props = $props();
 
 	//
@@ -35,40 +37,12 @@
 	const name = fieldConfig.name;
 	const multiple = isArrayField(fieldConfig);
 	const { form } = getFormContext();
-
-	/* Select */
-
-	let items: Selected<string>[] = [];
-	if (fieldConfig.type == 'select' && fieldConfig.options.values) {
-		items = fieldConfig.options.values.map((v) => ({ label: v, value: v }));
-	}
-
-	/* File */
-
-	let accept: string | undefined = undefined;
-	if (fieldConfig.type == 'file' && fieldConfig.options.mimeTypes) {
-		accept = fieldConfig.options.mimeTypes.join(',');
-	}
-
-	/* Relation */
-
-	let collectionName: C | undefined = undefined;
-	if (fieldConfig.type == 'relation' && fieldConfig.options.collectionId) {
-		const collectionId = fieldConfig.options.collectionId;
-		collectionName = getCollectionNameFromId(collectionId) as C;
-	}
 </script>
 
 {#if hidden}
 	<!-- Nothing -->
 {:else if component}
-	<component.component
-		{form}
-		field={fieldConfig.name}
-		{label}
-		{...component.props}
-		{...component.events}
-	/>
+	{@render component({ form, field: name })}
 {:else if fieldConfig.type == 'text' || fieldConfig.type == 'url' || fieldConfig.type == 'date' || fieldConfig.type == 'email'}
 	<Field {form} {name} options={{ label, description, placeholder, type: fieldConfig.type }} />
 {:else if fieldConfig.type == 'number'}
@@ -78,12 +52,19 @@
 {:else if fieldConfig.type == 'bool'}
 	<CheckboxField {form} {name} options={{ label, description }} />
 {:else if fieldConfig.type == 'file'}
+	{@const accept = fieldConfig.options.mimeTypes?.join(',')}
 	<FileField {form} {name} options={{ label, multiple, accept, placeholder }} />
 {:else if fieldConfig.type == 'select'}
-	<SelectField {form} {name} options={{ label, items, multiple, description, placeholder }} />
+	{@const items = fieldConfig.options.values?.map((v) => ({ label: v, value: v }))}
+	<SelectField
+		{form}
+		{name}
+		options={{ label, items, type: multiple ? 'multiple' : 'single', description, placeholder }}
+	/>
 {:else if fieldConfig.type == 'editor'}
 	<TextareaField {form} {name} options={{ label, description, placeholder }} />
-{:else if fieldConfig.type == 'relation' && collectionName}
+{:else if fieldConfig.type == 'relation'}
+	{@const collectionName = getCollectionNameFromId(fieldConfig.options.collectionId!) as C}
 	<CollectionField
 		{form}
 		{name}

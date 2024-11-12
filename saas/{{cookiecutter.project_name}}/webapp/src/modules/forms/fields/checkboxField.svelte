@@ -10,18 +10,17 @@
 	import { Checkbox } from '@/components/ui/checkbox';
 
 	import type { FieldOptions } from './types';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
 	import { capitalize } from 'effect/String';
 	import RequiredIndicator from '../components/requiredIndicator.svelte';
 
 	interface Props {
-		//
 		form: SuperForm<Data, any>;
 		name: FormPathLeaves<Data, boolean>;
 		options?: Partial<FieldOptions> & ComponentProps<typeof Checkbox>;
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { form, name, options = {}, children: childrenSnippet }: Props = $props();
@@ -35,7 +34,7 @@
 	<Form.Control>
 		{#snippet children({ props })}
 			<div class="flex items-center gap-2">
-				<Checkbox {...props} bind:checked={$value} />
+				<Checkbox {...props} checked={$value} onCheckedChange={(v) => ($value = v)} />
 
 				<Form.Label>
 					{#if childrenSnippet}

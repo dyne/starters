@@ -15,8 +15,9 @@
 
 	import { capitalize } from 'effect/String';
 
+	//
+
 	interface Props {
-		//
 		form: SuperForm<Data, any>;
 		name: FormPathLeaves<Data, boolean>;
 		options?: Partial<FieldOptions> & ComponentProps<typeof Switch>;
@@ -33,7 +34,7 @@
 	<Form.Control>
 		{#snippet children({ props })}
 			<div class="flex items-center gap-2">
-				<Switch {...props} bind:checked={$value} />
+				<Switch {...props} checked={$value} onCheckedChange={(v) => ($value = v)} />
 				<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
 			</div>
 		{/snippet}

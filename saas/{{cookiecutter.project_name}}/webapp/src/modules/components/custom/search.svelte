@@ -95,7 +95,9 @@
 			{disabled}
 			bind:value={searchText}
 		/>
-		<div class="text-primary absolute right-3 top-1/2 z-10 -translate-y-1/2 opacity-50">
+		<div
+			class="text-secondary-foreground absolute right-3 top-1/2 z-10 -translate-y-1/2 opacity-50"
+		>
 			<Icon src={$open ? ChevronUp : ChevronDown} class="size-4"></Icon>
 		</div>
 	</div>
@@ -146,7 +148,7 @@
 						</div>
 					</li>
 				{:else}
-					<li class="text-primary/30 flex justify-center py-2">
+					<li class="text-secondary-foreground/30 flex justify-center py-2">
 						<T tag="small">
 							{m.No_results_found()}
 						</T>

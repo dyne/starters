@@ -6,8 +6,9 @@
 <div class="space-y-4">
 	<CollectionSearch
 		collection="z_test_collection"
+		onSelect={(record) => console.log(record)}
 		queryOptions={{ expand: ['relation_multi_field'] }}
-		displayFn={(record) => record.expand?.relation_multi_field?.map((u) => u.name).join(', ') ?? ''}
+		displayFn={(record) => record.text_field}
 	/>
 
 	<CollectionSelect
@@ -17,5 +18,6 @@
 		displayFn={(record) => {
 			return record.expand?.relation_multi_field?.map((u) => u.name).join(', ') ?? '';
 		}}
+		clearValueOnSelect
 	/>
 </div>

@@ -120,7 +120,7 @@
 						relations: {
 							users: {
 								displayFields: ['name'],
-								exclude: [$currentUser?.id ?? '']
+								queryOptions: { exclude: [$currentUser?.id ?? ''] }
 							}
 						}
 					}}
