@@ -9,7 +9,7 @@
 	// TODO - rebuild home
 </script>
 
-<div class="flex items-center justify-between border-b p-4">
+<div class="flex items-center justify-between border-b p-2">
 	<img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt={`${appTitle} Logo`} />
 
 	{#if $featureFlags.AUTH}

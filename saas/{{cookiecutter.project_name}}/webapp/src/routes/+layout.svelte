@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { i18n } from '$lib/i18n';
+	import { i18n } from '@/i18n';
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import '../app.css';
 	import { appTitle } from '@/utils/strings';

@@ -45,7 +45,8 @@
 				})}
 			{:else}
 				<Button variant="outline" {...props}>
-					<Icon src={Languages} mr />{m.Select_language()}
+					<Icon src={Languages} />
+					{m.Select_language()}
 				</Button>
 			{/if}
 		{/snippet}
