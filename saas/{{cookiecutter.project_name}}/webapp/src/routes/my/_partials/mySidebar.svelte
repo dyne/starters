@@ -1,19 +1,13 @@
 <script lang="ts">
 	import * as Sidebar from '@/components/ui/sidebar/index.js';
-	import * as DropdownMenu from '@/components/ui/dropdown-menu';
-	import * as Collapsible from '@/components/ui/collapsible';
+	import * as Popover from '@/components/ui/popover';
 	import { version } from '$app/environment';
-	import type { HTMLAnchorAttributes } from 'svelte/elements';
-	import type { DropdownMenuItemProps } from 'bits-ui';
-
 	import { getUserDidUrl } from '@/did';
 	import { featureFlags } from '@/features';
-	import { goto, m } from '@/i18n';
+	import { m } from '@/i18n';
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-
 	import Logo from '@/components/layout/Logo.svelte';
 	import { createOrganizationLinks, type OrgRole } from '@/organizations';
-	import { getUserRole } from '@/organizations/utils';
 	import { appTitle } from '@/utils/strings';
 	import { getUserDisplayName } from '@/pocketbase/utils';
 	import { currentUser, pb } from '@/pocketbase';
@@ -26,9 +20,10 @@
 		SquareStack,
 		ChevronUp,
 		LogOut,
-		File
+		File,
+		User,
+		SquareArrowOutUpRight
 	} from 'lucide-svelte';
-	import type { IconComponent } from '@/components/types';
 	import Icon from '@/components/custom/icon.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { PocketbaseQuery } from '@/pocketbase/query';
@@ -37,6 +32,7 @@
 	import SidebarItemIcon from '@/components/layout/sidebar/sidebarItemIcon.svelte';
 	import { OrganizationAvatar } from '@/organizations/components';
 	import { page } from '$app/stores';
+	import { Button } from '@/components/ui/button';
 
 	//
 
@@ -46,6 +42,10 @@
 	});
 
 	const sidebarState = Sidebar.useSidebar();
+
+	function closeMobile() {
+		sidebarState.setOpenMobile(false);
+	}
 </script>
 
 <Sidebar.Root>
@@ -107,59 +107,24 @@
 			<SidebarLink href="" title={m.Help()} icon={CircleHelp} disabled />
 
 			<Sidebar.MenuItem>
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger>
-						{#snippet child({ props })}
-							<Sidebar.MenuButton
-								{...props}
-								class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-							>
-								<!-- TODO - Insert language switch -->
-
-								<ChevronUp class="ml-auto" />
-							</Sidebar.MenuButton>
-						{/snippet}
-					</DropdownMenu.Trigger>
-
-					<DropdownMenu.Content side="top" class="w-[--bits-dropdown-menu-anchor-width]">
-						{#if $featureFlags.DID}
-							{#await getUserDidUrl() then href}
-								{#if href}
-									{@render DropdownMenuLink({
-										title: m.my_DID(),
-										icon: File,
-										'data-sveltekit-preload-data': 'off',
-										href,
-										target: '_blank'
-									})}
-								{/if}
-							{/await}
-						{/if}
-
-						{@render DropdownMenuLink({
-							title: m.Go_Pro(),
-							icon: Flame,
-							'data-sveltekit-preload-data': 'off',
-							href: '/',
-							options: {
-								disabled: true
-							}
-						})}
-
-						{@render DropdownMenuLink({
-							title: m.Sign_out(),
-							icon: LogOut,
-							'data-sveltekit-preload-data': 'off',
-							href: '/logout'
-						})}
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+				<LanguageSelect>
+					{#snippet trigger({ props, text, icon })}
+						<Sidebar.MenuButton
+							{...props}
+							class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+						>
+							<Icon src={icon} />
+							<span>{text}</span>
+							<ChevronUp class="ml-auto" />
+						</Sidebar.MenuButton>
+					{/snippet}
+				</LanguageSelect>
 			</Sidebar.MenuItem>
 
 			{#if $currentUser}
 				<Sidebar.MenuItem>
-					<DropdownMenu.Root>
-						<DropdownMenu.Trigger>
+					<Popover.Root>
+						<Popover.Trigger>
 							{#snippet child({ props })}
 								<Sidebar.MenuButton
 									{...props}
@@ -173,41 +138,63 @@
 									<ChevronUp class="ml-auto" />
 								</Sidebar.MenuButton>
 							{/snippet}
-						</DropdownMenu.Trigger>
+						</Popover.Trigger>
 
-						<DropdownMenu.Content side="top" class="w-[--bits-dropdown-menu-anchor-width]">
+						<Popover.Content side="top" class="w-[--bits-popover-anchor-width] space-y-0.5 p-1">
+							<Button
+								variant="ghost"
+								size="sm"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								href="/my/profile"
+								onclick={closeMobile}
+							>
+								<Icon src={User} />
+								{m.My_profile()}
+							</Button>
+
 							{#if $featureFlags.DID}
 								{#await getUserDidUrl() then href}
 									{#if href}
-										{@render DropdownMenuLink({
-											title: m.my_DID(),
-											icon: File,
-											'data-sveltekit-preload-data': 'off',
-											href,
-											target: '_blank'
-										})}
+										<Button
+											variant="ghost"
+											size="sm"
+											{href}
+											class="flex w-full items-center justify-start gap-2"
+											target="_blank"
+										>
+											<Icon src={File} />
+											{m.my_DID()}
+											<Icon src={SquareArrowOutUpRight} />
+										</Button>
 									{/if}
 								{/await}
 							{/if}
 
-							{@render DropdownMenuLink({
-								title: m.Go_Pro(),
-								icon: Flame,
-								'data-sveltekit-preload-data': 'off',
-								href: '/',
-								options: {
-									disabled: true
-								}
-							})}
+							<Button
+								variant="ghost"
+								size="sm"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								disabled
+							>
+								<Icon src={Flame} />
+								{m.Go_Pro()}
+							</Button>
 
-							{@render DropdownMenuLink({
-								title: m.Sign_out(),
-								icon: LogOut,
-								'data-sveltekit-preload-data': 'off',
-								href: '/logout'
-							})}
-						</DropdownMenu.Content>
-					</DropdownMenu.Root>
+							<Button
+								variant="ghost"
+								size="sm"
+								href="/logout"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								disabled
+							>
+								<Icon src={LogOut} />
+								{m.Sign_out()}
+							</Button>
+						</Popover.Content>
+					</Popover.Root>
 				</Sidebar.MenuItem>
 			{/if}
 		</Sidebar.Menu>
@@ -222,7 +209,7 @@
 		</div>
 	</Sidebar.Footer>
 </Sidebar.Root>
-
+<!-- 
 {#snippet DropdownMenuLink({
 	title,
 	icon,
@@ -245,4 +232,4 @@
 			</a>
 		{/snippet}
 	</DropdownMenu.Item>
-{/snippet}
+{/snippet} -->

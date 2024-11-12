@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { getLanguagesData, m, type LanguageData } from '.';
@@ -24,9 +23,10 @@
 			]
 		>;
 		language?: Snippet<[{ languageData: LanguageData }]>;
+		contentClass?: string;
 	}
 
-	const { trigger, language }: Props = $props();
+	const { trigger, language, contentClass = '' }: Props = $props();
 
 	const pageState = new Store(page);
 	const languagesData = $derived(getLanguagesData(pageState.current));
@@ -51,7 +51,7 @@
 		{/snippet}
 	</Popover.Trigger>
 
-	<Popover.Content class="p-2">
+	<Popover.Content class="space-y-0.5 p-1 {contentClass} w-[--bits-popover-anchor-width]">
 		{#each languagesData as languageData}
 			{#if language}
 				{@render language({ languageData })}
@@ -63,6 +63,7 @@
 					{hreflang}
 					variant={isCurrent ? 'secondary' : 'ghost'}
 					class="flex items-center justify-start gap-2"
+					size="sm"
 				>
 					<span class="text-2xl">
 						{flag}

@@ -40,7 +40,7 @@ export const languagesDisplay: Record<AvailableLanguageTag, { flag: string; name
 	de: { flag: '🇩🇪', name: 'Deutsch' },
 	fr: { flag: '🇫🇷', name: 'Français' },
 	da: { flag: '🇩🇰', name: 'Dansk' },
-	'pt-BR': { flag: '🇧🇷', name: 'Português' }
+	'pt-br': { flag: '🇧🇷', name: 'Português' }
 };
 
 export function getLanguagesData(page: Page): LanguageData[] {
