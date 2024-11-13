@@ -15,11 +15,12 @@
 		collection,
 		queryOptions = {},
 		disabled = false,
-		placeholder = undefined,
+		placeholder,
 		clearValueOnSelect = false,
 		onSelect = () => {},
-		displayFields = undefined,
-		displayFn = undefined
+		displayFields,
+		displayFn,
+		controlAttrs
 	}: Props = $props();
 
 	//
@@ -64,7 +65,14 @@
 	});
 </script>
 
-<SelectInput type="single" items={selectItems} bind:value={recordId} {placeholder} {disabled}>
+<SelectInput
+	type="single"
+	items={selectItems}
+	bind:value={recordId}
+	{placeholder}
+	{controlAttrs}
+	{disabled}
+>
 	{#snippet trigger()}
 		{#if selectedRecord}
 			{presentRecord(selectedRecord)}

@@ -21,7 +21,7 @@
 		placeholder?: string | undefined;
 		hidden?: boolean;
 		collectionFieldOptions?: Omit<CollectionFieldOptions<C, ExpandQueryOption<C>>, 'collection'>;
-		component?: FieldSnippet<CollectionRecords[C]>;
+		// component?: FieldSnippet<CollectionRecords[C]>;
 	}
 
 	let {
@@ -30,8 +30,8 @@
 		description = undefined,
 		placeholder = undefined,
 		hidden = false,
-		collectionFieldOptions = {},
-		component
+		collectionFieldOptions = {}
+		// component
 	}: Props = $props();
 
 	//
@@ -43,8 +43,8 @@
 
 {#if hidden}
 	<!-- Nothing -->
-{:else if component}
-	{@render component({ form, field: name })}
+	<!-- {:else if component}
+	{@render component({ form, field: name })} -->
 {:else if fieldConfig.type == 'text' || fieldConfig.type == 'url' || fieldConfig.type == 'date' || fieldConfig.type == 'email'}
 	<Field {form} {name} options={{ label, description, placeholder, type: fieldConfig.type }} />
 {:else if fieldConfig.type == 'number'}

@@ -2,7 +2,7 @@
 	import type { GenericRecord } from '@/utils/types';
 </script>
 
-<script lang="ts" generics="Data extends GenericRecord">
+<script lang="ts" generics="Data extends GenericRecord, T extends SelectType">
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy, type FormPath } from 'sveltekit-superforms/client';
 
@@ -22,27 +22,39 @@
 	interface Props {
 		form: SuperForm<Data>;
 		name: FormPath<Data>;
-		options: Partial<FieldOptions> & Partial<SelectProps>;
+		options: Partial<FieldOptions> & Partial<SelectProps<T>>;
 	}
 
 	const { form, name, options = {} }: Props = $props();
-	const { label, description, type, items = [], ...rest } = options;
+	const {
+		label,
+		description,
+		type = 'single' as SelectType,
+		items = [],
+		trigger,
+		...rest
+	} = options;
 
 	//
 
 	const value = fieldProxy(form, name) as Writable<MaybeArray<string>>;
+
+	// TODO - Fix types
+	// - trigger={trigger as undefined}
+	// - value={$value as unknown as undefined}
 </script>
 
 <Form.Field {form} {name}>
 	<FieldWrapper field={name} options={{ label: options.label, description: options.description }}>
 		{#snippet children({ props })}
 			<SelectInput
-				{...props}
 				{...rest}
 				{items}
-				type={type ?? ('single' as SelectType)}
-				value={$value as MaybeArray<string>}
-				onValueChange={(data: MaybeArray<string>) => ($value = data)}
+				trigger={trigger as undefined}
+				{type}
+				value={$value as unknown as undefined}
+				controlAttrs={props}
+				onValueChange={(data) => ($value = data)}
 			/>
 		{/snippet}
 	</FieldWrapper>

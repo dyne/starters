@@ -116,7 +116,7 @@ test.describe('it should test organizations and members', () => {
 		await expect(editRoleButton).toBeVisible();
 		await editRoleButton.click();
 
-		await page.getByRole('combobox').click();
+		await page.getByLabel('Role *').click();
 		await page.getByRole('option', { name: 'admin' }).click();
 		await page.getByRole('button', { name: 'Edit record' }).click();
 		await expect(page.getByRole('dialog')).toBeHidden();

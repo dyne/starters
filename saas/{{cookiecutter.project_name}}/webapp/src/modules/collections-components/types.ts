@@ -2,6 +2,7 @@ import type { CollectionName } from '@/pocketbase/collections-models';
 import type { ExpandQueryOption, PocketbaseQueryOptions, QueryResponse } from '@/pocketbase/query';
 import type { CollectionRecords } from '@/pocketbase/types';
 import type { RecordPresenter } from './utils';
+import type { ControlAttrs } from 'formsnap';
 
 export interface CollectionSelectBaseProps<
 	C extends CollectionName,
@@ -16,4 +17,5 @@ export interface CollectionSelectBaseProps<
 	displayFields?: (keyof CollectionRecords[C])[] | undefined;
 	displayFn?: RecordPresenter<QueryResponse<C, Expand>> | undefined;
 	clearValueOnSelect?: boolean;
+	controlAttrs?: ControlAttrs;
 }

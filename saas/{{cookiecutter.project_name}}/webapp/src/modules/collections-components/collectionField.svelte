@@ -95,7 +95,7 @@
 					addItem(valueProxy, record.id, multiple);
 				}}
 				clearValueOnSelect
-				{...props}
+				controlAttrs={props}
 			/>
 
 			<List class="min-h-[42px]">

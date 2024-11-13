@@ -64,7 +64,7 @@
 	const pocketbaseQuery = writable(new PocketbaseQuery(collection, queryOptions));
 	$: $pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
 
-	const currentPage = writable<number | undefined>(undefined);
+	const currentPage = writable<number>(1);
 	const totalItems = writable<number | undefined>(undefined);
 
 	//

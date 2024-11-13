@@ -105,7 +105,7 @@
 			{@const name = getFieldConfigName(fieldSchema)}
 			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
 			{@const label = capitalize(fieldsOptions?.labels?.[name] ?? name)}
-			{@const component = fieldsOptions?.components?.[name]}
+			<!-- {@const component = fieldsOptions?.components?.[name]} -->
 			{@const collectionFieldOptions = getRelationsOptions(fieldsOptions?.relations ?? {}, name)}
 			{@const description = fieldsOptions?.descriptions?.[name]}
 			{@const placeholder = fieldsOptions?.placeholders?.[name]}
@@ -114,7 +114,6 @@
 				{label}
 				fieldConfig={fieldSchema}
 				{hidden}
-				{component}
 				{collectionFieldOptions}
 				{placeholder}
 			/>
