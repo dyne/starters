@@ -11,8 +11,8 @@
 
 	let { children, ...props }: Props = $props();
 
-	const { form } = getFormContext();
-	const { allErrors } = form;
+	const { form } = $derived(getFormContext());
+	const { allErrors } = $derived(form);
 
 	let formHasErrors = $derived($allErrors.filter((e) => e.path != FORM_ERROR_PATH).length > 0);
 </script>

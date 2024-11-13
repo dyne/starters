@@ -5,10 +5,10 @@
 	import Alert from '@/components/custom/alert.svelte';
 	import { TriangleAlert } from 'lucide-svelte';
 
-	const { form } = getFormContext();
-	const { allErrors } = form;
+	const { form } = $derived(getFormContext());
 
-	let error = $derived($allErrors.find((e) => e.path == FORM_ERROR_PATH));
+	const { allErrors } = $derived(form);
+	const error = $derived($allErrors.find((e) => e.path == FORM_ERROR_PATH));
 </script>
 
 {#if error}

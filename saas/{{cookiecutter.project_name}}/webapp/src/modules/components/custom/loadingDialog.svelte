@@ -1,10 +1,11 @@
 <script lang="ts">
 	import * as AlertDialog from '@/components/ui/alert-dialog';
 	import Spinner from './spinner.svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		loading?: boolean;
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { loading = $bindable(false), children }: Props = $props();

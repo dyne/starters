@@ -9,8 +9,9 @@
 
 	let { field }: Props = $props();
 
-	const { hideRequiredIndicator, form } = getFormContext();
-	const { constraints } = formFieldProxy(form, field as FormPath<GenericRecord>);
+	const { form, hideRequiredIndicator } = $derived(getFormContext());
+
+	const { constraints } = $derived(formFieldProxy(form, field as FormPath<GenericRecord>));
 	let isFieldRequired = $derived($constraints?.required);
 </script>
 

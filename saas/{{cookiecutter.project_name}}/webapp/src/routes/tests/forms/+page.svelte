@@ -14,6 +14,8 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { ZTestCollectionSelectFieldOptions } from '@/pocketbase/types';
 	import { CollectionField } from '@/collections-components';
+	import type { ComponentProps } from 'svelte';
+	import { Button } from '@/components/ui/button';
 
 	const schema = createCollectionZodSchema('z_test_collection');
 
@@ -38,10 +40,20 @@
 		label: v,
 		value: v as string
 	}));
+
+	let hide = $state<ComponentProps<typeof Form>['hide']>([]);
+
+	function changeHide() {
+		hide = ['required_indicator'];
+	}
 </script>
 
-<Form {form}>
-	<SelectField {form} name="select_field" options={{ items: selectItems }} />
+<Button onclick={changeHide}>sad</Button>
+
+<Form {form} {hide}>
+	<Field {form} name="text_field" />
+
+	<!-- <SelectField {form} name="select_field" options={{ items: selectItems }} />
 	<SelectField
 		{form}
 		name="select_multi_field"
@@ -83,7 +95,7 @@
 
 	<SuperDebug data={formData}></SuperDebug>
 
-	<Field {form} name="text_field" />
+	
 	<Field {form} name="url_field" options={{ type: 'url' }} />
 	<Field {form} name="number_field" options={{ type: 'number' }} />
 	<FileField {form} name="file_field" />
@@ -91,5 +103,5 @@
 	<Field {form} name="date_field" options={{ type: 'date' }} />
 	<SwitchField {form} name="boolean_field" />
 	<CheckboxField {form} name="boolean_field" />
-	<TextareaField {form} name="json_field" />
+	<TextareaField {form} name="json_field" /> -->
 </Form>
