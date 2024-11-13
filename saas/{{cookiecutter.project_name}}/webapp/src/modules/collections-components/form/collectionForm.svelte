@@ -98,7 +98,7 @@
 <Form
 	{form}
 	hideRequiredIndicator={Boolean(uiOptions.hideRequiredIndicator)}
-	hide={['submitButton', 'error']}
+	hide={['submit_button', 'error']}
 >
 	{#key initialData}
 		{#each fieldsConfigs as fieldSchema}

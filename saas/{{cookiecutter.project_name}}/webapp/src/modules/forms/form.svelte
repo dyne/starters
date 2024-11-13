@@ -1,14 +1,12 @@
 <script lang="ts" module>
-	import { getContext, setContext, type Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { GenericRecord } from '@/utils/types';
 	import { setupDerivedContext } from '@/utils/context.svelte';
 
 	//
 
-	export const FORM_KEY = Symbol('ok');
-
-	export type FormContext<Data extends GenericRecord = GenericRecord> = {
+	type FormContext<Data extends GenericRecord = GenericRecord> = {
 		form: SuperForm<Data>;
 		hideRequiredIndicator: boolean;
 	};
@@ -37,7 +35,8 @@
 
 	type Props = {
 		form: SuperForm<T, any>;
-		hide?: ('error' | 'submit_button' | 'loading_state' | 'required_indicator')[];
+		hide?: ('error' | 'submit_button' | 'loading_state')[];
+		hideRequiredIndicator?: boolean;
 		children?: Snippet<
 			[{ SubmitButton: typeof SubmitButton; FormError: typeof FormError; isLoading: boolean }]
 		>;
@@ -48,6 +47,7 @@
 		form,
 		hide = [],
 		class: className = 'space-y-6',
+		hideRequiredIndicator = false,
 		children,
 		submitButton,
 		submitButtonContent,
@@ -69,7 +69,7 @@
 
 	const context = $derived<FormContext<T>>({
 		form,
-		hideRequiredIndicator: hide.includes('required_indicator')
+		hideRequiredIndicator
 	});
 
 	setFormContext(() => context);

@@ -130,7 +130,7 @@
 
 		<Separator />
 
-		<Form {form} class="space-y-6" submitButtonText={m.Generate_keys()}>
+		<Form {form} class="space-y-6">
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Field {form} name="email" options={{ label: 'User email' }} />
@@ -146,6 +146,10 @@
 			{#each userChallenges as question}
 				<Field {form} name={`questions.${question.id}`} options={{ label: question.text }} />
 			{/each}
+
+			{#snippet submitButtonContent()}
+				{m.Generate_keys()}
+			{/snippet}
 		</Form>
 
 		<Separator />

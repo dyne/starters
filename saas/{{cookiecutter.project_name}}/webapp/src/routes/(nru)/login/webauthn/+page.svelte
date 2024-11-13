@@ -32,7 +32,7 @@
 	});
 </script>
 
-<Form {form} submitButtonText={m.Log_in_with_webauthn()}>
+<Form {form}>
 	<Field
 		{form}
 		name="email"
@@ -43,4 +43,8 @@
 			placeholder: 'name@foundation.org'
 		}}
 	/>
+
+	{#snippet submitButtonContent()}
+		{m.Log_in_with_webauthn()}
+	{/snippet}
 </Form>

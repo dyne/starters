@@ -15,7 +15,6 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import z from 'zod';
 	import { createToggleStore } from '@/components/custom/utils';
-	import SubmitButton from '@/forms/components/submitButton.svelte';
 
 	//
 
@@ -73,7 +72,7 @@
 	</div>
 
 	{#if $showForm}
-		<Form {form} hide={['submitButton']}>
+		<Form {form}>
 			<Field {form} name="name" options={{ label: m.Username() }} />
 
 			<div class="space-y-2">
@@ -88,10 +87,12 @@
 
 			<FileField {form} name="avatar" />
 
-			<div class="flex items-center justify-end gap-2">
-				<Button variant="outline" onclick={showForm.off}><Icon src={X} mr />{m.Cancel()}</Button>
-				<SubmitButton><Icon src={Pencil} mr />{m.Update_profile()}</SubmitButton>
-			</div>
+			{#snippet submitButton({ SubmitButton })}
+				<div class="flex items-center justify-end gap-2">
+					<Button variant="outline" onclick={showForm.off}><Icon src={X} mr />{m.Cancel()}</Button>
+					<SubmitButton><Icon src={Pencil} mr />{m.Update_profile()}</SubmitButton>
+				</div>
+			{/snippet}
 		</Form>
 	{/if}
 </div>

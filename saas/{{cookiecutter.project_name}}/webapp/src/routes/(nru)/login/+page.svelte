@@ -33,7 +33,7 @@
 	});
 </script>
 
-<Form {form} submitButtonText={m.Log_in()}>
+<Form {form}>
 	<Field
 		{form}
 		name="email"
@@ -53,4 +53,8 @@
 			placeholder: '•••••'
 		}}
 	/>
+
+	{#snippet submitButtonContent()}
+		{m.Log_in()}
+	{/snippet}
 </Form>

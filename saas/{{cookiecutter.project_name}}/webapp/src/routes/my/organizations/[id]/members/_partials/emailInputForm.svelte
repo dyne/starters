@@ -83,7 +83,7 @@
 
 <!--  -->
 
-<Form {form} hide={['submitButton']}>
+<Form {form}>
 	<FileField
 		{form}
 		name="file_source"
@@ -113,25 +113,23 @@
 		</Alert>
 	{/if}
 
-	{#if emails.length}
-		<Alert variant="success" class="!p-4">
-			{#snippet content({ Title })}
-				<div class="flex items-center justify-between gap-2">
-					<Title><span class="mr-1">✅</span> {emails.length} {m.Emails_found()}</Title>
-					<!-- <SubmitButton variant="default">
-						<Icon src={ArrowRight} mr></Icon>
-						{m.Review_and_confirm()}
-						</SubmitButton> -->
-					<Button
-						onclick={() => {
-							onSuccess(emails);
-						}}
-					>
-						<Icon src={ArrowRight} mr></Icon>
-						{m.Review_and_confirm()}
-					</Button>
-				</div>
-			{/snippet}
-		</Alert>
-	{/if}
+	{#snippet submitButton()}
+		{#if emails.length}
+			<Alert variant="success" class="!p-4">
+				{#snippet content({ Title })}
+					<div class="flex items-center justify-between gap-2">
+						<Title><span class="mr-1">✅</span> {emails.length} {m.Emails_found()}</Title>
+						<Button
+							onclick={() => {
+								onSuccess(emails);
+							}}
+						>
+							<Icon src={ArrowRight} mr></Icon>
+							{m.Review_and_confirm()}
+						</Button>
+					</div>
+				{/snippet}
+			</Alert>
+		{/if}
+	{/snippet}
 </Form>

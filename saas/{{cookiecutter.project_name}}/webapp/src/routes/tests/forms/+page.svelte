@@ -41,19 +41,21 @@
 		value: v as string
 	}));
 
-	let hide = $state<ComponentProps<typeof Form>['hide']>([]);
+	//
 
-	function changeHide() {
-		hide = ['required_indicator'];
-	}
+	let hide = $state<boolean>(false);
+
+	// function changeHide() {
+	// 	hide = !hide;
+	// }
 </script>
 
-<Button onclick={changeHide}>sad</Button>
+<!-- <Button onclick={changeHide}>sad</Button> -->
 
-<Form {form} {hide}>
+<Form {form} hideRequiredIndicator={hide}>
 	<Field {form} name="text_field" />
 
-	<!-- <SelectField {form} name="select_field" options={{ items: selectItems }} />
+	<SelectField {form} name="select_field" options={{ items: selectItems }} />
 	<SelectField
 		{form}
 		name="select_multi_field"
@@ -95,7 +97,6 @@
 
 	<SuperDebug data={formData}></SuperDebug>
 
-	
 	<Field {form} name="url_field" options={{ type: 'url' }} />
 	<Field {form} name="number_field" options={{ type: 'number' }} />
 	<FileField {form} name="file_field" />
@@ -103,5 +104,5 @@
 	<Field {form} name="date_field" options={{ type: 'date' }} />
 	<SwitchField {form} name="boolean_field" />
 	<CheckboxField {form} name="boolean_field" />
-	<TextareaField {form} name="json_field" /> -->
+	<TextareaField {form} name="json_field" />
 </Form>

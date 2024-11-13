@@ -73,7 +73,7 @@
 
 <T tag="h4">Create an account</T>
 
-<Form {form} submitButtonText={m.Create_an_account()} hideRequiredIndicator>
+<Form {form} hideRequiredIndicator>
 	<Field
 		{form}
 		name="email"
@@ -129,6 +129,10 @@
 			{m.privacy_policy()}
 		</A>
 	</CheckboxField>
+
+	{#snippet submitButtonContent()}
+		{m.Create_an_account()}
+	{/snippet}
 </Form>
 
 <div class="flex flex-col gap-4">

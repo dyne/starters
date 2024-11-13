@@ -96,7 +96,7 @@
 			<T>{m.Please_type_here_your_email_and_your_seed_to_restore_your_keyring_()}</T>
 		{/if}
 
-		<Form {form} submitButtonText={m.Regenerate_keys()} hideRequiredIndicator>
+		<Form {form} hideRequiredIndicator>
 			{#if !$currentUser}
 				<div class="space-y-1">
 					<Field {form} name="email" options={{ label: m.User_email() }} />
@@ -107,6 +107,10 @@
 			{/if}
 
 			<TextareaField {form} name="seed" options={{ placeholder: textAreaPlaceholder }} />
+
+			{#snippet submitButtonContent()}
+				{m.Regenerate_keys()}
+			{/snippet}
 		</Form>
 
 		<Separator />
