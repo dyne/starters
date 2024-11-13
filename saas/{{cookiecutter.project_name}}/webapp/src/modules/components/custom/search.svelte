@@ -1,4 +1,4 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
+<!-- TODO - Convert to Svelte 5 -->
 <script lang="ts" context="module">
 	import type { MaybePromise } from '@/utils/types';
 
@@ -20,6 +20,7 @@
 	import Spinner from './spinner.svelte';
 	import Icon from './icon.svelte';
 	import T from './t.svelte';
+	import type { ControlAttrs } from 'formsnap';
 
 	//
 
@@ -29,6 +30,8 @@
 	export let label: string | undefined = undefined;
 	export let placeholder = m.Search();
 	export let disabled = false;
+
+	export let controlAttrs: ControlAttrs | undefined = undefined;
 
 	//
 
@@ -94,8 +97,11 @@
 			{placeholder}
 			{disabled}
 			bind:value={searchText}
+			{...controlAttrs}
 		/>
-		<div class="text-primary absolute right-3 top-1/2 z-10 -translate-y-1/2 opacity-50">
+		<div
+			class="text-secondary-foreground absolute right-3 top-1/2 z-10 -translate-y-1/2 opacity-50"
+		>
 			<Icon src={$open ? ChevronUp : ChevronDown} class="size-4"></Icon>
 		</div>
 	</div>
@@ -146,7 +152,7 @@
 						</div>
 					</li>
 				{:else}
-					<li class="text-primary/30 flex justify-center py-2">
+					<li class="text-secondary-foreground/30 flex justify-center py-2">
 						<T tag="small">
 							{m.No_results_found()}
 						</T>

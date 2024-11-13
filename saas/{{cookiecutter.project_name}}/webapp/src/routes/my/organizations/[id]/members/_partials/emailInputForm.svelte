@@ -123,7 +123,7 @@
 						{m.Review_and_confirm()}
 						</SubmitButton> -->
 					<Button
-						on:click={() => {
+						onclick={() => {
 							onSuccess(emails);
 						}}
 					>

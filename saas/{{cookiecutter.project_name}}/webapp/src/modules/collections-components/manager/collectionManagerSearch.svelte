@@ -13,5 +13,5 @@
 
 <div class="flex gap-2">
 	<Input bind:value={$pocketbaseQuery.options.search} placeholder={m.Search()} />
-	<IconButton on:click={clearSearch} />
+	<IconButton onclick={clearSearch} />
 </div>

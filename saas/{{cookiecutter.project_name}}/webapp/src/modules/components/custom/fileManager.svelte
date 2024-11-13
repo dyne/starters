@@ -75,7 +75,7 @@
 			<ArrayOrItemManager bind:data>
 				{#snippet children({ item, removeItem })}
 					{@const isNew = isNewFile(item)}
-					<ListItem on:click={removeItem}>
+					<ListItem onclick={removeItem}>
 						<div class="flex items-center gap-2">
 							<T tag="p">
 								{item.name}
@@ -94,7 +94,7 @@
 		<List>
 			<ListHeader class="flex items-center justify-between">
 				<T tag="small">{m.Rejected_files()}</T>
-				<Button variant="link" class="h-6 text-xs" on:click={clearRejectedFiles}>
+				<Button variant="link" class="h-6 text-xs" onclick={clearRejectedFiles}>
 					<X size={14} class="mr-1" />
 					{m.Clear()}
 				</Button>

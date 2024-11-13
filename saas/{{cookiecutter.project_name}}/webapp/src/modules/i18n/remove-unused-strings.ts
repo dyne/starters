@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { availableLanguageTags } from './paraglide/runtime';
 
 /**
  * Helper function to recursively find all files in a directory

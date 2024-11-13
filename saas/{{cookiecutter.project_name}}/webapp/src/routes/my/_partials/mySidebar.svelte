@@ -1,182 +1,235 @@
 <script lang="ts">
+	import * as Sidebar from '@/components/ui/sidebar/index.js';
+	import * as Popover from '@/components/ui/popover';
 	import { version } from '$app/environment';
-
 	import { getUserDidUrl } from '@/did';
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-
 	import Logo from '@/components/layout/Logo.svelte';
-	import { createOrganizationSidebarLinks } from '@/organizations';
-	import { getUserRole } from '@/organizations/utils';
+	import { createOrganizationLinks, type OrgRole } from '@/organizations';
 	import { appTitle } from '@/utils/strings';
 	import { getUserDisplayName } from '@/pocketbase/utils';
-
 	import { currentUser, pb } from '@/pocketbase';
-
-	import Sidebar from '@/components/layout/sidebar/sidebar.svelte';
-	import SidebarButton from '@/components/layout/sidebar/sidebarButton.svelte';
-	import SidebarItems from '@/components/layout/sidebar/sidebarItems.svelte';
-	import * as Popover from '@/components/ui/popover';
-	import { Separator } from '@/components/ui/separator';
 	import T from '@/components/custom/t.svelte';
-	import type {
-		OrganizationsResponse,
-		OrgAuthorizationsResponse,
-		OrgRolesResponse
-	} from '@/pocketbase/types';
-
 	import {
-		ArrowUpRightFromSquare,
 		Flame,
 		Home,
 		Inbox,
 		CircleHelp,
 		SquareStack,
+		ChevronUp,
+		LogOut,
+		File,
 		User,
-		File
+		SquareArrowOutUpRight
 	} from 'lucide-svelte';
+	import Icon from '@/components/custom/icon.svelte';
+	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import { PocketbaseQuery } from '@/pocketbase/query';
+	import SidebarLink from '@/components/layout/sidebar/sidebarLink.svelte';
+	import SidebarGroup from '@/components/layout/sidebar/sidebarGroup.svelte';
+	import SidebarItemIcon from '@/components/layout/sidebar/sidebarItemIcon.svelte';
+	import { OrganizationAvatar } from '@/organizations/components';
+	import { page } from '$app/stores';
+	import { Button } from '@/components/ui/button';
 
 	//
 
-	// TODO - Improve subscription
-	function getOrgAuthorizations() {
-		type Authorizations = Required<
-			OrgAuthorizationsResponse<{
-				organization: OrganizationsResponse;
-				role: OrgRolesResponse;
-			}>
-		>;
+	const authorizationsQuery = new PocketbaseQuery('orgAuthorizations', {
+		filter: `user = "${pb.authStore.model!.id}"`,
+		expand: ['organization', 'role']
+	});
 
-		return pb.collection('orgAuthorizations').getFullList<Authorizations>({
-			filter: `user = "${pb.authStore.model!.id}"`,
-			expand: 'organization,role',
-			fetch,
-			requestKey: null
-		});
+	const sidebarState = Sidebar.useSidebar();
+
+	function closeMobile() {
+		sidebarState.setOpenMobile(false);
 	}
 </script>
 
-<Sidebar class="h-full">
-	{#snippet top()}
-		<div class="px-3 py-2">
-			<Logo />
-		</div>
-	{/snippet}
+<Sidebar.Root>
+	<Sidebar.Header class="flex flex-row items-center justify-between border-b">
+		<Logo />
+		{#if sidebarState.isMobile}
+			<Sidebar.Trigger variant="outline" class="size-9" />
+		{/if}
+	</Sidebar.Header>
 
-	<div class="p-2">
-		<SidebarItems
-			links={[
-				{
-					text: m.Home(),
-					href: '/my',
-					icon: Home
-				},
-				{
-					text: m.notifications(),
-					icon: Inbox,
-					href: '/my/notifications',
-					disabled: true
-				}
-			]}
-		/>
-	</div>
+	<Sidebar.Content class="gap-0">
+		<Sidebar.Group>
+			<Sidebar.GroupContent>
+				<Sidebar.Menu>
+					<SidebarLink href="/my" title={m.Home()} icon={Home} />
+					<SidebarLink href="/my/notifications" title={m.notifications()} icon={Inbox} disabled />
+				</Sidebar.Menu>
+			</Sidebar.GroupContent>
+		</Sidebar.Group>
 
-	<Separator />
+		{#if $featureFlags.ORGANIZATIONS}
+			<Sidebar.Group>
+				<Sidebar.GroupLabel>{m.organizations()}</Sidebar.GroupLabel>
+				<Sidebar.GroupContent class="space-y-1">
+					<Sidebar.Menu>
+						<SidebarLink href="/my/organizations" title={m.My_organizations()} icon={SquareStack} />
+					</Sidebar.Menu>
 
-	{#if $featureFlags.ORGANIZATIONS}
-		<div class="space-y-1 p-2">
-			<div class="pb-1 pl-3 pt-1">
-				<T tag="small" class=" text-xs font-bold uppercase tracking-wide">
-					{m.organizations()}
-				</T>
-			</div>
+					{#await authorizationsQuery.getFullList() then authorizations}
+						{#each authorizations as authorization}
+							{@const organization = authorization.expand?.organization!}
+							{@const role = authorization.expand?.role!}
+							{@const active = $page.url.pathname.includes(`/my/organizations/${organization.id}`)}
+							<SidebarGroup {active}>
+								{#snippet trigger()}
+									<SidebarItemIcon>
+										<OrganizationAvatar {organization} class="size-5 border" />
+									</SidebarItemIcon>
+									<span>{organization.name}</span>
+								{/snippet}
 
-			<div class="!mb-3">
-				<SidebarItems
-					links={[
-						{
-							text: m.My_organizations(),
-							href: '/my/organizations',
-							icon: SquareStack
-						}
-					]}
-				/>
-			</div>
+								{#snippet content()}
+									{@const links = createOrganizationLinks(organization.id, role.name as OrgRole)}
 
-			{#await getOrgAuthorizations() then authorizations}
-				{#each authorizations as authorization}
-					{@const organization = authorization.expand.organization}
-					{@const organizationId = organization.id}
-					{@const userId = $currentUser?.id ?? ''}
-					{#await getUserRole(organizationId, userId) then userRole}
-						{@const links = createOrganizationSidebarLinks(organization, m, userRole)}
-						<SidebarItems {links} />
+									{#each links as link}
+										<SidebarLink {...link} sub />
+									{/each}
+								{/snippet}
+							</SidebarGroup>
+						{/each}
 					{/await}
-				{/each}
-			{/await}
-		</div>
-	{/if}
+				</Sidebar.GroupContent>
+			</Sidebar.Group>
+		{/if}
+	</Sidebar.Content>
 
-	{#snippet bottom()}
-		<div class="p-2">
-			<SidebarItems
-				links={[
-					{
-						text: 'Help',
-						icon: CircleHelp,
-						href: '',
-						disabled: true,
-						target: '_blank'
-					}
-				]}
-			/>
+	<Sidebar.Footer class="gap-0 border-t p-0">
+		<Sidebar.Menu class="p-2">
+			<SidebarLink href="" title={m.Help()} icon={CircleHelp} disabled />
 
-			<LanguageSelect>
-				{#snippet trigger({ builder, icon, text })}
-					<SidebarButton builders={[builder]} {icon} {text} />
-				{/snippet}
-			</LanguageSelect>
+			<Sidebar.MenuItem>
+				<LanguageSelect>
+					{#snippet trigger({ props, text, icon })}
+						<Sidebar.MenuButton
+							{...props}
+							class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+						>
+							<Icon src={icon} />
+							<span>{text}</span>
+							<ChevronUp class="ml-auto" />
+						</Sidebar.MenuButton>
+					{/snippet}
+				</LanguageSelect>
+			</Sidebar.MenuItem>
 
 			{#if $currentUser}
-				{@const avatar = pb.getFileUrl($currentUser, 'avatar')}
-				<Popover.Root>
-					<Popover.Trigger asChild let:builder>
-						<SidebarButton
-							builders={[builder]}
-							icon={avatar}
-							text={getUserDisplayName($currentUser)}
-						/>
-					</Popover.Trigger>
+				<Sidebar.MenuItem>
+					<Popover.Root>
+						<Popover.Trigger>
+							{#snippet child({ props })}
+								<Sidebar.MenuButton
+									{...props}
+									class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+								>
+									<SidebarItemIcon>
+										<UserAvatar user={$currentUser} class="size-6" />
+									</SidebarItemIcon>
+									<span>{getUserDisplayName($currentUser!)}</span>
 
-					<Popover.Content class="space-y-1 p-2" sameWidth>
-						<SidebarButton text={m.My_profile()} icon={User} href="/my/profile" />
+									<ChevronUp class="ml-auto" />
+								</Sidebar.MenuButton>
+							{/snippet}
+						</Popover.Trigger>
 
-						{#if $featureFlags.DID}
-							{#await getUserDidUrl() then url}
-								<SidebarButton href={url} text={m.my_DID()} icon={File} target="_blank" />
-							{/await}
-						{/if}
+						<Popover.Content side="top" class="w-[--bits-popover-anchor-width] space-y-0.5 p-1">
+							<Button
+								variant="ghost"
+								size="sm"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								href="/my/profile"
+								onclick={closeMobile}
+							>
+								<Icon src={User} />
+								{m.My_profile()}
+							</Button>
 
-						<SidebarButton href="/pricing" icon={Flame} text={m.Go_Pro()} disabled />
+							{#if $featureFlags.DID}
+								{#await getUserDidUrl() then href}
+									{#if href}
+										<Button
+											variant="ghost"
+											size="sm"
+											{href}
+											class="flex w-full items-center justify-start gap-2"
+											target="_blank"
+										>
+											<Icon src={File} />
+											{m.my_DID()}
+											<Icon src={SquareArrowOutUpRight} />
+										</Button>
+									{/if}
+								{/await}
+							{/if}
 
-						<Separator />
+							<Button
+								variant="ghost"
+								size="sm"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								disabled
+							>
+								<Icon src={Flame} />
+								{m.Go_Pro()}
+							</Button>
 
-						<SidebarButton
-							href="/logout"
-							data-sveltekit-preload-data="off"
-							text={m.Sign_out()}
-							icon={ArrowUpRightFromSquare}
-						/>
-					</Popover.Content>
-				</Popover.Root>
+							<Button
+								variant="ghost"
+								size="sm"
+								href="/logout"
+								data-sveltekit-preload-data="off"
+								class="flex w-full items-center justify-start gap-2"
+								disabled
+							>
+								<Icon src={LogOut} />
+								{m.Sign_out()}
+							</Button>
+						</Popover.Content>
+					</Popover.Root>
+				</Sidebar.MenuItem>
 			{/if}
-		</div>
+		</Sidebar.Menu>
 
-		<div class=" flex border-t px-6 py-3">
-			<T tag="small" class="text-secondary-foreground/50 text-wrap font-mono text-xs">
+		<div class="flex w-full overflow-hidden border-t p-2">
+			<T
+				tag="small"
+				class="text-secondary-foreground/50 text-wrap font-mono text-xs leading-normal"
+			>
 				{appTitle} – Version {version}
 			</T>
 		</div>
-	{/snippet}
-</Sidebar>
+	</Sidebar.Footer>
+</Sidebar.Root>
+<!-- 
+{#snippet DropdownMenuLink({
+	title,
+	icon,
+	href,
+	options,
+	...rest
+}: {
+	title: string;
+	href: string;
+	icon?: IconComponent;
+	options?: DropdownMenuItemProps;
+} & HTMLAnchorAttributes)}
+	<DropdownMenu.Item {...options} class="{options?.class} hover:cursor-pointer">
+		{#snippet child({ props })}
+			<a {href} {...props} {...rest}>
+				{#if icon}
+					<Icon src={icon} />
+				{/if}
+				<span>{title}</span>
+			</a>
+		{/snippet}
+	</DropdownMenu.Item>
+{/snippet} -->

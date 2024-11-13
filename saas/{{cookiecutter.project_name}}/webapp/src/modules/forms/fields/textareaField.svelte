@@ -11,13 +11,10 @@
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import type { FieldOptions } from './types';
 
-	
-
 	interface Props {
-		//
 		form: SuperForm<Data>;
 		name: FormPathLeaves<Data, string | number>;
-		options?: Partial<FieldOptions> & ComponentProps<Textarea>;
+		options?: Partial<FieldOptions> & ComponentProps<typeof Textarea>;
 	}
 
 	let { form, name, options = {} }: Props = $props();
@@ -30,9 +27,9 @@
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} >
-		{#snippet children({ attrs })}
-				<Textarea {...attrs} {...options} bind:value={$valueProxy} />
-					{/snippet}
-		</FieldWrapper>
+	<FieldWrapper field={name} {options}>
+		{#snippet children({ props })}
+			<Textarea {...options} {...props} bind:value={$valueProxy} />
+		{/snippet}
+	</FieldWrapper>
 </Form.Field>

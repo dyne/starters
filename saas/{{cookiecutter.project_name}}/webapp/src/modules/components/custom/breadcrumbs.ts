@@ -37,7 +37,7 @@ export async function calcBreadcrumbs(
 		});
 
 	return (await Promise.all(breadcrumbDataList)).map((b) => ({
-		text: b.name,
+		title: b.name,
 		href: b.url
 	}));
 }

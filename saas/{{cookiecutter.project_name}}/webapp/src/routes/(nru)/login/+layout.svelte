@@ -21,28 +21,29 @@
 	const modes: Link[] = [
 		{
 			href: '/login',
-			text: m.Email_and_password()
+			title: m.Email_and_password()
 		},
 		{
 			href: '/login/webauthn',
-			text: m.Webauthn()
+			title: m.Webauthn()
 		}
 	];
 </script>
 
 <T tag="h4">Log in</T>
+
 {#if $featureFlags.WEBAUTHN}
 	<div class="space-y-2">
 		<T tag="small" class="text-gray-500">{m.Choose_your_authentication_method()}</T>
 		<div class="flex items-center overflow-hidden rounded-md border">
-			{#each modes as { href, text }}
+			{#each modes as { href, title }}
 				{@const isActive = $page.url.pathname === href}
 				<Button
 					variant={isActive ? 'secondary' : 'outline'}
 					{href}
 					class="grow rounded-none border-none"
 				>
-					{text}
+					{title}
 				</Button>
 			{/each}
 		</div>

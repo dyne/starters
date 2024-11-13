@@ -1,28 +1,24 @@
-import type { OrganizationsResponse } from '@/pocketbase/types';
-import type { m as messages } from '@/i18n';
-import type { NavigationTab } from '@/components/custom/navigationTabs.svelte';
+import { m } from '@/i18n';
 import { Cog, Home, Users } from 'lucide-svelte';
-import type { SidebarItemProps } from '@/components/layout/sidebar/types';
-import { pb } from '@/pocketbase';
 import type { OrgRole } from '.';
+import type { LinkWithIcon } from '@/components/types';
+
+//
 
 export function createOrganizationLinks(
 	organizationId: string,
-	m: typeof messages,
 	userRole: OrgRole = 'member'
-): NavigationTab[] {
+): LinkWithIcon[] {
 	const base = (path = '') => `/my/organizations/${organizationId}${path}`;
 
-	const links: NavigationTab[] = [
+	const links: LinkWithIcon[] = [
 		{
-			text: m.Home(),
+			title: m.Home(),
 			href: base(),
-			icon: Home,
-			activeForSubpages: false
+			icon: Home
 		},
-
 		{
-			text: m.Members(),
+			title: m.Members(),
 			href: base('/members'),
 			icon: Users
 		}
@@ -30,25 +26,11 @@ export function createOrganizationLinks(
 
 	if (userRole == 'owner') {
 		links.push({
-			text: m.Settings(),
+			title: m.Settings(),
 			href: base('/settings'),
 			icon: Cog
 		});
 	}
 
 	return links;
-}
-
-export function createOrganizationSidebarLinks(
-	org: OrganizationsResponse,
-	m: typeof messages,
-	userRole: OrgRole = 'member'
-): SidebarItemProps[] {
-	return [
-		{
-			text: org.name,
-			links: createOrganizationLinks(org.id, m, userRole),
-			icon: pb.getFileUrl(org, org.avatar)
-		}
-	];
 }

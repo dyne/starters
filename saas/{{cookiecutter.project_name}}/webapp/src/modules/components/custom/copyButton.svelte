@@ -1,23 +1,17 @@
 <script lang="ts">
-	import Button from '@/components/ui/button/button.svelte';
+	import Button, { type ButtonProps } from '@/components/ui/button/button.svelte';
 	import { ClipboardPlus } from 'lucide-svelte';
 	import Icon from '@/components/custom/icon.svelte';
-	import type { ComponentProps } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import { m } from '@/i18n';
 
 	//
 
-	type $$Props = ComponentProps<Button> & {
+	type Props = ButtonProps & {
 		delay?: number;
 		textToCopy: string;
+		children?: Snippet;
 	};
-
-	interface Props {
-		textToCopy: $$Props['textToCopy'];
-		delay?: $$Props['delay'];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
 
 	let { textToCopy, delay = 2000, children, ...rest }: Props = $props();
 
@@ -32,7 +26,7 @@
 	}
 </script>
 
-<Button variant="outline" on:click={copyText} {...rest}>
+<Button variant="outline" {...rest} onclick={copyText}>
 	{#if !isCopied}
 		{@render children?.()}
 		<Icon src={ClipboardPlus} ml={Boolean(children)} />

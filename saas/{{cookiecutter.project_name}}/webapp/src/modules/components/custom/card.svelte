@@ -1,26 +1,31 @@
-<!-- @migration-task Error while migrating Svelte code: $$props is used together with named props in a way that cannot be automatically migrated. -->
 <script lang="ts">
 	import { Root, Content, Header, Footer } from '@/components/ui/card';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 
-	type $$Props = ComponentProps<Root> & { contentClass?: string };
-	export let contentClass: $$Props['contentClass'] = '';
+	type Props = ComponentProps<typeof Root> & {
+		contentClass?: string;
+		header?: Snippet;
+		children?: Snippet;
+		footer?: Snippet;
+	};
+
+	const { contentClass, header, children, footer, ...rest }: Props = $props();
 </script>
 
-<Root {...$$props}>
-	{#if $$slots.header}
+<Root {...rest}>
+	{#if header}
 		<Header>
-			<slot name="header" />
+			{@render header()}
 		</Header>
 	{/if}
 
 	<Content class={contentClass}>
-		<slot />
+		{@render children?.()}
 	</Content>
 
-	{#if $$slots.footer}
+	{#if footer}
 		<Footer>
-			<slot name="footer"></slot>
+			{@render footer()}
 		</Footer>
 	{/if}
 </Root>

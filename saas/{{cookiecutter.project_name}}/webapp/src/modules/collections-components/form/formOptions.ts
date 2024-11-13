@@ -1,5 +1,4 @@
 import type { CollectionFieldOptions } from '@/collections-components/collectionField.svelte';
-import type { FieldComponentProp } from './fieldComponent';
 import type { CollectionName } from '@/pocketbase/collections-models';
 import type {
 	CollectionRecords,
@@ -7,9 +6,16 @@ import type {
 	CollectionRelatedCollections as Related
 } from '@/pocketbase/types';
 import type { ExpandQueryOption } from '@/pocketbase/query';
-import type { KeyOf, MaybePromise } from '@/utils/types';
-import type { ComponentProps } from 'svelte';
+import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
+import type { ComponentProps, Snippet } from 'svelte';
 import type { CollectionForm } from '.';
+import type { FormPath, SuperForm } from 'sveltekit-superforms';
+
+//
+
+export type FieldSnippet<T, D extends GenericRecord = T & GenericRecord> = Snippet<
+	[{ form: SuperForm<D>; field: FormPath<D> }]
+>;
 
 /* Fields */
 
@@ -24,7 +30,7 @@ export type FieldsOptions<C extends CollectionName, R = CollectionRecords[C]> = 
 	relations: {
 		[K in keyof Related[C]]?: BaseCollectionFieldOptions<Related[C][K] & CollectionName>;
 	};
-	components: { [K in keyof R]?: FieldComponentProp };
+	components: { [K in keyof R]?: FieldSnippet<R & GenericRecord> };
 };
 
 type BaseCollectionFieldOptions<C extends CollectionName> = CollectionFieldOptions<

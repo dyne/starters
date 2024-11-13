@@ -15,11 +15,12 @@
 
 	import { capitalize } from 'effect/String';
 
+	//
+
 	interface Props {
-		//
 		form: SuperForm<Data, any>;
 		name: FormPathLeaves<Data, boolean>;
-		options?: Partial<FieldOptions> & ComponentProps<Switch>;
+		options?: Partial<FieldOptions> & ComponentProps<typeof Switch>;
 	}
 
 	let { form, name, options = {} }: Props = $props();
@@ -30,11 +31,13 @@
 </script>
 
 <Form.Field {form} {name}>
-	<Form.Control let:attrs>
-		<div class="flex items-center gap-2">
-			<Switch {...attrs} includeInput bind:checked={$value} />
-			<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
-		</div>
+	<Form.Control>
+		{#snippet children({ props })}
+			<div class="flex items-center gap-2">
+				<Switch {...props} checked={$value} onCheckedChange={(v) => ($value = v)} />
+				<Form.Label>{options.label ?? capitalize(name)}</Form.Label>
+			</div>
+		{/snippet}
 	</Form.Control>
 
 	{#if options.description}

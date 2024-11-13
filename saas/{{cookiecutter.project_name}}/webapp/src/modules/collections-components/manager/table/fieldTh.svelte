@@ -36,7 +36,7 @@
 			size="icon"
 			variant="ghost"
 			class="{isSortField ? 'visible' : 'invisible'} size-6 group-hover:visible"
-			on:click={handleClick}
+			onclick={handleClick}
 		>
 			<Icon src={!isSortField ? ArrowUp : sortState[1] == 'DESC' ? ArrowDown : ArrowUp} size={14} />
 		</Button>

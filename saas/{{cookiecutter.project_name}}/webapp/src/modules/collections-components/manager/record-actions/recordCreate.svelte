@@ -52,8 +52,8 @@
 </script>
 
 <Sheet bind:open={$show} {title}>
-	{#snippet trigger({ builder })}
-		<Button builders={[builder]} class="shrink-0">
+	{#snippet trigger({ props })}
+		<Button {...props} class="shrink-0">
 			<Icon src={Plus} mr />
 			{#if children}{@render children()}{:else}
 				{title}

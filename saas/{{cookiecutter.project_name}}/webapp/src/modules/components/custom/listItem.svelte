@@ -4,14 +4,13 @@
 	import { X } from 'lucide-svelte';
 	import T from './t.svelte';
 
-
-	
 	interface Props {
 		label?: string | undefined;
 		hideButton?: boolean;
 		class?: string;
 		contentClass?: string;
 		children?: import('svelte').Snippet;
+		onclick?: () => void;
 	}
 
 	let {
@@ -19,23 +18,22 @@
 		hideButton = false,
 		class: className = '',
 		contentClass = '',
-		children
+		children,
+		onclick = () => {}
 	}: Props = $props();
 </script>
 
 <div class="flex items-center justify-between gap-6 px-1 py-1 pl-3 {className}">
 	<div class="w-0 grow overflow-hidden {contentClass}">
-		{#if children}{@render children()}{:else}
-			{#if label}
-				<T tag="p">
-					{label}
-				</T>
-			{/if}
+		{#if children}{@render children()}{:else if label}
+			<T tag="p">
+				{label}
+			</T>
 		{/if}
 	</div>
 
 	{#if !hideButton}
-		<Button variant="ghost" size="icon" class="size-8" on:click>
+		<Button variant="ghost" size="icon" class="size-8" {onclick}>
 			<Icon src={X} size={20} />
 		</Button>
 	{/if}

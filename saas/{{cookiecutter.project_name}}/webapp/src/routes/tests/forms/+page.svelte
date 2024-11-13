@@ -25,7 +25,7 @@
 		},
 		initialData: {
 			file_field: createDummyFile(),
-			relation_field: '8pqa9tnjse6qt9m'
+			relation_field: '5bxdhl7ieg0ogbd'
 		},
 		options: {
 			dataType: 'form'
@@ -42,7 +42,11 @@
 
 <Form {form}>
 	<SelectField {form} name="select_field" options={{ items: selectItems }} />
-	<SelectField {form} name="select_multi_field" options={{ items: selectItems, multiple: true }} />
+	<SelectField
+		{form}
+		name="select_multi_field"
+		options={{ items: selectItems, type: 'multiple' }}
+	/>
 
 	<CollectionField
 		{form}

@@ -1,13 +1,10 @@
 <!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts" generics="C extends CollectionName">
 	import type { SchemaField } from 'pocketbase';
-
 	import { capitalize } from '@/utils/other';
-
 	import type { SuperForm } from 'sveltekit-superforms';
-
 	import { getCollectionModel } from '@/pocketbase/collections-models';
-	import type { AnySchemaField, CollectionName } from '@/pocketbase/collections-models';
+	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
 	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
 	import { Button } from '@/components/ui/button';
@@ -108,7 +105,7 @@
 			{@const name = getFieldConfigName(fieldSchema)}
 			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
 			{@const label = capitalize(fieldsOptions?.labels?.[name] ?? name)}
-			{@const component = fieldsOptions?.components?.[name]}
+			<!-- {@const component = fieldsOptions?.components?.[name]} -->
 			{@const collectionFieldOptions = getRelationsOptions(fieldsOptions?.relations ?? {}, name)}
 			{@const description = fieldsOptions?.descriptions?.[name]}
 			{@const placeholder = fieldsOptions?.placeholders?.[name]}
@@ -117,7 +114,6 @@
 				{label}
 				fieldConfig={fieldSchema}
 				{hidden}
-				{component}
 				{collectionFieldOptions}
 				{placeholder}
 			/>
@@ -135,7 +131,7 @@
 		<div class="flex gap-2">
 			<slot name="footer-right"></slot>
 			{#if uiOptions.showCancelButton}
-				<Button variant="outline" on:click={onCancel}>{m.Cancel()}</Button>
+				<Button variant="outline" onclick={onCancel}>{m.Cancel()}</Button>
 			{/if}
 			<SubmitButton>{submitButtonText}</SubmitButton>
 		</div>

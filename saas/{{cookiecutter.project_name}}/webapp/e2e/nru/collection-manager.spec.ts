@@ -33,9 +33,9 @@ test.describe('it should test the collection manager', () => {
 		await page.getByLabel('Number_field *').press('ArrowUp');
 		await page.getByLabel('Richtext_field *').click();
 		await page.getByLabel('Richtext_field *').fill('okok');
-		await page.getByRole('combobox').nth(2).click();
+		await page.getByLabel('Relation_field *').click();
 		await page.getByRole('option').nth(0).click();
-		await page.getByRole('combobox').nth(3).click();
+		await page.getByLabel('Relation_multi_field *').click();
 		await page.getByRole('option').nth(0).click();
 
 		// const fileChooserPromise = page.waitForEvent('filechooser');

@@ -14,12 +14,11 @@
 	import type { ComponentProps } from 'svelte';
 	import { pipe, Tuple } from 'effect';
 
-	interface Props {
-		//
+	type Props = {
 		form: SuperForm<Data>;
 		name: FormPath<Data>;
-		options?: Partial<FieldOptions & Omit<ComponentProps<Input>, 'type' | 'value'>>;
-	}
+		options?: Partial<FieldOptions & Omit<ComponentProps<typeof Input>, 'type' | 'value'>>;
+	};
 
 	let { form, name, options = {} }: Props = $props();
 
@@ -129,15 +128,15 @@
 
 <Form.Field {form} {name}>
 	<FieldWrapper field={name} {options}>
-		{#snippet children({ attrs })}
+		{#snippet children({ props })}
 			<FileManager bind:data={$valueProxy} {validator} {multiple} let:addFiles>
 				<Input
-					{...attrs}
 					{...options}
+					{...props}
 					placeholder="Upload a file"
 					type="file"
 					class="hover:bg-primary/10 file:bg-secondary-foreground file:text-secondary p-0 py-1 pl-1 file:mr-4 file:h-full file:rounded-md file:px-4 hover:cursor-pointer file:hover:cursor-pointer"
-					on:change={(e) => {
+					onchange={(e) => {
 						const fileList = e.currentTarget.files;
 						if (fileList) addFiles([...fileList]);
 						e.currentTarget.value = '';

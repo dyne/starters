@@ -1,33 +1,14 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
-	import {
-		type PocketbaseQueryOptions,
-		type ExpandQueryOption,
-		type QueryResponse,
-		PocketbaseQuery
-	} from '@/pocketbase/query';
+	import { type ExpandQueryOption, type QueryResponse, PocketbaseQuery } from '@/pocketbase/query';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import { createRecordDisplay } from './utils';
 	import Search from '@/components/custom/search.svelte';
 	import type { SearchFunction } from '@/components/custom/search.svelte';
-	import type { CollectionRecords } from '@/pocketbase/types';
-	import type { RecordPresenter } from './utils';
+	import type { CollectionSelectBaseProps } from './types';
 
-	
+	//
 
-
-
-
-	interface Props {
-		//
-		collection: C;
-		queryOptions?: Partial<PocketbaseQueryOptions<C, Expand>>;
-		disabled?: boolean;
-		label?: string | undefined;
-		placeholder?: string | undefined;
-		onSelect?: (record: QueryResponse<C, Expand>) => void;
-		displayFields?: (keyof CollectionRecords[C])[] | undefined;
-		displayFn?: RecordPresenter<QueryResponse<C, Expand>> | undefined;
-	}
+	type Props = CollectionSelectBaseProps<C, Expand>;
 
 	let {
 		collection,
@@ -37,9 +18,9 @@
 		placeholder = undefined,
 		onSelect = () => {},
 		displayFields = undefined,
-		displayFn = undefined
+		displayFn = undefined,
+		...rest
 	}: Props = $props();
-
 
 	function createSearchFunction(
 		pocketbaseQuery: PocketbaseQuery<C, Expand>
@@ -67,7 +48,7 @@
 	let searchFunction = $derived(createSearchFunction(pocketbaseQuery));
 </script>
 
-<Search searchFn={searchFunction} {onSelect} {label} {placeholder} {disabled} />
+<Search searchFn={searchFunction} {onSelect} {label} {placeholder} {disabled} {...rest} />
 
 <!-- <svelte:fragment slot="item" let:item>
 		<slot name="item" item={typeCaster(item)}></slot>

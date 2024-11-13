@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { capitalize } from 'effect/String';
-
 	import * as Form from '@/components/ui/form';
 	import type { FieldOptions } from '../types';
 	import RequiredIndicator from '@/forms/components/requiredIndicator.svelte';
@@ -10,19 +9,22 @@
 	interface Props {
 		field: string;
 		options?: Partial<FieldOptions>;
-		children?: Snippet<[{ attrs: ControlAttrs }]>;
+		children?: Snippet<[{ props: ControlAttrs }]>;
 	}
 
-	let { field, options = {}, children }: Props = $props();
+	let { field, options = {}, children: child }: Props = $props();
 </script>
 
-<Form.Control let:attrs>
-	<Form.Label>
-		{options.label ?? capitalize(field)}
-		<RequiredIndicator {field} />
-	</Form.Label>
+<Form.Control>
+	{#snippet children({ props })}
+		<!-- TODO - Make <FormLabel> commponent -->
+		<Form.Label>
+			{options.label ?? capitalize(field)}
+			<RequiredIndicator {field} />
+		</Form.Label>
 
-	{@render children?.({ attrs })}
+		{@render child?.({ props })}
+	{/snippet}
 </Form.Control>
 
 {#if options.description}

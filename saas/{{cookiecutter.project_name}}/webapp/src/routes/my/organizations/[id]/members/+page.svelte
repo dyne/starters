@@ -68,8 +68,8 @@
 					{#snippet right()}
 						<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
 							<Dialog bind:open={$showInviteModal} title={m.invite_members()}>
-								{#snippet trigger({ builder })}
-									<Button variant="outline" builders={[builder]}>
+								{#snippet trigger({ props })}
+									<Button variant="outline" {...props}>
 										<Plus size="20" class="mr-2" />
 										{m.invite_members()}
 									</Button>
@@ -115,8 +115,8 @@
 										<div class="space-x-1">
 											{#if userRole.level < role.level}
 												<RecordEdit {record}>
-													{#snippet trigger({ builder })}
-														<Button variant="outline" size="sm" builders={[builder]}>
+													{#snippet trigger({ props })}
+														<Button variant="outline" size="sm" {...props}>
 															{m.Edit_role()}
 															<Icon src={Pencil} ml />
 														</Button>
@@ -124,8 +124,8 @@
 												</RecordEdit>
 
 												<RecordDelete {record}>
-													{#snippet trigger({ builder })}
-														<Button variant="outline" size="sm" builders={[builder]}>
+													{#snippet trigger({ props })}
+														<Button variant="outline" size="sm" {...props}>
 															{m.Remove()}
 															<Icon src={X} ml />
 														</Button>

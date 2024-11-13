@@ -1,22 +1,26 @@
-<script lang="ts">
-	import { m } from '@/i18n';
+<script lang="ts" module>
 	import * as Avatar from '@/components/ui/avatar';
-	import type { AvatarProps } from 'bits-ui';
-	interface Props {
-		[key: string]: any
-	}
+	import type { ComponentProps } from 'svelte';
 
-	let { ...props_1 }: Props = $props();
-
-	type $$Props = AvatarProps & { src?: string; alt?: string; fallback?: string };
-	let props = $derived(props_1 as $$Props);
+	export type AvatarProps = ComponentProps<typeof Avatar.Root> & {
+		src?: string;
+		alt?: string;
+		fallback?: string;
+	};
 </script>
 
-<Avatar.Root {...props_1}>
-	{#if props.src}
-		<Avatar.Image src={props.src} alt={props.alt ?? m.Avatar()} />
+<script lang="ts">
+	import { m } from '@/i18n';
+	import { cn } from '../ui/utils';
+
+	const { src, alt, fallback, ...rest }: AvatarProps = $props();
+</script>
+
+<Avatar.Root {...rest} class={cn(rest.class, 'overflow-hidden')}>
+	{#if src}
+		<Avatar.Image {src} alt={alt ?? m.Avatar()} />
 	{/if}
-	{#if props.fallback}
-		<Avatar.Fallback>{props.fallback}</Avatar.Fallback>
+	{#if fallback}
+		<Avatar.Fallback class="rounded-none text-[80%]">{fallback}</Avatar.Fallback>
 	{/if}
 </Avatar.Root>

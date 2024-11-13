@@ -1,31 +1,18 @@
-<script lang="ts" module>
-	import type { NavigationTabProps as NavigationTab } from './navigationTab.svelte';
-	export { type NavigationTab };
-</script>
-
 <script lang="ts">
-	import NavigationTabComponent from './navigationTab.svelte';
-	import { cn } from '@/components/utils';
+	import type { LinkWithIcon } from '../types';
+	import NavigationTab from './navigationTab.svelte';
 
 	interface Props {
-		tabs?: NavigationTab[];
-		overflow?: 'wrap' | 'scroll';
+		tabs?: LinkWithIcon[];
 	}
 
-	let { tabs = [], overflow = 'scroll' }: Props = $props();
-
-	let classes = $derived(
-		cn('flex gap-1', {
-			'overflow-x-auto': overflow == 'scroll',
-			'flex-wrap': overflow == 'wrap'
-		})
-	);
+	let { tabs = [] }: Props = $props();
 </script>
 
-<ul class={classes}>
+<ul class="flex gap-1 overflow-scroll">
 	{#each tabs as tab}
 		<li role="presentation">
-			<NavigationTabComponent props={tab} />
+			<NavigationTab {...tab} />
 		</li>
 	{/each}
 </ul>

@@ -109,7 +109,7 @@
 		<T tag="h4">{m.Generate_your_keys()}</T>
 
 		{#if WelcomeSession.isActive()}
-			<Alert variant="blue" icon={HelpCircle}>
+			<Alert variant="info" icon={HelpCircle}>
 				<span class="sr-only">{m.Info()}</span>
 				<span class="text mb-2 flex items-center font-bold">
 					{m.Important_information()}
@@ -158,7 +158,7 @@
 		<T class="text-sm">
 			{m.Please_store_this_in_a_safe_place_to_recover_your_account_in_the_future_this_passphrase_will_be_shown_only_one_time()}
 		</T>
-		<Alert variant="blue">
+		<Alert variant="info">
 			<span class="font-mono">
 				{seed}
 				<div class="flex flex-col items-end pt-4">

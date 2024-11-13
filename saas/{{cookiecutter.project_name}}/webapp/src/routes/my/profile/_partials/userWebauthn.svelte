@@ -78,7 +78,7 @@
 	<div class="mt-2 flex justify-end">
 		<Button
 			variant="outline"
-			on:click={() => {
+			onclick={() => {
 				registerUser(userEmailAddress, navigator.userAgent);
 			}}
 		>

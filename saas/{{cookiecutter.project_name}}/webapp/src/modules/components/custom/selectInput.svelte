@@ -1,57 +1,97 @@
-<!-- @migration-task Error while migrating Svelte code: $$props is used together with named props in a way that cannot be automatically migrated. -->
-<script lang="ts" context="module">
-	export type Selected<T> = {
-		label?: string;
-		value: T;
-	};
-</script>
-
-<script lang="ts" generics="T, Multiple extends boolean = false">
-	import { maybeArrayIsValue } from '@/utils/other';
-
-	import { m } from '@/i18n';
-	import { omit } from 'lodash/fp';
-
-	import * as Select from '@/components/ui/select';
-	import type { SelectProps } from 'bits-ui';
+<script lang="ts" module>
+	import type { SelectRootProps, SelectBaseRootPropsWithoutHTML } from 'bits-ui';
+	import type { ArrayElement } from 'type-fest/source/internal';
 	import type { ControlAttrs } from 'formsnap';
+	import type { Snippet } from 'svelte';
 
 	//
 
-	type $$Props = SelectProps<T, Multiple> & { placeholder?: string; attrs?: ControlAttrs };
-	$: props = $$props as $$Props;
+	export type SelectItem = ArrayElement<SelectBaseRootPropsWithoutHTML['items']>;
+	export type SelectType = SelectRootProps['type'];
+	export type SelectValue<T extends SelectType> = T extends 'multiple' ? string[] : string;
 
-	export let selected: $$Props['selected'] = undefined;
+	export type SelectProps<
+		T extends SelectType,
+		V = SelectValue<T>
+	> = SelectBaseRootPropsWithoutHTML & {
+		clearOnSelect?: boolean;
+		placeholder?: string;
+		controlAttrs?: ControlAttrs;
+		type: T;
+		value?: V;
+		trigger?: Snippet<[{ value: V | undefined }]>;
+		onValueChange?: (value: V) => void;
+	};
 </script>
 
-<Select.Root {...omit(['attrs', 'placeholder', 'label'], $$restProps)} bind:selected>
-	<!-- <Select.Root {...$$restProps} bind:selected> -->
-	<!-- Reference: https://formsnap.dev/docs/recipes/bits-ui-select -->
-	{#if selected}
-		{#if Array.isArray(selected)}
-			{#each selected as item}
-				<input name={props.attrs?.name} hidden value={item} />
-			{/each}
-		{:else}
-			<input name={props.attrs?.name} hidden value={props.selected} />
-		{/if}
-	{/if}
+<script lang="ts" generics="T extends SelectType">
+	import { ensureArray, maybeArrayIsValue } from '@/utils/other';
 
-	<Select.Trigger {...props.attrs}>
-		{#if maybeArrayIsValue(selected)}
-			<Select.Value />
+	import { m } from '@/i18n';
+	import * as Select from '@/components/ui/select';
+
+	//
+
+	let {
+		// @ts-ignore
+		type = 'single' as SelectType,
+		value = $bindable(),
+		items,
+		trigger,
+		onValueChange,
+		clearOnSelect = false,
+		placeholder,
+		controlAttrs,
+		...rest
+	}: SelectProps<T> = $props();
+
+	// TODO - Fix types
+	// - bind:value={value as undefined}
+	// - onValueChange={(v: string | string[]) => {
+	// - 	onValueChange?.(v as SelectValue<T>);
+	// - 	if (clearOnSelect) value = undefined;
+	// - }}
+</script>
+
+<Select.Root
+	{type}
+	{...rest}
+	bind:value={value as undefined}
+	onValueChange={(v: string | string[]) => {
+		onValueChange?.(v as SelectValue<T>);
+		if (clearOnSelect) value = undefined;
+	}}
+>
+	<!-- Formsnap Fix -->
+	<!-- Reference: https://formsnap.dev/docs/recipes/bits-ui-select -->
+	{#if maybeArrayIsValue(value)}
+		{#each ensureArray(value) as item}
+			<input name={controlAttrs?.name ?? rest.name} hidden value={item} />
+		{/each}
+	{/if}
+	<!-- Formsnap Fix -->
+
+	<Select.Trigger {...controlAttrs}>
+		{#if maybeArrayIsValue(value)}
+			{#if trigger}
+				{@render trigger({ value })}
+			{:else}
+				{value}
+			{/if}
 		{:else}
-			<span data-placeholder>{props.placeholder ?? m.Select_a_value()}</span>
+			{placeholder ?? m.Select_a_value()}
 		{/if}
 	</Select.Trigger>
 
-	<Select.Content sideOffset={0} class="!mt-0">
-		{#if props.items?.length}
-			{#each props.items as { label, value }}
-				<Select.Item {label} {value}>{label}</Select.Item>
+	<Select.Content>
+		{#if items?.length}
+			{#each items as item}
+				<Select.Item value={item.value} disabled={item.disabled}>
+					{item.label ?? item.value}
+				</Select.Item>
 			{/each}
 		{:else}
-			<Select.Item class="flex justify-center [&>span]:hidden" disabled value={undefined}>
+			<Select.Item class="flex justify-center [&>span]:hidden" disabled value="">
 				{m.No_options_available()}
 			</Select.Item>
 		{/if}
