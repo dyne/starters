@@ -1,4 +1,4 @@
-import Logo from './Logo.svelte';
+import Logo from './logo.svelte';
 import Topbar from './topbar.svelte';
 
 import PageContent from './pageContent.svelte';

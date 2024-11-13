@@ -4,7 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import SidebarContext from '@/components/layout/sidebar/sidebarContext.svelte';
 	import Topbar from '@/components/layout/topbar.svelte';
-	import Logo from '@/components/layout/Logo.svelte';
+	import Logo from '@/components/layout/logo.svelte';
 
 	interface Props {
 		children?: Snippet;

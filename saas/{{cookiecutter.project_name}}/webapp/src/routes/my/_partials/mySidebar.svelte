@@ -6,7 +6,7 @@
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-	import Logo from '@/components/layout/Logo.svelte';
+	import Logo from '@/components/layout/logo.svelte';
 	import { createOrganizationLinks, type OrgRole } from '@/organizations';
 	import { appTitle } from '@/utils/strings';
 	import { getUserDisplayName } from '@/pocketbase/utils';
