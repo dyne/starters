@@ -8,22 +8,23 @@
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import type { FieldOptions } from './types';
 
+	//
+
 	interface Props {
 		form: SuperForm<Data>;
 		name: FormPathLeaves<Data, string | number>;
 		options?: Partial<FieldOptions & HTMLInputAttributes>;
 	}
 
-	let { form, name, options = {} }: Props = $props();
+	const { form, name, options = {} }: Props = $props();
 
 	//
 
-	let { form: formData } = form;
+	const { form: formData } = form;
 
-	const numberValue = numberProxy(formData, name);
-	const textValue = fieldProxy(formData, name);
-
-	let valueProxy = $derived(options.type == 'number' ? numberValue : textValue);
+	const numberValue = $derived(numberProxy(formData, name));
+	const textValue = $derived(fieldProxy(formData, name));
+	const valueProxy = $derived(options.type == 'number' ? numberValue : textValue);
 
 	//
 

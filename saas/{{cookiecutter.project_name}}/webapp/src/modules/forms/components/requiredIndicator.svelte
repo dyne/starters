@@ -7,12 +7,11 @@
 		field: string;
 	}
 
-	let { field }: Props = $props();
+	const { field }: Props = $props();
 
 	const { form, hideRequiredIndicator } = $derived(getFormContext());
-
 	const { constraints } = $derived(formFieldProxy(form, field as FormPath<GenericRecord>));
-	let isFieldRequired = $derived($constraints?.required);
+	const isFieldRequired = $derived($constraints?.required);
 </script>
 
 {#if !hideRequiredIndicator && isFieldRequired}

@@ -18,6 +18,7 @@
 	import { Button } from '@/components/ui/button';
 
 	const schema = createCollectionZodSchema('z_test_collection');
+	console.log(schema.shape);
 
 	const form = createForm({
 		adapter: zod(schema),

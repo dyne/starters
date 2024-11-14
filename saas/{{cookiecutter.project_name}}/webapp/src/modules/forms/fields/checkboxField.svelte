@@ -5,16 +5,15 @@
 <script lang="ts" generics="Data extends GenericRecord">
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy, type FormPathLeaves } from 'sveltekit-superforms/client';
-
 	import * as Form from '@/components/ui/form';
 	import { Checkbox } from '@/components/ui/checkbox';
-
 	import type { FieldOptions } from './types';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import type { Writable } from 'svelte/store';
-
 	import { capitalize } from 'effect/String';
 	import RequiredIndicator from '../components/requiredIndicator.svelte';
+
+	//
 
 	interface Props {
 		form: SuperForm<Data, any>;
@@ -23,11 +22,9 @@
 		children?: Snippet;
 	}
 
-	let { form, name, options = {}, children: childrenSnippet }: Props = $props();
+	const { form, name, options = {}, children: childrenSnippet }: Props = $props();
 
-	//
-
-	const value: Writable<boolean> = fieldProxy(form, name);
+	const value: Writable<boolean> = $derived(fieldProxy(form, name));
 </script>
 
 <Form.Field {form} {name}>

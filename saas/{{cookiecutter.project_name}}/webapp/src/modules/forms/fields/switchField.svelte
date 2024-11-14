@@ -1,18 +1,12 @@
-<script lang="ts" module>
-	import type { GenericRecord } from '@/utils/types';
-</script>
-
 <script lang="ts" generics="Data extends GenericRecord">
+	import type { GenericRecord } from '@/utils/types';
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy, type FormPathLeaves } from 'sveltekit-superforms/client';
-
 	import * as Form from '@/components/ui/form';
 	import { Switch } from '@/components/ui/switch';
-
 	import type { FieldOptions } from './types';
 	import type { ComponentProps } from 'svelte';
 	import type { Writable } from 'svelte/store';
-
 	import { capitalize } from 'effect/String';
 
 	//
@@ -23,9 +17,7 @@
 		options?: Partial<FieldOptions> & ComponentProps<typeof Switch>;
 	}
 
-	let { form, name, options = {} }: Props = $props();
-
-	//
+	const { form, name, options = {} }: Props = $props();
 
 	const value: Writable<boolean> = fieldProxy(form, name);
 </script>

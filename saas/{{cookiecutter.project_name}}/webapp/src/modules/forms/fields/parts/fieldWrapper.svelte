@@ -12,7 +12,7 @@
 		children?: Snippet<[{ props: ControlAttrs }]>;
 	}
 
-	let { field, options = {}, children: child }: Props = $props();
+	const { field, options = {}, children: child }: Props = $props();
 </script>
 
 <Form.Control>

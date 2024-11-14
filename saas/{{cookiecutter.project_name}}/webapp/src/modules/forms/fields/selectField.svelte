@@ -1,18 +1,13 @@
-<script lang="ts" module>
-	import type { GenericRecord } from '@/utils/types';
-</script>
-
 <script lang="ts" generics="Data extends GenericRecord, T extends SelectType">
+	import type { GenericRecord } from '@/utils/types';
 	import type { SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy, type FormPath } from 'sveltekit-superforms/client';
-
 	import * as Form from '@/components/ui/form';
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import SelectInput, {
 		type SelectProps,
 		type SelectType
 	} from '@/components/custom/selectInput.svelte';
-
 	import type { FieldOptions } from './types';
 	import type { Writable } from 'svelte/store';
 	import type { MaybeArray } from 'date-fns';
