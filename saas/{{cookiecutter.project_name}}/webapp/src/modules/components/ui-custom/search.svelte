@@ -116,7 +116,7 @@
 	>
 		<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 		<div
-			class="flex max-h-full flex-col gap-0 overflow-y-auto bg-white px-2 py-2 text-black"
+			class="flex max-h-full flex-col gap-0 overflow-y-auto bg-white p-1 text-black"
 			tabindex="0"
 		>
 			{#await resultsPromise}
@@ -135,16 +135,16 @@
 					<li
 						{...opt}
 						use:opt.action
-						class="relative cursor-pointer scroll-my-2 rounded-md py-2 pl-4 pr-4 data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 data-[disabled]:opacity-50"
+						class="data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
 					>
 						{#if $isSelected(result)}
 							<div class="check absolute left-2 top-1/2 z-10 text-gray-900">
 								<Check class="size-4" />
 							</div>
 						{/if}
-						<div class="pl-4">
+						<div>
 							<slot name="item" {item}>
-								<span class="font-medium">{result.label}</span>
+								<span>{result.label}</span>
 								{#if result.description}
 									<span class="block text-sm opacity-75">{result.description}</span>
 								{/if}
