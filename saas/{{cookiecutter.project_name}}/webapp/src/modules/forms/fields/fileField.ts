@@ -1,6 +1,6 @@
 import { pipe, Tuple } from 'effect';
 import type { FORM_ERROR_PATH } from '../form';
-import type { FileManagerValidator, RejectedFile } from '@/components/custom/fileManager.svelte';
+import type { FileManagerValidator, RejectedFile } from '@/components/ui-custom/fileManager.svelte';
 import type { GenericRecord, If, IsArray } from '@/utils/types';
 import type { SuperForm } from 'sveltekit-superforms';
 

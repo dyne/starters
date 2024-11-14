@@ -1,7 +1,5 @@
 <script lang="ts">
-	import Card from '@/components/custom/card.svelte';
-
-	
+	import Card from '@/components/ui-custom/card.svelte';
 
 	interface Props {
 		class?: string;

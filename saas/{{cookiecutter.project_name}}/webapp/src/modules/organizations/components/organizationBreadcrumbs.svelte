@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { m } from '@/i18n';
 	import { pb } from '@/pocketbase';
-	import type { BreadcrumbsOptions } from '@/components/custom/breadcrumbs.svelte';
-	import Breadcrumbs from '@/components/custom/breadcrumbs.svelte';
+	import type { BreadcrumbsOptions } from '@/components/ui-custom/breadcrumbs.svelte';
+	import Breadcrumbs from '@/components/ui-custom/breadcrumbs.svelte';
 
 	//
 

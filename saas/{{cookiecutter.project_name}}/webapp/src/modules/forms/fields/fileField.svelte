@@ -4,7 +4,7 @@
 	import { fieldProxy } from 'sveltekit-superforms';
 	import * as Form from '@/components/ui/form';
 	import FieldWrapper from './parts/fieldWrapper.svelte';
-	import FileManager from '@/components/custom/fileManager.svelte';
+	import FileManager from '@/components/ui-custom/fileManager.svelte';
 	import Input from '@/components/ui/input/input.svelte';
 	import type { FieldOptions } from './types';
 	import type { Writable } from 'svelte/store';

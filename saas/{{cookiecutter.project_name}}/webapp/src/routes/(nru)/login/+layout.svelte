@@ -8,10 +8,10 @@
 	import type { Link } from '@/components/types';
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import A from '@/components/custom/a.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}

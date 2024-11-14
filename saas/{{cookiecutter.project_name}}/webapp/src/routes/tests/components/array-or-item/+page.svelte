@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ArrayOrItemManager from '@/components/custom/arrayOrItemManager.svelte';
-	import PlainCard from '@/components/custom/plainCard.svelte';
+	import ArrayOrItemManager from '@/components/ui-custom/arrayOrItemManager.svelte';
+	import PlainCard from '@/components/ui-custom/plainCard.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 
 	let items = $state(['ciao', 'no', 'ok']);

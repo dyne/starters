@@ -3,7 +3,7 @@
 	import { PageTop, PageContent } from '@/components/layout';
 	import OrganizationTabs from './organizationTabs.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 
 	interface Props {
 		org: OrganizationsResponse;
@@ -17,7 +17,7 @@
 	<OrganizationBreadcrumbs />
 	<T tag="h4">{org.name}</T>
 	{#snippet bottom()}
-		<OrganizationTabs  organizationId={org.id} />
+		<OrganizationTabs organizationId={org.id} />
 	{/snippet}
 </PageTop>
 

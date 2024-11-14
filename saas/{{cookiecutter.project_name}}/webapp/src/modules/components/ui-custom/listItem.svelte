@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '@/components/ui/button';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { X } from 'lucide-svelte';
 	import T from './t.svelte';
 

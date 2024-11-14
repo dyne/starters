@@ -2,7 +2,7 @@
 	import { getFormContext } from '@/forms';
 	import { m } from '@/i18n';
 	import { FORM_ERROR_PATH } from '../form';
-	import Alert from '@/components/custom/alert.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import { TriangleAlert } from 'lucide-svelte';
 
 	//

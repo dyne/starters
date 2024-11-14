@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
 	import { DEFAULT_SORT_ORDER } from '@/pocketbase/query';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { Button } from '@/components/ui/button';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Head } from '@/components/ui/table';

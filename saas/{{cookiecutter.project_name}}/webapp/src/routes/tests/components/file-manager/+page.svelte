@@ -1,6 +1,6 @@
 <script lang="ts">
-	import FileManager from '@/components/custom/fileManager.svelte';
-	import T from '@/components/custom/t.svelte';
+	import FileManager from '@/components/ui-custom/fileManager.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { createDummyFile } from '@/utils/other';
 
 	let files: File[] = $state([

@@ -19,9 +19,9 @@
 >
 	import { m } from '@/i18n';
 	import { ensureArray } from '@/utils/other';
-	import ListItem from '@/components/custom/listItem.svelte';
+	import ListItem from '@/components/ui-custom/listItem.svelte';
 	import { pb } from '@/pocketbase';
-	import ArrayOrItemManager from '@/components/custom/arrayOrItemManager.svelte';
+	import ArrayOrItemManager from '@/components/ui-custom/arrayOrItemManager.svelte';
 	import type { Writable } from 'svelte/store';
 	import { CollectionSelect } from '.';
 	import { createDefaultRecordPresenter, type RecordPresenter } from './utils';
@@ -31,8 +31,8 @@
 	import type { FieldOptions } from '@/forms/fields/types';
 	import FieldWrapper from '@/forms/fields/parts/fieldWrapper.svelte';
 	import CollectionSearch from './collectionSearch.svelte';
-	import List from '@/components/custom/list.svelte';
-	import T from '@/components/custom/t.svelte';
+	import List from '@/components/ui-custom/list.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import type { CollectionSelectBaseProps } from './types';
 
 	//

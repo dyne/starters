@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button, { type ButtonProps } from '@/components/ui/button/button.svelte';
 	import { ClipboardPlus } from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import type { Snippet } from 'svelte';
 	import { m } from '@/i18n';
 

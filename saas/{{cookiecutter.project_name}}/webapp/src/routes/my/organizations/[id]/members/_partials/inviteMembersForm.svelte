@@ -2,7 +2,7 @@
 	import EmailInputForm from './emailInputForm.svelte';
 	import EmailReviewForm from './emailReviewForm.svelte';
 
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { ArrowLeft, Mail, X } from 'lucide-svelte';
 	import Button from '@/components/ui/button/button.svelte';
 

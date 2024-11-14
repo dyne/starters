@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { featureFlags } from '@/features';
 	import { WelcomeSession } from '@/auth/welcome';
-	import A from '@/components/custom/a.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	if (WelcomeSession.isActive()) WelcomeSession.end();
 </script>

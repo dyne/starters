@@ -4,7 +4,7 @@
 	import { setupComponentPbSubscriptions } from '@/pocketbase';
 	import type { RecordIdString } from '@/pocketbase/types';
 	import { createRecordDisplay } from './utils';
-	import SelectInput, { type SelectItem } from '@/components/custom/selectInput.svelte';
+	import SelectInput, { type SelectItem } from '@/components/ui-custom/selectInput.svelte';
 	import type { CollectionSelectBaseProps } from './types';
 
 	//

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from '@/components/ui/button/button.svelte';
-	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import UserAvatar from '@/components/ui-custom/userAvatar.svelte';
 	import { Pencil, X } from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 
 	import { Form, createForm } from '@/forms';
 	import { Field, FileField, CheckboxField } from '@/forms/fields';
@@ -14,7 +14,7 @@
 	import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import z from 'zod';
-	import { createToggleStore } from '@/components/custom/utils';
+	import { createToggleStore } from '@/components/ui-custom/utils';
 
 	//
 

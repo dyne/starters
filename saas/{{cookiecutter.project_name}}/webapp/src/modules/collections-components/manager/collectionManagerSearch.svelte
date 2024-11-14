@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import { Input } from '@/components/ui/input';
 	import { m } from '@/i18n';

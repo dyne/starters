@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
+	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
 	import RecordCreate from './record-actions/recordCreate.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 

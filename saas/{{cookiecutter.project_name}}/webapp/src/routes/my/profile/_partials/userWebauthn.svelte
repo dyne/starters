@@ -2,15 +2,15 @@
 	import { registerUser, isWebauthnSupported, isPlatformAuthenticatorAvailable } from '@/webauthn';
 	import { currentUser } from '@/pocketbase';
 	import { CollectionManager, RecordDelete, RecordEdit } from '@/collections-components/manager';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { m } from '@/i18n';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import Button from '@/components/ui/button/button.svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { Plus, Info } from 'lucide-svelte';
-	import Card from '@/components/custom/card.svelte';
-	import Spinner from '@/components/custom/spinner.svelte';
-	import Alert from '@/components/custom/alert.svelte';
+	import Card from '@/components/ui-custom/card.svelte';
+	import Spinner from '@/components/ui-custom/spinner.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import type { WebauthnCredentialsResponse } from '@/pocketbase/types';
 
 	const platformAuthenticatorAvailable = isPlatformAuthenticatorAvailable();

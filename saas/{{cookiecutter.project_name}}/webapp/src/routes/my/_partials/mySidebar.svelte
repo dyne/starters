@@ -11,7 +11,7 @@
 	import { appName } from '@/brand';
 	import { getUserDisplayName } from '@/pocketbase/utils';
 	import { currentUser, pb } from '@/pocketbase';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import {
 		Flame,
 		Home,
@@ -24,8 +24,8 @@
 		User,
 		SquareArrowOutUpRight
 	} from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
-	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
+	import UserAvatar from '@/components/ui-custom/userAvatar.svelte';
 	import { PocketbaseQuery } from '@/pocketbase/query';
 	import SidebarLink from '@/components/layout/sidebar/sidebarLink.svelte';
 	import SidebarGroup from '@/components/layout/sidebar/sidebarGroup.svelte';

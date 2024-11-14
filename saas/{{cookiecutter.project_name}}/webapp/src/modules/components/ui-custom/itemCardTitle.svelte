@@ -1,5 +1,5 @@
 <script lang="ts">
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 
 	interface Props {
 		class?: string;
@@ -7,7 +7,6 @@
 	}
 
 	let { class: className = '', children }: Props = $props();
-	
 </script>
 
 <T class="text-card-foreground font-semibold {className}">{@render children?.()}</T>

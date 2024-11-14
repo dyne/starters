@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { m } from '@/i18n';
 	import { appName } from '@/brand';
-	import Alert from '@/components/custom/alert.svelte';
-	import T from '@/components/custom/t.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {

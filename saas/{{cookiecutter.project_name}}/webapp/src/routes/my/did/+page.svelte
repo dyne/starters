@@ -1,5 +1,5 @@
 <script lang="ts">
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 
 	let { data } = $props();
 	const did = JSON.stringify(data.did, null, 2);

@@ -3,9 +3,9 @@
 	import { m } from '@/i18n';
 	import { PageContent, PageCard, PageTop } from '@/components/layout';
 	import { ArrowLeft } from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { Button } from '@/components/ui/button';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 </script>
 
 <PageTop>

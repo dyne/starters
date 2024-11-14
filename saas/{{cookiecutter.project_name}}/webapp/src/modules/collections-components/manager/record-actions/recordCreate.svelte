@@ -1,5 +1,5 @@
 <script lang="ts" generics="C extends CollectionName">
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import type { CollectionRecords } from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import {
@@ -8,11 +8,11 @@
 	} from '@/collections-components/form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import { Button } from '@/components/ui/button';
-	import { createToggleStore } from '@/components/custom/utils';
+	import { createToggleStore } from '@/components/ui-custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
 	import { Plus } from 'lucide-svelte';
-	import Sheet from '@/components/custom/sheet.svelte';
+	import Sheet from '@/components/ui-custom/sheet.svelte';
 	import { merge } from 'lodash';
 
 	interface Props {

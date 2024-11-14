@@ -7,17 +7,17 @@
 	} from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import PageTop from '@/components/layout/pageTop.svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { ArrowLeft, Users, UserPlus } from 'lucide-svelte';
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
+	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
 	import PageContent from '@/components/layout/pageContent.svelte';
 	import PageCard from '@/components/layout/pageCard.svelte';
-	import EmptyState from '@/components/custom/emptyState.svelte';
-	import PlainCard from '@/components/custom/itemCard.svelte';
+	import EmptyState from '@/components/ui-custom/emptyState.svelte';
+	import PlainCard from '@/components/ui-custom/itemCard.svelte';
 	import { CollectionManager } from '@/collections-components';
-	import Dialog from '@/components/custom/dialog.svelte';
+	import Dialog from '@/components/ui-custom/dialog.svelte';
 	import { Button } from '@/components/ui/button';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { OrganizationAvatar } from '@/organizations/components';
 
 	//

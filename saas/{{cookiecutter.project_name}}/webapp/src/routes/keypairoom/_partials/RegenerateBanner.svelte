@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { m } from '@/i18n';
-	import Alert from '@/components/custom/alert.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import { TriangleAlert } from 'lucide-svelte';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 </script>
 
 <Alert variant="warning" icon={TriangleAlert}>

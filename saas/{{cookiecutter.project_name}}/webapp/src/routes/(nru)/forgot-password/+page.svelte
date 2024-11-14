@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { Button } from '@/components/ui/button/index.js';
 	import { Input } from '@/components/ui/input/index.js';
 	import Label from '@/components/ui/label/label.svelte';
 
 	let { form } = $props();
 
-	
 	// TODO - Translations
 </script>
 

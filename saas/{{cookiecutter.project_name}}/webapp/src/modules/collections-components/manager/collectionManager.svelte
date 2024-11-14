@@ -19,7 +19,7 @@
 	import { writable } from 'svelte/store';
 	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
 	import { ClientResponseError } from 'pocketbase';
-	import EmptyState from '@/components/custom/emptyState.svelte';
+	import EmptyState from '@/components/ui-custom/emptyState.svelte';
 	import { Array as A } from 'effect';
 	import CollectionManagerPagination from './collectionManagerPagination.svelte';
 	import CollectionManagerSearch from './collectionManagerSearch.svelte';

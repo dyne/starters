@@ -4,9 +4,7 @@
 	import { m } from '@/i18n';
 	import OrganizationLayout from '@/organizations/components/organizationLayout.svelte';
 	import PageCard from '@/components/layout/pageCard.svelte';
-	import T from '@/components/custom/t.svelte';
-
-	
+	import T from '@/components/ui-custom/t.svelte';
 
 	interface Props {
 		//

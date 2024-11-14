@@ -21,7 +21,7 @@
 	import { m } from '@/i18n';
 	import FormError from './components/formError.svelte';
 	import SubmitButton from './components/submitButton.svelte';
-	import LoadingDialog from '@/components/custom/loadingDialog.svelte';
+	import LoadingDialog from '@/components/ui-custom/loadingDialog.svelte';
 	import type { HTMLFormAttributes } from 'svelte/elements';
 
 	//

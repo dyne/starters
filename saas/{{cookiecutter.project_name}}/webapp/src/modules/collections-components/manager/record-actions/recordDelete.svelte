@@ -3,18 +3,18 @@
 	import { getExceptionMessage } from '@/utils/errors';
 	import type { GenericRecord, MaybePromise } from '@/utils/types';
 	import { m } from '@/i18n';
-	import { createToggleStore } from '@/components/custom/utils';
-	import Dialog from '@/components/custom/dialog.svelte';
-	import T from '@/components/custom/t.svelte';
-	import Alert from '@/components/custom/alert.svelte';
+	import { createToggleStore } from '@/components/ui-custom/utils';
+	import Dialog from '@/components/ui-custom/dialog.svelte';
+	import T from '@/components/ui-custom/t.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import { Button } from '@/components/ui/button';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { onDestroy, type Snippet } from 'svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Trash, X } from 'lucide-svelte';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 	import type { IconComponent } from '@/components/types';
 
 	interface Props {

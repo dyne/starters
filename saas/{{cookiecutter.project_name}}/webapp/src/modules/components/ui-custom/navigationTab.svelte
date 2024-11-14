@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { cn } from '@/components/ui/utils';
 	import { Store } from 'runed';
 	import type { LinkWithIcon } from '../types';

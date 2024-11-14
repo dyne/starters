@@ -12,7 +12,7 @@
 	import type { KeyOf } from '@/utils/types';
 	import * as Table from '@/components/ui/table';
 	import FieldTh from './fieldTh.svelte';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 
 	interface Props {
 		records: T[];

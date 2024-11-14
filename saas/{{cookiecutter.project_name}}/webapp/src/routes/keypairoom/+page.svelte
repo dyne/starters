@@ -24,7 +24,7 @@
 	// Components
 	import { Form, createForm } from '@/forms';
 	import { Field } from '@/forms/fields';
-	import CopyButton from '@/components/custom/copyButton.svelte';
+	import CopyButton from '@/components/ui-custom/copyButton.svelte';
 	import { HelpCircle } from 'lucide-svelte';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
@@ -33,11 +33,11 @@
 	import { log } from '@/utils/other';
 
 	import Button from '@/components/ui/button/button.svelte';
-	import T from '@/components/custom/t.svelte';
-	import Alert from '@/components/custom/alert.svelte';
+	import T from '@/components/ui-custom/t.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { PageCard } from '@/components/layout';
-	import A from '@/components/custom/a.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	//
 

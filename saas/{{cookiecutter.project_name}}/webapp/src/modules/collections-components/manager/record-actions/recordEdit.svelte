@@ -7,12 +7,12 @@
 		CollectionFormOptions
 	} from '@/collections-components/form/formOptions';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import { createToggleStore } from '@/components/custom/utils';
+	import { createToggleStore } from '@/components/ui-custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
-	import Sheet from '@/components/custom/sheet.svelte';
+	import Sheet from '@/components/ui-custom/sheet.svelte';
 	import { merge } from 'lodash';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 	import type { Snippet } from 'svelte';
 	import type { GenericRecord } from '@/utils/types';
 	import type { IconComponent } from '@/components/types';

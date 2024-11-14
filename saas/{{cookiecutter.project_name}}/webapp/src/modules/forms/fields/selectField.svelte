@@ -7,7 +7,7 @@
 	import SelectInput, {
 		type SelectProps,
 		type SelectType
-	} from '@/components/custom/selectInput.svelte';
+	} from '@/components/ui-custom/selectInput.svelte';
 	import type { FieldOptions } from './types';
 	import type { Writable } from 'svelte/store';
 	import type { MaybeArray } from 'date-fns';

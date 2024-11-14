@@ -6,9 +6,9 @@
 	import { Pencil, Plus, X } from 'lucide-svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import PageCard from '@/components/layout/pageCard.svelte';
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
-	import PlainCard from '@/components/custom/itemCard.svelte';
-	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
+	import PlainCard from '@/components/ui-custom/itemCard.svelte';
+	import UserAvatar from '@/components/ui-custom/userAvatar.svelte';
 	import { currentUser } from '@/pocketbase/index.js';
 	import { RecordEdit, RecordDelete } from '@/collections-components/manager';
 	import MembershipRequests from './_partials/membershipRequests.svelte';
@@ -16,9 +16,9 @@
 	import OrganizationLayout from '@/organizations/components/organizationLayout.svelte';
 	import InviteMembersForm from './_partials/inviteMembersForm.svelte';
 	import PendingInvites from './_partials/pendingInvites.svelte';
-	import { createToggleStore } from '@/components/custom/utils';
-	import Dialog from '@/components/custom/dialog.svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import { createToggleStore } from '@/components/ui-custom/utils';
+	import Dialog from '@/components/ui-custom/dialog.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { capitalize } from '@/utils/other';
 	import { CollectionForm } from '@/collections-components';
 

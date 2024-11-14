@@ -3,10 +3,10 @@
 	import type { OrganizationsResponse } from '@/pocketbase/types';
 	import { m } from '@/i18n';
 	import Badge from '@/components/ui/badge/badge.svelte';
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
+	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
 	import { RecordDelete } from '@/collections-components/manager';
 	import { PageCard } from '@/components/layout';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 
 	interface Props {
 		//

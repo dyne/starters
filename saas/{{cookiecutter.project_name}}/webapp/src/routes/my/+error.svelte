@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { m } from '@/i18n';
-	import T from '@/components/custom/t.svelte';
-	import A from '@/components/custom/a.svelte';
+	import T from '@/components/ui-custom/t.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	const status = $page.status;
 	const title = status === 404 ? m.Not_Found() : m.Internal_Error();

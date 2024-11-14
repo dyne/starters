@@ -10,9 +10,9 @@
 	import { featureFlags } from '@/features';
 	import { OrganizationInviteSession } from '@/organizations/invites';
 	import { WelcomeSession, WelcomeBanner } from '@/auth/welcome';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import A from '@/components/custom/a.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	//
 

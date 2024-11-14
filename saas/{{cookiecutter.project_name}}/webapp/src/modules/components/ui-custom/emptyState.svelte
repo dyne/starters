@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FolderOpen } from 'lucide-svelte';
 	import type { IconComponent } from '@/components/types';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import T from './t.svelte';
 
 	interface Props {
@@ -11,12 +11,7 @@
 		bottom?: import('svelte').Snippet;
 	}
 
-	let {
-		title,
-		description = undefined,
-		icon = FolderOpen,
-		bottom
-	}: Props = $props();
+	let { title, description = undefined, icon = FolderOpen, bottom }: Props = $props();
 </script>
 
 <div

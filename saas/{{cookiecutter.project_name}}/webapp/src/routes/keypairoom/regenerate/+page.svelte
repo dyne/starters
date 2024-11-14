@@ -11,17 +11,17 @@
 	import z from 'zod';
 	import { Form, createForm } from '@/forms';
 	import { Field, TextareaField } from '@/forms/fields';
-	import Card from '@/components/custom/card.svelte';
+	import Card from '@/components/ui-custom/card.svelte';
 	import { featureFlags } from '@/features';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { getUserPublicKeys, RegenerateKeyringSession } from '@/keypairoom/utils';
 	import { m } from '@/i18n';
 	import RegenerateBanner from '../_partials/RegenerateBanner.svelte';
 	import { log } from '@/utils/other';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { PageCard } from '@/components/layout';
-	import A from '@/components/custom/a.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	//
 

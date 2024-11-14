@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { createForm, Form, SubmitButton } from '@/forms';
 	import { m } from '@/i18n';
 	import { readFileAsString, zodFileSchema } from '@/utils/files';
@@ -7,10 +7,10 @@
 	import { ArrowRight } from 'lucide-svelte';
 	import z from 'zod';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import Alert from '@/components/custom/alert.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import { FileField, TextareaField } from '@/forms/fields';
 	import Separator from '@/components/ui/separator/separator.svelte';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 	import { Button } from '@/components/ui/button';
 
 	interface Props {

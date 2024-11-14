@@ -4,7 +4,7 @@
 	import UserWebauthn from './_partials/userWebauthn.svelte';
 
 	import { featureFlags } from '@/features';
-	import Card from '@/components/custom/card.svelte';
+	import Card from '@/components/ui-custom/card.svelte';
 
 	let { data } = $props();
 	let { publicKeys } = data;

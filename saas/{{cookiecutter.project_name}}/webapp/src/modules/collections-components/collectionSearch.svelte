@@ -2,8 +2,8 @@
 	import { type ExpandQueryOption, type QueryResponse, PocketbaseQuery } from '@/pocketbase/query';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import { createRecordDisplay } from './utils';
-	import Search from '@/components/custom/search.svelte';
-	import type { SearchFunction } from '@/components/custom/search.svelte';
+	import Search from '@/components/ui-custom/search.svelte';
+	import type { SearchFunction } from '@/components/ui-custom/search.svelte';
 	import type { CollectionSelectBaseProps } from './types';
 
 	//

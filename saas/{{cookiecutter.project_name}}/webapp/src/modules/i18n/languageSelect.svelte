@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { getLanguagesData, m, type LanguageData } from '.';
 	import { Languages } from 'lucide-svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import * as Popover from '@/components/ui/popover';
 	import { Button } from '@/components/ui/button';
 	import { languageTag } from '.';

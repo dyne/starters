@@ -2,7 +2,7 @@
 	import { Topbar } from '@/components/layout';
 	import { currentUser } from '@/pocketbase';
 	import DIDButton from '@/did/DIDButton.svelte';
-	import UserAvatar from '@/components/custom/userAvatar.svelte';
+	import UserAvatar from '@/components/ui-custom/userAvatar.svelte';
 	import { m } from '@/i18n';
 	import { featureFlags } from '@/features';
 	import { Button } from '@/components/ui/button';

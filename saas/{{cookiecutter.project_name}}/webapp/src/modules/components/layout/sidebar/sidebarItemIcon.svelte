@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { IconComponent } from '@/components/types';
 	import type { Snippet } from 'svelte';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 
 	const { children, src }: { children?: Snippet; src?: IconComponent } = $props();
 </script>

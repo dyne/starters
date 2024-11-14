@@ -2,7 +2,7 @@
 	import { currentUser } from '@/pocketbase';
 	import { getUserRole, type OrgRole } from '@/organizations';
 	import { createOrganizationLinks } from '@/organizations';
-	import NavigationTabs from '@/components/custom/navigationTabs.svelte';
+	import NavigationTabs from '@/components/ui-custom/navigationTabs.svelte';
 
 	//
 

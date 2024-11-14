@@ -2,7 +2,7 @@
 	import { cn } from '@/components/ui/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import ItemCard from '@/components/custom/itemCard.svelte';
+	import ItemCard from '@/components/ui-custom/itemCard.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import {
 		RecordSelect,
@@ -12,8 +12,8 @@
 		RecordDelete
 	} from './record-actions';
 	import type { Snippet } from 'svelte';
-	import type ItemCardTitle from '@/components/custom/itemCardTitle.svelte';
-	import type ItemCardDescription from '@/components/custom/itemCardDescription.svelte';
+	import type ItemCardTitle from '@/components/ui-custom/itemCardTitle.svelte';
+	import type ItemCardDescription from '@/components/ui-custom/itemCardDescription.svelte';
 
 	interface Props {
 		//

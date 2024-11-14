@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import T from '@/components/custom/t.svelte';
-	import A from '@/components/custom/a.svelte';
+	import T from '@/components/ui-custom/t.svelte';
+	import A from '@/components/ui-custom/a.svelte';
 
 	// TODO - Better <a> styling
 

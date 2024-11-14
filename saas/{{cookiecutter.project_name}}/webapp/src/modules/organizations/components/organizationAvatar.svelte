@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Avatar, { type AvatarProps } from '@/components/custom/avatar.svelte';
+	import Avatar, { type AvatarProps } from '@/components/ui-custom/avatar.svelte';
 	import { cn } from '@/components/ui/utils';
 	import { pb } from '@/pocketbase';
 	import type { OrganizationsRecord } from '@/pocketbase/types';

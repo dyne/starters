@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CollectionManager } from '@/collections-components/manager';
-	import List from '@/components/custom/list.svelte';
-	import ListItem from '@/components/custom/listItem.svelte';
+	import List from '@/components/ui-custom/list.svelte';
+	import ListItem from '@/components/ui-custom/listItem.svelte';
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 	import PocketBase from 'pocketbase';
 	import type { TypedPocketBase } from '@/pocketbase/types';
