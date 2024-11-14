@@ -22,34 +22,20 @@
 		...rest
 	}: Props = $props();
 
-	function createSearchFunction(
-		pocketbaseQuery: PocketbaseQuery<C, Expand>
-	): SearchFunction<QueryResponse<C, Expand>> {
-		return async (text: string | undefined) => {
-			pocketbaseQuery.options.search = text;
-			const records = await pocketbaseQuery.getFullList();
-
-			return records.map((item) => ({
-				value: item,
-				label: createRecordDisplay(item, displayFields, displayFn),
-				disabled: false
-			}));
-		};
-	}
-
 	//
 
-	// function typeCaster(value: unknown): CollectionRecords[C] {
-	// 	return value as CollectionRecords[C];
-	// }
-	//
+	type SearchFn = SearchFunction<QueryResponse<C, Expand>>;
 
-	let pocketbaseQuery = $derived(new PocketbaseQuery(collection, queryOptions));
-	let searchFunction = $derived(createSearchFunction(pocketbaseQuery));
+	const searchFunction: SearchFn = $derived(async function (text: string | undefined) {
+		const query = new PocketbaseQuery(collection, { ...queryOptions, search: text });
+		const records = await query.getFullList();
+
+		return records.map((item) => ({
+			value: item,
+			label: createRecordDisplay(item, displayFields, displayFn),
+			disabled: false
+		}));
+	});
 </script>
 
 <Search searchFn={searchFunction} {onSelect} {label} {placeholder} {disabled} {...rest} />
-
-<!-- <svelte:fragment slot="item" let:item>
-		<slot name="item" item={typeCaster(item)}></slot>
-</svelte:fragment> -->
