@@ -4,31 +4,32 @@
 </script>
 
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { page } from '$app/stores';
 	import { calcBreadcrumbs } from './breadcrumbs';
 	import type { Link } from '@/components/types';
 	import * as Breadcrumb from '@/components/ui/breadcrumb/index.js';
 	import Icon from './icon.svelte';
 	import { Home } from 'lucide-svelte';
+	import { Store } from 'runed';
 
 	//
 
-	// export let items: Link[] = [];
-
 	interface Props {
-		// export let homeIcon: any = undefined;
 		options?: Partial<CalcBreadcrumbsOptions>;
 	}
 
-	let { options = {} }: Props = $props();
+	const { options = {} }: Props = $props();
 
 	//
 
 	let breadcrumbs: Link[] = $state([]);
-	run(() => {
-		calcBreadcrumbs($page, options).then((newBreadcrumbs) => (breadcrumbs = newBreadcrumbs));
+
+	const pageState = new Store(page);
+
+	$effect(() => {
+		calcBreadcrumbs(pageState.current, options).then(
+			(newBreadcrumbs) => (breadcrumbs = newBreadcrumbs)
+		);
 	});
 </script>
 

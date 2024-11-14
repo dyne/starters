@@ -3,13 +3,14 @@
 	import Icon from '@/components/ui-custom/icon.svelte';
 	import { X } from 'lucide-svelte';
 	import T from './t.svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		label?: string | undefined;
 		hideButton?: boolean;
 		class?: string;
 		contentClass?: string;
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 		onclick?: () => void;
 	}
 

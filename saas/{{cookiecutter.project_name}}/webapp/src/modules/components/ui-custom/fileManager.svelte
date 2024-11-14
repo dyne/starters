@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	type MaybePromise<T> = T | Promise<T>;
 
 	export type RejectedFile = { file: File; reasons: string[] };
@@ -18,34 +18,40 @@
 	import List from './list.svelte';
 	import ListHeader from './listHeader.svelte';
 	import ListItem from './listItem.svelte';
+	import type { Snippet } from 'svelte';
 
 	//
 
-	export let data: File | File[] | undefined = undefined;
-	export let validator: FileManagerValidator | undefined = undefined;
-	export let multiple = false;
+	type Props = {
+		data?: File | File[];
+		validator?: FileManagerValidator;
+		multiple?: boolean;
+		children?: Snippet<[{ addFiles: (newFiles: File[]) => void }]>;
+	};
+
+	let { data = $bindable(), validator, multiple = false, children: child }: Props = $props();
 
 	/* File upload handling */
 
-	let rejectedFiles: RejectedFile[] = [];
+	let rejectedFiles: RejectedFile[] = $state([]);
 
-	async function addFiles(newFiles: File[]) {
+	const addFiles = $derived(async function (newFiles: File[]) {
 		if (validator) {
 			const result = await validator(newFiles);
 			newFiles = result.acceptedFiles;
 			rejectedFiles = result.rejectedFiles;
 		}
 		updateData(newFiles);
-	}
+	});
 
-	function updateData(newFiles: File[]) {
+	const updateData = $derived(function (newFiles: File[]) {
 		if (multiple) {
 			if (Array.isArray(data)) data = [...data, ...newFiles];
 			else if (data === undefined) data = [...newFiles];
 		} else {
 			data = newFiles[0];
 		}
-	}
+	});
 
 	function clearRejectedFiles() {
 		rejectedFiles = [];
@@ -66,7 +72,7 @@
 </script>
 
 <div class="space-y-2">
-	<slot {addFiles} />
+	{@render child?.({ addFiles })}
 
 	{#if (Array.isArray(data) && data.length > 0) || (!multiple && Boolean(data))}
 		<List>
