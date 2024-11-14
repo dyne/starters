@@ -32,7 +32,7 @@ export const load = async ({ url, fetch }) => {
 
 		try {
 			if (publicKeys && keyring) await matchPublicAndPrivateKeys(publicKeys, keyring);
-		} catch (e) {
+		} catch {
 			RegenerateKeyringSession.start();
 			redirect(`/keypairoom/regenerate`, url);
 		}
