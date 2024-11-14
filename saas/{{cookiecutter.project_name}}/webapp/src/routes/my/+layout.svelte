@@ -4,7 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import SidebarContext from '@/components/layout/sidebar/sidebarContext.svelte';
 	import Topbar from '@/components/layout/topbar.svelte';
-	import Logo from '@/components/layout/logo.svelte';
+	import { AppLogo } from '@/brand';
 
 	interface Props {
 		children?: Snippet;
@@ -24,7 +24,7 @@
 						{#snippet left()}
 							<div class="flex items-center gap-2">
 								<Sidebar.Trigger variant="outline" class="size-9" />
-								<Logo />
+								<AppLogo />
 							</div>
 						{/snippet}
 						{#snippet right()}{/snippet}

@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { Logo, Topbar } from '@/components/layout';
+	import { Topbar } from '@/components/layout';
 	import { currentUser } from '@/pocketbase';
 	import DIDButton from '@/did/DIDButton.svelte';
 	import UserAvatar from '@/components/custom/userAvatar.svelte';
 	import { m } from '@/i18n';
 	import { featureFlags } from '@/features';
 	import { Button } from '@/components/ui/button';
+	import { AppLogo } from '@/brand';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { children }: Props = $props();
@@ -16,7 +18,7 @@
 
 <Topbar>
 	{#snippet left()}
-		<Logo />
+		<AppLogo />
 	{/snippet}
 	{#snippet center()}
 		<div class="flex items-center">

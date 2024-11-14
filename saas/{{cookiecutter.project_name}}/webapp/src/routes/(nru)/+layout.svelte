@@ -1,10 +1,13 @@
 <script lang="ts">
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-	import { appTitle } from '@/utils/strings';
-	import A from '@/components/custom/a.svelte';
+	import { AppLogo } from '@/brand';
 	import PageCard from '@/components/layout/pageCard.svelte';
+	import type { Snippet } from 'svelte';
+
+	//
+
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { children }: Props = $props();
@@ -12,9 +15,7 @@
 
 <div class="flex h-screen items-center justify-center">
 	<div class="max-w-[500px] space-y-4">
-		<A href="/">
-			<img class="mr-2 h-10" src="/logo.svg" alt={`${appTitle} Logo`} />
-		</A>
+		<AppLogo />
 		<PageCard>
 			{@render children?.()}
 		</PageCard>

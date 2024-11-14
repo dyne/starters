@@ -45,8 +45,10 @@ export async function loginUser(username: string) {
 	credentialRequestOptions.publicKey.challenge = bufferDecode(
 		credentialRequestOptions.publicKey.challenge
 	);
-	credentialRequestOptions.publicKey.allowCredentials.forEach(function (listItem: any) {
-		listItem.id = bufferDecode(listItem.id);
+	credentialRequestOptions.publicKey.allowCredentials.forEach(function (listItem: {
+		id: string | Uint8Array;
+	}) {
+		listItem.id = bufferDecode(listItem.id as string);
 	});
 	const credential = await navigator.credentials.get({
 		publicKey: credentialRequestOptions.publicKey

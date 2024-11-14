@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms/client';
 	import type { GenericRecord } from '@/utils/types';
-	import { setupDerivedContext } from '@/utils/context.svelte';
+	import { setupDerivedContext } from '@/utils/svelte-context';
 
 	//
 

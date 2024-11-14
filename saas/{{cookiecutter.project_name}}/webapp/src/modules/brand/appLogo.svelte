@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { appTitle } from '@/utils/strings';
+	import { appName } from '@/brand';
 
 	interface Props {
 		/*
@@ -12,7 +12,7 @@
 </script>
 
 <a {href}>
-	<img src={'/logo.svg'} class="h-9" alt={appTitle} />
+	<img src={'/logo.svg'} class="h-9" alt={appName} />
 </a>
 
 <!--  

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { m } from '@/i18n';
-	import { appTitle } from '@/utils/strings';
+	import { appName } from '@/brand';
 	import Alert from '@/components/custom/alert.svelte';
 	import T from '@/components/custom/t.svelte';
 	import type { Snippet } from 'svelte';
@@ -15,7 +15,7 @@
 
 <Alert variant="info" class="space-y-3 {className}">
 	<T tag="h2" class="-rotate-2 text-ellipsis text-balance text-center">
-		{m.welcome_to_app({ appName: appTitle })}
+		{m.welcome_to_app({ appName })}
 	</T>
 
 	{@render children?.()}

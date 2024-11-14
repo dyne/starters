@@ -2,7 +2,7 @@
 	import { i18n } from '@/i18n';
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import '../app.css';
-	import { appTitle } from '@/utils/strings';
+	import { appName } from '@/brand';
 	import { Toaster } from '@/components/ui/sonner';
 
 	let { children } = $props();
@@ -10,7 +10,7 @@
 
 <svelte:head>
 	<title>
-		{appTitle}
+		{appName}
 	</title>
 </svelte:head>
 

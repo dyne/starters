@@ -6,9 +6,9 @@
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
 	import LanguageSelect from '@/i18n/languageSelect.svelte';
-	import Logo from '@/components/layout/logo.svelte';
+	import { AppLogo } from '@/brand';
 	import { createOrganizationLinks, type OrgRole } from '@/organizations';
-	import { appTitle } from '@/utils/strings';
+	import { appName } from '@/brand';
 	import { getUserDisplayName } from '@/pocketbase/utils';
 	import { currentUser, pb } from '@/pocketbase';
 	import T from '@/components/custom/t.svelte';
@@ -50,7 +50,7 @@
 
 <Sidebar.Root>
 	<Sidebar.Header class="flex flex-row items-center justify-between border-b">
-		<Logo />
+		<AppLogo />
 		{#if sidebarState.isMobile}
 			<Sidebar.Trigger variant="outline" class="size-9" />
 		{/if}
@@ -204,7 +204,7 @@
 				tag="small"
 				class="text-secondary-foreground/50 text-wrap font-mono text-xs leading-normal"
 			>
-				{appTitle} – Version {version}
+				{appName} – Version {version}
 			</T>
 		</div>
 	</Sidebar.Footer>
