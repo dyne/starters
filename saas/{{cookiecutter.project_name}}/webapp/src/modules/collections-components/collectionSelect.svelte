@@ -5,11 +5,11 @@
 	import type { RecordIdString } from '@/pocketbase/types';
 	import { createRecordDisplay } from './utils';
 	import SelectInput, { type SelectItem } from '@/components/ui-custom/selectInput.svelte';
-	import type { CollectionSelectBaseProps } from './types';
+	import type { CollectionInputProps } from './types';
 
 	//
 
-	type Props = CollectionSelectBaseProps<C, Expand>;
+	type Props = CollectionInputProps<C, Expand>;
 
 	let {
 		collection,

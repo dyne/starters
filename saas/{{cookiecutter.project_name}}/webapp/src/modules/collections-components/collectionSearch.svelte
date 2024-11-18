@@ -4,11 +4,11 @@
 	import { createRecordDisplay } from './utils';
 	import Search from '@/components/ui-custom/search.svelte';
 	import type { SearchFunction } from '@/components/ui-custom/search.svelte';
-	import type { CollectionSelectBaseProps } from './types';
+	import type { CollectionInputProps } from './types';
 
 	//
 
-	type Props = CollectionSelectBaseProps<C, Expand>;
+	type Props = CollectionInputProps<C, Expand>;
 
 	let {
 		collection,
