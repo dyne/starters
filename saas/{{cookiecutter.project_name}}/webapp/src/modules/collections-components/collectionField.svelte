@@ -3,13 +3,15 @@
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { ExpandQueryOption, QueryResponse } from '@/pocketbase/query';
 
+	export type CollectionFieldModeProp = { mode?: 'search' | 'select' };
+
 	export type CollectionFieldOptions<
 		C extends CollectionName,
 		Expand extends ExpandQueryOption<C>
 	> = {
-		mode?: 'search' | 'select';
 		multiple?: boolean;
-	} & Omit<CollectionInputProps<C, Expand>, 'collection'> &
+	} & CollectionFieldModeProp &
+		Omit<CollectionInputProps<C, Expand>, 'collection'> &
 		Partial<FieldOptions>;
 </script>
 
@@ -24,7 +26,7 @@
 	import ArrayOrItemManager from '@/components/ui-custom/arrayOrItemManager.svelte';
 	import type { Writable } from 'svelte/store';
 	import { CollectionSelect } from '.';
-	import { createDefaultRecordPresenter, type RecordPresenter } from './utils';
+	import { createDefaultRecordPresenter } from './utils';
 	import * as Form from '@/components/ui/form';
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy } from 'sveltekit-superforms/client';

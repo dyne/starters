@@ -15,7 +15,4 @@
 		toast.success(JSON.stringify(record));
 		invalidateAll();
 	}}
-	let:form
->
-	<FormDebug {form} />
-</CollectionForm>
+></CollectionForm>

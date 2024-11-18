@@ -1,38 +1,38 @@
-<script lang="ts" generics="C extends CollectionName">
+<script lang="ts" module>
 	import type { CollectionName, AnySchemaField } from '@/pocketbase/collections-models';
-	import type { ExpandQueryOption } from '@/pocketbase/query';
+	import type { FieldSnippet, RelationFieldOptions } from './collectionForm';
+
+	export type CollectionFormFieldProps<C extends CollectionName> = {
+		fieldConfig: AnySchemaField;
+		hidden?: boolean;
+		label?: string;
+		snippet?: FieldSnippet<C>;
+		relationFieldOptions?: RelationFieldOptions<C>;
+		description?: string;
+		placeholder?: string;
+	};
+</script>
+
+<script lang="ts" generics="C extends CollectionName">
 	import { getFormContext } from '@/forms';
 	import { CheckboxField, FileField, Field, SelectField, TextareaField } from '@/forms/fields';
-	import CollectionField, { type CollectionFieldOptions } from '../collectionField.svelte';
+	import CollectionField from '../collectionField.svelte';
 	import { getCollectionNameFromId } from '@/pocketbase/collections-models';
 	import { isArrayField } from '@/pocketbase/collections-models';
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
-	import type { GenericRecord } from '@/utils/types';
-	import type { Snippet } from 'svelte';
-	import type { FieldSnippet } from './formOptions';
-	import type { CollectionRecords } from '@/pocketbase/types';
+	import type { CollectionFormData } from '@/pocketbase/types';
 
 	//
 
-	interface Props {
-		fieldConfig: AnySchemaField;
-		label?: any;
-		description?: string | undefined;
-		placeholder?: string | undefined;
-		hidden?: boolean;
-		collectionFieldOptions?: Omit<CollectionFieldOptions<C, ExpandQueryOption<C>>, 'collection'>;
-		// component?: FieldSnippet<CollectionRecords[C]>;
-	}
-
 	let {
 		fieldConfig,
-		label = fieldConfig.name as string,
-		description = undefined,
-		placeholder = undefined,
+		label = fieldConfig.name,
+		description,
+		placeholder,
 		hidden = false,
-		collectionFieldOptions = {}
-		// component
-	}: Props = $props();
+		snippet,
+		relationFieldOptions = {}
+	}: CollectionFormFieldProps<C> = $props();
 
 	//
 
@@ -43,8 +43,11 @@
 
 {#if hidden}
 	<!-- Nothing -->
-	<!-- {:else if component}
-	{@render component({ form, field: name })} -->
+{:else if snippet}
+	{@render snippet({
+		form: form as SuperForm<CollectionFormData[C]>,
+		field: name as FormPath<CollectionFormData[C]>
+	})}
 {:else if fieldConfig.type == 'text' || fieldConfig.type == 'url' || fieldConfig.type == 'date' || fieldConfig.type == 'email'}
 	<Field {form} {name} options={{ label, description, placeholder, type: fieldConfig.type }} />
 {:else if fieldConfig.type == 'number'}
@@ -72,7 +75,7 @@
 		{name}
 		collection={collectionName}
 		options={{
-			...collectionFieldOptions,
+			...relationFieldOptions,
 			multiple,
 			label,
 			description
