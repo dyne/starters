@@ -4,7 +4,7 @@ import type {
 	SchemaFields
 } from '@/pocketbase/collections-models';
 import { pipe, Record, String } from 'effect';
-import type { CollectionFormProps } from './collectionForm';
+import type { CollectionFormProps } from './collectionFormTypes';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import { createCollectionZodSchema } from '@/pocketbase/zod-schema';

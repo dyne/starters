@@ -13,7 +13,7 @@
 		type CollectionFormMode,
 		type CollectionFormProps,
 		type FieldsOptions
-	} from './collectionForm';
+	} from './collectionFormTypes';
 
 	/* Props and unpacking */
 

@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import type { CollectionName, AnySchemaField } from '@/pocketbase/collections-models';
-	import type { FieldSnippet, RelationFieldOptions } from './collectionForm';
+	import type { FieldSnippet, RelationFieldOptions } from './collectionFormTypes';
 
 	export type CollectionFormFieldProps<C extends CollectionName> = {
 		fieldConfig: AnySchemaField;

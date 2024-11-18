@@ -34,7 +34,10 @@
 		COLLECTION_MANAGER_KEY,
 		type CollectionManagerContext
 	} from './collectionManagerContext';
-	import type { UIOptions as CollectionFormUIOptions, FieldsOptions } from '../form/formOptions';
+	import type {
+		UIOptions as CollectionFormUIOptions,
+		FieldsOptions
+	} from '../form/collectionFormTypes';
 	import type { FormOptions as SuperformsOptions } from '@/forms';
 
 	//

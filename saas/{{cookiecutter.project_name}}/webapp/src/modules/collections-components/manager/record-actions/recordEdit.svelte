@@ -5,7 +5,7 @@
 	import type {
 		OnCollectionFormSuccess,
 		CollectionFormOptions
-	} from '@/collections-components/form/formOptions';
+	} from '@/collections-components/form/collectionFormTypes';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import { createToggleStore } from '@/components/ui-custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
