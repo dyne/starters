@@ -64,7 +64,7 @@ export type FieldSnippet<C extends CollectionName, T = CollectionFormData[C]> = 
 
 /* UI Options */
 
-type UIOptions = FormSnippets & {
+export type UIOptions = FormSnippets & {
 	hideRequiredIndicator?: boolean;
 	showToastOnSuccess?: boolean;
 	toastText?: string;
