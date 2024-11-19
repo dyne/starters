@@ -1,19 +1,23 @@
+<script lang="ts" module>
+	export type ItemCardSnippets = {
+		left?: Snippet;
+		children?: Snippet<[{ Title: typeof Title; Description: typeof Description }]>;
+		right?: Snippet;
+	};
+</script>
+
 <script lang="ts">
 	import Title from './itemCardTitle.svelte';
 	import Description from './itemCardDescription.svelte';
 	import type { Snippet } from 'svelte';
+	import type { BitsDivAttributes } from 'bits-ui';
 
-	interface Props {
-		class?: string;
-		left?: Snippet;
-		children?: Snippet<[{ Title: typeof Title; Description: typeof Description }]>;
-		right?: Snippet;
-	}
+	type Props = Omit<BitsDivAttributes, 'children'> & ItemCardSnippets;
 
-	let { class: className = '', left, children, right }: Props = $props();
+	let { class: className = '', left, children, right, ...rest }: Props = $props();
 </script>
 
-<div class="flex items-center gap-4 rounded-lg border p-4 {className}">
+<div class="flex items-center gap-4 rounded-lg border p-4 {className}" {...rest}>
 	{#if left}
 		<div class="shrink-0">
 			{@render left?.()}

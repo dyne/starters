@@ -9,16 +9,16 @@
 		perPage: 6
 	}}
 >
-	<svelte:fragment slot="top" let:Search let:Header>
+	{#snippet top({ Header, Search })}
 		<Header />
 
 		<div class="mb-4 mt-4">
 			<Search />
 		</div>
-	</svelte:fragment>
+	{/snippet}
 
-	<svelte:fragment slot="records" let:records let:Table let:Card>
-		<Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table>
+	{#snippet records({ records, Table, Card })}
+		<!-- <Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table> -->
 
 		<div class="mt-4 space-y-2">
 			{#each records as record}
@@ -30,5 +30,13 @@
 				</Card>
 			{/each}
 		</div>
+	{/snippet}
+
+	<!-- <svelte:fragment slot="top" let:Search let:Header>
+
 	</svelte:fragment>
+
+	<svelte:fragment slot="records" let:records let:Table let:Card>
+
+	</svelte:fragment> -->
 </CollectionManager>
