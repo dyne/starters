@@ -18,7 +18,7 @@
 	{/snippet}
 
 	{#snippet records({ records, Table, Card })}
-		<!-- <Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table> -->
+		<Table {records} fields={['id', 'text_field', 'relation_field', 'created']}></Table>
 
 		<div class="mt-4 space-y-2">
 			{#each records as record}
@@ -31,12 +31,4 @@
 			{/each}
 		</div>
 	{/snippet}
-
-	<!-- <svelte:fragment slot="top" let:Search let:Header>
-
-	</svelte:fragment>
-
-	<svelte:fragment slot="records" let:records let:Table let:Card>
-
-	</svelte:fragment> -->
 </CollectionManager>

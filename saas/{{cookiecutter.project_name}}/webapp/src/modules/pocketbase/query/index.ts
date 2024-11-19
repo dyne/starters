@@ -148,10 +148,18 @@ export class PocketbaseQuery<C extends CollectionName, E extends ExpandQueryOpti
 
 	// Utils
 
+	sortBy(sortOption: SortOption) {
+		this.options.sort = sortOption;
+	}
+
 	getFlippedSort() {
 		return [
 			this.sortOption[0],
 			this.sortOption[1] == DEFAULT_SORT_ORDER ? 'DESC' : 'ASC'
 		] as SortOption;
+	}
+
+	flipSort() {
+		this.options.sort = this.getFlippedSort();
 	}
 }

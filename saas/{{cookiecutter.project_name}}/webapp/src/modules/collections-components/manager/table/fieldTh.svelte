@@ -15,16 +15,16 @@
 
 	let { field, label = undefined }: Props = $props();
 
-	const { pocketbaseQuery } = getCollectionManagerContext();
+	const { manager } = $derived(getCollectionManagerContext());
 
-	let sortState = $derived($pocketbaseQuery.sortOption);
-	let isSortField = $derived(sortState[0] == field);
+	const sortState = $derived(manager.query.sortOption);
+	const isSortField = $derived(sortState[0] == field);
 
 	async function handleClick() {
 		if (!isSortField) {
-			$pocketbaseQuery.options.sort = [field, DEFAULT_SORT_ORDER];
+			manager.query.sortBy([field, DEFAULT_SORT_ORDER]);
 		} else {
-			$pocketbaseQuery.options.sort = $pocketbaseQuery.getFlippedSort();
+			manager.query.flipSort();
 		}
 	}
 </script>

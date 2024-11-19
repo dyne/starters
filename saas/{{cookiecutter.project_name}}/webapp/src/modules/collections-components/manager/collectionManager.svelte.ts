@@ -23,7 +23,11 @@ export class CollectionManager<
 	currentPage = $state(1);
 	totalItems = $state(0);
 	loadingError = $state<ClientResponseError>();
+
 	queryOptions = $state<Partial<PocketbaseQueryOptions<C, Expand>>>({});
+	query = $derived.by(() => {
+		return new PocketbaseQuery(this.collection, this.queryOptions);
+	});
 
 	selectedRecords = $state<RecordIdString[]>([]);
 
@@ -41,14 +45,13 @@ export class CollectionManager<
 
 	async loadRecords() {
 		const hasPagination = Boolean(this.queryOptions.perPage);
-		const query = new PocketbaseQuery(this.collection, this.queryOptions);
 		try {
 			if (hasPagination) {
-				const result = await query.getList(this.currentPage);
+				const result = await this.query.getList(this.currentPage);
 				this.totalItems = result.totalItems;
 				this.records = result.items;
 			} else {
-				this.records = await query.getFullList();
+				this.records = await this.query.getFullList();
 			}
 		} catch (e) {
 			this.loadingError = e as ClientResponseError;

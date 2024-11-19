@@ -18,15 +18,16 @@
 	/* Props and unpacking */
 
 	const props: CollectionFormProps<C> = $props();
-	$inspect(props);
-
-	const { collection, fieldsOptions = {}, uiOptions = {} } = $derived(props);
 
 	const {
-		hideRequiredIndicator = false,
+		collection,
+		fieldsOptions = {},
+		uiOptions = {},
 		submitButtonContent: buttonContent,
 		submitButton: submitButtonArea
-	} = $derived(uiOptions);
+	} = $derived(props);
+
+	const { hideRequiredIndicator = false } = $derived(uiOptions);
 
 	type F = FieldsOptions<C>;
 
@@ -89,18 +90,18 @@
 	);
 </script>
 
-<Form {form} {hideRequiredIndicator} submitButton={submitButtonArea}>
+<Form {form} {hideRequiredIndicator} submitButton={submitButtonArea} {submitButtonContent}>
 	{#each fields as field}
 		<CollectionFormField {...field} />
 	{/each}
-
-	{#snippet submitButtonContent()}
-		{#if buttonContent}
-			{@render buttonContent()}
-		{:else if formMode == 'edit'}
-			{m.Edit_record()}
-		{:else if formMode == 'create'}
-			{m.Create_record()}
-		{/if}
-	{/snippet}
 </Form>
+
+{#snippet submitButtonContent()}
+	{#if buttonContent}
+		{@render buttonContent()}
+	{:else if formMode == 'edit'}
+		{m.Edit_record()}
+	{:else if formMode == 'create'}
+		{m.Create_record()}
+	{/if}
+{/snippet}

@@ -17,11 +17,12 @@ import type { FormOptions } from '@/forms/form';
 
 /* Props */
 
-export type CollectionFormProps<C extends CollectionName> = CollectionFormOptions<C> & {
-	collection: C;
-	recordId?: RecordIdString;
-	initialData?: Partial<CollectionRecords[C]>;
-};
+export type CollectionFormProps<C extends CollectionName> = CollectionFormOptions<C> &
+	FormSnippets & {
+		collection: C;
+		recordId?: RecordIdString;
+		initialData?: Partial<CollectionRecords[C]>;
+	};
 
 export type CollectionFormOptions<C extends CollectionName> = {
 	onSuccess?: OnCollectionFormSuccess<C>;
@@ -64,7 +65,7 @@ export type FieldSnippet<C extends CollectionName, T = CollectionFormData[C]> = 
 
 /* UI Options */
 
-export type UIOptions = FormSnippets & {
+export type UIOptions = {
 	hideRequiredIndicator?: boolean;
 	showToastOnSuccess?: boolean;
 	toastText?: string;

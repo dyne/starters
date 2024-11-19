@@ -16,26 +16,24 @@
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import Alert from '@/components/ui-custom/alert.svelte';
 	import LoadingDialog from '@/components/ui-custom/loadingDialog.svelte';
-	import type { Snippet } from 'svelte';
-	import type { GenericRecord } from '@/utils/types';
-	import type { IconComponent } from '@/components/types';
+	import type { RecordProp, TitleProp, TriggerProp } from './types';
 
 	//
 
-	interface Props {
-		record: CollectionResponses[C];
+	type Props = {
 		dialogTitle?: any;
-		onAdd?: () => void;
-		onRemove?: () => void;
-		trigger?: Snippet<[{ openDialog: () => void; props: GenericRecord; icon: IconComponent }]>;
-	}
+		onAuthorizationAdd?: () => void;
+		onAuthorizationRemove?: () => void;
+	} & TitleProp &
+		TriggerProp &
+		RecordProp<C>;
 
 	let {
 		record,
 		dialogTitle = m.Share_record(),
-		onAdd = () => {},
-		onRemove = () => {},
-		trigger: triggerSnippet
+		onAuthorizationAdd: onAdd = () => {},
+		onAuthorizationRemove: onRemove = () => {},
+		button: triggerSnippet
 	}: Props = $props();
 
 	/* */
@@ -85,8 +83,8 @@
 	{#snippet trigger({ props })}
 		{#if triggerSnippet}
 			{@render triggerSnippet({
-				openDialog: dialogState.on,
-				props,
+				openForm: dialogState.on,
+				triggerAttributes: props,
 				icon: Share
 			})}
 		{:else}
@@ -107,8 +105,7 @@
 					initialData={authorization}
 					recordId={authorization?.id}
 					uiOptions={{
-						submitButtonText: authorization ? m.Update_authorizations() : m.Share(),
-						triggerToast: true,
+						showToastOnSuccess: true,
 						toastText: m.Record_shared_successfully()
 					}}
 					fieldsOptions={{
@@ -125,15 +122,26 @@
 						}
 					}}
 				>
-					<!-- @migration-task: migrate this slot by hand, `footer-left` is an invalid identifier -->
-					<svelte:fragment slot="footer-left">
-						{#if authorization}
-							<Button variant="destructive" onclick={() => (formState = 'removeAccess')}>
-								<Icon src={Trash} mr />
-								{m.Remove_access()}
-							</Button>
-						{/if}
-					</svelte:fragment>
+					{#snippet submitButton({ SubmitButton })}
+						<div class="flex justify-between">
+							<div>
+								{#if authorization}
+									<Button variant="destructive" onclick={() => (formState = 'removeAccess')}>
+										<Icon src={Trash} mr />
+										{m.Remove_access()}
+									</Button>
+								{/if}
+							</div>
+
+							<SubmitButton>
+								{#if authorization}
+									{m.Update_authorizations()}
+								{:else}
+									{m.Share()}
+								{/if}
+							</SubmitButton>
+						</div>
+					{/snippet}
 				</CollectionForm>
 			{:else if formState == 'removeAccess' && authorization}
 				<T>{m.Are_you_sure_you_want_to_remove_access_to_the_record()}</T>
