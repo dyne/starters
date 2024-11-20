@@ -2,24 +2,26 @@
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import * as Pagination from '@/components/ui/pagination';
 
+	//
+
 	interface Props {
 		class?: string;
 	}
 
 	let { class: className = '' }: Props = $props();
 
-	const { paginationContext, pocketbaseQuery } = getCollectionManagerContext();
-	const { currentPage: currentPageStore, totalItems } = paginationContext;
+	//
 
-	let perPage = $derived($pocketbaseQuery.options.perPage);
-	let show = $derived(perPage && ($totalItems ?? 0) > perPage);
+	const { manager } = $derived(getCollectionManagerContext());
+	const perPage = $derived(manager.queryOptions.perPage);
+	const show = $derived(perPage && manager.totalItems > perPage);
 </script>
 
 {#if show && perPage}
 	<Pagination.Root
-		count={$totalItems ?? 0}
+		count={manager.totalItems}
 		{perPage}
-		bind:page={$currentPageStore}
+		bind:page={manager.currentPage}
 		class={className}
 	>
 		{#snippet children({ currentPage, pages })}

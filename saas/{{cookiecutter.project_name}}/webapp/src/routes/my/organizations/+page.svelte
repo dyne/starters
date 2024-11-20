@@ -3,13 +3,11 @@
 	import { currentUser, pb } from '@/pocketbase/index.js';
 	import { invalidateAll } from '$app/navigation';
 	import { m } from '@/i18n';
-	import EmptyState from '@/components/ui-custom/emptyState.svelte';
 	import PlainCard from '@/components/ui-custom/itemCard.svelte';
 	import CollectionManager from '@/collections-components/manager/collectionManager.svelte';
 	import { Button } from '@/components/ui/button';
 	import { Badge } from '@/components/ui/badge';
 	import Avatar from '@/components/ui-custom/avatar.svelte';
-	import T from '@/components/ui-custom/t.svelte';
 	import { PageTop, PageCard, PageContent } from '@/components/layout';
 	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
 	import Icon from '@/components/ui-custom/icon.svelte';
@@ -63,9 +61,9 @@
 			expand: ['organization'],
 			filter: `user.id = "${$currentUser?.id ?? ''}" && declined = false`
 		}}
-		hide={['emptyState']}
+		hide={['empty_state']}
 	>
-		<svelte:fragment slot="records" let:records>
+		{#snippet records({ records })}
 			<PageCard>
 				<SectionTitle title={m.organization_invites()} />
 
@@ -83,7 +81,7 @@
 					</PlainCard>
 				{/each}
 			</PageCard>
-		</svelte:fragment>
+		{/snippet}
 	</CollectionManager>
 
 	<CollectionManager
@@ -92,9 +90,9 @@
 			expand: ['organization'],
 			filter: `user.id = "${$currentUser?.id}"`
 		}}
-		hide={['emptyState']}
+		hide={['empty_state']}
 	>
-		<svelte:fragment slot="records" let:records>
+		{#snippet records({ records })}
 			<PageCard>
 				<SectionTitle title={m.Your_membership_requests()}></SectionTitle>
 
@@ -131,7 +129,7 @@
 					{/each}
 				</div>
 			</PageCard>
-		</svelte:fragment>
+		{/snippet}
 	</CollectionManager>
 
 	<PageCard>
@@ -155,11 +153,11 @@
 				filter: `user.id = "${$currentUser?.id}"`
 			}}
 		>
-			<svelte:fragment slot="emptyState">
+			{#snippet emptyState({ EmptyState })}
 				<EmptyState title={m.You_havent_added_any_organizations_yet_()} icon={Puzzle} />
-			</svelte:fragment>
+			{/snippet}
 
-			<svelte:fragment slot="records" let:records>
+			{#snippet records({ records })}
 				<div class="space-y-2">
 					{#each records as a}
 						{@const org = a.expand?.organization}
@@ -196,7 +194,7 @@
 						{/if}
 					{/each}
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</CollectionManager>
 	</PageCard>
 </PageContent>

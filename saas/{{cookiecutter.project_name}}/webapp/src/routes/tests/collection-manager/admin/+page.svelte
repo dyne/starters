@@ -28,7 +28,7 @@
 			pocketbase: pb
 		}}
 	>
-		<svelte:fragment slot="records" let:records>
+		{#snippet records({ records })}
 			<List>
 				{#each records as r}
 					<ListItem>
@@ -36,7 +36,7 @@
 					</ListItem>
 				{/each}
 			</List>
-		</svelte:fragment>
+		{/snippet}
 	</CollectionManager>
 
 	<!--  -->
@@ -49,7 +49,7 @@
 			pocketbase: pb
 		}}
 	>
-		<svelte:fragment slot="records" let:records>
+		{#snippet records({ records })}
 			<List>
 				{#each records as r}
 					<ListItem>
@@ -57,6 +57,6 @@
 					</ListItem>
 				{/each}
 			</List>
-		</svelte:fragment>
+		{/snippet}
 	</CollectionManager>
 {/await}

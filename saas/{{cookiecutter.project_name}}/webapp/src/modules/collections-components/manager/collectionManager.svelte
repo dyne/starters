@@ -1,214 +1,147 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
-	import RecordCard from './recordCard.svelte';
-
-	import CollectionTable from './table/collectionTable.svelte';
-
+	// Logic
+	import { CollectionManager } from './collectionManager.svelte.js';
+	import { setupComponentPocketbaseSubscriptions } from '@/pocketbase/subscriptions';
 	import {
-		PocketbaseQuery,
-		type ExpandQueryOption,
-		type PocketbaseQueryOptions,
-		type QueryResponse
-	} from '@/pocketbase/query';
-	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
-	import { ensureArray } from '@/utils/other';
-	import { FolderIcon, Search } from 'lucide-svelte';
-	import MessageCircleWarning from 'lucide-svelte/icons/message-circle-warning';
-	import { m } from '@/i18n';
-	import { setContext } from 'svelte';
-	import { writable } from 'svelte/store';
-	import { pb, setupComponentPbSubscriptions } from '@/pocketbase';
-	import { ClientResponseError } from 'pocketbase';
-	import EmptyState from '@/components/ui-custom/emptyState.svelte';
-	import { Array as A } from 'effect';
-	import CollectionManagerPagination from './collectionManagerPagination.svelte';
-	import CollectionManagerSearch from './collectionManagerSearch.svelte';
-	import CollectionManagerHeader from './collectionManagerHeader.svelte';
-	import {
-		getCollectionModel,
-		getCollectionNameFromId,
-		type CollectionName,
-		type RelationSchemaField
-	} from '@/pocketbase/collections-models';
-	import {
-		COLLECTION_MANAGER_KEY,
+		setCollectionManagerContext,
 		type CollectionManagerContext
 	} from './collectionManagerContext';
-	import type { UIOptions as CollectionFormUIOptions, FieldsOptions } from '../form/formOptions';
+
+	// Logic - Types
+	import type {
+		ExpandQueryOption,
+		PocketbaseQueryOptions,
+		QueryResponse
+	} from '@/pocketbase/query';
+	import type { CollectionName } from '@/pocketbase/collections-models';
+	import type {
+		UIOptions as CollectionFormUIOptions,
+		FieldsOptions
+	} from '../form/collectionFormTypes';
 	import type { FormOptions as SuperformsOptions } from '@/forms';
+	import type { CollectionFormData } from '@/pocketbase/types';
+
+	// Components
+	import Card from './recordCard.svelte';
+	import Table from './table/collectionTable.svelte';
+	import EmptyState from '@/components/ui-custom/emptyState.svelte';
+	import Pagination from './collectionManagerPagination.svelte';
+	import Search from './collectionManagerSearch.svelte';
+	import Header from './collectionManagerHeader.svelte';
+
+	// UI
+	import { m } from '@/i18n';
+	import { FolderIcon, SearchIcon, MessageCircleWarning } from 'lucide-svelte';
+	import type { Snippet } from 'svelte';
 
 	//
 
-	export let collection: C;
-	export let queryOptions: Partial<PocketbaseQueryOptions<C, Expand>> = {};
-	export let subscribe: 'off' | 'expand-collections' | CollectionName[] = 'expand-collections';
+	type Props = {
+		collection: C;
+	} & Partial<Options> &
+		Partial<Snippets>;
 
-	export let hide: ('emptyState' | 'pagination')[] = [];
+	type Snippets = {
+		records: Snippet<
+			[
+				{
+					records: QueryResponse<C, Expand>[];
+					Card: typeof Card;
+					Table: typeof Table;
+					Pagination: typeof Pagination;
+				}
+			]
+		>;
+		emptyState: Snippet<[{ EmptyState: typeof EmptyState }]>;
+		top: Snippet<[{ Search: typeof Search; Header: typeof Header }]>;
+	};
 
-	//
+	type Options = {
+		queryOptions: Partial<PocketbaseQueryOptions<C, Expand>>;
+		subscribe: 'off' | 'expanded_collections' | CollectionName[];
+		hide: ('empty_state' | 'pagination')[];
 
-	export let formUIOptions: CollectionFormUIOptions = {};
-	export let createFormUIOptions: CollectionFormUIOptions = {};
-	export let editFormUIOptions: CollectionFormUIOptions = {};
+		formUIOptions: CollectionFormUIOptions;
+		createFormUIOptions: CollectionFormUIOptions;
+		editFormUIOptions: CollectionFormUIOptions;
 
-	export let formSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
-	export let createFormSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
-	export let editFormSuperformsOptions: SuperformsOptions<CollectionRecords[C]> = {};
+		formSuperformsOptions: SuperformsOptions<CollectionFormData[C]>;
+		createFormSuperformsOptions: SuperformsOptions<CollectionFormData[C]>;
+		editFormSuperformsOptions: SuperformsOptions<CollectionFormData[C]>;
 
-	export let formFieldsOptions: Partial<FieldsOptions<C>> = {};
-	export let createFormFieldsOptions: Partial<FieldsOptions<C>> = {};
-	export let editFormFieldsOptions: Partial<FieldsOptions<C>> = {};
+		formFieldsOptions: Partial<FieldsOptions<C>>;
+		createFormFieldsOptions: Partial<FieldsOptions<C>>;
+		editFormFieldsOptions: Partial<FieldsOptions<C>>;
+	};
 
-	/* Record loading */
-
-	const pocketbaseQuery = writable(new PocketbaseQuery(collection, queryOptions));
-	$: $pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
-
-	const currentPage = writable<number>(1);
-	const totalItems = writable<number | undefined>(undefined);
-
-	//
-
-	let records: QueryResponse<C, Expand>[] = [];
-	let error: ClientResponseError | undefined = undefined;
-
-	$: loadRecords($pocketbaseQuery, $currentPage);
-
-	async function loadRecords(
-		pocketbaseQuery: PocketbaseQuery<C, Expand>,
-		currentPage: number | undefined = undefined
-	) {
-		try {
-			if (pocketbaseQuery.options.perPage) {
-				const result = await pocketbaseQuery.getList(currentPage ?? 0);
-				$totalItems = result.totalItems;
-				records = result.items;
-			} else {
-				records = await pocketbaseQuery.getFullList();
-			}
-		} catch (e) {
-			error = e as ClientResponseError;
-		}
-	}
-
-	/* Subscriptions */
-
-	// TODO - Make reactive
-	// TODO - When "authorizations" is added, `records` update, but not when it's removed
-	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
-	if (Array.isArray(subscribe)) {
-		subscriptionCollections.push(...subscribe);
-	} else if (subscribe == 'expand-collections') {
-		const collections = ensureArray($pocketbaseQuery.options.expand).map((expandString) => {
-			const INVERSE_KEY = '_via_';
-			if (expandString.includes(INVERSE_KEY)) return expandString.split(INVERSE_KEY)[0];
-			else return getCollectionNameFromRelationFieldName(collection, expandString);
-		}) as CollectionName[];
-		subscriptionCollections.push(...collections);
-	}
-	for (const c of A.dedupe(subscriptionCollections)) {
-		setupComponentPbSubscriptions(c, () => loadRecords($pocketbaseQuery, $currentPage));
-	}
-
-	function getCollectionNameFromRelationFieldName<C extends CollectionName>(
-		collection: C,
-		fieldName: string
-	) {
-		// TODO - port `filter` function here
-		const field = getCollectionModel(collection).schema.find(
-			(f) => f.name == fieldName && f.type == 'relation'
-		) as RelationSchemaField | undefined;
-		return getCollectionNameFromId(field?.options.collectionId ?? '');
-	}
-
-	/* Record selection */
-
-	const selectedRecords = writable<string[]>([]);
-
-	function areAllRecordsSelected(selectedRecords: RecordIdString[]) {
-		return records.every((r) => selectedRecords.includes(r.id));
-	}
-
-	function toggleSelectAllRecords() {
-		const allSelected = areAllRecordsSelected($selectedRecords);
-		if (allSelected) {
-			$selectedRecords = [];
-		} else {
-			$selectedRecords = records.map((item) => item.id);
-		}
-	}
-
-	function discardSelection() {
-		$selectedRecords = [];
-	}
-
-	/* Context */
-
-	setContext<CollectionManagerContext<C, Expand>>(COLLECTION_MANAGER_KEY, {
+	const {
 		collection,
-		recordService: pb.collection(collection),
-		paginationContext: {
-			currentPage,
-			totalItems
-		},
-		pocketbaseQuery,
-		selectionContext: {
-			selectedRecords,
-			areAllRecordsSelected,
-			toggleSelectAllRecords,
-			discardSelection
-		},
+		queryOptions = {},
+		hide = [],
+		subscribe = 'expanded_collections',
+		top,
+		records,
+		emptyState,
+		...rest
+	}: Props = $props();
+
+	//
+
+	const manager = $derived(new CollectionManager(collection, queryOptions));
+
+	const context = $derived<CollectionManagerContext<C, Expand>>({
+		manager,
 		formsOptions: {
 			base: {
-				uiOptions: formUIOptions,
-				superformsOptions: formSuperformsOptions,
-				fieldsOptions: formFieldsOptions
+				uiOptions: rest.editFormUIOptions,
+				superformsOptions: rest.editFormSuperformsOptions,
+				fieldsOptions: rest.editFormFieldsOptions
 			},
 			create: {
-				uiOptions: createFormUIOptions,
-				superformsOptions: createFormSuperformsOptions,
-				fieldsOptions: createFormFieldsOptions
+				uiOptions: rest.editFormUIOptions,
+				superformsOptions: rest.editFormSuperformsOptions,
+				fieldsOptions: rest.editFormFieldsOptions
 			},
 			edit: {
-				uiOptions: editFormUIOptions,
-				superformsOptions: editFormSuperformsOptions,
-				fieldsOptions: editFormFieldsOptions
+				uiOptions: rest.editFormUIOptions,
+				superformsOptions: rest.editFormSuperformsOptions,
+				fieldsOptions: rest.editFormFieldsOptions
 			}
 		}
 	});
+
+	setCollectionManagerContext(() => context);
+
+	setupComponentPocketbaseSubscriptions({
+		collection,
+		callback: () => manager.loadRecords(),
+		expandOption: queryOptions.expand,
+		other: ['authorizations']
+	});
 </script>
 
-<slot name="top" Search={CollectionManagerSearch} Header={CollectionManagerHeader} />
+{@render top?.({ Search, Header })}
 
-{#if error}
+{#if manager.loadingError}
 	<EmptyState
 		title={m.Error()}
 		description={m.Some_error_occurred_while_loading_records_()}
 		icon={MessageCircleWarning}
 	/>
-{:else if records.length > 0}
-	<slot
-		name="records"
-		{records}
-		selectedRecords={$selectedRecords}
-		Pagination={CollectionManagerPagination}
-		Table={CollectionTable}
-		Card={RecordCard}
-	/>
+{:else if manager.records.length > 0}
+	{@render records?.({ records: manager.records, Card, Table, Pagination })}
 
 	{#if !hide.includes('pagination')}
-		<CollectionManagerPagination class="mt-6" />
+		<Pagination class="mt-6" />
 	{/if}
-{:else if $pocketbaseQuery.options.search}
-	<EmptyState title={m.No_records_found()} icon={Search} />
-{:else}
-	<slot name="emptyState">
-		{#if !hide.includes('emptyState')}
-			<EmptyState
-				title={m.No_items_here()}
-				description={m.Start_by_adding_a_record_to_this_collection_()}
-				icon={FolderIcon}
-			/>
-		{/if}
-	</slot>
+{:else if manager.queryOptions.search && manager.records.length === 0}
+	<EmptyState title={m.No_records_found()} icon={SearchIcon} />
+{:else if emptyState}
+	{@render emptyState({ EmptyState })}
+{:else if !hide.includes('empty_state')}
+	<EmptyState
+		title={m.No_items_here()}
+		description={m.Start_by_adding_a_record_to_this_collection_()}
+		icon={FolderIcon}
+	/>
 {/if}

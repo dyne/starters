@@ -9,10 +9,7 @@
 	onSuccess={(record) => {
 		toast.success(JSON.stringify(record));
 	}}
-	let:form
->
-	<FormDebug {form} />
-</CollectionForm>
+/>
 
 <!-- 
 <div class="mx-auto max-w-xl p-4">

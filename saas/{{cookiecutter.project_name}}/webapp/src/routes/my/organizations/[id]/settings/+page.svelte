@@ -22,10 +22,11 @@
 			collection="organizations"
 			recordId={organization.id}
 			initialData={organization}
-			uiOptions={{
-				submitButtonText: m.Save_changes()
-			}}
-			on:success={invalidateAll}
-		/>
+			onSuccess={invalidateAll}
+		>
+			{#snippet submitButtonContent()}
+				{m.Save_changes()}
+			{/snippet}
+		</CollectionForm>
 	</PageCard>
 </OrganizationLayout>

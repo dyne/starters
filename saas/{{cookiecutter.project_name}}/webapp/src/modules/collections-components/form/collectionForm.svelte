@@ -1,58 +1,59 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts" generics="C extends CollectionName">
 	import type { SchemaField } from 'pocketbase';
 	import { capitalize } from '@/utils/other';
-	import type { SuperForm } from 'sveltekit-superforms';
 	import { getCollectionModel } from '@/pocketbase/collections-models';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import type { GenericRecord, KeyOf, MaybePromise } from '@/utils/types';
-	import type { CollectionRecords, RecordIdString } from '@/pocketbase/types';
-	import { Button } from '@/components/ui/button';
+	import type { KeyOf } from '@/utils/types';
+	import type { CollectionFormData } from '@/pocketbase/types';
 	import { m } from '@/i18n';
-	import { Form, FormError, SubmitButton, type FormOptions } from '@/forms';
+	import { Form } from '@/forms';
 	import { setupCollectionForm } from './collectionFormSetup';
-	import FieldSchemaToInput from './fieldConfigToField.svelte';
+	import CollectionFormField, { type CollectionFormFieldProps } from './collectionFormField.svelte';
 	import {
-		type OnCollectionFormSuccess,
-		type FieldsOptions,
-		defaultFieldsOptions,
-		type UIOptions,
-		defaultUIOptions
-	} from './formOptions';
+		type CollectionFormMode,
+		type CollectionFormProps,
+		type FieldsOptions
+	} from './collectionFormTypes';
 
-	//
+	/* Props and unpacking */
 
-	export let collection: C;
-	export let recordId: RecordIdString | undefined = undefined;
-	export let initialData: Partial<CollectionRecords[C]> = {};
+	const props: CollectionFormProps<C> = $props();
 
-	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
-	export let onCancel: () => MaybePromise<void> = () => {};
-
-	export let fieldsOptions: Partial<FieldsOptions<C>> = defaultFieldsOptions<C>();
-	export let uiOptions: UIOptions = defaultUIOptions();
-	export let superformsOptions: FormOptions<CollectionRecords[C]> = {};
-
-	/* */
-
-	let form: SuperForm<CollectionRecords[C]>;
-	$: form = setupCollectionForm<C>({
+	const {
 		collection,
-		fieldsOptions,
-		recordId,
-		onSuccess,
-		uiOptions,
-		superformsOptions: superformsOptions as FormOptions<GenericRecord>,
-		initialData
-	});
+		fieldsOptions = {},
+		uiOptions = {},
+		submitButtonContent: buttonContent,
+		submitButton: submitButtonArea
+	} = $derived(props);
 
-	/* Sorting fields */
+	const { hideRequiredIndicator = false } = $derived(uiOptions);
 
-	let fieldsConfigs = getCollectionModel(collection)
-		.schema.sort(createFieldConfigSorter(fieldsOptions?.order))
-		.filter(
-			(config) => !fieldsOptions?.exclude?.includes(config.name as KeyOf<CollectionRecords[C]>)
-		);
+	type F = FieldsOptions<C>;
+
+	const {
+		order: fieldsOrder = [],
+		exclude: excludeFields = [] as string[],
+		hide = {} as F['hide'],
+		labels = {} as F['labels'],
+		descriptions = {} as F['descriptions'],
+		placeholders = {} as F['placeholders'],
+		snippets = {} as F['snippets'],
+		relations = {} as F['relations']
+	} = $derived(fieldsOptions);
+
+	/* Form setup */
+
+	const formMode = $derived<CollectionFormMode>(props.recordId ? 'edit' : 'create');
+	const form = $derived(setupCollectionForm(props));
+
+	/* Fields */
+
+	const fieldsConfigs = $derived(
+		getCollectionModel(collection)
+			.schema.sort(createFieldConfigSorter(fieldsOrder))
+			.filter((config) => !excludeFields.includes(config.name))
+	);
 
 	function createFieldConfigSorter(order: string[] = []) {
 		return (a: SchemaField, b: SchemaField) => {
@@ -71,69 +72,36 @@
 		};
 	}
 
-	/* */
+	const fields = $derived<CollectionFormFieldProps<C>[]>(
+		fieldsConfigs.map((fieldConfig) => {
+			const name = fieldConfig.name as KeyOf<CollectionFormData[C]>;
 
-	let submitButtonText: string | undefined = undefined;
-	$: submitButtonText = Boolean(uiOptions?.submitButtonText)
-		? uiOptions?.submitButtonText
-		: Boolean(recordId)
-			? m.Edit_record()
-			: m.Create_record();
-
-	/* ts helpers */
-
-	function getFieldConfigName(fieldConfig: SchemaField) {
-		return fieldConfig.name as KeyOf<CollectionRecords[C]>;
-	}
-
-	function getRelationsOptions(
-		relationProp: FieldsOptions<C>['relations'],
-		fieldName: KeyOf<CollectionRecords[C]>
-	) {
-		// @ts-expect-error Type mismatch but we don't care
-		return relationProp?.[fieldName] ?? {};
-	}
+			return {
+				fieldConfig,
+				hidden: Object.keys(hide).includes(name),
+				label: labels[name] ?? capitalize(name),
+				snippet: snippets[name],
+				// @ts-expect-error - Slight type mismatch
+				relationFieldOptions: relations[name],
+				description: descriptions[name],
+				placeholder: placeholders[name]
+			};
+		})
+	);
 </script>
 
-<Form
-	{form}
-	hideRequiredIndicator={Boolean(uiOptions.hideRequiredIndicator)}
-	hide={['submit_button', 'error']}
->
-	{#key initialData}
-		{#each fieldsConfigs as fieldSchema}
-			{@const name = getFieldConfigName(fieldSchema)}
-			{@const hidden = Object.keys(fieldsOptions?.hide ?? {}).includes(name)}
-			{@const label = capitalize(fieldsOptions?.labels?.[name] ?? name)}
-			<!-- {@const component = fieldsOptions?.components?.[name]} -->
-			{@const collectionFieldOptions = getRelationsOptions(fieldsOptions?.relations ?? {}, name)}
-			{@const description = fieldsOptions?.descriptions?.[name]}
-			{@const placeholder = fieldsOptions?.placeholders?.[name]}
-			<FieldSchemaToInput
-				{description}
-				{label}
-				fieldConfig={fieldSchema}
-				{hidden}
-				{collectionFieldOptions}
-				{placeholder}
-			/>
-		{/each}
-	{/key}
-
-	<slot {form} />
-
-	<FormError />
-
-	<div class="flex justify-between gap-2">
-		<div>
-			<slot name="footer-left"></slot>
-		</div>
-		<div class="flex gap-2">
-			<slot name="footer-right"></slot>
-			{#if uiOptions.showCancelButton}
-				<Button variant="outline" onclick={onCancel}>{m.Cancel()}</Button>
-			{/if}
-			<SubmitButton>{submitButtonText}</SubmitButton>
-		</div>
-	</div>
+<Form {form} {hideRequiredIndicator} submitButton={submitButtonArea} {submitButtonContent}>
+	{#each fields as field}
+		<CollectionFormField {...field} />
+	{/each}
 </Form>
+
+{#snippet submitButtonContent()}
+	{#if buttonContent}
+		{@render buttonContent()}
+	{:else if formMode == 'edit'}
+		{m.Edit_record()}
+	{:else if formMode == 'create'}
+		{m.Create_record()}
+	{/if}
+{/snippet}

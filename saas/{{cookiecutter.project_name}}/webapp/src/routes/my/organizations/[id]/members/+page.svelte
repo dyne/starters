@@ -63,7 +63,7 @@
 				exclude: ['user', 'organization']
 			}}
 		>
-			<svelte:fragment slot="top">
+			{#snippet top()}
 				<SectionTitle title={m.Members()} description={m.members_description()}>
 					{#snippet right()}
 						<ProtectedOrgUI orgId={organization.id} roles={['admin', 'owner']}>
@@ -86,9 +86,9 @@
 						</ProtectedOrgUI>
 					{/snippet}
 				</SectionTitle>
-			</svelte:fragment>
+			{/snippet}
 
-			<svelte:fragment slot="records" let:records>
+			{#snippet records({ records })}
 				<div class="space-y-2">
 					{#each records as record}
 						{@const user = record.expand?.user}
@@ -115,8 +115,8 @@
 										<div class="space-x-1">
 											{#if userRole.level < role.level}
 												<RecordEdit {record}>
-													{#snippet trigger({ props })}
-														<Button variant="outline" size="sm" {...props}>
+													{#snippet button({ triggerAttributes })}
+														<Button variant="outline" size="sm" {...triggerAttributes}>
 															{m.Edit_role()}
 															<Icon src={Pencil} ml />
 														</Button>
@@ -124,8 +124,8 @@
 												</RecordEdit>
 
 												<RecordDelete {record}>
-													{#snippet trigger({ props })}
-														<Button variant="outline" size="sm" {...props}>
+													{#snippet button({ triggerAttributes })}
+														<Button variant="outline" size="sm" {...triggerAttributes}>
 															{m.Remove()}
 															<Icon src={X} ml />
 														</Button>
@@ -139,7 +139,7 @@
 						{/if}
 					{/each}
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</CollectionManager>
 	</PageCard>
 </OrganizationLayout>

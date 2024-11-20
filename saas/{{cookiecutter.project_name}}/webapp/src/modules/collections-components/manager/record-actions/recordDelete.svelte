@@ -1,7 +1,7 @@
 <script lang="ts" generics="C extends CollectionName">
 	import { toast } from 'svelte-sonner';
 	import { getExceptionMessage } from '@/utils/errors';
-	import type { GenericRecord, MaybePromise } from '@/utils/types';
+	import type { MaybePromise } from '@/utils/types';
 	import { m } from '@/i18n';
 	import { createToggleStore } from '@/components/ui-custom/utils';
 	import Dialog from '@/components/ui-custom/dialog.svelte';
@@ -9,29 +9,30 @@
 	import Alert from '@/components/ui-custom/alert.svelte';
 	import { Button } from '@/components/ui/button';
 	import Icon from '@/components/ui-custom/icon.svelte';
-	import { onDestroy, type Snippet } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Trash, X } from 'lucide-svelte';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import IconButton from '@/components/ui-custom/iconButton.svelte';
-	import type { IconComponent } from '@/components/types';
+	import type { TitleProp, TriggerProp } from './types';
 
-	interface Props {
+	//
+
+	type Props = {
 		record: CollectionResponses[C];
-		dialogTitle?: any;
 		beforeDelete?: (record: CollectionResponses[C]) => MaybePromise<void>;
-		trigger?: Snippet<[{ openDialog: () => void; props: GenericRecord; icon: IconComponent }]>;
-	}
+	} & TriggerProp &
+		TitleProp;
 
-	let {
+	const {
 		record,
-		dialogTitle = m.Delete_record(),
+		formTitle = m.Delete_record(),
 		beforeDelete = () => {},
-		trigger: triggerSnippet
+		button: triggerSnippet
 	}: Props = $props();
 
-	let { recordService } = getCollectionManagerContext<C>();
+	const { manager } = $derived(getCollectionManagerContext());
 
 	//
 
@@ -43,7 +44,7 @@
 		error = undefined;
 		try {
 			await beforeDelete(record);
-			await recordService.delete(record.id);
+			await manager.recordService.delete(record.id);
 			dialogState.off();
 			toast.info(m.Record_deleted_successfully());
 		} catch (e) {
@@ -56,12 +57,12 @@
 	});
 </script>
 
-<Dialog bind:open={$dialogState} title={dialogTitle}>
+<Dialog bind:open={$dialogState} title={formTitle}>
 	{#snippet trigger({ props })}
 		{#if triggerSnippet}
 			{@render triggerSnippet({
-				openDialog: dialogState.on,
-				props,
+				openForm: dialogState.on,
+				triggerAttributes: props,
 				icon: Trash
 			})}
 		{:else}

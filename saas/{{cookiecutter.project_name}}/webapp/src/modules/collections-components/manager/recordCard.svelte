@@ -16,7 +16,6 @@
 	import type ItemCardDescription from '@/components/ui-custom/itemCardDescription.svelte';
 
 	interface Props {
-		//
 		record: CollectionResponses[C];
 		hide?: Array<RecordAction>;
 		class?: string;
@@ -34,12 +33,11 @@
 
 	//
 
-	const { selectionContext: selection } = getCollectionManagerContext();
-	const { selectedRecords } = selection;
+	const { manager } = $derived(getCollectionManagerContext());
 
-	let classes = $derived(
+	const classes = $derived(
 		cn(className, {
-			'border-primary': $selectedRecords.includes(record.id)
+			'border-primary': manager.selectedRecords.includes(record.id)
 		})
 	);
 </script>

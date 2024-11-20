@@ -50,18 +50,18 @@
 				expand: ['orgJoinRequests_via_organization'],
 				perPage: 20
 			}}
-			subscribe="expand-collections"
-			hide={['emptyState']}
+			subscribe="expanded_collections"
+			hide={['empty_state']}
 		>
-			<svelte:fragment slot="top" let:Search>
+			{#snippet top({ Search })}
 				<Search />
-			</svelte:fragment>
+			{/snippet}
 
-			<svelte:fragment slot="emptyState">
+			{#snippet emptyState({ EmptyState })}
 				<EmptyState title={m.No_available_organizations_found()} icon={Users} />
-			</svelte:fragment>
+			{/snippet}
 
-			<svelte:fragment slot="records" let:records>
+			{#snippet records({ records })}
 				<div class="space-y-2">
 					{#each records as org}
 						{@const sentMembershipRequest = org.expand?.orgJoinRequests_via_organization?.at(0)}
@@ -83,6 +83,7 @@
 									{/if}
 								</div>
 							{/snippet}
+
 							{#snippet right()}
 								<div class="shrink-0 self-start pl-8">
 									{#if !sentMembershipRequest}
@@ -114,7 +115,7 @@
 						</PlainCard>
 					{/each}
 				</div>
-			</svelte:fragment>
+			{/snippet}
 		</CollectionManager>
 	</PageCard>
 </PageContent>

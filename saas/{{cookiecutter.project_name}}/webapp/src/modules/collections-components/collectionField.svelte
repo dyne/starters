@@ -3,13 +3,15 @@
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { ExpandQueryOption, QueryResponse } from '@/pocketbase/query';
 
+	export type CollectionFieldModeProp = { mode?: 'search' | 'select' };
+
 	export type CollectionFieldOptions<
 		C extends CollectionName,
 		Expand extends ExpandQueryOption<C>
 	> = {
-		mode?: 'search' | 'select';
 		multiple?: boolean;
-	} & Omit<CollectionSelectBaseProps<C, Expand>, 'collection'> &
+	} & CollectionFieldModeProp &
+		Omit<CollectionInputProps<C, Expand>, 'collection'> &
 		Partial<FieldOptions>;
 </script>
 
@@ -18,13 +20,13 @@
 	generics="Data extends GenericRecord, C extends CollectionName, Expand extends ExpandQueryOption<C> = never"
 >
 	import { m } from '@/i18n';
-	import { ensureArray } from '@/utils/other';
+	import { ensureArray, maybeArrayIsValue } from '@/utils/other';
 	import ListItem from '@/components/ui-custom/listItem.svelte';
 	import { pb } from '@/pocketbase';
 	import ArrayOrItemManager from '@/components/ui-custom/arrayOrItemManager.svelte';
 	import type { Writable } from 'svelte/store';
 	import { CollectionSelect } from '.';
-	import { createDefaultRecordPresenter, type RecordPresenter } from './utils';
+	import { createDefaultRecordPresenter } from './utils';
 	import * as Form from '@/components/ui/form';
 	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 	import { fieldProxy } from 'sveltekit-superforms/client';
@@ -33,7 +35,7 @@
 	import CollectionSearch from './collectionSearch.svelte';
 	import List from '@/components/ui-custom/list.svelte';
 	import T from '@/components/ui-custom/t.svelte';
-	import type { CollectionSelectBaseProps } from './types';
+	import type { CollectionInputProps } from './types';
 
 	//
 
@@ -58,15 +60,10 @@
 
 	const Component = $derived(mode == 'search' ? CollectionSearch : CollectionSelect);
 
-	const valueProxy = fieldProxy(form, name) as Writable<string | string[] | undefined>;
+	const valueProxy = $derived(fieldProxy(form, name)) as Writable<string | string[] | undefined>;
 
 	function fetchRecord(collection: C, id: string): Promise<QueryResponse<C, Expand>> {
 		return pb.collection(collection).getOne(id, { requestKey: null });
-	}
-
-	function valueExists(value: typeof $valueProxy) {
-		if (Array.isArray(value)) return Boolean(value.length);
-		else return Boolean(value);
 	}
 
 	function addItem(proxy: typeof valueProxy, value: string, multiple: boolean) {
@@ -99,7 +96,7 @@
 			/>
 
 			<List class="min-h-[42px]">
-				{#if valueExists($valueProxy)}
+				{#if maybeArrayIsValue($valueProxy)}
 					<ArrayOrItemManager bind:data={$valueProxy}>
 						{#snippet children({ item, removeItem })}
 							<ListItem onclick={removeItem}>

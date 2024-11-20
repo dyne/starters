@@ -8,12 +8,11 @@
 		hideCreate?: boolean;
 	}
 
-	let { title = undefined, hideCreate = false }: Props = $props();
-
-	const { collection } = getCollectionManagerContext();
+	const { title, hideCreate = false }: Props = $props();
+	const { manager } = $derived(getCollectionManagerContext());
 </script>
 
-<SectionTitle title={title ?? collection}>
+<SectionTitle title={title ?? manager.collection}>
 	{#snippet right()}
 		{#if !hideCreate}
 			<RecordCreate />

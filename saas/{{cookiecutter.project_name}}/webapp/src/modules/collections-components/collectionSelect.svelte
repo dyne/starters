@@ -1,15 +1,15 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
 	import { type ExpandQueryOption, PocketbaseQuery, type QueryResponse } from '@/pocketbase/query';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import { setupComponentPbSubscriptions } from '@/pocketbase';
+	import { setupComponentPocketbaseSubscriptions } from '@/pocketbase/subscriptions';
 	import type { RecordIdString } from '@/pocketbase/types';
 	import { createRecordDisplay } from './utils';
 	import SelectInput, { type SelectItem } from '@/components/ui-custom/selectInput.svelte';
-	import type { CollectionSelectBaseProps } from './types';
+	import type { CollectionInputProps } from './types';
 
 	//
 
-	type Props = CollectionSelectBaseProps<C, Expand>;
+	type Props = CollectionInputProps<C, Expand>;
 
 	let {
 		collection,
@@ -35,12 +35,14 @@
 		return createRecordDisplay(record, displayFields, displayFn);
 	});
 
-	const selectItems: SelectItem[] = $derived.by(() => {
-		return records.map((r) => ({
+	const selectItems: SelectItem[] = $derived(
+		records.map((r) => ({
 			value: r.id,
 			label: presentRecord(r)
-		}));
-	});
+		}))
+	);
+
+	//
 
 	const loadRecords = $derived(function () {
 		const query = new PocketbaseQuery(collection, queryOptions);
@@ -51,10 +53,12 @@
 		loadRecords();
 	});
 
-	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
-	for (const c of subscriptionCollections) {
-		setupComponentPbSubscriptions(c, () => loadRecords());
-	}
+	setupComponentPocketbaseSubscriptions({
+		collection,
+		callback: () => loadRecords(),
+		expandOption: queryOptions.expand,
+		other: ['authorizations']
+	});
 
 	//
 

@@ -4,12 +4,12 @@ import type {
 	SchemaFields
 } from '@/pocketbase/collections-models';
 import { pipe, Record, String } from 'effect';
-import type { CollectionFormMode, FieldsOptions, UIOptions } from './formOptions';
+import type { CollectionFormProps } from './collectionFormTypes';
 import { setError, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
 import { getCollectionModel } from '@/pocketbase/collections-models';
 import { createCollectionZodSchema } from '@/pocketbase/zod-schema';
 import z from 'zod';
-import type { GenericRecord, MaybePromise } from '@/utils/types';
+import type { GenericRecord } from '@/utils/types';
 import { merge, cloneDeep } from 'lodash';
 import { pb } from '@/pocketbase';
 import { createForm, type FormOptions } from '@/forms';
@@ -17,39 +17,36 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { ensureArray } from '@/utils/other';
 import { getExceptionMessage } from '@/utils/errors';
 import { ClientResponseError, type CollectionModel } from 'pocketbase';
-import type { CollectionRecords, CollectionResponses, RecordIdString } from '@/pocketbase/types';
+import type {
+	CollectionFormData,
+	CollectionRecords,
+	CollectionResponses
+} from '@/pocketbase/types';
 import { m } from '@/i18n';
 import { toast } from 'svelte-sonner';
 
 //
 
-type SetupCollectionFormProps<C extends CollectionName> = {
-	collection: C;
-	fieldsOptions: Partial<FieldsOptions<C>>;
-	initialData: Partial<CollectionRecords[C]>;
-	recordId?: RecordIdString;
-	superformsOptions?: FormOptions;
-	uiOptions?: UIOptions;
-	onSuccess?: (record: CollectionResponses[C], mode: CollectionFormMode) => MaybePromise<void>;
-};
-
 export function setupCollectionForm<C extends CollectionName>({
 	collection,
-	recordId = undefined,
-	fieldsOptions = {},
+	recordId,
 	initialData = {},
 	onSuccess = () => {},
+	fieldsOptions = {},
 	superformsOptions = {},
 	uiOptions = {}
-}: SetupCollectionFormProps<C>): SuperForm<CollectionRecords[C]> {
+}: CollectionFormProps<C>): SuperForm<CollectionFormData[C]> {
+	const { exclude = [], defaults = {}, hide = {} } = fieldsOptions;
+	const { toastText } = uiOptions;
+
+	/* */
+
 	const collectionModel = getCollectionModel(collection) as CollectionModel;
 
 	/* Schema creation */
 
 	const baseSchema = createCollectionZodSchema(collection) as z.AnyZodObject;
-	const schema = baseSchema.omit(
-		Object.fromEntries((fieldsOptions?.exclude ?? []).map((key) => [key, true]))
-	);
+	const schema = baseSchema.omit(Object.fromEntries(exclude.map((key) => [key, true])));
 
 	/* Initial data processing */
 	/* This must be done for two reasons
@@ -74,22 +71,22 @@ export function setupCollectionForm<C extends CollectionName>({
 	 * (Also, useful for seeding and cleaning data)
 	 */
 
-	const processedInitialData = pipe(
-		merge(cloneDeep(initialData), fieldsOptions?.defaults, fieldsOptions?.hide), // Seeding data
-		(data) => removeExcessProperties(data, collectionModel),
+	const processedInitialData: Partial<CollectionFormData[C]> = pipe(
+		initialData,
+		(data) => removeExcessProperties(data, collectionModel, exclude), // Removes also "collectionId", "created", ...
 		(data) => mockInitialDataFiles(data, collectionModel),
-		(data) => stringifyJsonFields(data, collectionModel),
-		Record.filter((v) => Boolean(v)) // Useful to remove `undefined` values that sometimes cause problems
+		(data) => merge(cloneDeep(data), defaults, hide),
+		(data) => stringifyJsonFields(data, collectionModel)
 	);
 
 	/* Form creation */
 
-	const form = createForm({
+	const form = createForm<GenericRecord>({
 		adapter: zod(schema),
 		initialData: processedInitialData,
 		options: {
 			dataType: 'form',
-			...superformsOptions
+			...(superformsOptions as FormOptions)
 		},
 
 		onSubmit: async ({ form }) => {
@@ -106,14 +103,14 @@ export function setupCollectionForm<C extends CollectionName>({
 					record = await pb.collection(collection).create<CollectionResponses[C]>(data);
 				}
 
-				if (uiOptions?.triggerToast) {
-					const toastText = uiOptions?.toastText
-						? uiOptions?.toastText
+				if (uiOptions?.showToastOnSuccess) {
+					const text = toastText
+						? toastText
 						: recordId
 							? m.Record_updated_successfully()
 							: m.Record_created_successfully();
 
-					toast.success(toastText);
+					toast.success(text);
 				}
 
 				onSuccess(record, recordId ? 'edit' : 'create');
@@ -139,19 +136,31 @@ export function setupCollectionForm<C extends CollectionName>({
 
 	//
 
-	return form as SuperForm<CollectionRecords[C]>;
+	return form as SuperForm<CollectionFormData[C]>;
 }
 
 //
 
-function removeExcessProperties(recordData: GenericRecord, collectionModel: CollectionModel) {
+function removeExcessProperties<T extends GenericRecord>(
+	recordData: T,
+	collectionModel: CollectionModel,
+	exclude: string[] = []
+): Partial<T> {
 	const collectionFields = collectionModel.schema.map((f) => f.name);
-	return Record.filter(recordData, (_, k) => collectionFields.includes(k));
+	return Record.filter(recordData, (v, k) => {
+		const isRecordField = collectionFields.includes(k);
+		const isNotExcluded = !exclude.includes(k);
+		const hasValue = Boolean(v); // Sometimes useful
+		return isRecordField && isNotExcluded && hasValue;
+	}) as Partial<T>;
 }
 
 //
 
-function mockInitialDataFiles(recordData: GenericRecord, collectionModel: CollectionModel) {
+function mockInitialDataFiles<C extends CollectionName>(
+	recordData: Partial<CollectionRecords[C]>,
+	collectionModel: CollectionModel
+) {
 	return mapRecordDataByFieldType(
 		recordData,
 		collectionModel,
@@ -165,7 +174,7 @@ function mockInitialDataFiles(recordData: GenericRecord, collectionModel: Collec
 				return fieldValue;
 			}
 		}
-	);
+	) as Partial<CollectionFormData[C]>;
 }
 
 function mockFile(filename: string, fileFieldConfig: FileSchemaField) {
@@ -180,11 +189,14 @@ function mockFile(filename: string, fileFieldConfig: FileSchemaField) {
 
 //
 
-function stringifyJsonFields(recordData: GenericRecord, collectionModel: CollectionModel) {
+function stringifyJsonFields<T extends GenericRecord>(
+	recordData: GenericRecord,
+	collectionModel: CollectionModel
+): T {
 	return mapRecordDataByFieldType(recordData, collectionModel, 'json', (fieldValue) => {
 		if (!fieldValue) return fieldValue;
 		return JSON.stringify(fieldValue);
-	});
+	}) as T;
 }
 
 //

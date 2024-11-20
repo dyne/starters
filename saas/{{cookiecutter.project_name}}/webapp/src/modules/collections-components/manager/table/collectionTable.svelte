@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends CollectionResponses[CollectionName]">
+<script lang="ts" generics="Response extends CollectionResponses[CollectionName]">
 	import { m } from '@/i18n';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
@@ -13,17 +13,27 @@
 	import * as Table from '@/components/ui/table';
 	import FieldTh from './fieldTh.svelte';
 	import IconButton from '@/components/ui-custom/iconButton.svelte';
+	import type { Snippet } from 'svelte';
+
+	//
 
 	interface Props {
-		records: T[];
-		fields?: KeyOf<T>[];
+		records: Response[];
+		fields?: KeyOf<Response>[];
 		hide?: Array<RecordAction>;
-		header?: import('svelte').Snippet<[any]>;
-		row?: import('svelte').Snippet<[any]>;
-		actions?: import('svelte').Snippet<[any]>;
+		header?: Snippet<[{ Th: typeof Table.Head }]>;
+		row?: Snippet<[{ Td: typeof Table.Cell; record: Response }]>;
+		actions?: Snippet<[{ record: Response }]>;
 	}
 
-	let { records, fields = ['id'] as KeyOf<T>[], hide = [], header, row, actions }: Props = $props();
+	const {
+		records,
+		fields = ['id'] as KeyOf<Response>[],
+		hide = [],
+		header,
+		row,
+		actions
+	}: Props = $props();
 </script>
 
 <Table.Root>
@@ -67,22 +77,22 @@
 
 					{#if !hide.includes('edit')}
 						<RecordEdit {record}>
-							{#snippet trigger({ props, icon })}
-								<IconButton {icon} variant="ghost" {...props} />
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
 							{/snippet}
 						</RecordEdit>
 					{/if}
 					{#if !hide.includes('share')}
 						<RecordShare {record}>
-							{#snippet trigger({ props, icon })}
-								<IconButton {icon} variant="ghost" {...props} />
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
 							{/snippet}
 						</RecordShare>
 					{/if}
 					{#if !hide.includes('delete')}
 						<RecordDelete {record}>
-							{#snippet trigger({ props, icon })}
-								<IconButton {icon} variant="ghost" {...props} />
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
 							{/snippet}
 						</RecordDelete>
 					{/if}

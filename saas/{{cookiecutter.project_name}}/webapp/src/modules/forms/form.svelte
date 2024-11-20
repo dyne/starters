@@ -6,7 +6,7 @@
 
 	//
 
-	type FormContext<Data extends GenericRecord = GenericRecord> = {
+	export type FormContext<Data extends GenericRecord = GenericRecord> = {
 		form: SuperForm<Data>;
 		hideRequiredIndicator: boolean;
 	};
@@ -15,6 +15,15 @@
 		setupDerivedContext<FormContext>('form');
 
 	export { getFormContext };
+
+	//
+
+	export type FormSnippets = {
+		submitButtonContent?: Snippet;
+		submitButton?: Snippet<[{ SubmitButton: typeof SubmitButton }]>;
+		loadingStateContent?: Snippet;
+		loadingState?: Snippet<[{ isLoading: boolean }]>;
+	};
 </script>
 
 <script lang="ts" generics="T extends GenericRecord">
@@ -25,13 +34,6 @@
 	import type { HTMLFormAttributes } from 'svelte/elements';
 
 	//
-
-	type FormSnippets = {
-		submitButtonContent?: Snippet;
-		submitButton?: Snippet<[{ SubmitButton: typeof SubmitButton }]>;
-		loadingStateContent?: Snippet;
-		loadingState?: Snippet<[{ isLoading: boolean }]>;
-	};
 
 	type Props = {
 		form: SuperForm<T, any>;
