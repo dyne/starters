@@ -105,73 +105,69 @@
 		</WelcomeBanner>
 	{/if}
 
-	<PageCard>
-		<T tag="h4">{m.Generate_your_keys()}</T>
+	<T tag="h4">{m.Generate_your_keys()}</T>
 
-		{#if WelcomeSession.isActive()}
-			<Alert variant="info" icon={HelpCircle}>
-				<span class="sr-only">{m.Info()}</span>
-				<span class="text mb-2 flex items-center font-bold">
-					{m.Important_information()}
-				</span>
-				<ul class="list-disc space-y-1 pl-4 pt-1">
-					<li>
-						{m.By_answering_these_questions_you_will_generate_keys_that_will_be_used_to_encrypt_your_data()}
-					</li>
-					<li>
-						{m.Please_remember_the_answers_as_they_will_be_the_only_way_to_restore_the_encryption_keys()}
-					</li>
-					<li>{m.Please_answer_at_least_3_of_the_following_questions()}</li>
-				</ul>
-			</Alert>
-		{:else if RegenerateKeyringSession.isActive()}
-			<RegenerateBanner />
+	{#if WelcomeSession.isActive()}
+		<Alert variant="info" icon={HelpCircle}>
+			<span class="sr-only">{m.Info()}</span>
+			<span class="text mb-2 flex items-center font-bold">
+				{m.Important_information()}
+			</span>
+			<ul class="list-disc space-y-1 pl-4 pt-1">
+				<li>
+					{m.By_answering_these_questions_you_will_generate_keys_that_will_be_used_to_encrypt_your_data()}
+				</li>
+				<li>
+					{m.Please_remember_the_answers_as_they_will_be_the_only_way_to_restore_the_encryption_keys()}
+				</li>
+				<li>{m.Please_answer_at_least_3_of_the_following_questions()}</li>
+			</ul>
+		</Alert>
+	{:else if RegenerateKeyringSession.isActive()}
+		<RegenerateBanner />
+	{/if}
+
+	<Separator />
+
+	<Form {form} class="space-y-6">
+		{#if !$currentUser}
+			<div class="space-y-1">
+				<Field {form} name="email" options={{ label: 'User email' }} />
+
+				<T tag="small" class="text-gray-400">
+					{m.Your_email_wont_be_stored_anywhere_it_will_be_used_only_to_generate_the_keys_()}
+				</T>
+			</div>
+
+			<Separator />
 		{/if}
 
-		<Separator />
+		{#each userChallenges as question}
+			<Field {form} name={`questions.${question.id}`} options={{ label: question.text }} />
+		{/each}
 
-		<Form {form} class="space-y-6">
-			{#if !$currentUser}
-				<div class="space-y-1">
-					<Field {form} name="email" options={{ label: 'User email' }} />
+		{#snippet submitButtonContent()}
+			{m.Generate_keys()}
+		{/snippet}
+	</Form>
 
-					<T tag="small" class="text-gray-400">
-						{m.Your_email_wont_be_stored_anywhere_it_will_be_used_only_to_generate_the_keys_()}
-					</T>
-				</div>
+	<Separator />
 
-				<Separator />
-			{/if}
-
-			{#each userChallenges as question}
-				<Field {form} name={`questions.${question.id}`} options={{ label: question.text }} />
-			{/each}
-
-			{#snippet submitButtonContent()}
-				{m.Generate_keys()}
-			{/snippet}
-		</Form>
-
-		<Separator />
-
-		<A class="block text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</A>
-	</PageCard>
+	<A class="block text-sm" href="/keypairoom/regenerate">{m.I_have_the_seed_passphrase()}</A>
 {:else}
-	<PageCard>
-		<T tag="h4">{m.Keypair_creation_successful()}</T>
-		<T class="text-sm">
-			{m.Please_store_this_in_a_safe_place_to_recover_your_account_in_the_future_this_passphrase_will_be_shown_only_one_time()}
-		</T>
-		<Alert variant="info">
-			<span class="font-mono">
-				{seed}
-				<div class="flex flex-col items-end pt-4">
-					<CopyButton textToCopy={seed}>{m.Copy_seed()}</CopyButton>
-				</div>
-			</span>
-		</Alert>
-		<div class="flex justify-end">
-			<Button href="/my">{m.Go_to_Dashboard()}</Button>
-		</div>
-	</PageCard>
+	<T tag="h4">{m.Keypair_creation_successful()}</T>
+	<T class="text-sm">
+		{m.Please_store_this_in_a_safe_place_to_recover_your_account_in_the_future_this_passphrase_will_be_shown_only_one_time()}
+	</T>
+	<Alert variant="info">
+		<span class="font-mono">
+			{seed}
+			<div class="flex flex-col items-end pt-4">
+				<CopyButton textToCopy={seed}>{m.Copy_seed()}</CopyButton>
+			</div>
+		</span>
+	</Alert>
+	<div class="flex justify-end">
+		<Button href="/my">{m.Go_to_Dashboard()}</Button>
+	</div>
 {/if}

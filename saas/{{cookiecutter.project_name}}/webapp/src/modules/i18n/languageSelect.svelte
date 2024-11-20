@@ -1,79 +1,57 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { getLanguagesData, m, type LanguageData } from '.';
-	import { Languages } from 'lucide-svelte';
 	import Icon from '@/components/ui-custom/icon.svelte';
 	import * as Popover from '@/components/ui/popover';
 	import { Button } from '@/components/ui/button';
-	import { languageTag } from '.';
+	import BaseLanguageSelect from './baseLanguageSelect.svelte';
+	import type { LanguageSelectTriggerSnippetProps } from './baseLanguageSelect.svelte';
 	import type { Snippet } from 'svelte';
-	import type { IconComponent } from '@/components/types';
-	import { Store } from 'runed';
 	import type { GenericRecord } from '@/utils/types';
 
-	interface Props {
-		trigger?: Snippet<
-			[
-				{
-					props: GenericRecord;
-					icon: IconComponent;
-					text: string;
-					languageData: LanguageData;
-				}
-			]
-		>;
-		language?: Snippet<[{ languageData: LanguageData }]>;
+	type Props = {
 		contentClass?: string;
-	}
+		trigger?: Snippet<[LanguageSelectTriggerSnippetProps & { triggerAttributes: GenericRecord }]>;
+	};
 
-	const { trigger, language, contentClass = '' }: Props = $props();
-
-	const pageState = new Store(page);
-	const languagesData = $derived(getLanguagesData(pageState.current));
-	const currentLanguage = $derived(languagesData.find((l) => l.tag == languageTag())!);
+	const { contentClass = '', trigger: triggerSnippet }: Props = $props();
 </script>
 
 <Popover.Root>
-	<Popover.Trigger>
-		{#snippet child({ props })}
-			{#if trigger}
-				{@render trigger({
-					props,
-					icon: Languages,
-					text: m.Select_language(),
-					languageData: currentLanguage
-				})}
-			{:else}
-				<Button variant="outline" {...props}>
-					<Icon src={Languages} />
-					{m.Select_language()}
-				</Button>
-			{/if}
+	<BaseLanguageSelect>
+		{#snippet trigger(data)}
+			<Popover.Trigger>
+				{#snippet child({ props: triggerAttributes })}
+					{#if triggerSnippet}
+						{@render triggerSnippet({ ...data, triggerAttributes })}
+					{:else}
+						{@const { icon: LanguageIcon, text } = data}
+						<Button variant="outline" {...triggerAttributes}>
+							<Icon src={LanguageIcon} />
+							{text}
+						</Button>
+					{/if}
+				{/snippet}
+			</Popover.Trigger>
 		{/snippet}
-	</Popover.Trigger>
 
-	<Popover.Content class="space-y-0.5 p-1 {contentClass} w-[--bits-popover-anchor-width]">
-		{#each languagesData as languageData}
-			{#if language}
-				{@render language({ languageData })}
-			{:else}
-				{@const { href, hreflang, name, flag, isCurrent } = languageData}
-
-				<Button
-					{href}
-					{hreflang}
-					variant={isCurrent ? 'secondary' : 'ghost'}
-					class="flex items-center justify-start gap-2"
-					size="sm"
-				>
-					<span class="text-2xl">
-						{flag}
-					</span>
-					<span>
-						{name}
-					</span>
-				</Button>
-			{/if}
-		{/each}
-	</Popover.Content>
+		{#snippet languages({ languages })}
+			<Popover.Content class="space-y-0.5 p-1 {contentClass} w-[--bits-popover-anchor-width]">
+				{#each languages as { href, hreflang, name, flag, isCurrent }}
+					<Button
+						{href}
+						{hreflang}
+						variant={isCurrent ? 'secondary' : 'ghost'}
+						class="flex items-center justify-start gap-2"
+						size="sm"
+					>
+						<span class="text-2xl">
+							{flag}
+						</span>
+						<span>
+							{name}
+						</span>
+					</Button>
+				{/each}
+			</Popover.Content>
+		{/snippet}
+	</BaseLanguageSelect>
 </Popover.Root>
