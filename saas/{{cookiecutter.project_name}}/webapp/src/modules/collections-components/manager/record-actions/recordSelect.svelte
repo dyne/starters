@@ -1,21 +1,26 @@
 <script lang="ts" generics="C extends CollectionName">
 	import type { CollectionResponses } from '@/pocketbase/types';
-	import { Array } from 'effect';
 	import { Checkbox } from '@/components/ui/checkbox';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 
-	export let record: CollectionResponses[C];
+	//
 
-	let { selectionContext: selection } = getCollectionManagerContext();
-	let { selectedRecords } = selection;
+	interface Props {
+		record: CollectionResponses[C];
+	}
 
-	$: checked = $selectedRecords.includes(record.id);
+	const { record }: Props = $props();
+
+	//
+
+	const { manager } = $derived(getCollectionManagerContext());
+	const checked = $derived(manager.selectedRecords.includes(record.id));
 
 	function handleChecked(checked: boolean | 'indeterminate') {
 		if (checked == 'indeterminate') return;
-		if (checked) $selectedRecords = [...$selectedRecords, record.id];
-		else $selectedRecords = Array.remove($selectedRecords, $selectedRecords.indexOf(record.id));
+		if (checked) manager.selectRecord(record.id);
+		else manager.deselectRecord(record.id);
 	}
 </script>
 

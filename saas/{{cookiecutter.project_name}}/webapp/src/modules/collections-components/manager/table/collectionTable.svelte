@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends CollectionResponses[CollectionName]">
+<script lang="ts" generics="Response extends CollectionResponses[CollectionName]">
 	import { m } from '@/i18n';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
@@ -12,11 +12,28 @@
 	import type { KeyOf } from '@/utils/types';
 	import * as Table from '@/components/ui/table';
 	import FieldTh from './fieldTh.svelte';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
+	import type { Snippet } from 'svelte';
 
-	export let records: T[];
-	export let fields: KeyOf<T>[] = ['id'] as KeyOf<T>[];
-	export let hide: Array<RecordAction> = [];
+	//
+
+	interface Props {
+		records: Response[];
+		fields?: KeyOf<Response>[];
+		hide?: Array<RecordAction>;
+		header?: Snippet<[{ Th: typeof Table.Head }]>;
+		row?: Snippet<[{ Td: typeof Table.Cell; record: Response }]>;
+		actions?: Snippet<[{ record: Response }]>;
+	}
+
+	const {
+		records,
+		fields = ['id'] as KeyOf<Response>[],
+		hide = [],
+		header,
+		row,
+		actions
+	}: Props = $props();
 </script>
 
 <Table.Root>
@@ -30,7 +47,7 @@
 				<FieldTh {field} />
 			{/each}
 
-			<slot name="header" Th={Table.Head} />
+			{@render header?.({ Th: Table.Head })}
 
 			<Table.Head>
 				{m.Actions()}
@@ -53,30 +70,30 @@
 					</Table.Cell>
 				{/each}
 
-				<slot name="row" {record} Td={Table.Cell} />
+				{@render row?.({ record, Td: Table.Cell })}
 
 				<Table.Cell class="py-2">
-					<slot name="actions" {record} />
+					{@render actions?.({ record })}
 
 					{#if !hide.includes('edit')}
 						<RecordEdit {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
+							{/snippet}
 						</RecordEdit>
 					{/if}
 					{#if !hide.includes('share')}
 						<RecordShare {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
+							{/snippet}
 						</RecordShare>
 					{/if}
 					{#if !hide.includes('delete')}
 						<RecordDelete {record}>
-							<svelte:fragment slot="trigger" let:builder let:icon>
-								<IconButton {icon} variant="ghost" builders={[builder]} />
-							</svelte:fragment>
+							{#snippet button({ triggerAttributes, icon })}
+								<IconButton {icon} variant="ghost" {...triggerAttributes} />
+							{/snippet}
 						</RecordDelete>
 					{/if}
 				</Table.Cell>

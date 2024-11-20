@@ -4,7 +4,7 @@
 	import { Button } from '@/components/ui/button';
 	import { m } from '@/i18n';
 
-	let url: string | undefined = undefined;
+	let url: string | undefined = $state(undefined);
 
 	getUserDidUrl().then((res) => {
 		url = res;

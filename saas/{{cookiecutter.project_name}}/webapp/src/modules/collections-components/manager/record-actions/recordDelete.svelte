@@ -3,38 +3,48 @@
 	import { getExceptionMessage } from '@/utils/errors';
 	import type { MaybePromise } from '@/utils/types';
 	import { m } from '@/i18n';
-	import { createToggleStore } from '@/components/custom/utils';
-	import Dialog from '@/components/custom/dialog.svelte';
-	import T from '@/components/custom/t.svelte';
-	import Alert from '@/components/custom/alert.svelte';
+	import { createToggleStore } from '@/components/ui-custom/utils';
+	import Dialog from '@/components/ui-custom/dialog.svelte';
+	import T from '@/components/ui-custom/t.svelte';
+	import Alert from '@/components/ui-custom/alert.svelte';
 	import { Button } from '@/components/ui/button';
-	import Icon from '@/components/custom/icon.svelte';
+	import Icon from '@/components/ui-custom/icon.svelte';
 	import { onDestroy } from 'svelte';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { Trash, X } from 'lucide-svelte';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
+	import type { TitleProp, TriggerProp } from './types';
 
 	//
 
-	export let record: CollectionResponses[C];
-	export let dialogTitle = m.Delete_record();
-	export let beforeDelete: (record: CollectionResponses[C]) => MaybePromise<void> = () => {};
+	type Props = {
+		record: CollectionResponses[C];
+		beforeDelete?: (record: CollectionResponses[C]) => MaybePromise<void>;
+	} & TriggerProp &
+		TitleProp;
 
-	let { recordService } = getCollectionManagerContext<C>();
+	const {
+		record,
+		formTitle = m.Delete_record(),
+		beforeDelete = () => {},
+		button: triggerSnippet
+	}: Props = $props();
+
+	const { manager } = $derived(getCollectionManagerContext());
 
 	//
 
 	const dialogState = createToggleStore(false);
 
-	let error: string | undefined = undefined;
+	let error: string | undefined = $state(undefined);
 
 	async function deleteRecord(record: CollectionResponses[C]) {
 		error = undefined;
 		try {
 			await beforeDelete(record);
-			await recordService.delete(record.id);
+			await manager.recordService.delete(record.id);
 			dialogState.off();
 			toast.info(m.Record_deleted_successfully());
 		} catch (e) {
@@ -47,14 +57,20 @@
 	});
 </script>
 
-<Dialog bind:open={$dialogState} title={dialogTitle}>
-	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" openModal={dialogState.on} {builder} icon={Trash}>
-			<IconButton icon={Trash} builders={[builder]} />
-		</slot>
-	</svelte:fragment>
+<Dialog bind:open={$dialogState} title={formTitle}>
+	{#snippet trigger({ props })}
+		{#if triggerSnippet}
+			{@render triggerSnippet({
+				openForm: dialogState.on,
+				triggerAttributes: props,
+				icon: Trash
+			})}
+		{:else}
+			<IconButton icon={Trash} {...props} />
+		{/if}
+	{/snippet}
 
-	<svelte:fragment slot="content">
+	{#snippet content()}
 		<div class="space-y-6">
 			<T>{m.Are_you_sure_you_want_to_delete_this_record()}</T>
 
@@ -66,16 +82,16 @@
 			{/if}
 
 			<div class="flex justify-center gap-2">
-				<Button variant="destructive" on:click={() => deleteRecord(record)}>
+				<Button variant="destructive" onclick={() => deleteRecord(record)}>
 					<Icon src={Trash} mr />
 					{m.Delete()}
 				</Button>
 
-				<Button variant="outline" on:click={dialogState.off}>
+				<Button variant="outline" onclick={dialogState.off}>
 					<Icon src={X} mr />
 					{m.Cancel()}
 				</Button>
 			</div>
 		</div>
-	</svelte:fragment>
+	{/snippet}
 </Dialog>

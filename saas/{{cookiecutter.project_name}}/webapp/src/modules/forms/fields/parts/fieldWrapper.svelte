@@ -1,20 +1,30 @@
 <script lang="ts">
 	import { capitalize } from 'effect/String';
-
 	import * as Form from '@/components/ui/form';
 	import type { FieldOptions } from '../types';
 	import RequiredIndicator from '@/forms/components/requiredIndicator.svelte';
+	import type { Snippet } from 'svelte';
+	import type { ControlAttrs } from 'formsnap';
 
-	export let field: string;
-	export let options: Partial<FieldOptions> = {};
+	interface Props {
+		field: string;
+		options?: Partial<FieldOptions>;
+		children?: Snippet<[{ props: ControlAttrs }]>;
+	}
+
+	const { field, options = {}, children: child }: Props = $props();
 </script>
 
-<Form.Control let:attrs>
-	<Form.Label>
-		{options.label ?? capitalize(field)}
-		<RequiredIndicator {field} />
-	</Form.Label>
-	<slot {attrs} />
+<Form.Control>
+	{#snippet children({ props })}
+		<!-- TODO - Make <FormLabel> commponent -->
+		<Form.Label>
+			{options.label ?? capitalize(field)}
+			<RequiredIndicator {field} />
+		</Form.Label>
+
+		{@render child?.({ props })}
+	{/snippet}
 </Form.Control>
 
 {#if options.description}

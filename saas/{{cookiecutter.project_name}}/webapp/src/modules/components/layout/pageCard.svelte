@@ -1,12 +1,15 @@
 <script lang="ts">
-	import Card from '@/components/custom/card.svelte';
+	import Card from '@/components/ui-custom/card.svelte';
 
-	let className = '';
-	export { className as class };
+	interface Props {
+		class?: string;
+		contentClass?: string;
+		children?: import('svelte').Snippet;
+	}
 
-	export let contentClass = '';
+	let { class: className = '', contentClass = '', children }: Props = $props();
 </script>
 
 <Card class="shadow-md ${className}" contentClass="space-y-6 {contentClass}">
-	<slot />
+	{@render children?.()}
 </Card>

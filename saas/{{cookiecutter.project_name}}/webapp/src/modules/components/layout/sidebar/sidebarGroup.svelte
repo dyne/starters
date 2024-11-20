@@ -1,62 +1,31 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import type { SidebarGroupProps } from './types.ts';
-	import { isLinkActive } from '@/utils/other.js';
+	import * as Sidebar from '@/components/ui/sidebar';
+	import * as Collapsible from '@/components/ui/collapsible';
+	import type { Snippet } from 'svelte';
+	import { cn } from '@/components/ui/utils';
 
-	import * as Accordion from '@/components/ui/accordion';
-	import SidebarLink from './sidebarLink.svelte';
-	import { cn } from '@/components/utils.js';
-	import { buttonVariants } from '@/components/ui/button/index.js';
-	import { nanoid } from 'nanoid';
-	import SidebarIcon from './sidebarIcon.svelte';
+	type Props = { trigger: Snippet; content: Snippet; active?: boolean };
 
-	type $$Props = SidebarGroupProps;
-	$: props = $$props as $$Props;
+	const { trigger, content, active = false }: Props = $props();
 
-	$: isActive = isGroupActive(props);
-
-	function isGroupActive({ links }: SidebarGroupProps) {
-		return links.some((l) => isLinkActive(l.href, $page, true));
-	}
-
-	const name = nanoid(5);
-
-	// TODO - fix behavior of "organization home" link not working
+	const open = $derived(active);
 </script>
 
-<Accordion.Root value={isActive ? name : ''}>
-	<Accordion.Item
-		value={name}
-		class={cn('rounded-md ', {
-			'ring-primary ring-1': isActive,
-			'border-none': !isActive
-		})}
-	>
-		<Accordion.Trigger
-			class={cn(
-				buttonVariants({
-					class: 'justify-between hover:no-underline',
-					variant: 'ghost'
-				}),
-				{
-					'hover:bg-transparent': isActive,
-					'pointer-events-none opacity-50': props.disabled
-				}
-			)}
-			disabled={props.disabled}
-		>
-			<div class="flex items-center">
-				<SidebarIcon {props} />
-				<span>
-					{props.text}
-				</span>
-			</div>
-		</Accordion.Trigger>
-
-		<Accordion.Content class="pb-1 pl-4 pr-1 [&>div]:pb-0">
-			{#each props.links as link}
-				<SidebarLink {...link}></SidebarLink>
-			{/each}
-		</Accordion.Content>
-	</Accordion.Item>
-</Accordion.Root>
+<Sidebar.Menu class={cn({ 'ring-primary rounded-sm ring-1 ring-offset-2': active })}>
+	<Collapsible.Root class="group/collapsible" {open}>
+		<Sidebar.MenuItem>
+			<Collapsible.Trigger>
+				{#snippet child({ props })}
+					<Sidebar.MenuButton {...props}>
+						{@render trigger()}
+					</Sidebar.MenuButton>
+				{/snippet}
+			</Collapsible.Trigger>
+			<Collapsible.Content>
+				<Sidebar.MenuSub>
+					{@render content()}
+				</Sidebar.MenuSub>
+			</Collapsible.Content>
+		</Sidebar.MenuItem>
+	</Collapsible.Root>
+</Sidebar.Menu>

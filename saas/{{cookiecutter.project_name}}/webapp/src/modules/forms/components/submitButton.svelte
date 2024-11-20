@@ -4,14 +4,15 @@
 	import { FORM_ERROR_PATH } from '../form';
 	import type { ButtonProps } from '@/components/ui/button';
 
-	type $$Props = ButtonProps;
+	//
 
-	const { form } = getFormContext();
-	const { allErrors } = form;
+	const { children, ...props }: ButtonProps = $props();
 
-	$: formHasErrors = $allErrors.filter((e) => e.path != FORM_ERROR_PATH).length > 0;
+	const { form } = $derived(getFormContext());
+	const { allErrors } = $derived(form);
+	const formHasErrors = $derived($allErrors.filter((e) => e.path != FORM_ERROR_PATH).length > 0);
 </script>
 
-<Form.Button {...$$props} disabled={formHasErrors}>
-	<slot></slot>
+<Form.Button {...props} disabled={formHasErrors}>
+	{@render children?.()}
 </Form.Button>

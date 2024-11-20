@@ -8,18 +8,23 @@
 	import FieldWrapper from './parts/fieldWrapper.svelte';
 	import type { FieldOptions } from './types';
 
-	export let form: SuperForm<Data>;
-	export let name: FormPathLeaves<Data, string | number>;
-	export let options: Partial<FieldOptions & HTMLInputAttributes> = {};
+	//
+
+	interface Props {
+		form: SuperForm<Data>;
+		name: FormPathLeaves<Data, string | number>;
+		options?: Partial<FieldOptions & HTMLInputAttributes>;
+	}
+
+	const { form, name, options = {} }: Props = $props();
 
 	//
 
-	let { form: formData } = form;
+	const { form: formData } = form;
 
-	const numberValue = numberProxy(formData, name);
-	const textValue = fieldProxy(formData, name);
-
-	$: valueProxy = options.type == 'number' ? numberValue : textValue;
+	const numberValue = $derived(numberProxy(formData, name));
+	const textValue = $derived(fieldProxy(formData, name));
+	const valueProxy = $derived(options.type == 'number' ? numberValue : textValue);
 
 	//
 
@@ -29,15 +34,17 @@
 		url: 'https://www.website.org'
 	};
 
-	$: placeholder = Boolean(options.placeholder)
-		? options.placeholder
-		: defaultPlaceholders[options.type ?? 'text'];
+	let placeholder = $derived(
+		Boolean(options.placeholder) ? options.placeholder : defaultPlaceholders[options.type ?? 'text']
+	);
 </script>
 
 <Form.Field {form} {name}>
-	<FieldWrapper field={name} {options} let:attrs>
-		{#if valueProxy}
-			<Input {...options} {placeholder} {...attrs} bind:value={$valueProxy} />
-		{/if}
+	<FieldWrapper field={name} {options}>
+		{#snippet children({ props })}
+			{#if valueProxy}
+				<Input {...options} {placeholder} {...props} bind:value={$valueProxy} />
+			{/if}
+		{/snippet}
 	</FieldWrapper>
 </Form.Field>

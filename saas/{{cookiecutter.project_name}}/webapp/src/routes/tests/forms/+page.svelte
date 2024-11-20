@@ -14,8 +14,11 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { ZTestCollectionSelectFieldOptions } from '@/pocketbase/types';
 	import { CollectionField } from '@/collections-components';
+	import type { ComponentProps } from 'svelte';
+	import { Button } from '@/components/ui/button';
 
 	const schema = createCollectionZodSchema('z_test_collection');
+	console.log(schema.shape);
 
 	const form = createForm({
 		adapter: zod(schema),
@@ -25,7 +28,7 @@
 		},
 		initialData: {
 			file_field: createDummyFile(),
-			relation_field: '8pqa9tnjse6qt9m'
+			relation_field: '5bxdhl7ieg0ogbd'
 		},
 		options: {
 			dataType: 'form'
@@ -38,11 +41,27 @@
 		label: v,
 		value: v as string
 	}));
+
+	//
+
+	let hide = $state<boolean>(false);
+
+	// function changeHide() {
+	// 	hide = !hide;
+	// }
 </script>
 
-<Form {form}>
+<!-- <Button onclick={changeHide}>sad</Button> -->
+
+<Form {form} hideRequiredIndicator={hide}>
+	<Field {form} name="text_field" />
+
 	<SelectField {form} name="select_field" options={{ items: selectItems }} />
-	<SelectField {form} name="select_multi_field" options={{ items: selectItems, multiple: true }} />
+	<SelectField
+		{form}
+		name="select_multi_field"
+		options={{ items: selectItems, type: 'multiple' }}
+	/>
 
 	<CollectionField
 		{form}
@@ -79,7 +98,6 @@
 
 	<SuperDebug data={formData}></SuperDebug>
 
-	<Field {form} name="text_field" />
 	<Field {form} name="url_field" options={{ type: 'url' }} />
 	<Field {form} name="number_field" options={{ type: 'number' }} />
 	<FileField {form} name="file_field" />

@@ -1,8 +1,8 @@
 <script lang="ts" generics="C extends CollectionName">
-	import { cn } from '@/components/utils';
+	import { cn } from '@/components/ui/utils';
 	import type { CollectionResponses } from '@/pocketbase/types';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import ItemCard from '@/components/custom/itemCard.svelte';
+	import ItemCard from '@/components/ui-custom/itemCard.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import {
 		RecordSelect,
@@ -11,36 +11,50 @@
 		RecordShare,
 		RecordDelete
 	} from './record-actions';
+	import type { Snippet } from 'svelte';
+	import type ItemCardTitle from '@/components/ui-custom/itemCardTitle.svelte';
+	import type ItemCardDescription from '@/components/ui-custom/itemCardDescription.svelte';
+
+	interface Props {
+		record: CollectionResponses[C];
+		hide?: Array<RecordAction>;
+		class?: string;
+		children?: Snippet<[{ Title: typeof ItemCardTitle; Description: typeof ItemCardDescription }]>;
+		right?: Snippet<[{ record: CollectionResponses[C] }]>;
+	}
+
+	let {
+		record,
+		hide = [],
+		class: className = '',
+		children: children_render,
+		right: right_render
+	}: Props = $props();
 
 	//
 
-	export let record: CollectionResponses[C];
-	export let hide: Array<RecordAction> = [];
+	const { manager } = $derived(getCollectionManagerContext());
 
-	let className = '';
-	export { className as class };
-
-	//
-
-	const { selectionContext: selection } = getCollectionManagerContext();
-	const { selectedRecords } = selection;
-
-	$: classes = cn(className, {
-		'border-primary': $selectedRecords.includes(record.id)
-	});
+	const classes = $derived(
+		cn(className, {
+			'border-primary': manager.selectedRecords.includes(record.id)
+		})
+	);
 </script>
 
-<ItemCard class="{classes} " let:Title let:Description>
-	<svelte:fragment slot="left">
+<ItemCard class="{classes} ">
+	{#snippet left()}
 		{#if !hide.includes('select')}
 			<RecordSelect {record} />
 		{/if}
-	</svelte:fragment>
+	{/snippet}
 
-	<slot {Title} {Description} />
+	{#snippet children({ Title, Description })}
+		{@render children_render?.({ Title, Description })}
+	{/snippet}
 
-	<svelte:fragment slot="right">
-		<slot name="right" {record} />
+	{#snippet right()}
+		{@render right_render?.({ record })}
 
 		{#if !hide.includes('edit')}
 			<RecordEdit {record} />
@@ -51,5 +65,5 @@
 		{#if !hide.includes('delete')}
 			<RecordDelete {record} />
 		{/if}
-	</svelte:fragment>
+	{/snippet}
 </ItemCard>

@@ -1,18 +1,21 @@
 <script lang="ts">
-	import SectionTitle from '@/components/custom/sectionTitle.svelte';
+	import SectionTitle from '@/components/ui-custom/sectionTitle.svelte';
 	import RecordCreate from './record-actions/recordCreate.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 
-	export let title: string | undefined = undefined;
-	export let hideCreate = false;
+	interface Props {
+		title?: string | undefined;
+		hideCreate?: boolean;
+	}
 
-	const { collection } = getCollectionManagerContext();
+	const { title, hideCreate = false }: Props = $props();
+	const { manager } = $derived(getCollectionManagerContext());
 </script>
 
-<SectionTitle title={title ?? collection}>
-	<svelte:fragment slot="right">
+<SectionTitle title={title ?? manager.collection}>
+	{#snippet right()}
 		{#if !hideCreate}
 			<RecordCreate />
 		{/if}
-	</svelte:fragment>
+	{/snippet}
 </SectionTitle>

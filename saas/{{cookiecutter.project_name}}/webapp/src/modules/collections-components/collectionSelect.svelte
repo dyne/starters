@@ -1,64 +1,85 @@
 <script lang="ts" generics="C extends CollectionName, Expand extends ExpandQueryOption<C> = never">
-	import {
-		type PocketbaseQueryOptions,
-		type ExpandQueryOption,
-		PocketbaseQuery,
-		type QueryResponse
-	} from '@/pocketbase/query';
+	import { type ExpandQueryOption, PocketbaseQuery, type QueryResponse } from '@/pocketbase/query';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import type { ControlAttrs } from 'formsnap';
-	import { setupComponentPbSubscriptions } from '@/pocketbase';
-	import type { CollectionRecords } from '@/pocketbase/types';
-	import { createRecordDisplay, type RecordPresenter } from './utils';
-	import SelectInput, { type Selected } from '@/components/custom/selectInput.svelte';
+	import { setupComponentPocketbaseSubscriptions } from '@/pocketbase/subscriptions';
+	import type { RecordIdString } from '@/pocketbase/types';
+	import { createRecordDisplay } from './utils';
+	import SelectInput, { type SelectItem } from '@/components/ui-custom/selectInput.svelte';
+	import type { CollectionInputProps } from './types';
 
 	//
 
-	// TODO - support two-way binding
+	type Props = CollectionInputProps<C, Expand>;
 
-	export let collection: C;
-	export let queryOptions: Partial<PocketbaseQueryOptions<C, Expand>> = {};
-
-	export let disabled = false;
-	export let placeholder: string | undefined = undefined;
-	export let clearValueOnSelect = false;
-
-	export let onSelect: (record: QueryResponse<C, Expand> | undefined) => void = () => {};
-
-	export let displayFields: (keyof CollectionRecords[C])[] | undefined = undefined;
-	export let displayFn: RecordPresenter<QueryResponse<C, Expand>> | undefined = undefined;
-
-	export let attrs: ControlAttrs | undefined = undefined;
+	let {
+		collection,
+		queryOptions = {},
+		disabled = false,
+		placeholder,
+		clearValueOnSelect = false,
+		onSelect = () => {},
+		displayFields,
+		displayFn,
+		controlAttrs
+	}: Props = $props();
 
 	//
 
-	$: pocketbaseQuery = new PocketbaseQuery(collection, queryOptions);
+	type Record = QueryResponse<C, Expand>;
 
-	let selectOptions: Selected<QueryResponse<C, Expand>>[] = [];
-	$: loadRecords(pocketbaseQuery);
+	let records = $state<Record[]>([]);
+	let recordId = $state<RecordIdString | undefined>();
+	const selectedRecord = $derived(records.find((r) => r.id == recordId));
 
-	async function loadRecords(pocketbaseQuery: PocketbaseQuery<C, Expand>) {
-		const records = await pocketbaseQuery.getFullList();
-		selectOptions = records.map((item) => ({
-			value: item,
-			label: createRecordDisplay(item, displayFields, displayFn)
-		}));
-	}
+	const presentRecord = $derived(function (record: Record) {
+		return createRecordDisplay(record, displayFields, displayFn);
+	});
 
-	//
-
-	const subscriptionCollections: CollectionName[] = [collection, 'authorizations'];
-	for (const c of subscriptionCollections) {
-		setupComponentPbSubscriptions(c, () => loadRecords(pocketbaseQuery));
-	}
+	const selectItems: SelectItem[] = $derived(
+		records.map((r) => ({
+			value: r.id,
+			label: presentRecord(r)
+		}))
+	);
 
 	//
 
-	let selected: Selected<QueryResponse<C, Expand>> | undefined = undefined;
-	$: {
-		onSelect(selected?.value);
-		if (clearValueOnSelect) selected = undefined;
-	}
+	const loadRecords = $derived(function () {
+		const query = new PocketbaseQuery(collection, queryOptions);
+		query.getFullList().then((res) => (records = res));
+	});
+
+	$effect(() => {
+		loadRecords();
+	});
+
+	setupComponentPocketbaseSubscriptions({
+		collection,
+		callback: () => loadRecords(),
+		expandOption: queryOptions.expand,
+		other: ['authorizations']
+	});
+
+	//
+
+	$effect(() => {
+		if (!selectedRecord) return;
+		onSelect($state.snapshot(selectedRecord) as Record);
+		if (clearValueOnSelect) recordId = undefined;
+	});
 </script>
 
-<SelectInput {placeholder} {disabled} items={selectOptions} bind:selected {attrs} />
+<SelectInput
+	type="single"
+	items={selectItems}
+	bind:value={recordId}
+	{placeholder}
+	{controlAttrs}
+	{disabled}
+>
+	{#snippet trigger()}
+		{#if selectedRecord}
+			{presentRecord(selectedRecord)}
+		{/if}
+	{/snippet}
+</SelectInput>

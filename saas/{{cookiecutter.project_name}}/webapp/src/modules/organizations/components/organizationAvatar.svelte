@@ -1,12 +1,17 @@
 <script lang="ts">
-	import Avatar from '@/components/custom/avatar.svelte';
+	import Avatar, { type AvatarProps } from '@/components/ui-custom/avatar.svelte';
+	import { cn } from '@/components/ui/utils';
 	import { pb } from '@/pocketbase';
 	import type { OrganizationsRecord } from '@/pocketbase/types';
 
-	export let organization: OrganizationsRecord;
+	type Props = AvatarProps & {
+		organization: OrganizationsRecord;
+	};
 
-	$: src = pb.files.getUrl(organization, organization.avatar ?? '');
-	$: fallback = organization.name.slice(0, 2);
+	let { organization, ...rest }: Props = $props();
+
+	let src = $derived(pb.files.getUrl(organization, organization.avatar ?? ''));
+	let fallback = $derived(organization.name.slice(0, 2));
 </script>
 
-<Avatar {src} {fallback} class="rounded-sm" />
+<Avatar {...rest} {src} {fallback} class={cn(rest.class, 'rounded-sm')} />

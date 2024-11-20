@@ -40,10 +40,10 @@ export const languagesDisplay: Record<AvailableLanguageTag, { flag: string; name
 	de: { flag: '🇩🇪', name: 'Deutsch' },
 	fr: { flag: '🇫🇷', name: 'Français' },
 	da: { flag: '🇩🇰', name: 'Dansk' },
-	'pt-BR': { flag: '🇧🇷', name: 'Português' }
+	'pt-br': { flag: '🇧🇷', name: 'Português' }
 };
 
-export function languagesData(page: Page) {
+export function getLanguagesData(page: Page): LanguageData[] {
 	const currentLang = i18n.getLanguageFromUrl(page.url);
 
 	return Record.keys(languagesDisplay).map((lang) => ({
@@ -55,3 +55,12 @@ export function languagesData(page: Page) {
 		isCurrent: lang == currentLang
 	}));
 }
+
+export type LanguageData = {
+	tag: AvailableLanguageTag;
+	href: string;
+	hreflang: AvailableLanguageTag;
+	flag: string;
+	name: string;
+	isCurrent: boolean;
+};

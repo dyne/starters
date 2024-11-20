@@ -1,66 +1,67 @@
 <script lang="ts" generics="C extends CollectionName">
 	import Pencil from 'lucide-svelte/icons/pencil';
-	import Icon from '@/components/custom/icon.svelte';
-	import type { CollectionRecords, CollectionResponses } from '@/pocketbase/types';
+	import type { CollectionResponses } from '@/pocketbase/types';
 	import { m } from '@/i18n';
-	import type {
-		OnCollectionFormSuccess,
-		CollectionFormOptions
-	} from '@/collections-components/form/formOptions';
+	import type { CollectionFormOptions } from '@/collections-components/form/collectionFormTypes';
 	import type { CollectionName } from '@/pocketbase/collections-models';
-	import { Button } from '@/components/ui/button';
-	import { createToggleStore } from '@/components/custom/utils';
 	import { getCollectionManagerContext } from '../collectionManagerContext';
 	import { CollectionForm } from '@/collections-components';
-	import Sheet from '@/components/custom/sheet.svelte';
+	import Sheet from '@/components/ui-custom/sheet.svelte';
 	import { merge } from 'lodash';
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
+	import type { RecordCreateEditProps } from './types';
 
 	//
 
-	export let collection: C | undefined = undefined;
-	collection;
-
-	export let record: CollectionResponses[C];
-	export let initialData: Partial<CollectionRecords[C]> = {};
-
-	export let sheetTitle: string | undefined = undefined;
-
-	export let onSuccess: OnCollectionFormSuccess<C> = () => {};
-
-	//
-
-	const show = createToggleStore(false);
-
-	const { collection: c, formsOptions } = getCollectionManagerContext();
-	const collectionName: C = c as C; // ts-fix
-
-	const title = sheetTitle ?? m.Edit_record();
-
-	const options: CollectionFormOptions<C> = merge({}, formsOptions.base, formsOptions.edit, {
-		uiOptions: { submitButtonText: title, triggerToast: true }
-	} as CollectionFormOptions<C>);
-
-	const handleSuccess: OnCollectionFormSuccess<C> = (record) => {
-		show.off();
-		onSuccess(record, 'edit');
+	type Props = RecordCreateEditProps<C> & {
+		record: CollectionResponses[C];
 	};
+
+	const { formTitle, onSuccess = () => {}, buttonText, button, record }: Props = $props();
+
+	//
+
+	const { manager, formsOptions } = $derived(getCollectionManagerContext());
+
+	const defaultFormOptions: CollectionFormOptions<C> = {
+		uiOptions: { showToastOnSuccess: true }
+	};
+	const options = $derived(merge(defaultFormOptions, formsOptions.base, formsOptions.edit));
+
+	const sheetTitle = $derived(formTitle ?? m.Edit_record());
 </script>
 
-<Sheet bind:open={$show} {title}>
-	<svelte:fragment slot="trigger" let:builder>
-		<slot name="trigger" open={show.on} {builder} icon={Pencil}>
-			<IconButton variant="outline" icon={Pencil} builders={[builder]} />
-		</slot>
-	</svelte:fragment>
+<Sheet title={sheetTitle}>
+	{#snippet trigger({ sheetTriggerAttributes, openSheet })}
+		{#if button}
+			{@render button({
+				triggerAttributes: sheetTriggerAttributes,
+				icon: Pencil,
+				openForm: openSheet
+			})}
+		{:else}
+			<IconButton variant="outline" icon={Pencil} {...sheetTriggerAttributes} />
+		{/if}
+	{/snippet}
 
-	<svelte:fragment slot="content">
+	{#snippet content({ closeSheet })}
 		<CollectionForm
+			collection={manager.collection}
 			recordId={record.id}
-			initialData={{ ...record, ...initialData }}
-			collection={collectionName}
+			initialData={record}
 			{...options}
-			onSuccess={handleSuccess}
-		/>
-	</svelte:fragment>
+			onSuccess={(record) => {
+				closeSheet();
+				onSuccess(record, 'create');
+			}}
+		>
+			{#snippet submitButtonContent()}
+				{#if buttonText}
+					{@render buttonText?.()}
+				{:else}
+					{m.Edit_record()}
+				{/if}
+			{/snippet}
+		</CollectionForm>
+	{/snippet}
 </Sheet>

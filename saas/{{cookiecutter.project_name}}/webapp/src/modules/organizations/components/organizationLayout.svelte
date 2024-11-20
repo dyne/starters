@@ -3,17 +3,24 @@
 	import { PageTop, PageContent } from '@/components/layout';
 	import OrganizationTabs from './organizationTabs.svelte';
 	import type { OrganizationsResponse } from '@/pocketbase/types';
-	import T from '@/components/custom/t.svelte';
+	import T from '@/components/ui-custom/t.svelte';
 
-	export let org: OrganizationsResponse;
+	interface Props {
+		org: OrganizationsResponse;
+		children?: import('svelte').Snippet;
+	}
+
+	let { org, children }: Props = $props();
 </script>
 
 <PageTop>
 	<OrganizationBreadcrumbs />
 	<T tag="h4">{org.name}</T>
-	<OrganizationTabs slot="bottom" organizationId={org.id} />
+	{#snippet bottom()}
+		<OrganizationTabs organizationId={org.id} />
+	{/snippet}
 </PageTop>
 
 <PageContent>
-	<slot />
+	{@render children?.()}
 </PageContent>

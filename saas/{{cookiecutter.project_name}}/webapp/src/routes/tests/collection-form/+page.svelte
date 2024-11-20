@@ -6,13 +6,10 @@
 
 <CollectionForm
 	collection="z_test_collection"
-	let:form
 	onSuccess={(record) => {
 		toast.success(JSON.stringify(record));
 	}}
->
-	<FormDebug {form} />
-</CollectionForm>
+/>
 
 <!-- 
 <div class="mx-auto max-w-xl p-4">

@@ -2,12 +2,17 @@
 	import { verifyUserRole } from './verify-authorizations';
 	import type { OrgRole } from '.';
 
-	export let orgId: string;
-	export let roles: OrgRole[];
+	interface Props {
+		orgId: string;
+		roles: OrgRole[];
+		children?: import('svelte').Snippet;
+	}
+
+	let { orgId, roles, children }: Props = $props();
 </script>
 
 {#await verifyUserRole(orgId, roles) then response}
 	{#if response.hasRole}
-		<slot />
+		{@render children?.()}
 	{/if}
 {/await}

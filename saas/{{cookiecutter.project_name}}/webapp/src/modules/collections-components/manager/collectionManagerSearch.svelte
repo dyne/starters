@@ -1,17 +1,18 @@
 <script lang="ts">
-	import IconButton from '@/components/custom/iconButton.svelte';
+	import IconButton from '@/components/ui-custom/iconButton.svelte';
 	import { getCollectionManagerContext } from './collectionManagerContext';
 	import { Input } from '@/components/ui/input';
 	import { m } from '@/i18n';
+	import { Debounced } from 'runed';
 
-	const { pocketbaseQuery } = getCollectionManagerContext();
+	const { manager } = $derived(getCollectionManagerContext());
 
-	function clearSearch() {
-		$pocketbaseQuery.options.search = undefined;
-	}
+	let searchText = $state('');
+	const deboucedSearch = new Debounced(() => searchText, 500);
+	$effect(() => manager.search(deboucedSearch.current));
 </script>
 
 <div class="flex gap-2">
-	<Input bind:value={$pocketbaseQuery.options.search} placeholder={m.Search()} />
-	<IconButton on:click={clearSearch} />
+	<Input bind:value={searchText} placeholder={m.Search()} />
+	<IconButton onclick={() => manager.clearSearch()} />
 </div>
