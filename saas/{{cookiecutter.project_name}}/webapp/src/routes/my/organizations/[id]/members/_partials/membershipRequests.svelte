@@ -48,9 +48,9 @@
 		filter: `organization.id = "${organization.id}" && status = "${pending}"`,
 		expand: ['user']
 	}}
-	hide={['emptyState']}
+	hide={['empty_state']}
 >
-	<svelte:fragment slot="records" let:records>
+	{#snippet records({ records })}
 		<PageCard>
 			<SectionTitle
 				tag="h4"
@@ -119,5 +119,5 @@
 				{/each}
 			</div>
 		</PageCard>
-	</svelte:fragment>
+	{/snippet}
 </CollectionManager>

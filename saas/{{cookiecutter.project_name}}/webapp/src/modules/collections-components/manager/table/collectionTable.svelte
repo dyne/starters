@@ -1,4 +1,4 @@
-<script lang="ts" generics="C extends CollectionName">
+<script lang="ts" generics="Response extends CollectionResponses[CollectionName]">
 	import { m } from '@/i18n';
 	import type { CollectionName } from '@/pocketbase/collections-models';
 	import type { CollectionResponses } from '@/pocketbase/types';
@@ -16,8 +16,6 @@
 	import type { Snippet } from 'svelte';
 
 	//
-
-	type Response = CollectionResponses[C];
 
 	interface Props {
 		records: Response[];

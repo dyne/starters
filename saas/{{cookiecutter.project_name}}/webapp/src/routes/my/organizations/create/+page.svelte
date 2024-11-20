@@ -27,12 +27,13 @@
 					avatar: m.Avatar()
 				}
 			}}
-			uiOptions={{
-				submitButtonText: m.Create_organization()
-			}}
 			onSuccess={(record) => {
 				window.location.assign(`/my/organizations/${record.id}`);
 			}}
-		/>
+		>
+			{#snippet submitButtonContent()}
+				{m.Create_organization()}
+			{/snippet}
+		</CollectionForm>
 	</PageCard>
 </PageContent>

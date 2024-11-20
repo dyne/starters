@@ -36,7 +36,7 @@
 		collection="webauthnCredentials"
 		editFormFieldsOptions={{ exclude: ['user', 'credential'] }}
 	>
-		<svelte:fragment slot="records" let:records>
+		{#snippet records({ records })}
 			<div class="space-y-2 py-4">
 				{#each records as record}
 					{@const label = Boolean(record.description)
@@ -55,7 +55,7 @@
 					</Card>
 				{/each}
 			</div>
-		</svelte:fragment>
+		{/snippet}
 	</CollectionManager>
 
 	{#await platformAuthenticatorAvailable}
