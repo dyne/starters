@@ -108,12 +108,12 @@
 
 			<Sidebar.MenuItem>
 				<LanguageSelect>
-					{#snippet trigger({ props, text, icon })}
+					{#snippet trigger({ triggerAttributes, text, icon: LanguagesIcon })}
 						<Sidebar.MenuButton
-							{...props}
+							{...triggerAttributes}
 							class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
-							<Icon src={icon} />
+							<Icon src={LanguagesIcon} />
 							<span>{text}</span>
 							<ChevronUp class="ml-auto" />
 						</Sidebar.MenuButton>
