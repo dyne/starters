@@ -8,8 +8,8 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"pb/config"
-	"pb/zencode"
+	"config"
+	"zencode"
 	"strconv"
 	"time"
 )
