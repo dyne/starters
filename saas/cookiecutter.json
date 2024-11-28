@@ -7,9 +7,9 @@
   "repo": "https://github.com/dyne/{{ cookiecutter.project_slug }}",
   "_copy_without_render": [
     "*.svelte",
-    "admin/pb_hooks/rbac.pb.js",
-    "admin/pb_hooks/organizations.pb.js",
-    "admin/pb_hooks/organizations_invites.pb.js",
-    "admin/pb_hooks/utils.js"
+    "pb_hooks/rbac.pb.js",
+    "pb_hooks/organizations.pb.js",
+    "pb_hooks/organizations_invites.pb.js",
+    "pb_hooks/utils.js"
   ]
 }
