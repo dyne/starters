@@ -27,7 +27,7 @@
 		"test:e2e:ui": "playwright test --ui",
 		"serve": "pnpm build && pnpm preview --host",
 		"vite-run": "node ./vite-run.js",
-		"generate:types": "pnpx pocketbase-typegen --db ../admin/pb_data/data.db --out src/modules/pocketbase/types/index.generated.ts && pnpm generate:types-extra",
+		"generate:types": "pnpm dlx pocketbase-typegen --env --out src/modules/pocketbase/types/index.generated.ts && pnpm generate:types-extra",
 		"generate:types-extra": "pnpm vite-run src/modules/pocketbase/types/generate.types-extra.ts",
 		"generate:features": "pnpm vite-run src/modules/features/generate.features-list.ts",
 		"generate:roles": "pnpm vite-run ./src/modules/organizations/generate.roles-list.ts",
@@ -35,7 +35,9 @@
 		"generate:definitions": "pnpm generate:collections-models && pnpm generate:types && pnpm generate:features && pnpm generate:roles",
 		"i18n:remove-unused-strings": "pnpm vite-run ./src/modules/i18n/remove-unused-strings.ts",
 		"i18n:lint": "pnpm inlang lint --project ./project.inlang",
-		"i18n:lint:en": "pnpm inlang lint --project ./project.inlang --languageTags en"
+		"i18n:lint:en": "pnpm inlang lint --project ./project.inlang --languageTags en",
+		"emails": "rm -rf static/emails/* && mkdir -p static/emails && find ./ -name _components -prune -o -name '*.mjml' -exec sh -c 'mjml \"$1\" -o static/emails/$(basename \"${1%.mjml}.html\")' sh {} \\;",
+		"postemails": "node ./emails/_generateEmailList.mjs"
 	},
 	"devDependencies": {
 		"@inlang/cli": "^2.18.1",
@@ -84,9 +86,11 @@
 	"dependencies": {
 		"@inlang/paraglide-sveltekit": "^0.11.1",
 		"@melt-ui/svelte": "^0.86.0",
+		"@types/node": "^22.10.2",
 		"date-fns": "^4.1.0",
 		"effect": "^3.10.12",
 		"lodash": "^4.17.21",
+		"mjml": "^4.15.3",
 		"nanoid": "^5.0.8",
 		"pocketbase": "^0.21.5",
 		"runed": "^0.15.3",
