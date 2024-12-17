@@ -251,7 +251,7 @@ function getAppUrl() {
 
 /** @returns {string} */
 function getAppName() {
-    return removeTrailingSlash($app.settings().meta.appName);
+    return $app.settings().meta.appName;
 }
 
 /**
