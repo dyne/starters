@@ -98,7 +98,9 @@ routerAdd("POST", "/organizations/invite", (c) => {
     if (!organizationId || !emails)
         throw utils.createMissingDataError("organizationId", "emails");
 
-    const actorId = utils.getUserFromContext(c)?.getId();
+    const actor = utils.getUserFromContext(c);
+    const actorId = actor?.getId();
+    const actorName = actor?.get("name");
     if (!actorId) throw utils.createMissingDataError("userId");
 
     const actorRole = utils.getUserRole(actorId, organizationId);
@@ -164,12 +166,31 @@ routerAdd("POST", "/organizations/invite", (c) => {
             ];
             const paramsString = routeParams.join("-");
             const emailCtaUrl = `${utils.getAppUrl()}/organization-invite-${paramsString}`;
-            const a = `<a href="${emailCtaUrl}">Manage your invitation</a>`;
+
+            /** @type {{html:string, subject:string}} */
+            let emailData;
+
+            if (!user) {
+                emailData = utils.renderEmail("user-invitation", {
+                    Editor: actorName ?? "Admin",
+                    InvitationLink: emailCtaUrl,
+                    OrganizationName: organizationName,
+                    AppName: utils.getAppName(),
+                });
+            } else {
+                emailData = utils.renderEmail("join-organization", {
+                    Editor: actorName ?? "Admin",
+                    DashboardLink: emailCtaUrl,
+                    UserName: user?.get("name") ?? "User",
+                    OrganizationName: organizationName,
+                    AppName: utils.getAppName(),
+                });
+            }
 
             const err = utils.sendEmail({
                 to: { address: email, name: "" },
-                subject: `You have been invited to join ${organizationName}`,
-                html: a,
+                // subject: `You have been invited to join ${organizationName}`,
+                ...emailData,
             });
 
             if (!err) {
@@ -206,8 +227,6 @@ routerAdd("POST", "/organizations/invite", (c) => {
 /* */
 
 onRecordAfterDeleteRequest((e) => {
-    /** @type {Utils} */
-    const utils = require(`${__hooks}/utils.js`);
     /** @type {AuditLogger} */
     const auditLogger = require(`${__hooks}/auditLogger.js`);
 

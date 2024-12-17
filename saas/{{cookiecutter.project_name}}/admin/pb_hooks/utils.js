@@ -249,6 +249,11 @@ function getAppUrl() {
     return removeTrailingSlash($app.settings().meta.appUrl);
 }
 
+/** @returns {string} */
+function getAppName() {
+    return removeTrailingSlash($app.settings().meta.appName);
+}
+
 /**
  * @param {string} organizationId
  * @returns {string}
@@ -434,6 +439,7 @@ module.exports = {
     getOrganizationAdminsAddresses,
     getOrganizationMembersPageUrl,
     getAppUrl,
+    getAppName,
     runOrganizationInviteEndpointChecks,
     renderEmail,
     getOrganizationPageUrl,
