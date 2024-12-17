@@ -438,5 +438,8 @@
 	"An_error_occurred_while_processing_your_request": "An error occurred while processing your request",
 	"Value_does_not_match_regex_pattern": "Value does not match regex pattern {pattern}",
 	"No_records_found": "No records found",
-	"Actions": "Actions"
+	"Actions": "Actions",
+	"An_error_occurred_while_verifying_your_email_": "An error occurred while verifying your email! :(",
+	"Oh_no": "Oh no!",
+	"Email_verified_succesfully": "Email verified succesfully!"
 }
