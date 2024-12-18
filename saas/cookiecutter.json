@@ -11,6 +11,8 @@
     "admin/pb_hooks/organizations.pb.js",
     "admin/pb_hooks/organizations_invites.pb.js",
     "admin/pb_hooks/utils.js",
-    "webapp/emails/_generateEmailList.mjs"
+    "webapp/emails/_generateEmailList.mjs",
+    "*.mjml",
+    "**/emails/*.html"
   ]
 }
