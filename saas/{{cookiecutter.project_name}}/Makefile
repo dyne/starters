@@ -73,11 +73,11 @@ $(WCZ): .git
 $(DATA):
 	mkdir -p $(DATA)
 
-$(PUBLIC):
+setup_pb_public:
 	rm -rf $(PUBLIC)
 	ln -s $(WEBAPP)/static $(PUBLIC)
 
-$(PB): $(DATA) $(PUBLIC)
+$(PB): $(DATA) setup_pb_public
 	@echo "📦 Setup the backend"
 	@cd $(ADMIN) && go mod tidy && go build
 
