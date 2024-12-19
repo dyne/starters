@@ -84,7 +84,7 @@
 		"zod": "^3.23.8"
 	},
 	"dependencies": {
-		"@inlang/paraglide-sveltekit": "^0.11.1",
+		"@inlang/paraglide-sveltekit": "^0.15.0",
 		"@melt-ui/svelte": "^0.86.0",
 		"@types/node": "^22.10.2",
 		"date-fns": "^4.1.0",
