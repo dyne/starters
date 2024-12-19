@@ -12,9 +12,7 @@ const FEATURES_COLLECTION_NAME = "features";
  */
 const feature = {
     name: "oauth",
-    envVariables: {
-        providers: ["google", "github"],
-    },
+    active: false,
 };
 
 migrate(
