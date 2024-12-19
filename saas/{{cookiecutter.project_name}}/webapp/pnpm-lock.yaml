@@ -36,8 +36,8 @@ importers:
         specifier: ^0.21.5
         version: 0.21.5
       runed:
-        specifier: ^0.20.0
-        version: 0.20.0(svelte@5.1.15)
+        specifier: ^0.15.3
+        version: 0.15.3(svelte@5.1.15)
       svelte-loading-spinners:
         specifier: ^0.3.6
         version: 0.3.6
@@ -2735,15 +2735,10 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  runed@0.15.4:
-    resolution: {integrity: sha512-kmbpstUd7v2FdlBM+MT78IyuOVd38tq/e7MHvVb0fnVCsPSPMD/m2Xh+wUhzg9qCJgxRjBbIKu68DlH/x5VXJA==}
+  runed@0.15.3:
+    resolution: {integrity: sha512-HtayB+loDcGdqJDHW8JFdsZzGQMyVzim6+s3052MkjZnwmwDstmF+cusMeTssBe6TCdt5i9D/Tb+KYXN3L0kXA==}
     peerDependencies:
       svelte: ^5.0.0-next.1
-
-  runed@0.20.0:
-    resolution: {integrity: sha512-YqPxaUdWL5nUXuSF+/v8a+NkVN8TGyEGbQwTA25fLY35MR/2bvZ1c6sCbudoo1kT4CAJPh4kUkcgGVxW127WKw==}
-    peerDependencies:
-      svelte: ^5.7.0
 
   rusha@0.8.14:
     resolution: {integrity: sha512-cLgakCUf6PedEu15t8kbsjnwIFFR2D4RfL+W3iWFJ4iac7z4B0ZI8fxy4R3J956kAI68HclCFGL8MPoUVC3qVA==}
@@ -4378,7 +4373,7 @@ snapshots:
       '@floating-ui/dom': 1.6.12
       '@internationalized/date': 3.5.6
       esm-env: 1.1.4
-      runed: 0.15.4(svelte@5.1.15)
+      runed: 0.15.3(svelte@5.1.15)
       svelte: 5.1.15
       svelte-toolbelt: 0.4.6(svelte@5.1.15)
 
@@ -6105,12 +6100,7 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  runed@0.15.4(svelte@5.1.15):
-    dependencies:
-      esm-env: 1.1.4
-      svelte: 5.1.15
-
-  runed@0.20.0(svelte@5.1.15):
+  runed@0.15.3(svelte@5.1.15):
     dependencies:
       esm-env: 1.2.1
       svelte: 5.1.15

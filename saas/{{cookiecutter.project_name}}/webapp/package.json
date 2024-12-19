@@ -93,7 +93,7 @@
 		"mjml": "^4.15.3",
 		"nanoid": "^5.0.8",
 		"pocketbase": "^0.21.5",
-		"runed": "^0.20.0",
+		"runed": "^0.15.3",
 		"svelte-loading-spinners": "^0.3.6",
 		"type-fest": "^4.26.1",
 		"zenroom": "^4.45.3"
