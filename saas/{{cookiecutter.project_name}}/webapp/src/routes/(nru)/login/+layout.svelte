@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { Link } from '@/components/types';
 	import { featureFlags } from '@/features';
 	import { m } from '@/i18n';
@@ -45,7 +45,7 @@
 		<T tag="small" class="text-gray-500">{m.Choose_your_authentication_method()}</T>
 		<div class="flex items-center overflow-hidden rounded-md border">
 			{#each modes as { href, title }}
-				{@const isActive = $page.url.pathname === href}
+				{@const isActive = page.url.pathname === href}
 				<Button
 					variant={isActive ? 'secondary' : 'outline'}
 					{href}
