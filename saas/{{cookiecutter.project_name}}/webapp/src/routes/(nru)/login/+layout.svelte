@@ -1,6 +1,5 @@
 <script lang="ts" module>
-	import { writable } from 'svelte/store';
-	export const currentEmail = writable('');
+	export const currentEmail = $state({ value: '' });
 </script>
 
 <script lang="ts">
@@ -12,8 +11,13 @@
 	import { Button } from '@/components/ui/button';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import A from '@/components/ui-custom/a.svelte';
+	import type { Snippet } from 'svelte';
+	import Oauth from '@/auth/oauth/oauth.svelte';
+
+	//
+
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { children }: Props = $props();
@@ -31,6 +35,10 @@
 </script>
 
 <T tag="h4">Log in</T>
+
+{#if $featureFlags.OAUTH}
+	<Oauth></Oauth>
+{/if}
 
 {#if $featureFlags.WEBAUTHN}
 	<div class="space-y-2">
